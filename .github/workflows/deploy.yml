@@ -49,7 +49,7 @@ jobs:
       - name: Assemble site
         run: |
           mkdir -p _site/src
-          cp index.html simulator.html pension.html styles.css _site/
+          cp index.html simulator.html pension.html tokens.css styles.css _site/
           cp -r guide _site/
           cp src/nav.js _site/src/
 

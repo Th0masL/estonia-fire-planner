@@ -12,6 +12,7 @@ The project is Estonia-specific because most FIRE material assumes US accounts a
 - A separate pension projection calculator
 - Estonia-specific tax, pension, health-insurance and investment-account rules
 - Property, broker, portfolio and household-planning guides
+- Local Nordic Utility design tokens in `tokens.css`, with no network dependency
 - Centralised rates in `src/rates.js`, reused by both calculators and the prose build
 - Regression, invariant, round-trip, monotonicity and rendered-output tests
 
@@ -42,7 +43,7 @@ python3 build.py
 bash test/run.sh
 ```
 
-`build.py` generates `index.html`, the calculator bundles and `guide/*.html`. Edit Markdown or files under `src/`, then rebuild rather than editing generated HTML directly.
+`build.py` generates `index.html`, the calculator bundles and `guide/*.html`. Edit Markdown or files under `src/`, then rebuild rather than editing generated HTML directly. Interface styles consume the local semantic tokens in `tokens.css`.
 
 ## GitHub Pages
 

@@ -223,6 +223,7 @@ TEMPLATE = """<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title>
 <meta name="description" content="{desc}">
+<link rel="stylesheet" href="{root}tokens.css">
 <link rel="stylesheet" href="{root}styles.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
 </head>

@@ -120,6 +120,14 @@ for (const page of PAGES) {
   ok(markup.includes('id="sidebar"'), `${page} has the shared navigation`);
   ok(/<title>[^<]+<\/title>/.test(markup), `${page} has a title`);
 
+  // Nordic Utility tokens must load locally and before component CSS on every
+  // generated page. A missing ../ on a guide page would otherwise look fine at
+  // repository root and silently lose its theme after deployment.
+  const tokenLink = markup.indexOf('tokens.css');
+  const styleLink = markup.indexOf('styles.css');
+  ok(tokenLink >= 0 && tokenLink < styleLink,
+    `${page} loads local design tokens before component styles`);
+
   // Internal links must point at files that exist. A finding linking to a
   // missing guide page is a dead end at exactly the moment someone wants more.
   const base = page.includes('/') ? 'guide' : '';
@@ -129,6 +137,17 @@ for (const page of PAGES) {
       : (base ? `${base}/${m[1]}` : m[1]);
     ok(existsSync(join(ROOT, target)), `${page} links to a real file`, m[1]);
   }
+}
+
+// Component CSS consumes semantic tokens; raw palette values belong only in
+// the copied canonical token file. Domain visualization colors are also token-
+// based, so an accidental literal here is interface drift rather than data.
+{
+  const css = read('styles.css');
+  ok(!/#[0-9a-f]{3,8}\b|rgba?\s*\(/i.test(css),
+    'component CSS contains no raw palette colors');
+  const workflow = read('.github/workflows/deploy.yml');
+  ok(workflow.includes('tokens.css'), 'Pages artifact includes local design tokens');
 }
 
 // --- the calculators must be self-contained ----------------------------------
