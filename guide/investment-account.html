@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The investment account — Estonian FIRE Simulator</title>
+<meta name="description" content="This is the single most important Estonian FIRE tool. Learn it properly.">
+<link rel="stylesheet" href="../styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
+</head>
+<body class="guide">
+<a class="skip" href="#main">Skip to content</a>
+
+<button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
+
+<nav id="sidebar" class="sidebar" aria-label="Contents">
+  <div class="brand">
+    <span class="brand-mark">FI</span>
+    <span class="brand-text">Estonian&nbsp;FIRE<small>Simulator &amp; guide</small></span>
+  </div>
+  <ul class="nav">
+    <li class="nav-doc"><a class="nav-top" href="../index.html">Start here</a></li>
+
+    <li class="nav-group">Calculators</li>
+    <li class="nav-doc"><a class="nav-top" href="../simulator.html">FIRE calculator</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../pension.html">Pension calculator</a></li>
+
+    <li class="nav-group">Guides</li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/fire-basics.html">FIRE basics</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/tax-overview.html">Estonian tax overview</a></li>
+    <li class="nav-doc active"><a class="nav-top" href="../guide/investment-account.html">The investment account</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/pensions.html">Pension pillars</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/health-insurance.html">Health insurance</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/crypto.html">Crypto</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/real-estate.html">Property & rental income</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/company.html">Using an OÜ</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/portfolio.html">Building the portfolio</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/brokers.html">Brokers & parking cash</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/property.html">Buying a home</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/household.html">Household & children</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/fatfire.html">FatFIRE</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/risks.html">Risks & blind spots</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/protection.html">Account protection</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/levers.html">Strategy levers</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/sources.html">Sources & verification</a></li>
+  </ul>
+  <div class="sidebar-foot">
+    <button id="theme" class="theme" aria-label="Toggle colour theme">
+      <span class="theme-icon" aria-hidden="true"></span><span class="theme-text">Theme</span>
+    </button>
+    <p class="note">Not financial advice. Rates last verified August 2026.</p>
+  </div>
+</nav>
+
+<div class="scrim" id="scrim"></div>
+
+<main id="main" class="main">
+  <div class="wrap">
+    <section class="doc">
+      <h1 class="doc-title">The investment account</h1>
+<p><strong>This is the single most important Estonian FIRE tool.</strong> Learn it properly.</p>
+<h2 id="how-it-works">How it works</h2>
+<p>You designate an ordinary bank account as an investment account and declare it to the tax authority. Then:</p>
+<ul>
+<li>Money <strong>in</strong> = contributions (<code>sissemaksed</code>)</li>
+<li>Money <strong>out</strong> = disbursements (<code>väljamaksed</code>)</li>
+<li><strong>Tax is due only when cumulative disbursements exceed cumulative contributions</strong>, and only on the excess, at 22%</li>
+</ul>
+<p>That's it. Inside the account, you can buy, sell, rebalance, and realise gains <strong>with no tax event at all</strong>. Deferral is indefinite and there is no cap.</p>
+<h2 id="why-this-is-enormous-for-fire">Why this is enormous for FIRE</h2>
+<p><strong>During accumulation:</strong> you can rebalance annually, switch funds when a cheaper one appears, or take profits — none of it triggers tax. The compounding drag that dominates taxable-account investing in most countries is simply absent.</p>
+<p><strong>During decumulation:</strong> this is the part people miss. Because tax is only due once withdrawals <em>exceed contributions</em>, an early retiree can withdraw <strong>their entire contribution base tax-free first</strong>. If you contributed €400k over 15 years and it grew to €900k, your first €400k of withdrawals is <strong>0% tax</strong>. At €40k/year that is <strong>ten years of completely tax-free retirement income</strong> — precisely covering the sequence-risk-critical early window and the bridge to pension age.</p>
+<p>Effectively, Estonia hands you a Roth conversion ladder for free, with no paperwork and no five-year rule.</p>
+<h2 id="constraints-read-carefully">Constraints (read carefully)</h2>
+<p>Eligible assets under TuMS §17¹(2) ✅:</p>
+<ul>
+<li><strong>Publicly traded securities</strong> on a regulated market or MTF in an EEA or OECD state</li>
+<li><strong>Fund units</strong> — UCITS ETFs qualify cleanly</li>
+<li><strong>Bank deposits</strong>, including fixed-term deposits</li>
+<li><strong>Investment-risk life insurance contracts</strong></li>
+<li><strong>Loans and equity via EEA-licensed crowdfunding platforms</strong> (EU Crowdfunding Regulation 2020/1503) — added 2023–24. Unlicensed platforms stay outside</li>
+<li><strong>Crypto-assets bought via a MiCA-licensed provider</strong> — new in 2026</li>
+</ul>
+<p>Constraints:</p>
+<ul>
+<li><strong>All</strong> transactions must flow through the declared account. Buy an asset with outside money and it's outside the regime, permanently, for that asset.</li>
+<li>The <strong>cash account itself</strong> must sit at a bank, payment institution, e-money institution or investment firm. An account held <strong>at</strong> a crowdfunding or crypto platform cannot be the investment account, even though assets bought through such platforms can qualify.</li>
+<li><strong>Direct real estate is not eligible.</strong> Neither is private company equity or physical gold.</li>
+<li>Bookkeeping is on you (declared annually in Form A, table 6.5/7.2). Banks like LHV automate most of it if you use their account.</li>
+<li>Moving money out for a house deposit resets progress against your contribution base — plan large withdrawals deliberately.</li>
+</ul>
+<h2 id="practical-setup">Practical setup</h2>
+<p>The canonical Estonian FIRE portfolio is boring and correct:</p>
+<blockquote>
+<p><strong>Accumulating, Irish-domiciled UCITS ETF (global equity), held inside an investment account.</strong></p>
+</blockquote>
+<ul>
+<li><strong>Accumulating</strong> — no dividend distributions, so no annual taxable events at all even outside IK edge cases, and no reinvestment friction</li>
+<li><strong>Irish-domiciled</strong> (ISIN starts <code>IE00…</code>) — Ireland's US tax treaty means <strong>15%</strong> withholding on US dividends inside the fund instead of 30% for e.g. Luxembourg funds. On a US-heavy global index that's roughly 0.15–0.25%/yr of pure, permanent return</li>
+<li><strong>Never US-domiciled</strong> (<code>US…</code> tickers like VTI, VOO) — US estate tax hits non-resident aliens above <strong>$60,000</strong> with no Estonia–US estate tax treaty to protect you, and PRIIPs rules make them hard to buy from EU brokers anyway</li>
+</ul>
+<p>Brokers: <strong>LHV</strong> (best IK integration, Xetra 0.14% min €5, custody free to €100k then 0.12%/yr), <strong>Lightyear</strong> (Estonian-founded, cheap, IK-aware), <strong>Interactive Brokers</strong> (cheapest at scale, custody outside Estonia, <strong>confirmed IK-eligible</strong> as an EEA investment firm — but IK reporting is manual). Detail in <a href="portfolio.html#lhv-or-ibkr-for-the-etf-itself">portfolio.md</a>.</p>
+<hr />
+      <nav class="pager"><a class="prev" href="tax-overview.html">← Estonian tax overview</a><a class="next" href="pensions.html">Pension pillars →</a></nav>
+    </section>
+  </div>
+</main>
+
+<script src="../src/nav.js"></script>
+</body>
+</html>

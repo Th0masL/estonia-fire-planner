@@ -1,0 +1,1984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pension calculator — Estonian FIRE Simulator</title>
+<meta name="description" content="What an Estonian salary turns into through pension pillars II and III: contributions, the state's 4%, and the pot at unlock.">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
+</head>
+<body class="sim">
+<a class="skip" href="#main">Skip to content</a>
+
+<button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
+
+<nav id="sidebar" class="sidebar" aria-label="Contents">
+  <div class="brand">
+    <span class="brand-mark">FI</span>
+    <span class="brand-text">Estonian&nbsp;FIRE<small>Simulator &amp; guide</small></span>
+  </div>
+  <ul class="nav">
+    <li class="nav-doc"><a class="nav-top" href="index.html">Start here</a></li>
+
+    <li class="nav-group">Calculators</li>
+    <li class="nav-doc"><a class="nav-top" href="simulator.html">FIRE calculator</a></li>
+    <li class="nav-doc active"><a class="nav-top" href="pension.html">Pension calculator</a></li>
+
+    <li class="nav-group">Guides</li>
+    <li class="nav-doc"><a class="nav-top" href="guide/fire-basics.html">FIRE basics</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/tax-overview.html">Estonian tax overview</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/investment-account.html">The investment account</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/pensions.html">Pension pillars</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/health-insurance.html">Health insurance</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/crypto.html">Crypto</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/real-estate.html">Property & rental income</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/company.html">Using an OÜ</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/portfolio.html">Building the portfolio</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/brokers.html">Brokers & parking cash</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/property.html">Buying a home</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/household.html">Household & children</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/fatfire.html">FatFIRE</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/risks.html">Risks & blind spots</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/protection.html">Account protection</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/levers.html">Strategy levers</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/sources.html">Sources & verification</a></li>
+  </ul>
+  <div class="sidebar-foot">
+    <button id="theme" class="theme" aria-label="Toggle colour theme">
+      <span class="theme-icon" aria-hidden="true"></span><span class="theme-text">Theme</span>
+    </button>
+    <p class="note">Not financial advice. Rates last verified August 2026.</p>
+  </div>
+</nav>
+
+<div class="scrim" id="scrim"></div>
+
+<header class="sim-head">
+  <div class="sim-head-inner">
+
+    <h1>What a salary is worth as a pension</h1>
+    <p class="lede">Estonian pension maths is counter-intuitive in two ways that matter when
+      deciding whether a job is worth taking. The state adds <strong>4% of gross</strong> to your
+      second pillar on top of your own contribution — money you get only if you are employed. And
+      the first <strong>€8,400 a year</strong> of any salary is free of income tax, so a modest
+      wage keeps far more of itself than a large one.</p>
+    <p class="privacy">🔒 Runs entirely in your browser. Nothing is uploaded.</p>
+  </div>
+</header>
+
+<main id="main" class="sim-main">
+  <section class="panel" aria-label="Details">
+    <div class="panel-head"><h2>Details</h2></div>
+
+    <fieldset>
+      <legend>The job</legend>
+      <div class="grid">
+        <label>Birth year <input type="number" id="birthYear" min="1930" max="2015" step="1" value="1990"></label>
+        <label>Gross salary <span class="u">€/mo</span><input type="number" id="gross" min="0" step="100" value="1200"></label>
+        <label>Work until age <input type="number" id="until" min="20" max="75" step="1" value="63"></label>
+        <label>Pillar II rate
+          <select id="rate">
+            <option value="0.02">2% — the default</option>
+            <option value="0.04">4%</option>
+            <option value="0.06">6%</option>
+          </select></label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Already saved</legend>
+      <div class="grid">
+        <label>Pillar II balance <span class="u">€</span><input type="number" id="have2" min="0" step="500" value="0"></label>
+        <label>Pillar III balance <span class="u">€</span><input type="number" id="have3" min="0" step="500" value="0"></label>
+        <label>Pillar III paid in <span class="u">€/yr</span><input type="number" id="p3" min="0" step="500" value="0"></label>
+        <label>Real return <span class="u">%</span><input type="number" id="ret" min="0" max="12" step="0.1" value="5"></label>
+      </div>
+      <p class="hint">Pillar III is capped at the lower of 15% of gross and €6,000, and the 22%
+        refund cannot exceed the income tax actually paid — so on a small salary it is worth
+        little or nothing.</p>
+      <p class="sub">Health cover</p>
+      <div class="checks">
+        <label><input type="checkbox" id="uninsured" checked> Would otherwise pay for health insurance</label>
+      </div>
+      <p class="hint">Estonian health cover follows social tax, not residency. Someone not employed
+        generally needs a voluntary contract, so a job removes that cost. Untick if cover comes
+        from somewhere else — parental benefit, raising a child under 3, or a large family.</p>
+    </fieldset>
+  </section>
+
+  <section class="panel results" id="out" aria-live="polite"></section>
+</main>
+
+<footer class="sim-foot">
+  <p>Not financial advice. See <a href="guide/pensions.html">the pensions guide</a> for the rules
+    and sources, or the <a href="simulator.html">full simulator</a> for a whole FIRE plan.</p>
+</footer>
+
+<script type="module">
+/* ---- format.js ---- */
+// Shared display formatting. Kept in one place so the calculator and the
+// action-plan text can never disagree about how a number is written.
+//
+// Every formatter guards against non-finite input. Divisions by an income of
+// zero, an FI date that never arrives and a corrupted share link all produce
+// Infinity or NaN legitimately, and a page reading "DSTI NaN%" is worse than
+// one reading "—". The guard lives here rather than at each call site because
+// there are dozens of call sites and only one of these.
+
+const GUARD = '—';
+
+const eur = (n) => (Number.isFinite(n)
+  ? '€' + Math.round(n).toLocaleString('en-IE')
+  : GUARD);
+
+const pct = (n) => (Number.isFinite(n) ? (n * 100).toFixed(0) + '%' : GUARD);
+
+const pct1 = (n) => (Number.isFinite(n) ? +(n * 100).toFixed(2) + '%' : GUARD);
+
+/* ---- explain.js ---- */
+// Click-to-open explanations: a small (i) beside a term that has to stay short
+// in a table but needs a sentence or two to be honest about what it means.
+//
+// Inline rather than a hover tooltip, so it works on touch and can run long.
+//
+// Which ones are open is held here rather than in the DOM, because the results
+// panel is rebuilt on every keystroke - anything stored in the markup would snap
+// shut as you type.
+//
+// NB the class is `explain`, not `info`. Findings already carry `info` as a
+// severity class, and a `.info` rule would match `.finding.info` too.
+
+const open = new Set();
+
+/** The (i) button. `key` must be unique per page and stable across renders. */
+const infoBtn = (key) =>
+  `<button type="button" class="explain" data-info="${key}" aria-expanded="${open.has(key)}"
+    aria-label="What this means">i</button>`;
+
+// Every body carries `data-info-body`, including the generated ones. Without it
+// a panel is only ever opened by the render pass that produced it - which is
+// wrong for anything the toggle does not redraw, such as the person cards, whose
+// markup is rebuilt on add/remove but not on a click.
+
+/** The explanation, as a full-width row inside a table.mini. */
+const infoRow = (key, text) =>
+  `<tr class="explain-row" data-info-body="${key}"${open.has(key) ? '' : ' hidden'}>` +
+  `<td colspan="2">${text}</td></tr>`;
+
+/** The explanation, for anywhere that is not a table. */
+const infoNote = (key, text) =>
+  `<p class="explain-body" data-info-body="${key}"${open.has(key) ? '' : ' hidden'}>${text}</p>`;
+
+/**
+ * Bring every panel on the page into line with the open set, wherever it came
+ * from. Pair a button with a body by key:
+ *
+ *   <button class="explain" data-info="buffer">i</button>
+ *   <p class="explain-body" data-info-body="buffer" hidden>...</p>
+ */
+function syncPanels() {
+  document.querySelectorAll('[data-info-body]').forEach((el) => {
+    el.hidden = !open.has(el.dataset.infoBody);
+  });
+  document.querySelectorAll('.explain[data-info]').forEach((b) => {
+    b.setAttribute('aria-expanded', open.has(b.dataset.info));
+  });
+}
+
+/**
+ * Install the toggle. `rerender` rebuilds the results from the open set, so
+ * there is one source of truth and no state stranded in the markup; static
+ * panels are toggled directly, since nothing redraws them.
+ */
+function bindExplain(rerender) {
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-info]');
+    if (!btn) return;
+    const key = btn.dataset.info;
+    if (open.has(key)) open.delete(key); else open.add(key);
+    rerender();
+    syncPanels();
+  });
+  syncPanels();
+}
+
+/* ---- rates.js ---- */
+// Estonian tax, social and pension rates.
+//
+// Everything the engine needs that a politician can change lives here, with the
+// date it took effect. Estonia has moved income tax, VAT and the basic exemption
+// three times in three years, so the annual update should be a five-minute edit
+// of this file and nothing else.
+
+const RATES = {
+  year: 2026,
+  lastVerified: '2026-08',
+
+  incomeTax: 0.22,                    // flat, from 2025-01-01
+  vat: 0.24,                          // added to bank custody fees, see brokers
+  basicExemptionMonthly: 700,         // universal from 2026-01-01, no income taper
+  basicExemptionPensionAge: 776,
+
+  unemploymentInsuranceEmployee: 0.016,
+  socialTax: 0.33,
+  socialTaxMinimumBaseMonthly: 886,   // -> EUR 292.38/mo minimum obligation
+  minimumWageMonthly: 946,            // from 2026-04-01; solidarity-component threshold
+  minimumAnnualWageForPension: 3 * 886 + 9 * 946, // 2026 Jan-Mar / Apr-Dec
+
+  pillar2: {
+    employeeRates: [0.02, 0.04, 0.06],  // own choice; 2% is the default
+    stateRate: 0.04,                    // FIXED - does not scale with your choice
+    rateChangeDeadline: '11-30',        // apply by 30 Nov, effective 1 Jan
+    earlyExitTax: 0.22,                 // all-or-nothing, whole balance
+    rejoinWaitYears: 10,
+    payout: { annuity: 0, fundPensionRecommended: 0, lumpSum: 0.10 },
+    // A pension contract pays a FIXED NOMINAL amount, set at signing from the
+    // premium, your age and a guaranteed interest rate. There is no CPI or wage
+    // link. The only route to an increase is "lisakasum", a share of the
+    // insurer's technical profit - and Compensa's own terms §14.1 state it has
+    // no obligation to pay it and you have no right to demand it. §14.4 lets a
+    // rise below 5% be paid as a one-off instead of raised into the payment, so
+    // small allocations never compound. Modelled as zero: an unenforceable
+    // discretionary top-up is not something to plan on.
+    annuityIndexed: false,
+    annuityProfitShareGuaranteed: false,
+    // The tax-free payout duration is remaining life expectancy at the age you
+    // start, from Statistics Estonia, rounded to the nearest whole year and taken from
+    // the life table of the year before last.
+    //
+    // Only the age-65 figure is confirmed: 19.3 years combined - 16.3 for men,
+    // 21.4 for women. The spread is five years, so a household figure is a
+    // simplification. Statistics Estonia publishes every age (OE045) but those
+    // values are not to hand, and the curve flattens with age so interpolation
+    // is unreliable; the decline below is an estimate and should be replaced
+    // with the real table. Pensionikeskus's own calculator is authoritative.
+    payoutYearsAtAge: 65,
+    payoutYearsAtAnchor: 19.3,
+    payoutYearsPerYearOfAge: 0.75,       // ESTIMATE - see above
+    annuityYears: 19,                    // the anchor, rounded as the rules do
+
+    // Only Compensa Life still writes these contracts, and an insurer may
+    // refuse a balance too small to be worth administering. Two findings from
+    // the 2026 research matter more than the count itself:
+    annuityProviders: 1,
+    // KindlTS §590 classes it as voluntary insurance, so no insurer is obliged
+    // to offer one to anybody.
+    annuityStatutoryObligation: false,
+    // Sotsiaalkindlustusamet took over servicing contracts from insurers that
+    // left, but writes no new ones. If the last seller stops, there is no
+    // backstop for someone retiring after that.
+    annuityStateFallbackForNewContracts: false,
+  },
+
+  pillar3: {
+    maxAnnual: 6000,
+    maxShareOfGross: 0.15,
+    refundRate: 0.22,                   // capped by income tax actually paid
+    transferableBetweenSpouses: false,  // TuMS 28-2(1-1) covers 25 & 26 only
+    minHoldYears: 5,
+    payout: { beforeUnlock: 0.22, lumpSumAfter: 0.10, lifetimeAnnuity: 0 },
+  },
+
+  // Pillar I, the state pension. RPKS §11(1): baasosa + staažiosak (pre-1999
+  // service) + kindlustusosak (1999-2020) + ühendosa (2021 on), the last three
+  // sharing one per-unit annual rate. Indexed each 1 April by 20% CPI growth
+  // + 80% growth in the pension share of social tax receipts; the 2026 index
+  // was 1.053.
+  //
+  // Self-check: the published average for a 44-year career is EUR 860.23, and
+  // 399.24 + 44 x 10.477 = 860.23 exactly - so one year at the average wage is
+  // worth a coefficient of 1.0, as the law intends.
+  pillar1: {
+    baseMonthly: 399.24,              // baasosa, flat, from 2026-04-01
+    yearRateMonthly: 10.477,          // aastahinne, per unit of coefficient
+    averagePensionMonthly: 860.23,    // the 44-year-service benchmark
+    // RPKS 11-1, from 2021: uhendosa = (solidaarosak + kindlustusosak) / 2.
+    //   kindlustusosak = your wage / the national average that year. Uncapped.
+    //   solidaarosak   = 1.000 for a full year of social tax at or above the
+    //                    minimum wage, and never more than that.
+    // Hence the memorandum's own examples: half the average wage earns 0.75 a
+    // year, the average earns 1.0, twice the average earns 1.5 - not 2.0,
+    // because half the formula is frozen at the ceiling.
+    solidarityWeight: 0.5,
+    solidarityMax: 1.0,
+
+    // RPKS 13-1(1): a Pillar II member has 16% of gross flowing into Pillar I
+    // instead of 20%, because 4 points are diverted into their own fund. Both
+    // halves of the uhendosa fall by that same 16/20, and a member's
+    // solidaarosak is separately capped at 0.800 rather than 1.000 - so a
+    // member accrues exactly 0.8x a non-member for identical earnings.
+    //
+    // This is the cost side of Pillar II, and it is not small: a 40-year average
+    // earner gets EUR 818.32 outside it and EUR 734.50 inside. The diverted 4%
+    // plus your own contribution is meant to more than repay that, which is
+    // exactly the comparison the pension calculator exists to make.
+    pillar2MemberFactor: 0.8,
+    minServiceYears: 15,              // below this it is rahvapension instead
+    nationalPensionMonthly: 414.10,
+
+    // RPKS 9-1: the "paindlik vanaduspension" - the state pension itself taken
+    // up to five years early, or deferred. The old fixed 0.4%/month early and
+    // 0.9%/month deferred rates were replaced in 2021 by a multiplier that
+    // depends on your birth date and is recalculated each 1 January, so these
+    // are Sotsiaalkindlustusamet's published FORECAST, not a guaranteed rate.
+    // Whatever applies when the pension is assessed is then permanent for life.
+    //
+    // Note the asymmetry: deferring pays more than claiming early costs.
+    flexibleAdjustment: {
+      // SKA forecast published for 2026. These are not guaranteed future rates:
+      // the coefficient is recalculated annually and depends on the assessment date.
+      '-5': -0.3067, '-4': -0.2550, '-3': -0.1988, '-2': -0.1378, '-1': -0.0717,
+      '0': 0,
+      '1': 0.0793, '2': 0.1688, '3': 0.2701, '4': 0.3850, '5': 0.5157,
+    },
+    // RPKS 9-1(2): how much service each year of early drawing requires. Steep,
+    // and it lands badly on exactly the people most interested in it - a short
+    // career is the whole point of retiring early, and it is what disqualifies
+    // you here.
+    earlyDrawingServiceYears: { 1: 20, 2: 25, 3: 30, 4: 35, 5: 40 },
+    maxEarlyYears: 5,
+  },
+
+  // Statistics Estonia's 2025 annual average, and the same figure the voluntary
+  // health premium is built from: RaKS §24(3) sets that premium at 0.13 x the
+  // last published average gross monthly wage, rounded to 10 cents, which is
+  // 2092 x 0.13 = 271.96 -> EUR 272.00. So the two are statutorily linked, and
+  // each confirms the other.
+  averageGrossWageMonthly: 2092,
+
+  // Both pillars unlock at the "flexible retirement age" = state pension age - 5.
+  // State pension age is life-expectancy linked from 2027, published 2 years
+  // ahead, capped at +3 months/year. No official figure exists beyond ~2028.
+  pensionAge: {
+    // Confirmed statutory ages by birth year. Older cohorts are included so an
+    // already-retired person's health/tax dates are not back-cast from 2026.
+    knownByBirthYear: {
+      1953: 63, 1954: 63 + 3 / 12, 1955: 63 + 6 / 12,
+      1956: 63 + 9 / 12, 1957: 64, 1958: 64 + 3 / 12,
+      1959: 64 + 6 / 12, 1960: 64 + 9 / 12, 1961: 65,
+      1962: 65 + 1 / 12, 1963: 65 + 3 / 12,
+    },
+    knownByCalendarYear: { 2026: 65, 2027: 65 + 1 / 12, 2028: 65 + 3 / 12 },
+    driftMonthsPerYearEstimate: 1.5,
+    maxDriftMonthsPerYear: 3,
+    pillarUnlockOffsetYears: -5,
+  },
+
+  healthInsurance: {
+    // RaKS §24(3): 0.13 x the last published average gross monthly wage, rounded
+    // to 10 cents, recalculated once a year after Statistics Estonia publishes.
+    voluntaryMonthly: 272,
+    voluntaryWaitMonths: 1,           // §24(4): cover starts a month after signing
+    voluntaryMinTermYears: 1,         // §24(2): the contract runs at least a year
+    voluntaryEndsIfMovingAbroad: true,  // §24(7), new from 2026-01-01
+    childrenCoveredToAge: 19,
+    // Two different provisions, routinely conflated because both are called the
+    // "dependent spouse" route:
+    //   - the CHILDREN-based one was abolished, cover ending 2026-01-31;
+    //   - RaKS §5(4)(4), for a dependent spouse or registered partner within
+    //     five years of pension age, is still in force (RT I, 06.07.2023, 6).
+    // The second needs no children, but does need the supporting spouse to be
+    // an insured person - so it lapses the moment they stop working too, which
+    // is exactly when a FIRE household would want it.
+    dependentSpouseChildrenRouteAbolished: '2026-01-31',
+    dependentSpouseNearPensionYears: 5,
+    ownRightRoutes: ['parental benefit', 'raising a child under 3', 'large family allowance'],
+  },
+
+  investmentAccount: {
+    // Tax is computed across ALL declared accounts together, not per account.
+    aggregatedAcrossAccounts: true,
+    transfersBetweenOwnAccountsTaxNeutral: true,   // TuMS 17-2(4)
+    currencyConversionIsDisbursement: false,       // TuMS 17-2
+  },
+
+  rental: { autoExpenseDeduction: 0.20 },   // residential only -> 17.6% effective
+
+  crypto: {
+    taxRate: 0.22,
+    // Since 2025 this depends on whether the service provider is MiCA-authorised.
+    lossOffsetAllowedWithMicaProvider: true,
+    lossOffsetAllowedWithoutMicaProvider: false,
+    investmentAccountEligibleWithMicaProvider: true,
+    swapIsDisposal: true,
+  },
+
+  mortgage: {
+    maxLtv: 0.85, maxLtvWithKredEx: 0.90,
+    maxDsti: 0.50, maxTermYears: 30, stressRate: 0.06,
+    earlyRepaymentCapMonthsInterest: 3,
+    interestDeductible: false,          // abolished 2024
+  },
+
+  protection: {
+    depositGuarantee: 100_000,          // per depositor per credit institution
+    depositGuaranteeJointPerHolder: true,
+    // TFS §25²: an extra tranche, for six months, on money from a residential
+    // property sale. Tagatisfond's current guidance confirms the extra EUR 100k.
+    temporaryHighBalance: 100_000,
+    temporaryHighBalanceMonths: 6,
+    investorCompensation: 20_000,       // backstop only; fund assets are segregated
+  },
+
+  // COMMERCIAL, not statutory. A broker changes these whenever it likes, which
+  // is exactly why they belong here rather than being typed into the prose --
+  // they will go stale faster than anything set by law.
+  brokers: {
+    // Custody on foreign securities. Both banks charge only on the part above
+    // the threshold, monthly. Swedbank's cap is the figure that matters: it
+    // turns a percentage into a flat maximum, which changes the answer at size.
+    custodyFreeThreshold: 100_000,
+    lhvCustodyAboveMonthly: 0.0001,     // 0.01%/month, no cap
+    lhvCustodyAboveAnnual: 0.0012,
+    swedbankCustodyAboveMonthly: 0.00008, // 0.008%/month...
+    swedbankCustodyMonthlyCap: 8,       // ...but never more than this
+    commissionRate: 0.0014,             // LHV and Swedbank both, foreign markets
+    swedbankMinCommission: 3.90,
+    lhvMinCommission: 5.00,
+    lightyearFxFee: 0.0035,
+    lightyearMoneyMarketFee: 0.0010,
+    // VAT is added to Swedbank's custody fee unless the account holds nothing
+    // but fund units. An all-ETF portfolio - which is what this guide builds -
+    // is exempt. Hold single shares or bonds alongside them and the whole fee
+    // gains 24%. LHV's treatment of the same fee is not published; assume VAT.
+    custodyVatExemptForFundsOnly: true,
+  },
+
+  // Market rates, unlike everything else in this file, are not law and move on
+  // their own. Dated so a reader can see how stale they are, and kept here so
+  // there is one place to refresh rather than several pages to hunt through.
+  marketRates: {
+    asOf: 'August 2026',
+    ecbDepositFacility: 0.0225,       // ECB, effective 17 June 2026
+    moneyMarketFundNet: 0.022,        // roughly EUR STR after a 0.10% fund fee
+    lightyearSavings: 0.0221,         // their published headline
+    ibkrEurCash: 0.01691,             // published full tier, checked August 2026
+    ibkrCashThreshold: 10_000,        // no interest at all below this
+    ibkrFullRateNav: 100_000,         // below this the rate is scaled down
+    termDepositBest: 0.030,           // smaller banks competing for funding
+    termDepositBigBanks: 0.023,       // LHV, SEB, Swedbank, top of their range
+  },
+};
+
+// Planning assumptions - not law, and the user should be able to change them.
+const DEFAULTS = {
+  realReturn: 0.05,
+  cashRealReturn: 0,
+  swr: 0.035,
+  // Real spending growth after FI: how fast the cost of the same life rises
+  // ABOVE inflation. Zero means today's spending stays valid in today's money
+  // forever, which is the standard FIRE assumption and probably a little
+  // optimistic - care and health costs outrun the general index, and lifestyle
+  // drifts. Left at zero by default because it is a judgement, not a fact.
+  spendingGrowth: 0,
+  // Only used for one thing: eroding a pension annuity, which is fixed in
+  // NOMINAL euros. Everything else on the site is in real terms and needs no
+  // inflation figure at all. 2.5% rather than the ECB's 2% target because
+  // Estonian inflation has run above the euro-area average.
+  inflation: 0.025,
+  // 100, not 95. Estonian remaining life expectancy at 65 is about 19 years, so
+  // an average pensioner reaches ~84 - but the horizon has to cover the person
+  // who lives longest, and for a couple the chance one of them passes 95 is not
+  // small. Fifteen extra years costs surprisingly little, because money needed
+  // that far out is discounted by decades of compounding.
+  planToAge: 100,
+  emergencyFundMonths: 6,
+  // Two independent questions, kept independent. What the PORTFOLIO must do:
+  //   'perpetual' - never fall below the capital that funds permanent spending
+  //                 at the withdrawal rate, so it lasts indefinitely.
+  //   'drawdown'  - only has to reach planToAge, spending down to nothing.
+  portfolioEnd: 'perpetual',
+  // And which PENSIONS count, which changes the income in either case:
+  //   'ignore' | 'ownPots' (II and III) | 'all' (plus Pillar I).
+  pensionPolicy: 'ignore',
+  // 'unlock'       - draw the pots as soon as the law allows, state pension age - 5.
+  // 'statePension' - leave them to compound and start everything together.
+  pillarDrawAge: 'unlock',
+  // 'annuity'     - eluaegne pensionileping: paid for life, 0% tax, one seller.
+  // 'fundPension' - fondipension: 0% tax at the recommended duration, but it
+  //                 runs out, and the portfolio has to cover what follows.
+  pillarPayout: 'annuity',
+  // How much of each pension to actually believe. 1 = count it in full. The two
+  // are separate because they fail for different reasons: your own pots are a
+  // balance whose future VALUE is uncertain (returns, fees, annuity pricing),
+  // while the state pension is a political promise that can simply be changed.
+  potsCountedShare: 1,
+  stateCountedShare: 1,
+  // Years the state pension is drawn before the standard age, 0-5. Worth more
+  // than it looks: health cover follows receipt of a state pension, so drawing
+  // early ends the voluntary contract early too.
+  statePensionEarlyYears: 0,
+  // Years of working past the earliest date the plan allows. The solver finds a
+  // boundary, not a target: by construction it leaves no margin at all, so this
+  // is how margin gets bought.
+  bufferYears: 0,
+  transactionCostRate: 0.02,          // notary, state fee, valuation, bank fee
+};
+
+/* ---- calc.js ---- */
+// Estonian FIRE Simulator - calculation engine.
+//
+// Pure functions only: no DOM, no storage, no side effects. Everything the site
+// displays is derived here, so the numbers in the guide and the numbers in the
+// calculator can never drift apart.
+//
+// Model: a household of one or two people. All income is pooled and all spending
+// is shared, so there is one household FI target and one timeline. Income and
+// wrappers are still tracked per person because almost every Estonian allowance
+// is per person, and the household surplus is split between people by a
+// configurable share - that share decides who *owns* the resulting portfolio,
+// not who needs what. What would happen on separation is out of scope.
+
+const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+const annuityFactor = (r, n) => (r === 0 ? n : ((1 + r) ** n - 1) / r);
+const overlapYears = (from, to, activeFrom = -Infinity, activeTo = Infinity) =>
+  Math.max(0, Math.min(to, activeTo) - Math.max(from, activeFrom));
+
+// ---------------------------------------------------------------- income tax
+
+/** Estonian take-home from a gross annual salary. */
+function netFromGross(grossAnnual, { pillar2Rate = 0.02, pensionAge = false } = {}) {
+  const ui = grossAnnual * RATES.unemploymentInsuranceEmployee;
+  const p2 = grossAnnual * pillar2Rate;
+  const exemption =
+    12 * (pensionAge ? RATES.basicExemptionPensionAge : RATES.basicExemptionMonthly);
+  const taxable = Math.max(0, grossAnnual - ui - p2 - exemption);
+  const incomeTax = taxable * RATES.incomeTax;
+  return {
+    gross: grossAnnual,
+    unemploymentInsurance: ui,
+    pillar2Employee: p2,
+    pillar2State: grossAnnual * RATES.pillar2.stateRate,
+    taxable,
+    incomeTax,
+    net: grossAnnual - ui - p2 - incomeTax,
+    effectiveRate: grossAnnual > 0 ? (ui + p2 + incomeTax) / grossAnnual : 0,
+  };
+}
+
+/** Deductible Pillar III contribution and the refund it actually produces. */
+function pillar3(grossAnnual, contributionAnnual = null, { pillar2Rate = 0.02 } = {}) {
+  const cap = Math.min(RATES.pillar3.maxAnnual, grossAnnual * RATES.pillar3.maxShareOfGross);
+  const contribution = contributionAnnual === null ? cap : Math.min(contributionAnnual, cap);
+  const incomeTaxPaid = netFromGross(grossAnnual, { pillar2Rate }).incomeTax;
+  // The refund is a deduction against your own tax: no tax, no refund, and it
+  // cannot be transferred to a spouse.
+  const refund = Math.min(contribution * RATES.pillar3.refundRate, incomeTaxPaid);
+  // What the refund would be if the allowance were used in full - that is the
+  // number a rule needs in order to say what is being left unclaimed.
+  const maxRefund = Math.min(cap * RATES.pillar3.refundRate, incomeTaxPaid);
+  return {
+    cap, contribution, refund, maxRefund,
+    unclaimed: Math.max(0, maxRefund - refund),
+    wasted: contribution * RATES.pillar3.refundRate - refund,
+  };
+}
+
+// ------------------------------------------------------------------ pensions
+
+/** Projected state pension age for a birth year, and when the pillars unlock. */
+function pensionAges(birthYear) {
+  const { knownByBirthYear, knownByCalendarYear, driftMonthsPerYearEstimate, pillarUnlockOffsetYears } =
+    RATES.pensionAge;
+  const yearTurning65 = birthYear + 65;
+  const known = Object.keys(knownByCalendarYear).map(Number).sort();
+  const lastKnownYear = known[known.length - 1];
+  let stateAge;
+  let confirmed = false;
+  if (knownByBirthYear?.[birthYear] != null) {
+    stateAge = knownByBirthYear[birthYear];
+    confirmed = true;
+  } else if (knownByCalendarYear[yearTurning65] != null) {
+    stateAge = knownByCalendarYear[yearTurning65];
+    confirmed = true;
+  } else if (yearTurning65 > lastKnownYear) {
+    stateAge = knownByCalendarYear[lastKnownYear];
+    confirmed = false;
+    stateAge += ((yearTurning65 - lastKnownYear) * driftMonthsPerYearEstimate) / 12;
+  } else {
+    // Only relevant to already-retired cohorts absent from the recent transition
+    // table. Keep the date conservative and explicitly mark it unconfirmed.
+    stateAge = 65;
+  }
+  return {
+    statePensionAge: stateAge,
+    pillarUnlockAge: stateAge + pillarUnlockOffsetYears,
+    confirmed,
+    estimateRange: confirmed ? null : {
+      min: knownByCalendarYear[lastKnownYear],
+      max: knownByCalendarYear[lastKnownYear] +
+        ((yearTurning65 - lastKnownYear) * RATES.pensionAge.maxDriftMonthsPerYear) / 12,
+    },
+    note: confirmed ? null :
+      'Scenario midpoint only; the official age has not been published. Use the displayed range.',
+  };
+}
+
+/**
+ * Monthly Pillar I entitlement for a career of `yearsWorked` at `grossAnnual`.
+ *
+ * The accrual is what makes this matter to a FIRE plan: stopping work stops the
+ * coefficient accumulating, so retiring early cuts the state pension in direct
+ * proportion to the years given up. Only the post-2021 ühendosa rule is
+ * modelled - earlier years accrued on a slightly different basis, which moves
+ * the answer by a few euros a month and cannot be reconstructed without a full
+ * contribution history.
+ */
+/**
+ * Income tax on a state pension. Pillar I *is* taxable, unlike a Pillar II
+ * lifetime annuity, but pension age carries a larger basic exemption and there
+ * is normally no other income left to use it against.
+ */
+function statePensionNet(grossAnnual, { pensionAge = true } = {}) {
+  const exemption = 12 * (pensionAge
+    ? RATES.basicExemptionPensionAge : RATES.basicExemptionMonthly);
+  const taxable = Math.max(0, grossAnnual - exemption);
+  return { gross: grossAnnual, taxable, tax: taxable * RATES.incomeTax,
+           net: grossAnnual - taxable * RATES.incomeTax };
+}
+
+/** Coefficient earned per year of work at a given wage, in or out of Pillar II. */
+function pillar1UnitsPerYear(grossAnnual, inPillar2 = true) {
+  const p1 = RATES.pillar1;
+  const averageAnnual = 12 * RATES.averageGrossWageMonthly;
+  const wageRatio = averageAnnual > 0 ? grossAnnual / averageAnnual : 0;
+  // Belonging to Pillar II costs 20% of the accrual, on both halves.
+  const factor = inPillar2 ? p1.pillar2MemberFactor : 1;
+  const minimumAnnual = RATES.minimumAnnualWageForPension;
+  const solidarity = Math.min(p1.solidarityMax,
+    minimumAnnual > 0 ? Math.max(0, grossAnnual) / minimumAnnual : 0) * factor;
+  const insurance = wageRatio * factor;           // uncapped, then reduced
+  return solidarity * p1.solidarityWeight + insurance * (1 - p1.solidarityWeight);
+}
+
+/**
+ * Pillar I from coefficient units rather than from a career length.
+ *
+ * `unitsSoFar` is what has actually accrued — the figure Sotsiaalkindlustusamet
+ * holds and shows in the self-service portal. It is the honest input: it already
+ * accounts for years abroad, months out of work and a salary that changed, none
+ * of which a "started working at age" guess can represent. Someone who moved to
+ * Estonia mid-career is the case that guess gets badly wrong, and it gets it
+ * wrong in the flattering direction.
+ *
+ * `serviceYears` is used only for the 15-year earned-pension threshold. This
+ * standalone function returns zero below it; national-pension residence and
+ * foreign-pension conditions must be established separately by the caller.
+ */
+function pillar1Monthly({
+  grossAnnual, unitsSoFar = 0, futureYears = 0, serviceYears = null, inPillar2 = true,
+}) {
+  const p1 = RATES.pillar1;
+  const perYear = pillar1UnitsPerYear(grossAnnual, inPillar2);
+  const future = Math.max(0, futureYears);
+  const units = Math.max(0, unitsSoFar) + perYear * future;
+  // Service is counted in years worked, not in units earned.
+  const service = serviceYears == null ? future : Math.max(0, serviceYears);
+  if (service < p1.minServiceYears) return 0;
+  return p1.baseMonthly + p1.yearRateMonthly * units;
+}
+
+/**
+ * What the pension pillars turn a given salary into. Deliberately standalone:
+ * it answers "is this job worth it for my pension?" without needing a whole
+ * household plan.
+ */
+function pillarProjection({
+  birthYear, grossMonthly, pillar2Rate = 0.02, pillar3Annual = 0,
+  workUntilAge = null, realReturn = 0.05, currentYear = RATES.year,
+  startingPillar2 = 0, startingPillar3 = 0,
+}) {
+  const gross = (grossMonthly || 0) * 12;
+  const ages = pensionAges(birthYear);
+  const ageNow = currentYear - birthYear;
+  const unlockAge = ages.pillarUnlockAge;
+  const stopAge = Math.min(workUntilAge ?? unlockAge, unlockAge);
+  const yearsWorking = Math.max(0, stopAge - ageNow);
+  const yearsToUnlock = Math.max(0, unlockAge - ageNow);
+  const idleYears = yearsToUnlock - yearsWorking;
+
+  const tax = netFromGross(gross, { pillar2Rate });
+  const p3 = pillar3(gross, pillar3Annual, { pillar2Rate });
+
+  const ownAnnual = gross * pillar2Rate;
+  const stateAnnual = gross * RATES.pillar2.stateRate;
+
+  const af = annuityFactor(realReturn, yearsWorking);
+  const idle = (1 + realReturn) ** idleYears;
+  const grow = (v) => v * af * idle;
+
+  const pot2 = startingPillar2 * (1 + realReturn) ** yearsToUnlock +
+    grow(ownAnnual) + grow(stateAnnual);
+  const pot3 = startingPillar3 * (1 + realReturn) ** yearsToUnlock +
+    grow(p3.contribution);
+
+  // A fund pension paced over the statistically recommended duration is taxed
+  // at 0%. Remaining life expectancy at that age is roughly 20 years.
+  const payoutYears = 20;
+  const monthlyPension = (pot2 + pot3) / payoutYears / 12;
+
+  return {
+    ageNow, unlockAge, unlockYear: birthYear + unlockAge, yearsWorking, yearsToUnlock,
+    pensionAgeConfirmed: ages.confirmed, pensionAgeRange: ages.estimateRange,
+    tax, pillar3: p3,
+    contributions: {
+      ownAnnual, stateAnnual, totalAnnual: ownAnnual + stateAnnual,
+      ownMonthly: ownAnnual / 12, stateMonthly: stateAnnual / 12,
+      pillar3Annual: p3.contribution, refund: p3.refund,
+    },
+    // Out of pocket: your Pillar II slice plus Pillar III, less the refund.
+    netCostAnnual: ownAnnual + p3.contribution - p3.refund,
+    pot2, pot3, total: pot2 + pot3,
+    monthlyPension, payoutYears,
+  };
+}
+
+// ----------------------------------------------------------------- mortgage
+
+function mortgage({ price, deposit, termYears, rate, collateralValue = price }) {
+  const loan = Math.max(0, price - Math.min(price, deposit));
+  const ltv = collateralValue > 0 ? loan / collateralValue : Infinity;
+  const pay = (r) => {
+    const i = r / 12, n = termYears * 12;
+    return i === 0 ? loan / n : (loan * i) / (1 - (1 + i) ** -n);
+  };
+  const monthly = pay(rate);
+  const stressed = pay(Math.max(rate, RATES.mortgage.stressRate));
+  return {
+    loan, ltv, monthly, stressedMonthly: stressed,
+    totalInterest: monthly * termYears * 12 - loan,
+    withinLtvLimit: ltv <= RATES.mortgage.maxLtv,
+    balanceAfter(years) {
+      const i = rate / 12, n = termYears * 12, k = Math.min(years * 12, n);
+      if (i === 0) return loan * (1 - k / n);
+      return (loan * ((1 + i) ** n - (1 + i) ** k)) / ((1 + i) ** n - 1);
+    },
+  };
+}
+
+// --------------------------------------------------------------- the engine
+
+/**
+ * @param {object} input - see docs/DATA-MODEL.md
+ * @returns a fully derived plan
+ */
+function simulate(input) {
+  const a = { ...DEFAULTS, ...(input.assumptions || {}) };
+  const hh = input.household;
+  const people = input.persons.map((p) => ({ ...p }));
+
+  // ---- income -------------------------------------------------------------
+  for (const p of people) {
+    const gross = (p.income.grossMonthly || 0) * 12;
+    const derived = netFromGross(gross, { pillar2Rate: p.pillar2Rate ?? 0.02 });
+    p.grossAnnual = gross;
+    // Trust an explicitly supplied net figure over the model.
+    p.netAnnual = p.income.netMonthly != null ? p.income.netMonthly * 12 : derived.net;
+    p.tax = derived;
+    // Unspecified means "not contributing", not "assume the maximum" - otherwise
+    // the unused-allowance finding would never surface for someone who hasn't started.
+    p.pillar3 = pillar3(gross, p.pillar3Annual ?? 0, {
+      pillar2Rate: p.pillar2Rate ?? 0.02,
+    });
+    p.employed = gross > 0;
+    p.hasHealthInsurance = p.employed || !!p.healthInsurance;
+  }
+
+  // Non-salary income belongs to the person who owns the asset producing it,
+  // which matters when working out what each of them would have alone.
+  for (const p of people) p.otherNetAnnual = (p.income.otherNetMonthly || 0) * 12;
+  // Legacy household-level rental is attributed to the first person.
+  const legacyRental = (hh.rentalIncomeNetMonthly || 0) * 12;
+  if (legacyRental) people[0].otherNetAnnual += legacyRental;
+
+  const rentalNet = people.reduce((s, p) => s + p.otherNetAnnual, 0);
+  const householdNetIncome = people.reduce((s, p) => s + p.netAnnual + p.otherNetAnnual, 0);
+
+  // ---- pension dates ------------------------------------------------------
+  // Needed this early because they decide when health cover stops being an
+  // expense, which feeds the spending figures below.
+  const currentYear = input.currentYear || RATES.year;
+  const drawAtStatePensionAge = (a.pillarDrawAge || 'unlock') === 'statePension';
+
+  // The state pension may be taken up to five years early, but each year of it
+  // demands five more years of service - and a short career is precisely what
+  // early retirement produces. So the request is capped by what the person has
+  // actually accrued, and the cap is reported rather than silently applied.
+  const earlyRequested = Math.max(0, Math.min(
+    RATES.pillar1.maxEarlyYears, Math.round(a.statePensionEarlyYears || 0)));
+  const earlyAllowedFor = (serviceYears) => {
+    let allowed = 0;
+    for (const [years, needed] of Object.entries(RATES.pillar1.earlyDrawingServiceYears)) {
+      if (serviceYears >= needed) allowed = Math.max(allowed, Number(years));
+    }
+    return Math.min(allowed, earlyRequested);
+  };
+  const fundPension = (a.pillarPayout || 'annuity') === 'fundPension';
+  for (const p of people) {
+    p.pension = pensionAges(p.birthYear);
+    p.pensionUnlockYear = p.birthYear + p.pension.pillarUnlockAge;
+    p.statePensionStandardYear = p.birthYear + p.pension.statePensionAge;
+    p.statePensionYear = p.statePensionStandardYear;
+    p.statePensionEarlyYears = 0;
+    p.statePensionAdjustment = 0;
+    // When the pots are actually taken, which need not be the first legal day.
+    // Deferring leaves them invested, so the pot is larger when it does start.
+    p.pillar2DrawYear = drawAtStatePensionAge ? p.statePensionYear : p.pensionUnlockYear;
+    p.pillar2DrawAge = drawAtStatePensionAge
+      ? p.pension.statePensionAge : p.pension.pillarUnlockAge;
+    const hasPillar3 = (p.assets?.pillar3 || 0) > 0 || (p.pillar3Annual || 0) > 0;
+    p.pillar3EligibilityKnown = !hasPillar3 || p.pillar3FirstContributionYear != null;
+    if (hasPillar3 && p.pillar3EligibilityKnown) {
+      const first = p.pillar3FirstContributionYear;
+      const legalYear = first <= 2020
+        ? Math.max(p.birthYear + 55, first + RATES.pillar3.minHoldYears)
+        : Math.max(p.pensionUnlockYear, first + RATES.pillar3.minHoldYears);
+      p.pillar3LegalYear = legalYear;
+      p.pillar3DrawYear = drawAtStatePensionAge
+        ? Math.max(legalYear, p.statePensionYear) : legalYear;
+    } else {
+      p.pillar3DrawYear = null;
+    }
+    // Compatibility headline: the date by which every countable pot has begun.
+    p.pillarDrawYear = Math.max(p.pillar2DrawYear, p.pillar3DrawYear ?? p.pillar2DrawYear);
+    p.pillarDrawAge = p.pillarDrawYear - p.birthYear;
+    // Do not invent an insurer price or an official tax-free duration. Those
+    // must come from a current quote / Pensionikeskus result supplied by the user.
+    p.payoutYears = fundPension && p.fundPensionYears != null
+      ? Math.max(1, p.fundPensionYears) : null;
+    p.annuityMonthlyQuote = p.annuityMonthlyQuote == null
+      ? null : Math.max(0, p.annuityMonthlyQuote);
+    p.pensionTermsKnown = fundPension ? p.payoutYears != null : p.annuityMonthlyQuote != null;
+    p.pillarIncomeEndYear = fundPension && p.payoutYears != null
+      ? Math.max(p.pillar2DrawYear + p.payoutYears,
+          (p.pillar3DrawYear ?? p.pillar2DrawYear) + p.payoutYears)
+      : (fundPension ? p.pillarDrawYear : Infinity);
+    p.pillarIncomeEndAge = fundPension && p.payoutYears != null
+      ? p.pillarDrawAge + p.payoutYears : (fundPension ? p.pillarDrawAge : Infinity);
+    p.ageNow = currentYear - p.birthYear;
+    // Pillar I accrual comes from the accrued coefficient and nothing else. No
+    // estimate from a career length: it could only ever be worse than the figure
+    // the state already holds, and it flattered anyone who worked outside
+    // Estonia. Blank means nothing accrued yet, which is the honest default.
+    p.pillar1UnitsSoFar = Math.max(0, p.pillar1Units ?? 0);
+    p.pillar1UnitsKnown = p.pillar1Units != null;
+    // Service years and coefficient units are legally different quantities.
+    // Never infer one from the other: a high or low salary would move the
+    // coefficient without changing the number of qualifying years.
+    p.yearsWorkedSoFar = p.yearsWorkedEstonia == null
+      ? null : Math.max(0, p.yearsWorkedEstonia);
+    p.euEeaServiceYears = Math.max(0, p.yearsWorkedEuEea || 0);
+    p.serviceYearsKnown = p.yearsWorkedSoFar != null;
+  }
+  // The binding date for the household is whoever's money arrives last, since
+  // the portfolio has to carry until then.
+  const lastToUnlock = people.reduce((x, y) =>
+    y.pillarDrawYear > x.pillarDrawYear ? y : x);
+  const ages = lastToUnlock.pension;
+
+  // ---- spending, now and at FI -------------------------------------------
+  const s = hh.spending;
+  const spendNow =
+    12 * ((s.housing || 0) + (s.childCosts || 0) + (s.other || 0) + (s.buffer || 0));
+
+  const purchase = hh.property?.purchase || null;
+  const mort = purchase ? mortgage(purchase) : null;
+  const housingAfter = purchase ? 12 * (mort.monthly + (purchase.runningCostsMonthly || 0)) : 12 * (s.housing || 0);
+  const spendAfterMove = spendNow - 12 * (s.housing || 0) + housingAfter;
+
+  // Pillar III contributions leave the counted portfolio - the balance is
+  // excluded from the plan - so they reduce what can be invested. The refund
+  // comes back, so only the net cost bites.
+  const pillar3NetCost = people.reduce(
+    (x, p) => x + Math.max(0, p.pillar3.contribution - p.pillar3.refund), 0);
+
+  // Life cover buys protection rather than assets, so the premium leaves the
+  // surplus and never appears in the portfolio.
+  const lifeInsuranceCost = people.reduce(
+    (x, p) => x + (p.lifeInsurance ? (p.lifeInsuranceMonthly || 0) * 12 : 0), 0);
+
+  // A voluntary health contract is a real outgoing today, and one worth seeing
+  // separately: it buys cover rather than assets, so it never appears in the
+  // portfolio. Only the years before FI - past FI nobody is employed, so every
+  // adult needs one and it is already inside perpetual spending.
+  const healthInsuranceCost = people.reduce(
+    (x, p) => x + (p.healthInsurance ? (p.healthInsuranceMonthly ?? RATES.healthInsurance.voluntaryMonthly) * 12 : 0), 0);
+
+  const fixedOutgoings = pillar3NetCost + lifeInsuranceCost + healthInsuranceCost;
+  const surplusNow = householdNetIncome - spendNow - fixedOutgoings;
+  const surplusAfterMove = householdNetIncome - spendAfterMove - fixedOutgoings;
+
+  // Perpetual spending excludes the mortgage (a finite liability, handled as a
+  // lump sum) and child costs (finite too), and nets off rental income.
+  const housingRunningAnnual = purchase
+    ? 12 * (purchase.runningCostsMonthly || 0)
+    : 12 * (s.housing || 0);
+  const discretionaryAnnual = 12 * ((s.other || 0) + (s.buffer || 0));
+
+  // Health cover runs from the day work stops until STATE PENSION age - not
+  // until the pillars unlock five years earlier. RaKS §5 insures you on the
+  // strength of receiving a state pension, and Pillar II income is not one: it
+  // is your own capital coming back to you. So the five years between the
+  // pillar unlock and the state pension are still a coverage gap, even though
+  // pension money is already arriving. That makes cover a *finite* liability,
+  // priced like the mortgage rather than folded into the perpetual number and
+  // funded forever.
+  const healthPerPerson = 12 * RATES.healthInsurance.voluntaryMonthly;
+  const healthCostBetween = (from, to) => people.reduce((x, p) => {
+    // A user-confirmed alternative route (foreign S1, student, parental or
+    // voluntary coverage) is authoritative. Otherwise budget voluntary cover
+    // from FI until state-pension coverage begins.
+    if (p.healthCoveredAfterFi) return x;
+    return x + healthPerPerson * overlapYears(from, to, -Infinity, p.statePensionYear);
+  }, 0);
+  const healthCostIn = (year) => healthCostBetween(year, year + 1);
+
+  // Spending is in today's money throughout, because the return is real. This
+  // is growth ON TOP of inflation - the cost of the same life rising faster
+  // than the general index - applied from the day work stops.
+  const g = a.spendingGrowth || 0;
+  const perpetual = discretionaryAnnual + housingRunningAnnual - rentalNet;
+  const healthAtFi = people.filter((p) => !p.healthCoveredAfterFi).length * healthPerPerson;
+  const healthUntilYear = Math.max(currentYear,
+    ...people.filter((p) => !p.healthCoveredAfterFi).map((p) => p.statePensionYear));
+
+  // ---- allocation shares --------------------------------------------------
+  // The split decides ownership of the pooled money, so it has to be known
+  // before the starting balances are divided up.
+  const rawShares = people.map((p) =>
+    p.allocationShare != null ? p.allocationShare : 1 / people.length);
+  const shareSum = rawShares.reduce((x, y) => x + y, 0) || 1;
+  people.forEach((p, i) => { p.share = rawShares[i] / shareSum; });
+
+  // ---- starting portfolios ------------------------------------------------
+  // Assets stay with whoever holds them. The allocation share governs future
+  // savings only; to change who owns existing money, move it in the inputs.
+  const countCrypto = !(input.excludeCrypto ?? true);
+  for (const p of people) {
+    const as = p.assets || {};
+    const iaBasis = Math.min(as.investmentAccount || 0,
+      as.investmentAccountContributions || 0);
+    p.investmentTaxReserve = Math.max(0, (as.investmentAccount || 0) - iaBasis) *
+      RATES.incomeTax;
+    const brokerageBasis = Math.min(as.brokerage || 0, as.brokerageCostBasis || 0);
+    p.brokerageTaxReserve = Math.max(0, (as.brokerage || 0) - brokerageBasis) *
+      RATES.incomeTax;
+    const cryptoBasis = Math.min(as.crypto || 0, as.cryptoCostBasis || 0);
+    p.cryptoTaxReserve = countCrypto
+      ? Math.max(0, (as.crypto || 0) - cryptoBasis) * RATES.crypto.taxRate : 0;
+    p.startPortfolio =
+      (as.investmentAccount || 0) - p.investmentTaxReserve +
+      (as.brokerage || 0) - p.brokerageTaxReserve +
+      (as.cash || 0) + (countCrypto ? (as.crypto || 0) - p.cryptoTaxReserve : 0);
+    p.excluded = (as.pillar2 || 0) + (as.pillar3 || 0) + (countCrypto ? 0 : as.crypto || 0);
+  }
+
+  // House cash leaves on the completion date, not today. The projection below
+  // compounds and saves at the pre-move rate until that event, then deducts it.
+  let cashForHouse = 0, reserve = 0, transactionCosts = 0, emergencyFund = 0;
+  if (purchase) {
+    const emergency = (spendAfterMove / 12) * a.emergencyFundMonths;
+    transactionCosts = purchase.price * a.transactionCostRate;
+    emergencyFund = emergency;
+    cashForHouse = Math.min(purchase.price, purchase.deposit) +
+      transactionCosts + (purchase.movingCosts || 0);
+    reserve = cashForHouse + emergency;
+
+  }
+
+  const totalStart = people.reduce((sum, p) => sum + p.startPortfolio, 0);
+  const startingCash = people.reduce((sum, p) => sum + (p.assets?.cash || 0), 0);
+  const startingRiskAssets = totalStart - startingCash;
+
+  // ---- timeline -----------------------------------------------------------
+  // A negative surplus means the household is drawing down, not saving nothing.
+  // Clamping it to zero would let compounding alone "reach" the target, which is
+  // arithmetically true and completely misleading.
+  const depleting = Math.max(surplusNow, surplusAfterMove) <= 0;
+  const annualSaving = Math.max(0, surplusAfterMove);
+  const houseYears = purchase ? Math.max(0, purchase.monthsAway || 0) / 12 : Infinity;
+  const grow = (start, save, years, rate = a.realReturn) =>
+    start * (1 + rate) ** Math.max(0, years) +
+      save * annuityFactor(rate, Math.max(0, years));
+  const projectedAtHouse = purchase
+    ? grow(startingRiskAssets, surplusNow, houseYears) +
+      grow(startingCash, 0, houseYears, a.cashRealReturn ?? 0)
+    : totalStart;
+  const houseFundingShortfall = purchase
+    ? Math.max(0, cashForHouse + emergencyFund - projectedAtHouse) : 0;
+  const project = (start, save, years) => {
+    // Custom starts are used only for ownership/coast calculations and cannot
+    // be split reliably into cash and risk assets. Treat them as invested.
+    if (start !== totalStart || save !== annualSaving) return grow(start, save, years);
+    if (!purchase || years <= houseYears) {
+      return grow(startingRiskAssets, surplusNow, years) +
+        grow(startingCash, 0, years, a.cashRealReturn ?? 0);
+    }
+    if (houseFundingShortfall > 0) return -Infinity;
+    const afterCompletion = projectedAtHouse - cashForHouse;
+    const reserveCash = Math.min(emergencyFund, afterCompletion);
+    return grow(afterCompletion - reserveCash, surplusAfterMove, years - houseYears) +
+      grow(reserveCash, 0, years - houseYears, a.cashRealReturn ?? 0);
+  };
+  const ownershipAt = (years) => {
+    let balances = people.map((p) => {
+      const cash = p.assets?.cash || 0;
+      const risk = p.startPortfolio - cash;
+      const before = Math.min(years, houseYears);
+      return grow(risk, surplusNow * p.share, before) +
+        grow(cash, 0, before, a.cashRealReturn ?? 0);
+    });
+    if (!purchase || years <= houseYears || houseFundingShortfall > 0) return balances;
+    let remaining = cashForHouse;
+    const payer = purchase.paidBy;
+    if (typeof payer === 'number' && people[payer]) {
+      const order = [payer, ...people.map((_, i) => i).filter((i) => i !== payer)];
+      for (const i of order) {
+        const take = Math.min(balances[i], remaining);
+        balances[i] -= take;
+        remaining -= take;
+      }
+    } else {
+      const sum = balances.reduce((x, v) => x + v, 0) || 1;
+      balances = balances.map((v) => Math.max(0, v - cashForHouse * v / sum));
+    }
+    const totalAfter = balances.reduce((x, v) => x + v, 0) || 1;
+    return balances.map((v, i) => {
+      const reserveCash = Math.min(v, emergencyFund * v / totalAfter);
+      return grow(v - reserveCash, surplusAfterMove * people[i].share, years - houseYears) +
+        grow(reserveCash, 0, years - houseYears, a.cashRealReturn ?? 0);
+    });
+  };
+
+  // Present value at the FI date of the health premiums still owed, i.e. those
+  // falling between stopping work and each person's state pension age.
+  // Present value of a payment stream that itself grows at g, discounted at the
+  // real return. Reduces to the flat annuity factor when g is zero.
+  const pvAnnuity = (n) => {
+    if (n <= 0) return 0;
+    const r = a.realReturn;
+    if (Math.abs(r - g) < 1e-9) return n / (1 + r);
+    return (1 - ((1 + g) / (1 + r)) ** n) / (r - g);
+  };
+  const healthBridgeAt = (y) => people.reduce(
+    (x, p) => x + (p.healthCoveredAfterFi ? 0 : healthPerPerson) * pvAnnuity(
+      Math.max(0, p.statePensionYear - (currentYear + y))), 0);
+
+  const primary = people[0];
+  const ageNow = currentYear - primary.birthYear;
+
+  // ---- pension income, if the plan is allowed to lean on it ---------------
+  // Pension money is individual: own balance, own contributions while working,
+  // own unlock date. Contributions stop at FI - that is the whole reason
+  // retiring early costs pension, and why the FI date and the pension it
+  // produces have to be solved together rather than one after the other.
+  const potAtDraw = (p, yearsToFi, kind) => {
+    const drawYear = kind === 'pillar2' ? p.pillar2DrawYear : p.pillar3DrawYear;
+    if (drawYear == null) return 0;
+    const yrs = Math.max(0, drawYear - currentYear);
+    const contributing = Math.min(yearsToFi, yrs);
+    const idle = (v) => v * (1 + a.realReturn) ** Math.max(0, yrs - contributing);
+    if (kind === 'pillar2') {
+      const rate = (p.pillar2Rate ?? 0.02) + RATES.pillar2.stateRate;
+      return (p.assets?.pillar2 || 0) * (1 + a.realReturn) ** yrs +
+        idle(p.grossAnnual * rate * annuityFactor(a.realReturn, contributing));
+    }
+    return (p.assets?.pillar3 || 0) * (1 + a.realReturn) ** yrs +
+      idle(p.pillar3.contribution * annuityFactor(a.realReturn, contributing));
+  };
+  const potAtUnlock = (p, yearsToFi) =>
+    potAtDraw(p, yearsToFi, 'pillar2') + potAtDraw(p, yearsToFi, 'pillar3');
+
+  const policy = a.pensionPolicy || 'ignore';
+  const countPots = policy === 'ownPots' || policy === 'all';
+  const countState = policy === 'all';
+
+  // Pillar I can only be counted when the inputs establish entitlement. EU/EEA
+  // aggregation can establish a right, but the cross-border pro-rata amount
+  // cannot be reconstructed here, so such cases remain deliberately uncounted.
+  const stateMonthlyFor = (p, futureYears) => {
+    if (!p.pillar1UnitsKnown || !p.serviceYearsKnown) return 0;
+    const estonianService = p.yearsWorkedSoFar + Math.max(0, futureYears);
+    if (estonianService >= RATES.pillar1.minServiceYears) {
+      return pillar1Monthly({
+        grossAnnual: p.grossAnnual,
+        unitsSoFar: p.pillar1UnitsSoFar,
+        futureYears,
+        serviceYears: estonianService,
+        inPillar2: (p.pillar2Rate ?? 0.02) > 0,
+      });
+    }
+    if (p.euEeaServiceYears > 0) return 0; // amount requires official pro-rata calculation
+    return p.nationalPensionEligible ? RATES.pillar1.nationalPensionMonthly : 0;
+  };
+
+  // Annual pension income in a given calendar year, for an FI date `yearsToFi`
+  // away. A lifetime annuity is assumed: it is the only Pillar II payout that
+  // is both 0%-taxed and genuinely lifelong. A fund pension paced over the
+  // recommended duration would stop partway through the plan.
+  // What the pots actually pay in a given year, in today's money. The two
+  // payouts behave in opposite directions, and neither is flat:
+  //
+  //   annuity     - a fixed nominal euro amount set at signing, with no CPI or
+  //                 wage link, so its real value decays at the inflation rate.
+  //   fundPension - a fixed number of units redeemed each time, valued at the
+  //                 fund's NAV, so the payment rides the fund. The balance stays
+  //                 invested while it is drawn down, so in real terms it climbs.
+  //
+  // Holding both flat, as this did, flattered the annuity and understated the
+  // fund pension - which is exactly the comparison the payout selector exists
+  // to make.
+  const inflation = a.inflation ?? DEFAULTS.inflation;
+  // A haircut on what the pension is believed to deliver. Applied to the income,
+  // not to the balance: the pot is still the pot, this is how much of it the
+  // plan is willing to depend on.
+  const potsShare = a.potsCountedShare ?? 1;
+  const stateShare = a.stateCountedShare ?? 1;
+  const potIncomeIn = (p, year, yearsToFi) => {
+    if (!p.pensionTermsKnown) return 0;
+    const from = Math.max(year, currentYear + yearsToFi);
+    const to = year + 1;
+    if (!fundPension) {
+      const active = overlapYears(from, to, p.pillarDrawYear, Infinity);
+      if (!active) return 0;
+      return p.annuityMonthlyQuote * 12 * potsShare * active /
+        (1 + inflation) ** Math.max(0, from - p.pillarDrawYear);
+    }
+    let income = 0;
+    for (const kind of ['pillar2', 'pillar3']) {
+      const draw = kind === 'pillar2' ? p.pillar2DrawYear : p.pillar3DrawYear;
+      if (draw == null) continue;
+      const active = overlapYears(from, to, draw, draw + p.payoutYears);
+      if (!active) continue;
+      const base = potAtDraw(p, yearsToFi, kind) / p.payoutYears * potsShare;
+      income += base * active * (1 + a.realReturn) ** Math.max(0, from - draw);
+    }
+    return income;
+  };
+
+  const pensionBreakdownIn = (year, yearsToFi) => {
+    let pots = 0, state = 0;
+    for (const p of people) {
+      // A fund pension stops. That is the whole point of offering the choice:
+      // the portfolio has to be able to take over again afterwards.
+      if (countPots && year + 1 > Math.min(p.pillar2DrawYear,
+          p.pillar3DrawYear ?? Infinity) && year < p.pillarIncomeEndYear) {
+        pots += potIncomeIn(p, year, yearsToFi);
+      }
+      if (countState && year + 1 > p.statePensionYear) {
+        // Net, not gross: a Pillar II annuity is 0%-taxed but Pillar I is not,
+        // and only what survives the tax can be spent.
+        const gross = 12 * stateMonthlyFor(p, yearsToFi) *
+          (1 + p.statePensionAdjustment);
+        const active = overlapYears(Math.max(year, currentYear + yearsToFi), year + 1,
+          p.statePensionYear, Infinity);
+        state += statePensionNet(gross, {
+          pensionAge: year >= p.statePensionStandardYear,
+        }).net * stateShare * active;
+      }
+    }
+    return { pots, state, total: pots + state };
+  };
+  const pensionIncomeIn = (year, yearsToFi) => pensionBreakdownIn(year, yearsToFi).total;
+
+  // The plan has to hold until the youngest person reaches the planning age.
+  const planEndYear = currentYear +
+    Math.max(...people.map((p) => a.planToAge - p.ageNow));
+
+  // What a year costs, in today's money: the base plus health cover, grown by
+  // however many years have passed since work stopped.
+  const purchaseYear = purchase ? currentYear + houseYears : -Infinity;
+  const mortgageEndYear = purchase ? purchaseYear + purchase.termYears : -Infinity;
+  // With no supplied end date, dependent costs continue for the whole plan. It
+  // is safer to overfund an unknown liability than erase it on the FI date.
+  const childCostsEndYear = s.childCostsEndYear ?? Infinity;
+  const needIn = (year, fiYear) => {
+    const from = Math.max(year, fiYear);
+    const to = year + 1;
+    if (from >= to) return 0;
+    const duration = to - from;
+    const housing = purchase
+      ? 12 * (s.housing || 0) * overlapYears(from, to, -Infinity, purchaseYear) +
+        12 * (purchase.runningCostsMonthly || 0) * overlapYears(from, to, purchaseYear, Infinity)
+      : 12 * (s.housing || 0) * duration;
+    const mortgageCost = purchase
+      ? 12 * mort.monthly * overlapYears(from, to, purchaseYear, mortgageEndYear) : 0;
+    const childCost = 12 * (s.childCosts || 0) *
+      overlapYears(from, to, -Infinity, childCostsEndYear);
+    const base = (discretionaryAnnual - rentalNet) * duration +
+      housing + mortgageCost + childCost + healthCostBetween(from, to);
+    return base * (1 + g) ** Math.max(0, from - fiYear);
+  };
+
+  // The floor the portfolio may never drop below.
+  //
+  //   drawdown  - zero. The money only has to reach planToAge.
+  //   perpetual - the capital that funds permanent spending at the withdrawal
+  //               rate indefinitely, less any income that is itself permanent.
+  //               Only the state pension qualifies: it is indexed by law,
+  //               whereas an annuity is fixed in euros and decays and a fund
+  //               pension stops outright. Counting those as permanent would be
+  //               the optimistic error.
+  //
+  // It binds only once every permanent income has arrived. Before then the walk
+  // already requires the money not to run out, and demanding perpetual capacity
+  // from day one would make the state pension worthless to a perpetual plan -
+  // the same conflation as tying the pension setting to the portfolio's job.
+  // Keyed off whether permanent income actually arrives, not off which option is
+  // selected: believing the state pension at 0% means none arrives, so the floor
+  // binds from the start exactly as it does when the pension is not counted.
+  const permanentIncomeFrom = () => countState && stateShare > 0
+    ? Math.max(...people.map((p) => p.statePensionYear)) : -Infinity;
+  const floorIn = (perpetualFloor, year, fiYear, y) => {
+    if (!perpetualFloor) return 0;
+    if (year < permanentIncomeFrom()) return 0;
+    if (g >= a.swr) return Infinity;
+    const spend = perpetual * (1 + g) ** Math.max(0, year - fiYear);
+    const permanent = countState ? pensionBreakdownIn(year, y).state : 0;
+    // Spending grows at g in real terms; the indexed pension is flat in real
+    // terms. Capitalise the two streams separately instead of pretending the
+    // pension grows at the household's lifestyle-growth rate.
+    return Math.max(0, spend / (a.swr - g) - permanent / a.swr);
+  };
+
+  // One walk answers both questions. The pension settings feed it identically
+  // either way, which is why counting no pension and believing a pension at 0%
+  // now describe the same plan - they mean the same thing, so they must.
+  const lastsFrom = (portfolioAtStop, y, perpetualFloor) => {
+    let pf = portfolioAtStop;
+    const fiYear = currentYear + y;
+    // Checked on day one as well as every year after: a portfolio that only
+    // clears the floor once it has grown was never perpetual-safe to begin with.
+    if (pf < floorIn(perpetualFloor, Math.floor(fiYear), fiYear, y) - 1e-6) return false;
+    for (let year = Math.floor(fiYear); year < planEndYear; year++) {
+      pf -= Math.max(0, needIn(year, fiYear) - pensionIncomeIn(year, y));
+      if (pf < -1e-6) return false;
+      const investedFor = year + 1 - Math.max(year, fiYear);
+      pf *= (1 + a.realReturn) ** investedFor;
+      if (pf < floorIn(perpetualFloor, year + 1, fiYear, y) - 1e-6) return false;
+    }
+    return true;
+  };
+
+  const solveFor = (perpetualFloor) => {
+    const ok = (y) => (!purchase || y >= houseYears) &&
+      houseFundingShortfall <= 0 &&
+      lastsFrom(project(totalStart, annualSaving, y), y, perpetualFloor);
+    if (ok(0)) return 0;
+    if (depleting || !ok(100)) return Infinity;
+    let lo = 0, hi = 100;
+    for (let i = 0; i < 50; i++) {
+      const mid = (lo + hi) / 2;
+      if (ok(mid)) hi = mid; else lo = mid;
+    }
+    return hi;
+  };
+
+  const perpetualMode = (a.portfolioEnd || 'perpetual') === 'perpetual';
+  const lastsIfStoppingAt = (y) =>
+    lastsFrom(project(totalStart, annualSaving, y), y, perpetualMode);
+
+  // Drawing the state pension early is circular: it needs a service length,
+  // which needs the FI date, which depends on how long health cover has to be
+  // bought, which is what drawing early changes. Solved by running it twice -
+  // once at the standard age to get a service length, then again with the
+  // dates that service actually permits. The second pass moves the answer by
+  // months, so a third would be noise.
+  if (earlyRequested > 0) {
+    const provisional = solveFor(perpetualMode);
+    for (const p of people) {
+      const serviceAtFi = p.serviceYearsKnown
+        ? p.yearsWorkedSoFar + (Number.isFinite(provisional) ? provisional : 0)
+        : 0;
+      p.statePensionEarlyYears = earlyAllowedFor(serviceAtFi);
+      p.statePensionYear = p.statePensionStandardYear - p.statePensionEarlyYears;
+      p.statePensionAdjustment =
+        RATES.pillar1.flexibleAdjustment[String(-p.statePensionEarlyYears)] ?? 0;
+      if (drawAtStatePensionAge) {
+        p.pillar2DrawYear = p.statePensionYear;
+        if (p.pillar3LegalYear != null) {
+          p.pillar3DrawYear = Math.max(p.pillar3LegalYear, p.statePensionYear);
+        }
+        p.pillarDrawYear = Math.max(
+          p.pillar2DrawYear, p.pillar3DrawYear ?? p.pillar2DrawYear);
+        p.pillarDrawAge = p.pillarDrawYear - p.birthYear;
+        p.pillarIncomeEndYear = fundPension && p.payoutYears != null
+          ? Math.max(p.pillar2DrawYear + p.payoutYears,
+              (p.pillar3DrawYear ?? p.pillar2DrawYear) + p.payoutYears)
+          : (fundPension ? p.pillarDrawYear : Infinity);
+        p.pillarIncomeEndAge = Number.isFinite(p.pillarIncomeEndYear)
+          ? p.pillarIncomeEndYear - p.birthYear : Infinity;
+      }
+    }
+  }
+
+  // Both answers, always, so the choice between them stays legible.
+  const yearsToFiPerpetual = solveFor(true);
+  const yearsToFiBridged = solveFor(false);
+  const bridging = !perpetualMode;
+  // Working past the earliest date buys margin, and buys more of it than the
+  // extra savings alone suggest: the portfolio compounds for longer, one year of
+  // withdrawals never happens, and pension contributions carry on.
+  const bufferYears = Math.max(0, a.bufferYears || 0);
+  const yearsToFiSolved = perpetualMode ? yearsToFiPerpetual : yearsToFiBridged;
+  const yearsToFi = Number.isFinite(yearsToFiSolved)
+    ? yearsToFiSolved + bufferYears : yearsToFiSolved;
+
+  // The smallest portfolio that survives from a given stop date. For a date the
+  // solver had to search for, this is just what the portfolio will be worth then
+  // - it was found by making that amount only barely enough. It differs when FI
+  // is already reached, where projecting forward reports what you happen to hold
+  // rather than what the plan needs, and those are not the same claim.
+  const requiredAt = (y, perpetualFloor) => {
+    if (!Number.isFinite(y)) return Infinity;
+    const have = project(totalStart, annualSaving, y);
+    if (!lastsFrom(have, y, perpetualFloor)) return Infinity;
+    if (lastsFrom(0, y, perpetualFloor)) return 0;
+    let lo = 0, hi = have;
+    for (let i = 0; i < 50; i++) {
+      const mid = (lo + hi) / 2;
+      if (lastsFrom(mid, y, perpetualFloor)) hi = mid; else lo = mid;
+    }
+    return hi;
+  };
+  const fiNumber = requiredAt(yearsToFiPerpetual, true);
+  // Under bridging the "number" is whatever the portfolio has to be on the day
+  // work stops, which is not spending/SWR - it is smaller, because it is allowed
+  // to run down.
+  // Two different quantities, and they are not interchangeable:
+  //   fiNumber  - the least the portfolio must be worth. What "you need this
+  //               much" honestly means.
+  //   fiTarget  - what it will actually be worth on that date. Slightly more,
+  //               because the plan is walked in whole years and you cannot stop
+  //               in the middle of one.
+  // Ownership and the schedule follow the money you will really have; the
+  // headline follows the requirement.
+  const fiTarget = Number.isFinite(yearsToFi)
+    ? project(totalStart, annualSaving, yearsToFi)
+    : Infinity;
+
+  const mortgageAtFi = mort && Number.isFinite(yearsToFi)
+    ? mort.balanceAfter(Math.max(0, yearsToFi - houseYears)) : 0;
+
+  // CoastFIRE: stop adding to the portfolio, keep working, and let compounding
+  // finish the job by `targetAge`. Under bridging "finished" means the pot
+  // survives to the end of the plan rather than reaching a fixed number.
+  const coastAt = (targetAge) => {
+    for (let y = 0; y <= 60; y += 0.25) {
+      const age = ageNow + y;
+      if (age >= targetAge) return null;
+      const pf = project(totalStart, annualSaving, y);
+      const atTarget = pf * (1 + a.realReturn) ** (targetAge - age);
+      const enough = lastsFrom(atTarget, targetAge - ageNow, perpetualMode);
+      if (enough) return { years: y, age, portfolio: pf };
+    }
+    return null;
+  };
+
+  // ---- how much shock this absorbs ----------------------------------------
+  // A deterministic stress test, which is the whole point of it: no historical
+  // series, no overlapping windows, no US-data-for-a-European compromise. Just
+  // "how bad an opening can this plan take before it fails", which is arithmetic
+  // and answerable exactly.
+  //
+  // The withdrawals are the ones the schedule already computed - spending and
+  // pension income do not change because markets did - so only the returns move.
+  const resilience = () => {
+    if (!Number.isFinite(yearsToFi)) return null;
+    const draws = [], durations = [];
+    let pf = fiTarget;
+    for (let year = Math.floor(currentYear + yearsToFi); year < planEndYear; year++) {
+      draws.push(Math.max(0, needIn(year, currentYear + yearsToFi) -
+        pensionIncomeIn(year, yearsToFi)));
+      durations.push(year + 1 - Math.max(year, currentYear + yearsToFi));
+    }
+    if (!draws.length) return null;
+    const survives = (badYears, badReturn, crash = 0) => {
+      let bal = fiTarget * (1 - crash);
+      const fiYear = currentYear + yearsToFi;
+      if (perpetualMode && bal < floorIn(true, Math.floor(fiYear), fiYear, yearsToFi) - 1) {
+        return false;
+      }
+      for (let i = 0; i < draws.length; i++) {
+        bal -= draws[i];
+        if (bal < -1) return false;
+        bal *= (1 + (i < badYears ? badReturn : a.realReturn)) ** durations[i];
+        const year = Math.floor(fiYear) + i + 1;
+        if (perpetualMode && bal < floorIn(true, year, fiYear, yearsToFi) - 1) return false;
+      }
+      return true;
+    };
+    // Saturation has to be reported as saturation. Counting up to the length of
+    // the schedule and returning that number makes a plan that survives
+    // everything look WORSE as it improves, because a later start date leaves
+    // fewer years to count.
+    const countBad = (rate) => {
+      let n = 0;
+      while (n <= draws.length && survives(n, rate)) n++;
+      const years = n - 1;
+      return { years: Math.min(years, draws.length), all: years >= draws.length };
+    };
+    // Largest immediate fall it still recovers from.
+    let lo = 0, hi = 0.95;
+    if (survives(0, a.realReturn, 0)) {
+      for (let i = 0; i < 40; i++) {
+        const mid = (lo + hi) / 2;
+        if (survives(0, a.realReturn, mid)) lo = mid; else hi = mid;
+      }
+    }
+    const flat = countBad(0), bear = countBad(-0.10);
+    return {
+      flatYears: flat.years, flatAll: flat.all,
+      bearYears: bear.years, bearAll: bear.all,
+      crash: lo, horizonYears: draws.length,
+    };
+  };
+
+  // ---- what the haircut buys ----------------------------------------------
+  // Believing a pension at less than 100% forces a larger portfolio, and that
+  // extra IS the safety margin. Replay the same plan with the pensions paying in
+  // full: whatever is left at the end is what the caution cost, expressed as
+  // what you would have if it turns out to have been unnecessary.
+  let haircutBuffer = null;
+  if (Number.isFinite(yearsToFi) && (countPots || countState) &&
+      (potsShare < 1 || stateShare < 1)) {
+    let pf = fiTarget;
+    for (let year = Math.floor(currentYear + yearsToFi); year < planEndYear; year++) {
+      let income = 0;
+      for (const p of people) {
+        if (countPots && year < p.pillarIncomeEndYear) {
+          // The same income, un-haircut.
+          income += potIncomeIn(p, year, yearsToFi) / (potsShare || 1);
+        }
+        if (countState && year >= p.statePensionYear) {
+          // Computed here rather than read off the person: the per-person pass
+          // has not run yet, and depending on that ordering is how a silent NaN
+          // gets into a headline figure.
+          const gross = 12 * stateMonthlyFor(p, yearsToFi) *
+            (1 + p.statePensionAdjustment);
+          income += statePensionNet(gross, {
+            pensionAge: year >= p.statePensionStandardYear,
+          }).net;
+        }
+      }
+      pf -= Math.max(0, needIn(year, currentYear + yearsToFi) - income);
+      const investedFor = year + 1 - Math.max(year, currentYear + yearsToFi);
+      pf *= (1 + a.realReturn) ** investedFor;
+    }
+    haircutBuffer = Math.max(0, pf);
+  }
+
+  // ---- year-by-year drawdown ----------------------------------------------
+  // The solver walks these years to find the FI date; this replays that walk and
+  // keeps the working, so it can be read rather than trusted. Same arithmetic,
+  // same order - if it ever disagrees with `lastsFrom` one of them is wrong.
+  const schedule = [];
+  if (Number.isFinite(yearsToFi)) {
+    let pf = fiTarget;
+    for (let year = Math.floor(currentYear + yearsToFi); year < planEndYear; year++) {
+      const health = healthCostBetween(
+        Math.max(year, currentYear + yearsToFi), year + 1);
+      const need = needIn(year, currentYear + yearsToFi);
+      const income = pensionBreakdownIn(year, yearsToFi);
+      const fromPortfolio = Math.max(0, need - income.total);
+      const opening = pf;
+      const investedFor = year + 1 - Math.max(year, currentYear + yearsToFi);
+      pf = (pf - fromPortfolio) * (1 + a.realReturn) ** investedFor;
+      schedule.push({
+        year,
+        ages: people.map((p) => p.ageNow + (year - currentYear)),
+        need, health,
+        fromPots: income.pots,
+        fromState: income.state,
+        fromPortfolio,
+        // Pension income beyond what is needed is not reinvested - conservative,
+        // and it keeps the portfolio line meaning "what the portfolio provides".
+        unusedPension: Math.max(0, income.total - need),
+        opening, closing: pf, investedFor,
+      });
+    }
+  }
+
+  // ---- per person (ownership of the shared pot) ---------------------------
+  for (const p of people) {
+    p.annualSaving = annualSaving * p.share;
+    // What this person will own at the household FI date. The split decides
+    // ownership of the pot, not who needs how much.
+    p.portfolioAtFi = null;
+    // There is one FI *date* for the household; people reach it at whatever
+    // age they happen to be.
+    p.ageAtFi = p.ageNow + yearsToFi;
+
+    p.pensionAtUnlock = potAtUnlock(p, yearsToFi);
+    p.pillar2AtDraw = potAtDraw(p, yearsToFi, 'pillar2');
+    p.pillar3AtDraw = potAtDraw(p, yearsToFi, 'pillar3');
+    // What the pots and the state pension are each worth as annual income, on
+    // the assumptions above. Reported whatever the policy, so the cost of
+    // ignoring them stays visible.
+    // The first year's payment. It does not stay there: see potIncomeIn.
+    p.pensionIncome = p.pensionTermsKnown
+      ? (fundPension
+          ? ((potAtDraw(p, yearsToFi, 'pillar2') + potAtDraw(p, yearsToFi, 'pillar3')) /
+              p.payoutYears) * potsShare
+          : p.annuityMonthlyQuote * 12 * potsShare)
+      : 0;
+    p.pensionIncomeFinal = Number.isFinite(yearsToFi)
+      ? potIncomeIn(p, Math.min(planEndYear - 1,
+          Number.isFinite(p.pillarIncomeEndYear) ? p.pillarIncomeEndYear - 1 : planEndYear - 1),
+        yearsToFi)
+      : p.pensionIncome;
+    p.yearsWorkedAtFi = p.serviceYearsKnown
+      ? p.yearsWorkedSoFar + (Number.isFinite(yearsToFi) ? yearsToFi : 0)
+      : null;
+    p.statePensionGross = 12 * stateMonthlyFor(
+      p, Number.isFinite(yearsToFi) ? yearsToFi : 0) *
+      (1 + p.statePensionAdjustment);
+    const stateNet = statePensionNet(p.statePensionGross, {
+      pensionAge: p.statePensionYear >= p.statePensionStandardYear,
+    });
+    p.statePensionTax = stateNet.tax;
+    p.statePensionIncome = stateNet.net * stateShare;
+    // The same career run to the state pension age instead of stopping at FI -
+    // the difference is what retiring early costs in state pension.
+    p.statePensionIfWorkedOn = statePensionNet(12 * stateMonthlyFor(
+      p, Math.max(0, p.statePensionYear - currentYear)), {
+      pensionAge: p.statePensionYear >= p.statePensionStandardYear,
+    }).net * stateShare;
+  }
+  if (Number.isFinite(yearsToFi)) {
+    const owned = ownershipAt(yearsToFi);
+    people.forEach((p, i) => { p.portfolioAtFi = owned[i]; });
+  }
+  const accumulation = [];
+  if (Number.isFinite(yearsToFi)) {
+    const lastMonth = Math.ceil(yearsToFi * 12);
+    for (let month = 0; month <= lastMonth; month += 3) {
+      const years = Math.min(yearsToFi, month / 12);
+      const perPerson = ownershipAt(years);
+      accumulation.push({
+        years, perPerson, total: perPerson.reduce((x, v) => x + v, 0),
+      });
+    }
+    if (!accumulation.length || accumulation[accumulation.length - 1].years < yearsToFi) {
+      const perPerson = ownershipAt(yearsToFi);
+      accumulation.push({ years: yearsToFi, perPerson,
+        total: perPerson.reduce((x, v) => x + v, 0) });
+    }
+  }
+
+  return {
+    assumptions: a,
+    currentYear,
+    income: { householdNetIncome, rentalNet, perPerson: people.map((p) => p.netAnnual) },
+    spending: {
+      now: spendNow, afterMove: spendAfterMove, perpetual,
+      // Health cover is finite, so it is reported apart from the forever number:
+      // what it costs a year, until when, and what funding it takes at FI.
+      healthAtFi,
+      healthUntilYear,
+      healthBridgeCost: Number.isFinite(yearsToFi) ? healthBridgeAt(yearsToFi) : 0,
+      healthYears: Number.isFinite(yearsToFi)
+        ? Math.max(0, healthUntilYear - (currentYear + yearsToFi))
+        : 0,
+    },
+    savings: {
+      surplusNow, surplusAfterMove,
+      pillar3NetCost, lifeInsuranceCost, healthInsuranceCost,
+      rateNow: householdNetIncome > 0 ? surplusNow / householdNetIncome : 0,
+      rateAfterMove: householdNetIncome > 0 ? surplusAfterMove / householdNetIncome : 0,
+    },
+    fi: {
+      perpetualSpending: perpetual,
+      // Under bridging the number is what the portfolio must be on the day work
+      // stops - smaller than spending/SWR, because it is allowed to run down
+      // once the pensions arrive.
+      number: bridging ? requiredAt(yearsToFi, perpetualMode) : fiNumber,
+      atFiDate: fiTarget,
+      perpetualNumber: fiNumber,
+      spendingGrowth: g,
+      numberAt4pct: perpetual / 0.04,
+      // Two different questions that a single flag used to answer badly.
+      // `bridging` is about the PORTFOLIO: is it allowed to run down. Whether
+      // any pension is actually in play is separate, and is what every pension
+      // display should be gated on.
+      bridging,
+      countsPots: countPots && potsShare > 0,
+      countsState: countState && stateShare > 0,
+      countsPension: (countPots && potsShare > 0) || (countState && stateShare > 0),
+      policy,
+      pillarDrawAge: a.pillarDrawAge || 'unlock',
+      pillarPayout: a.pillarPayout || 'annuity',
+      bufferYears,
+      yearsSolved: yearsToFiSolved,
+      resilience: resilience(),
+      statePensionEarlyRequested: earlyRequested,
+      statePensionEarlyAllowed: Math.max(0, ...people.map((x) => x.statePensionEarlyYears)),
+      inflation, potsShare, stateShare, haircutBuffer,
+      // When the pots stop paying, if they do. The years after this are back on
+      // the portfolio alone, plus the state pension if it is being counted.
+      pillarIncomeEndsYear: fundPension
+        ? Math.max(...people.map((p) => p.pillarIncomeEndYear)) : null,
+      pillarIncomeEndsAge: fundPension
+        ? Math.max(...people.map((p) => p.pillarIncomeEndAge)) : null,
+      // Both answers, always, so the cost of the choice is legible.
+      yearsPerpetual: yearsToFiPerpetual,
+      yearsBridged: yearsToFiBridged,
+      pensionIncomeAtUnlock: people.reduce(
+        (x, p) => x + (countPots ? p.pensionIncome : 0) +
+                     (countState ? p.statePensionIncome : 0), 0),
+      ownershipAtFi: people.map((p) => ({
+        name: p.name, share: p.share, portfolio: p.portfolioAtFi, ageAtFi: p.ageAtFi,
+      })),
+    },
+    portfolio: {
+      start: totalStart,
+      excluded: people.reduce((x, p) => x + p.excluded, 0),
+      // Split out, because they are excluded for different reasons and belong
+      // in different places: pension balances have a section of their own, and
+      // crypto is simply left out of the plan.
+      pensionBalances: people.reduce(
+        (x, p) => x + (p.assets?.pillar2 || 0) + (p.assets?.pillar3 || 0), 0),
+      cryptoExcluded: countCrypto ? 0 : people.reduce((x, p) => x + (p.assets?.crypto || 0), 0),
+      investmentTaxReserve: people.reduce((x, p) => x + p.investmentTaxReserve, 0),
+      brokerageTaxReserve: people.reduce((x, p) => x + p.brokerageTaxReserve, 0),
+      cryptoTaxReserve: people.reduce((x, p) => x + p.cryptoTaxReserve, 0),
+      // What the excluded pension money is likely to be worth once it unlocks.
+      // Balances compound to each person's own unlock date; Pillar II keeps
+      // receiving contributions (own rate plus the state's 4%) until FI, then
+      // stops. Crypto is deliberately left flat - projecting it would be
+      // inventing a return.
+      pensionAtUnlock: people.reduce((x, p) => x + p.pensionAtUnlock, 0),
+      perPerson: people.map((p) => ({
+        name: p.name,
+        pensionNow: (p.assets?.pillar2 || 0) + (p.assets?.pillar3 || 0),
+        pensionAtUnlock: p.pensionAtUnlock,
+        pensionIncome: p.pensionIncome,
+        unlockAge: p.pension.pillarUnlockAge,
+        unlockYear: p.pensionUnlockYear,
+        pensionAgeConfirmed: p.pension.confirmed,
+        pensionAgeRange: p.pension.estimateRange,
+        drawAge: p.pillarDrawAge,
+        statePensionEarlyYears: p.statePensionEarlyYears,
+        pillar1UnitsSoFar: p.pillar1UnitsSoFar,
+        pillar1UnitsKnown: p.pillar1UnitsKnown,
+        statePensionAdjustment: p.statePensionAdjustment,
+        drawYear: p.pillarDrawYear,
+        pillar2DrawYear: p.pillar2DrawYear,
+        pillar3DrawYear: p.pillar3DrawYear,
+        pillar3EligibilityKnown: p.pillar3EligibilityKnown,
+        deferred: drawAtStatePensionAge,
+        payoutYears: p.payoutYears,
+        pensionTermsKnown: p.pensionTermsKnown,
+        incomeEndYear: p.pillarIncomeEndYear,
+        incomeEndAge: p.pillarIncomeEndAge,
+        crypto: p.assets?.crypto || 0,
+      })),
+    },
+    schedule,
+    house: purchase
+      ? { ...mort,
+          cashToComplete: cashForHouse, totalReserve: reserve,
+          completionYear: purchaseYear,
+          mortgageEndYear,
+          fundsAtCompletion: projectedAtHouse,
+          fundingShortfall: houseFundingShortfall,
+          feasible: houseFundingShortfall <= 0,
+          // The parts, so the total can be checked rather than trusted.
+          deposit: Math.min(purchase.price, purchase.deposit),
+          transactionCosts, emergencyFund,
+          movingCosts: purchase.movingCosts || 0,
+          transactionCostRate: a.transactionCostRate,
+          emergencyFundMonths: a.emergencyFundMonths,
+          // No income and a mortgage is not "unknown", it is unaffordable.
+          // 0/0 would render as "DSTI NaN%" on a page someone is reading.
+          dsti: householdNetIncome > 0
+            ? (mort.stressedMonthly + (purchase.otherDebtMonthly || 0)) /
+              (householdNetIncome / 12)
+            : (mort.stressedMonthly > 0 ? Infinity : 0) }
+      : null,
+    timeline: {
+      ageNow,
+      yearsToFi, fiAge: ageNow + yearsToFi, fiYear: currentYear + yearsToFi,
+      agesAtFi: people.map((p) => ({ name: p.name, age: p.ageNow + yearsToFi })),
+      mortgageBalanceAtFi: mortgageAtFi,
+      coastToPensionUnlock: depleting ? null : coastAt(ages.pillarUnlockAge),
+      coastTo60: depleting ? null : coastAt(60),
+      depleting,
+      pension: ages,
+      accumulation,
+      bridgeYears: Math.max(0,
+        Math.max(...people.map((p) => p.pillarDrawYear)) - (currentYear + yearsToFi)),
+      pensionPerPerson: people.map((p) => ({
+        name: p.name, unlockAge: p.pension.pillarUnlockAge, unlockYear: p.pensionUnlockYear,
+      })),
+    },
+    persons: people,
+  };
+}
+
+/* ---- pension-ui.js ---- */
+// Standalone pension calculator. Answers "what does this job do for my
+// pension?" without needing a full household plan.
+
+
+
+
+const $ = (id) => document.getElementById(id);
+const read = () => ({
+  birthYear: +$('birthYear').value || 1990,
+  grossMonthly: +$('gross').value || 0,
+  workUntilAge: +$('until').value || 63,
+  pillar2Rate: +$('rate').value || 0.02,
+  startingPillar2: +$('have2').value || 0,
+  startingPillar3: +$('have3').value || 0,
+  pillar3Annual: +$('p3').value || 0,
+  realReturn: (+$('ret').value || 5) / 100,
+  uninsured: $('uninsured').checked,
+  currentYear: new Date().getFullYear(),
+});
+
+function render() {
+  const input = read();
+  if (!input.grossMonthly) {
+    $('out').innerHTML = '<p class="empty">Enter a gross salary to see what it produces.</p>';
+    return;
+  }
+  const r = pillarProjection(input);
+  const c = r.contributions;
+
+  // The same salary at each of the three permitted Pillar II rates.
+  const rows = RATES.pillar2.employeeRates.map((rate) => {
+    const alt = pillarProjection({ ...input, pillar2Rate: rate });
+    return { rate, alt };
+  });
+
+  // Marginal value of the first euros of salary: the basic exemption means a
+  // small wage is taxed far more lightly than a large one.
+  const takeHomeShare = r.tax.gross > 0 ? r.tax.net / r.tax.gross : 0;
+
+  // Employment also carries health cover. For someone who would otherwise buy a
+  // voluntary contract that is real money, and it arrives now rather than at 63.
+  // What Pillar II membership costs in state pension: the same career accrues
+  // 20% less, because 16% of gross reaches Pillar I rather than 20%.
+  const yearsWorked = Math.max(0, r.yearsWorking + (input.birthYear
+    ? Math.max(0, (input.currentYear - input.birthYear) - 25) : 0));
+  const grossAnnual = input.grossMonthly * 12;
+  const pillar1Cost = 12 * (
+    pillar1Monthly({ grossAnnual, futureYears: yearsWorked, serviceYears: yearsWorked,
+      inPillar2: false }) -
+    pillar1Monthly({ grossAnnual, futureYears: yearsWorked, serviceYears: yearsWorked,
+      inPillar2: true }));
+
+  const healthMonthly = input.uninsured ? RATES.healthInsurance.voluntaryMonthly : 0;
+  const cashPerMonth = r.tax.net / 12 + healthMonthly;
+
+  $('out').innerHTML = `
+    <div class="stat-row">
+      <div class="stat"><b>${eur(r.total)}</b><span>pension pot at ${r.unlockAge.toFixed(0)}</span></div>
+      <div class="stat"><b>${eur(r.monthlyPension)}</b><span>20-year division — not an annuity quote*</span></div>
+      <div class="stat"><b>${eur(c.totalAnnual / 12)}</b><span>going in each month</span></div>
+      <div class="stat"><b>${eur(cashPerMonth)}</b><span>cash value per month</span></div>
+    </div>
+    ${!r.pensionAgeConfirmed && r.pensionAgeRange ? `<p class="warning">The retirement age is not yet official. The calculator uses a midpoint scenario; the currently supportable state-pension-age range is ${r.pensionAgeRange.min.toFixed(1)}–${r.pensionAgeRange.max.toFixed(1)}. Stress-test both ends.</p>` : ''}
+
+    <h3>What the job is worth ${infoBtn('worth')}</h3>
+    ${infoNote('worth', `A salary pays more than the salary. Alongside the net pay there is the
+      state's ${pct(RATES.pillar2.stateRate)} of gross into Pillar II — money that exists only while
+      you are employed — and health cover, which otherwise has to be bought. This adds up what the
+      job is really worth, separating what arrives now from what is deferred to unlock age.`)}
+    <table class="mini">
+      <tr><th>Net salary</th><td>${eur(r.tax.net / 12)}/mo</td></tr>
+      ${healthMonthly ? `<tr><th>Health insurance included <span class="muted">no separate contract to pay for</span></th><td><strong>${eur(healthMonthly)}/mo</strong></td></tr>` : ''}
+      <tr><th><strong>Cash value now</strong></th><td><strong>${eur(cashPerMonth)}/mo</strong></td></tr>
+      <tr class="thead"><th>Deferred, on top</th><td></td></tr>
+      <tr><th>Into Pillar II <span class="muted">yours ${eur(c.ownMonthly)} + the state's ${eur(c.stateMonthly)}</span></th><td>${eur(c.totalAnnual / 12)}/mo</td></tr>
+      ${c.refund ? `<tr><th>Pillar III refund</th><td>${eur(c.refund / 12)}/mo</td></tr>` : ''}
+    </table>
+    <p class="hint">${healthMonthly
+      ? `Employment carries health cover with it, which is the part most easily missed. At
+         ${eur(healthMonthly)} a month it is worth ${pct(healthMonthly / (cashPerMonth || 1))} of
+         what the job is really paying, and unlike the pension it arrives immediately rather than
+         at ${r.unlockAge.toFixed(0)}. On this salary the job keeps ${pct(takeHomeShare)} of gross
+         as pay, and the cover comes on top of that.`
+      : `Keeping ${pct(takeHomeShare)} of gross as pay. A high earner keeps about 75% of each
+         additional euro — the basic exemption is why lower salaries keep more.`}</p>
+
+    <h3>Where the money comes from ${infoBtn('sources')}</h3>
+    ${infoNote('sources', `Of everything landing in your pensions each month, only part is yours.
+      The state's ${pct(RATES.pillar2.stateRate)} is fixed and does <em>not</em> rise when you raise
+      your own rate, and the Pillar III refund is income tax you would otherwise have paid. This
+      separates the three so the real out-of-pocket cost is visible.`)}
+    <table class="mini">
+      <tr><th>Your Pillar II <span class="muted">${pct1(input.pillar2Rate)} of gross</span></th><td>${eur(c.ownMonthly)}/mo</td></tr>
+      <tr><th>Pillar III${c.pillar3Annual ? '' : ' <span class="muted">not using it</span>'}</th><td>${eur(c.pillar3Annual / 12)}/mo</td></tr>
+      <tr><th>Less the Pillar III tax refund</th><td>${c.refund ? '−' + eur(c.refund / 12) : eur(0)}/mo</td></tr>
+      <tr><th><strong>Out of your own pocket</strong></th><td><strong>${eur(r.netCostAnnual / 12)}/mo</strong></td></tr>
+      <tr class="thead"><th>Added by the state</th><td></td></tr>
+      <tr><th>Pillar II <span class="muted">${pct1(RATES.pillar2.stateRate)} of gross, only while employed</span></th><td><strong>${eur(c.stateMonthly)}/mo</strong></td></tr>
+
+      <tr><th><strong>Total going into pensions</strong></th><td><strong>${eur((r.netCostAnnual + c.stateAnnual + c.refund) / 12)}/mo</strong></td></tr>
+      <tr><th>Paying in for</th><td>${r.yearsWorking.toFixed(0)} years, unlocking ${Math.round(r.unlockYear)}</td></tr>
+      ${pillar1Cost > 1 ? `
+      <tr class="thead"><th>What membership costs elsewhere</th><td></td></tr>
+      <tr><th>State pension given up ${infoBtn('diverted')} <span class="muted">the state's share is diverted from it, not added to it</span></th><td>−${eur(pillar1Cost / 12)}/mo</td></tr>` : ''}
+    </table>
+    ${infoNote('diverted', `The state's ${pct1(RATES.pillar2.stateRate)} is not additional money. RPKS §13¹(1)
+      sends ${pct(0.16)} of your gross into the state pension instead of ${pct(0.20)} once you are a
+      Pillar II member — the missing four points are what lands in your own fund. Both halves of the
+      Pillar I accrual formula fall by that same 16/20, so being a member earns you exactly
+      <strong>${pct(1 - RATES.pillar1.pillar2MemberFactor)} less</strong> state pension for identical
+      earnings.<br><br>On this salary that is ${eur(pillar1Cost / 12)} a month of state pension given
+      up, against ${eur(c.stateMonthly)} a month going into your own fund — plus your own
+      contribution, plus decades of compounding, which is what it has to beat. Note the cost comes
+      from <em>membership</em>, not from your rate: moving from
+      ${pct1(RATES.pillar2.employeeRates[0])} to ${pct1(RATES.pillar2.employeeRates[2])} adds
+      nothing to it.`)}
+
+    <p class="hint">${c.pillar3Annual
+      ? `Of every ${eur((r.netCostAnnual + c.stateAnnual + c.refund) / 12)} going in, ${eur(r.netCostAnnual / 12)} is yours — the rest is the state's contribution and the tax refund.`
+      : `The state puts ${(c.stateAnnual / (r.netCostAnnual || 1)).toFixed(1)}× your own contribution into
+         the fund, and only while you are employed — but it is moved out of your state pension
+         rather than added on top. Do not net the two: ${eur(c.stateMonthly)}/mo going in now is not
+         the same kind of thing as ${eur(pillar1Cost / 12)}/mo of indexed pension from
+         ${r.unlockAge.toFixed(0)}. The comparison that settles it is the pot above against that
+         income — ${eur(r.total)} of fund, built from money that would otherwise have bought
+         ${eur(pillar1Cost / 12)}/mo for life.`}</p>
+
+    <h3>Take-home on this salary ${infoBtn('takehome')}</h3>
+    ${infoNote('takehome', `Estonia's income tax is flat at ${pct(RATES.incomeTax)}, but the first
+      €${(12 * RATES.basicExemptionMonthly).toLocaleString()} a year is exempt for everyone — so the
+      <em>effective</em> rate rises with the salary and a modest wage keeps far more of itself
+      proportionally. Pillar II is listed as a deduction because it leaves your pay packet, though
+      unlike tax it is still your money.`)}
+    <table class="mini">
+      <tr><th>Gross</th><td>${eur(r.tax.gross / 12)}/mo</td></tr>
+      <tr><th>Income tax <span class="muted">after the €${(12 * RATES.basicExemptionMonthly).toLocaleString()} exemption</span></th><td>−${eur(r.tax.incomeTax / 12)}/mo</td></tr>
+      <tr><th>Unemployment insurance + Pillar II</th><td>−${eur((r.tax.unemploymentInsurance + r.tax.pillar2Employee) / 12)}/mo</td></tr>
+      <tr><th><strong>Net</strong></th><td><strong>${eur(r.tax.net / 12)}/mo</strong></td></tr>
+    </table>
+    <p class="hint">${takeHomeShare > 0.9
+      ? `At this level almost the whole salary survives — the basic exemption absorbs most of it.
+         A high earner keeps about 75% of each additional euro.`
+      : `The basic exemption covers the first €${(12 * RATES.basicExemptionMonthly).toLocaleString()}
+         of gross regardless of what else you earn, which is why lower salaries keep a larger share.`}</p>
+
+    ${(() => {
+      // Show what Pillar III could add even when nothing is entered - otherwise
+      // the option is invisible to the person who most needs to see it.
+      const maxed = pillarProjection({ ...input, pillar3Annual: RATES.pillar3.maxAnnual });
+      const cap = maxed.pillar3.cap;
+      const refund = maxed.pillar3.refund;
+      if (cap < 1) return '';
+      const already = c.pillar3Annual >= cap - 1;
+      const capReason = cap < RATES.pillar3.maxAnnual
+        ? `15% of gross` : `the €${RATES.pillar3.maxAnnual.toLocaleString()} annual cap`;
+      const wasted = cap * RATES.pillar3.refundRate - refund;
+      return `
+    <h3>${already ? 'Pillar III — already at the limit' : 'What Pillar III could add'}</h3>
+    <table class="mini">
+      <tr><th>Most you could pay in <span class="muted">limited by ${capReason}</span></th><td>${eur(cap)}/yr</td></tr>
+      <tr><th>Income tax back <span class="muted">at ${pct(RATES.pillar3.refundRate)}</span></th><td><strong>${refund > 0 ? '+' + eur(refund) + '/yr' : 'nothing'}</strong></td></tr>
+      <tr><th>Real cost after the refund</th><td>${eur(cap - refund)}/yr</td></tr>
+      <tr><th>Pot at ${r.unlockAge.toFixed(0)} if maxed</th><td>${eur(maxed.total)} <span class="muted">vs ${eur(r.total)}</span></td></tr>
+    </table>
+    ${(() => {
+      // Where the salary sits relative to the points at which Pillar III starts
+      // to pay. Derived from the rates rather than hard-coded, so a change to
+      // the exemption or the deduction share carries through.
+      const ded = RATES.unemploymentInsuranceEmployee + input.pillar2Rate;
+      const exempt = 12 * RATES.basicExemptionMonthly;
+      const noTaxBelow = exempt / (1 - ded) / 12;
+      const fullFrom = exempt / (1 - ded - RATES.pillar3.maxShareOfGross) / 12;
+      const capBinds = RATES.pillar3.maxAnnual / RATES.pillar3.maxShareOfGross / 12;
+      const g = input.grossMonthly;
+      const band = g < noTaxBelow ? 0 : g < fullFrom ? 1 : g < capBinds ? 2 : 3;
+      const row = (i, label, detail) =>
+        `<tr class="${i === band ? 'here' : ''}"><th>${label}</th><td>${detail}</td></tr>`;
+      return `
+    <h4>When Pillar III starts paying ${infoBtn('bands')}</h4>
+    ${infoNote('bands', `The refund is capped by the income tax you actually paid, so on a small
+      salary Pillar III returns little or nothing — it would just be locking money away. These are
+      the salary bands where that changes. The row in bold is where this salary falls.`)}
+    <table class="mini thresholds">
+      <tr class="thead"><th>Gross salary, before tax</th><td>What the refund does</td></tr>
+      ${row(0, `Below ${eur(noTaxBelow)}/mo`, 'no income tax is paid, so nothing to refund')}
+      ${row(1, `${eur(noTaxBelow)}–${eur(fullFrom)}/mo`, 'partial refund, limited by the tax paid')}
+      ${row(2, `From ${eur(fullFrom)}/mo`, `full ${pct(RATES.pillar3.refundRate)} on the whole allowance`)}
+      ${row(3, `From ${eur(capBinds)}/mo`, `the €${RATES.pillar3.maxAnnual.toLocaleString()} cap binds instead of ${pct(RATES.pillar3.maxShareOfGross)} of gross`)}
+    </table>
+    <p class="hint">The allowance is the <strong>lower of ${pct(RATES.pillar3.maxShareOfGross)} of gross
+      and €${RATES.pillar3.maxAnnual.toLocaleString()}</strong>, refunded at ${pct(RATES.pillar3.refundRate)} —
+      so the most anyone can get back is <strong>€${(RATES.pillar3.maxAnnual * RATES.pillar3.refundRate).toLocaleString()}
+      a year</strong>. It is per earner and cannot be transferred to a spouse. The row in bold is
+      where this salary falls.</p>`;
+    })()}
+
+    <p class="hint">${
+      refund <= 0
+        ? `On this salary there is no income tax left to refund, so Pillar III returns nothing —
+           it would just be locking money away. Contribute in the higher earner's name instead;
+           the allowance cannot be transferred between spouses.`
+        : wasted > 1
+          ? `The refund is capped by the income tax actually paid, so ${eur(wasted)} of the
+             nominal 22% is unusable at this salary.`
+          : `That is a guaranteed ${pct(RATES.pillar3.refundRate)} back on money you were going to
+             save anyway. It is locked until ${r.unlockAge.toFixed(0)}, but taken then it is taxed
+             at 10% rather than 22% — and 0% as a lifetime annuity.`}</p>`;
+    })()}
+
+    <h3>If the Pillar II rate changed ${infoBtn('rates')}</h3>
+    ${infoNote('rates', `You may contribute ${RATES.pillar2.employeeRates.map((r) => pct1(r)).join(', ')}
+      of gross, changed by 30 November for the following January. Raising it buys more pension but
+      <strong>no extra match</strong> — the state's ${pct(RATES.pillar2.stateRate)} is fixed — and it
+      locks the money until unlock age. Compare against putting the same amount in an investment
+      account, which stays reachable.`)}
+    <table class="mini">
+      <tr><th>Rate</th><td>Pot at ${r.unlockAge.toFixed(0)} · out of pocket</td></tr>
+      ${rows.map(({ rate, alt }) => `
+        <tr><th>${pct1(rate)}${rate === input.pillar2Rate ? ' <span class="muted">current</span>' : ''}</th>
+        <td>${eur(alt.total)} · ${eur(alt.netCostAnnual / 12)}/mo</td></tr>`).join('')}
+    </table>
+    <p class="hint">The state's 4% does <em>not</em> rise with your own rate — it is fixed. Raising
+      your contribution buys more pension, but no extra match, and it locks the money until
+      ${r.unlockAge.toFixed(0)}.</p>
+
+    <p class="hint">* Qualifying lifetime or recommended-duration payments can be taxed at
+      <strong>0%</strong>; a lump sum is generally taxed at 10%. The displayed monthly amount is
+      only the pot divided by ${r.payoutYears} years for scale. It is neither an insurer quote nor
+      the official Pensionikeskus duration and must not be used as expected pension income.</p>
+  `;
+}
+
+bindExplain(render);
+document.addEventListener('input', render);
+document.addEventListener('change', render);
+render();
+
+/* ---- nav.js ---- */
+// Shared chrome for the guide pages: theme toggle and the mobile drawer.
+(function () {
+  var root = document.documentElement;
+  try { var stored = localStorage.getItem('fa-theme'); if (stored) root.setAttribute('data-theme', stored); } catch (e) {}
+
+  var btn = document.getElementById('theme');
+  if (btn) btn.addEventListener('click', function () {
+    var dark = root.getAttribute('data-theme') === 'dark'
+      || (!root.hasAttribute('data-theme') && matchMedia('(prefers-color-scheme: dark)').matches);
+    var next = dark ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('fa-theme', next); } catch (e) {}
+  });
+
+  var menu = document.getElementById('menu'), scrim = document.getElementById('scrim');
+  function setOpen(o) { document.body.classList.toggle('nav-open', o); menu.setAttribute('aria-expanded', String(o)); }
+  if (menu) menu.addEventListener('click', function () { setOpen(!document.body.classList.contains('nav-open')); });
+  if (scrim) scrim.addEventListener('click', function () { setOpen(false); });
+  addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+})();
+
+</script>
+</body>
+</html>

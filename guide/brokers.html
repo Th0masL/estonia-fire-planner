@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Where to hold it — brokers, and parking cash — Estonian FIRE Simulator</title>
+<meta name="description" content="This guide keeps running into two practical questions. Which provider should you buy through, and where should you put cash that you need soon and don't wa">
+<link rel="stylesheet" href="../styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
+</head>
+<body class="guide">
+<a class="skip" href="#main">Skip to content</a>
+
+<button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
+
+<nav id="sidebar" class="sidebar" aria-label="Contents">
+  <div class="brand">
+    <span class="brand-mark">FI</span>
+    <span class="brand-text">Estonian&nbsp;FIRE<small>Simulator &amp; guide</small></span>
+  </div>
+  <ul class="nav">
+    <li class="nav-doc"><a class="nav-top" href="../index.html">Start here</a></li>
+
+    <li class="nav-group">Calculators</li>
+    <li class="nav-doc"><a class="nav-top" href="../simulator.html">FIRE calculator</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../pension.html">Pension calculator</a></li>
+
+    <li class="nav-group">Guides</li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/fire-basics.html">FIRE basics</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/tax-overview.html">Estonian tax overview</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/investment-account.html">The investment account</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/pensions.html">Pension pillars</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/health-insurance.html">Health insurance</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/crypto.html">Crypto</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/real-estate.html">Property & rental income</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/company.html">Using an OÜ</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/portfolio.html">Building the portfolio</a></li>
+    <li class="nav-doc active"><a class="nav-top" href="../guide/brokers.html">Brokers & parking cash</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/property.html">Buying a home</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/household.html">Household & children</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/fatfire.html">FatFIRE</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/risks.html">Risks & blind spots</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/protection.html">Account protection</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/levers.html">Strategy levers</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/sources.html">Sources & verification</a></li>
+  </ul>
+  <div class="sidebar-foot">
+    <button id="theme" class="theme" aria-label="Toggle colour theme">
+      <span class="theme-icon" aria-hidden="true"></span><span class="theme-text">Theme</span>
+    </button>
+    <p class="note">Not financial advice. Rates last verified August 2026.</p>
+  </div>
+</nav>
+
+<div class="scrim" id="scrim"></div>
+
+<main id="main" class="main">
+  <div class="wrap">
+    <section class="doc">
+      <h1 class="doc-title">Where to hold it — brokers, and parking cash</h1>
+<p>This guide keeps running into two practical questions. Which provider should you
+buy through, and where should you put cash that you need soon and don't want to
+put in shares? Most people can answer both the same way, so both are on this
+page.</p>
+<h2 id="the-short-version">The short version</h2>
+<p>Use any Estonian provider that reports to the Tax Board for you. LHV, Swedbank,
+SEB and Lightyear all do this. They send your investment account report in
+automatically, so you don't have to keep the records yourself, and that is what
+keeps the tax deferral working.</p>
+<p>They cost different amounts. Lightyear is free to buy ETFs and free to hold them.
+The banks charge 0.14% each time you buy, and they start
+charging you to hold your shares once you have more than
+€100,000. If you buy an ETF every month, that adds
+up.</p>
+<p>It doesn't matter much if you pick the wrong one. All four are regulated in
+Estonia, all four keep your shares separate from their own money, and you can
+move later.</p>
+<h2 id="the-field">The field</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><strong>Lightyear</strong></th>
+<th><strong>LHV</strong></th>
+<th><strong>Swedbank</strong></th>
+<th><strong>SEB</strong></th>
+<th><strong>Interactive Brokers</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>What it is</td>
+<td>investment firm</td>
+<td>bank</td>
+<td>bank</td>
+<td>bank</td>
+<td>foreign broker</td>
+</tr>
+<tr>
+<td>Cost to buy an ETF</td>
+<td><strong>free</strong></td>
+<td>0.14%, min €5.00</td>
+<td>0.14%, min €3.90</td>
+<td>about the same as LHV</td>
+<td>a few cents</td>
+</tr>
+<tr>
+<td>Cost to hold shares</td>
+<td><strong>nothing</strong></td>
+<td>free up to €100,000, then 0.01% a month</td>
+<td>free up to €100,000, then 0.008% a month, <strong>never more than €8 a month</strong></td>
+<td>free up to €100,000</td>
+<td>nothing</td>
+</tr>
+<tr>
+<td>Changing currency</td>
+<td>0.35%</td>
+<td>market rate</td>
+<td>market rate</td>
+<td>market rate</td>
+<td>close to market rate</td>
+</tr>
+<tr>
+<td>Reports to the Tax Board</td>
+<td>✅ automatically</td>
+<td>✅ automatically</td>
+<td>✅ automatically</td>
+<td>✅ automatically</td>
+<td>❌ <strong>you do it yourself, every year</strong></td>
+</tr>
+<tr>
+<td>Baltic shares</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>only some</td>
+</tr>
+<tr>
+<td>Regulated in</td>
+<td>Estonia</td>
+<td>Estonia</td>
+<td>Estonia</td>
+<td>Estonia</td>
+<td>Ireland / US</td>
+</tr>
+</tbody>
+</table>
+<p>Luminor also sells securities services, but it publishes very little that you can
+compare against the others. This guide doesn't know enough about it to recommend
+it or to warn you off it.</p>
+<h3 id="lightyear-is-the-cheap-one-and-it-is-estonian">Lightyear is the cheap one, and it is Estonian</h3>
+<p>Lightyear Europe AS has a licence from the Estonian Financial Supervision
+Authority. It is an Estonian company under Estonian supervision, not an app based
+somewhere far away. It charges nothing to buy ETFs and nothing to hold them, it
+works with the investment account, and it sends your report to the Tax Board the
+same way the banks do.</p>
+<p>There are four things to know before you choose it:</p>
+<ul>
+<li><strong>It is not a bank.</strong> You get no current account, no card and no mortgage. Your
+  cash there is covered by investor protection, which pays up to
+  €20,000, and not by the deposit guarantee,
+  which pays up to €100,000. This matters less than
+  it sounds for money you have invested, because all of these providers keep your
+  shares separate from their own money. It matters more for cash you leave
+  sitting there.</li>
+<li><strong>You cannot buy Baltic shares.</strong> If you are buying global index funds, which
+  is what most plans in this guide do, you will never notice.</li>
+<li><strong>Changing currency costs 0.35%.</strong> The banks don't
+  charge you separately for this. If you buy ETFs priced in euros, you never pay
+  it.</li>
+<li><strong>It is younger than the banks.</strong> It has been around for less time and has less
+  history behind it. That is something you have to judge for yourself.</li>
+</ul>
+<h3 id="lhv-and-swedbank-do-the-same-job">LHV and Swedbank do the same job</h3>
+<p>Both give you access to the same markets, both charge
+0.14%, both charge nothing until the shares in the
+account are worth more than €100,000, and both
+report to the Tax Board for you. Swedbank has a lower minimum fee per trade
+(€3.90, against LHV's
+€5.00), which only matters if you buy small amounts
+each month. LHV's app is nicer to use, but that is a matter of taste.</p>
+<p>Pick whichever bank you already use and don't think about it any further.</p>
+<h3 id="the-fee-for-holding-shares-which-is-easy-to-miss">The fee for holding shares, which is easy to miss</h3>
+<p>Above €100,000 the two banks stop being the same.
+Swedbank has a maximum monthly fee. LHV does not.</p>
+<table>
+<thead>
+<tr>
+<th>Value of the shares</th>
+<th>LHV charges</th>
+<th>Swedbank charges</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>€100,000</td>
+<td>nothing</td>
+<td>nothing</td>
+</tr>
+<tr>
+<td>€300,000</td>
+<td>€240 a year</td>
+<td>€96 a year</td>
+</tr>
+<tr>
+<td>€600,000</td>
+<td>€600 a year</td>
+<td>€96 a year</td>
+</tr>
+<tr>
+<td>€1,000,000</td>
+<td>€1,080 a year</td>
+<td>€96 a year</td>
+</tr>
+</tbody>
+</table>
+<p>Both banks only charge you on the money above
+€100,000. Swedbank never charges more than
+€8 a month, which is
+€96 a year, however big your portfolio
+gets. That is a small enough amount to ignore.</p>
+<p><strong>One condition on those Swedbank numbers.</strong> VAT at 24% is added to the
+fee, unless the account holds nothing but fund units. An account holding only
+ETFs pays no VAT, so the figures above are what you actually pay. Buy a few
+individual shares and hold them in the same account, and the whole fee gains
+24%, so €96 becomes about €119.
+This guide builds all-ETF portfolios, so the exemption normally applies, but it
+is worth knowing that one single share can switch it off.</p>
+<p>LHV does not publish whether the same exemption applies to its fee, so assume VAT
+is added there and treat LHV's numbers above as the lower bound.</p>
+<h3 id="what-interactive-brokers-is-actually-good-for">What Interactive Brokers is actually good for</h3>
+<p>There is one good reason to open an account there, and two reasons that used to
+be good and are not any more.</p>
+<p><strong>The good reason is that shares can be held outside Estonia.</strong> In a typical
+Estonia-resident plan, employment income, housing, banking and pensions may all be tied to one
+small country. Holding some financial assets through another jurisdiction spreads a risk that
+nothing else in this guide deals with.</p>
+<p><strong>It is no longer the cheapest way to buy.</strong> Lightyear lets you buy ETFs for
+free, and that is what most people reading this are doing.</p>
+<p><strong>It no longer saves you much on fees for holding shares.</strong> Swedbank will never
+charge you more than €96 a year, and
+Lightyear charges nothing at all, so there is not much to save.</p>
+<p><strong>What it costs you is the paperwork.</strong> Estonian providers tell the Tax Board
+about your investment account for you. Interactive Brokers does not, and it never
+will. You have to write down every payment in and every payment out yourself, and
+keep it correct for as long as the account is open. If you get it wrong, you lose
+the tax deferral. That is work you take on forever, in exchange for holding your
+money in another country.</p>
+<h3 id="what-to-do-first">What to do first</h3>
+<ol>
+<li><strong>Open one Estonian account.</strong> Choose Lightyear if you care most about cost
+   and you are buying ETFs. Choose LHV or Swedbank if you want it next to your
+   bank account, or if you want to buy Baltic shares.</li>
+<li><strong>Only open a second one if you can say why.</strong> Wanting your money held outside
+   Estonia is a good reason. Saving
+   €96 a year is not.</li>
+<li><strong>A third account is almost never worth it.</strong></li>
+</ol>
+<hr />
+<h2 id="parking-cash-a-money-market-fund-inside-the-investment-account">Parking cash: a money market fund inside the investment account</h2>
+<p>Some money has a job to do soon. A deposit on a house, an emergency fund, a tax
+bill due next October. Shares are the wrong place for it, and a normal savings
+account pays almost nothing. The usual answer is to buy a <strong>EUR money market fund
+inside your investment account</strong>, though a fixed-term deposit is a real
+alternative and sometimes the better one.</p>
+<h3 id="why-this-beats-a-savings-account">Why this beats a savings account</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Savings account at a bank</th>
+<th>Money market fund in an investment account</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>What you earn</td>
+<td>nothing much on a current account, more on a fixed term</td>
+<td>roughly the ECB rate, minus about 0.1%</td>
+</tr>
+<tr>
+<td>Tax</td>
+<td>you pay 22% on the interest <strong>in the year you receive it</strong></td>
+<td><strong>you pay nothing</strong> until you take out more than you put in</td>
+</tr>
+<tr>
+<td>If the bank fails</td>
+<td>the deposit guarantee pays up to €100,000</td>
+<td>this is not a deposit, so it is not covered — see below</td>
+</tr>
+<tr>
+<td>Getting your money</td>
+<td>straight away</td>
+<td>you sell, wait two days for settlement, then transfer</td>
+</tr>
+</tbody>
+</table>
+<p>The tax difference is the one that grows over time. Interest on a savings account
+is taxed the year you earn it. Money earned inside an investment account is not
+taxed until you take more out of the account than you put in. So the money that
+would have gone to the Tax Board each spring stays invested and keeps earning.</p>
+<h3 id="how-to-do-it">How to do it</h3>
+<ol>
+<li><strong>Get an investment account.</strong> Tell the Tax Board in e-MTA that one of your
+   bank accounts is an <em>investeerimiskonto</em>. Estonian providers usually make this
+   a checkbox when you open a securities account. <a href="investment-account.html">The investment account
+   guide</a> explains the rules you have to follow.</li>
+<li><strong>Move the cash into that account.</strong> Every euro you put in counts as a
+   contribution, and you can take that same amount back out later without paying
+   tax on it.</li>
+<li><strong>Buy a EUR money market fund</strong> in that account. Pick an <strong>accumulating</strong>
+   version. It pays nothing out to you, so there is nothing to declare and no
+   money leaves the account.</li>
+<li><strong>Leave it alone.</strong> Sell it when you need the money. Allow two days for the
+   sale to settle and another day to transfer the money, and work that out before
+   you book the notary rather than on the day.</li>
+</ol>
+<p>Lightyear does this for you as a savings product instead of a fund you buy
+yourself. Your money goes into money market funds run by someone else, it costs
+0.1% a year or less, and you can get it back
+the same day or the next day. It is a reasonable way to do the same thing with
+less effort, but you don't get to choose the fund.</p>
+<h3 id="which-providers-actually-pay-the-ecb-rate-on-cash">Which providers actually pay the ECB rate on cash</h3>
+<p>The ECB deposit facility rate is 2.25%
+(August 2026). Here is what the different routes pay against it, and
+what each one costs in tax and in flexibility.</p>
+<table>
+<thead>
+<tr>
+<th>Route</th>
+<th>Pays now</th>
+<th>Tax on the return</th>
+<th>Money is protected by</th>
+<th>Getting it back</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Money market fund</strong> at LHV, Swedbank or SEB</td>
+<td>about 2.2%</td>
+<td>deferred inside an investment account</td>
+<td>fund assets held separately, no deposit guarantee</td>
+<td>sell, then two days</td>
+</tr>
+<tr>
+<td><strong>Lightyear Savings</strong></td>
+<td>about 2.21%</td>
+<td>deferred inside an investment account</td>
+<td>same, held in third-party funds</td>
+<td>same or next day</td>
+</tr>
+<tr>
+<td><strong>Term deposit</strong> at Bigbank, Holm or Inbank</td>
+<td>up to about 3%</td>
+<td>22%, in the year it is paid</td>
+<td>deposit guarantee, €100,000</td>
+<td>locked until the term ends</td>
+</tr>
+<tr>
+<td><strong>Term deposit</strong> at LHV, SEB or Swedbank</td>
+<td>up to about 2.3%</td>
+<td>22%, in the year it is paid</td>
+<td>deposit guarantee, €100,000</td>
+<td>locked until the term ends</td>
+</tr>
+<tr>
+<td><strong>Interactive Brokers cash</strong></td>
+<td>about 1.69%</td>
+<td>22%, declared by hand</td>
+<td>investor protection, not the deposit guarantee</td>
+<td>same day</td>
+</tr>
+<tr>
+<td><strong>Ordinary current account</strong></td>
+<td>roughly nothing</td>
+<td>nothing to tax</td>
+<td>deposit guarantee, €100,000</td>
+<td>instant</td>
+</tr>
+</tbody>
+</table>
+<p>Three things stand out.</p>
+<p><strong>The smaller Estonian banks pay more than the ECB rate, not less.</strong> Bigbank,
+Holm Bank and Inbank compete for funding and price above the big banks. They are
+all licensed in Estonia and covered by the same
+€100,000 guarantee. A term deposit there is a
+sensible home for money with a fixed date, and it beats what a money market fund
+can reach.</p>
+<p><strong>The money market fund wins on tax and on flexibility, not on rate.</strong> Its
+advantage is that the return is not taxed while it stays in the investment
+account, and that it can be sold on any day rather than at the end of a fixed
+term. But that tax advantage is smaller than it first looks for money that is
+going to be spent. Taking money out to buy a house is a withdrawal, and once
+withdrawals pass contributions, the gain is taxed. The deferral changes <em>when</em>
+the tax is paid, not whether it is paid at all.</p>
+<p><strong>Interactive Brokers is the worst of these for cash.</strong> It pays a spread below
+the benchmark, it pays nothing at all on the first
+€10,000, and below
+€100,000 of account value the rate is scaled down
+further. It is a place to hold investments, not cash.</p>
+<p>⚠️ These rates move. They are a snapshot from August 2026, and unlike
+most numbers in this guide they are not law. Compare current deposit rates at
+minuraha.ee, which publishes a barometer of what Estonian banks are paying.</p>
+<h3 id="cash-at-a-bank-in-another-country">Cash at a bank in another country</h3>
+<p>Plenty of people living in Estonia still have a bank account somewhere else,
+often in the country they moved from. Two things decide whether it is a good
+place to keep cash, and neither of them is the advertised rate.</p>
+<p><strong>A tax exemption in another country does not survive Estonian residency.</strong> Many
+national savings products pay a modest rate and make it tax-free, and the tax
+break is the entire point of the product. An Estonian tax resident is taxed by
+Estonia on worldwide income at 22%, and under the usual tax treaty
+wording interest is taxed where the saver lives. So a tax-free account abroad is
+not tax-free here, and a rate that looked competitive can end up below what an
+ordinary Estonian term deposit pays. Always compare these after Estonian tax,
+never on the headline.</p>
+<p><strong>A second country's deposit guarantee is genuinely separate.</strong> Every EU country
+runs its own scheme covering €100,000, funded by
+that state. Cash split between an Estonian bank and a bank in another EU country
+is covered twice over, not once. For a balance well above the limit, that is a
+real reason to keep the foreign account open even when its rate is poor.</p>
+<p>Two pieces of admin come with it. The interest has to be declared in Estonia and
+taxed here, even where the other country taxed none of it. And the foreign bank
+reports the account to the Estonian tax authority automatically under the common
+reporting standard, so the balance is visible either way.</p>
+<h3 id="which-fund-to-buy">Which fund to buy</h3>
+<p>You want a fund that follows <strong>€STR</strong>, which is the euro short-term rate. When
+people say "the ECB rate", this is roughly what they mean. Look for one that
+costs less than about 0.15% a year, that is accumulating, and that trades on
+Xetra so your Estonian provider can buy it.</p>
+<p>The biggest one by far is the <strong>Xtrackers II EUR Overnight Rate Swap UCITS ETF
+1C</strong>. Its ticker on Xetra is XEON and its ISIN is LU0290358497. It costs 0.10% a
+year, it is accumulating, it is based in Luxembourg, and it holds about €22
+billion. <strong>Amundi Smart Overnight Return</strong> (LU1190417599) costs the same and does
+a similar job, though it is actively managed rather than following an index.</p>
+<p>⚠️ <strong>Check that you can actually buy it before you plan around it.</strong> Neither LHV
+nor Swedbank publishes a list of what you can buy. You search for the ticker or
+the ISIN once you are logged in. Both banks give you broad access to Xetra and
+XEON is one of the most traded things on that exchange, so it should be there,
+but search for it in your own account first.</p>
+<p><strong>Three things the fee doesn't tell you:</strong></p>
+<p><strong>XEON doesn't hold what it tracks.</strong> Instead of holding short-term loans, it has
+swap agreements with several banks that pay it the rate. This is normal, and it
+is why the fund is cheap, but it means you depend on those banks in a way you
+wouldn't with a fund that holds the real thing. If this money absolutely has to
+be there, that is worth more thought than a small difference in fees.</p>
+<p><strong>It follows €STR plus 0.085%, not €STR itself.</strong> The fee comes out of that. The
+difference is small, but it explains why the rate you read about and the return
+you get are not the same number.</p>
+<p><strong>It is not a savings account, and it can lose money.</strong> A money market fund is
+not covered by the €100,000 deposit guarantee at
+all. Your money is held separately from the provider's own, which actually
+protects you better in the case that matters — if the broker fails, your holding
+is still yours — but it is a different kind of protection, not a bigger version
+of the same one. And the value can fall. XEON lost 0.03% in 2022, when the
+underlying rate was still around zero. That is a small loss, but it is a loss, so
+don't treat this as a savings account.</p>
+<h3 id="when-a-savings-account-is-still-the-better-choice">When a savings account is still the better choice</h3>
+<p>If the amount is small, or you might need the money within a week, or you don't
+want to worry about a two-day wait before a notary appointment, use a savings
+account and accept the slightly worse rate. On €20,000 over six months the
+difference is about €100 before tax. That is not worth the extra complication if
+you would rather not deal with it.</p>
+      <nav class="pager"><a class="prev" href="portfolio.html">← Building the portfolio</a><a class="next" href="property.html">Buying a home →</a></nav>
+    </section>
+  </div>
+</main>
+
+<script src="../src/nav.js"></script>
+</body>
+</html>

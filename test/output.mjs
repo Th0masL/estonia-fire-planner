@@ -1,0 +1,327 @@
+// Checks on what actually ships: the built HTML, and the agreement between the
+// two calculators that model the same thing by different routes.
+//
+// The retrospective's first lesson was that the tests looked at the wrong layer.
+// Three real defects were invisible to Node entirely - ES modules being dead on
+// file://, a label that could not open its own file input, a rate label rounding
+// 3.5% to 4% - because nothing ever looked at the output. These do.
+//
+// Run after build.py.
+
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
+import { pillarProjection, netFromGross, pillar1Monthly, simulate, pensionAges } from '../src/calc.js';
+import { RATES } from '../src/rates.js';
+import { sanitise, exampleState } from '../src/state.js';
+
+const ROOT = new URL('..', import.meta.url).pathname;
+let checks = 0;
+const failures = [];
+const ok = (cond, label, detail = '') => {
+  checks++;
+  if (!cond) failures.push(`${label}${detail ? ' — ' + detail : ''}`);
+};
+
+const read = (rel) => readFileSync(join(ROOT, rel), 'utf8');
+
+// --- the two calculators must agree ------------------------------------------
+//
+// pension.html projects Pillar II through pillarProjection(); simulator.html
+// does it again inside simulate(). Two code paths, one set of rules - so they
+// can drift, and a user comparing the pages would be the one to find out.
+
+for (const gross of [1200, 2500, 4000, 8000]) {
+  for (const rate of RATES.pillar2.employeeRates) {
+    const birthYear = 1982;
+    const standalone = pillarProjection({
+      birthYear, grossMonthly: gross, pillar2Rate: rate,
+      realReturn: 0.05, currentYear: RATES.year, startingPillar2: 20000,
+    });
+
+    // The simulator's equivalent: the same person, working right up to unlock.
+    const ages = pensionAges(birthYear);
+    const yearsToUnlock = ages.pillarUnlockAge - (RATES.year - birthYear);
+    const plan = simulate(sanitise({
+      ...exampleState(),
+      currentYear: RATES.year,
+      household: {
+        hasDependents: false,
+        // Spending set so high that FI never arrives, which pins the stop date
+        // at the unlock date and makes the two projections comparable.
+        spending: { housing: 0, childCosts: 0, other: gross * 5, buffer: 0 },
+        rentalIncomeNetMonthly: 0, property: null,
+      },
+      persons: [{
+        name: 'Person1', birthYear,
+        income: { grossMonthly: gross, netMonthly: null, otherNetMonthly: 0 },
+        assets: { cash: 0, investmentAccount: 0, pillar2: 20000, pillar3: 0, crypto: 0 },
+        pillar2Rate: rate, pillar3Annual: 0, allocationShare: 1,
+      }],
+      assumptions: { realReturn: 0.05, swr: 0.035, pensionPolicy: 'ignore' },
+    }));
+
+    const a = standalone.pot2;
+    const b = plan.persons[0].pensionAtUnlock;
+    ok(Math.abs(a - b) < Math.max(50, a * 0.001),
+       `pension pot agrees between the two pages at €${gross}/mo, ${rate * 100}%`,
+       `${Math.round(a).toLocaleString()} vs ${Math.round(b).toLocaleString()}`);
+
+    // And the tax model behind both must be one model.
+    const t1 = standalone.tax;
+    const t2 = netFromGross(gross * 12, { pillar2Rate: rate });
+    ok(Math.abs(t1.net - t2.net) < 0.01,
+       `net pay agrees at €${gross}/mo, ${rate * 100}%`);
+  }
+}
+
+// --- Pillar I must reproduce the published benchmark -------------------------
+//
+// The one figure in the formula that can be checked against a government
+// publication: a 44-year career at the average wage. If a rate is mistyped this
+// is what catches it.
+
+{
+  // Outside Pillar II: the published benchmark describes people already drawing
+  // a pension, who accrued their 44 years before Pillar II existed. Someone
+  // retiring today from a full career inside it accrues 20% less.
+  const benchmark = pillar1Monthly({
+    grossAnnual: 12 * RATES.averageGrossWageMonthly, futureYears: 44, serviceYears: 44, inPillar2: false,
+  });
+  ok(Math.abs(benchmark - RATES.pillar1.averagePensionMonthly) < 0.5,
+     'the Pillar I formula reproduces the published 44-year average',
+     `${benchmark.toFixed(2)} vs ${RATES.pillar1.averagePensionMonthly}`);
+}
+
+// --- the built pages ---------------------------------------------------------
+
+const PAGES = ['index.html', 'simulator.html', 'pension.html',
+  ...readdirSync(join(ROOT, 'guide')).filter((f) => f.endsWith('.html')).map((f) => `guide/${f}`)];
+
+ok(PAGES.length > 15, 'the build produced the expected set of pages', `${PAGES.length} found`);
+
+// Everything outside <script> and <style>: the markup a reader actually sees.
+// The inlined bundle legitimately contains the words "undefined" and "NaN", and
+// template literals inside it look like href="${...}" to a regex.
+const markupOf = (html) => html
+  .replace(/<script\b[\s\S]*?<\/script>/gi, '')
+  .replace(/<style\b[\s\S]*?<\/style>/gi, '');
+
+for (const page of PAGES) {
+  const html = read(page);
+  const markup = markupOf(html);
+
+  // A figure that failed to substitute, or a template hole that never filled.
+  ok(!markup.includes('{{'), `${page} has no unsubstituted placeholder`);
+  ok(!/\bNaN\b|\bundefined\b/.test(markup), `${page} ships no NaN or undefined`);
+  ok(!html.includes('<!--BUNDLE-->') && !html.includes('<!--SIDEBAR-->'),
+     `${page} had every template marker replaced`);
+
+  // Every page must be reachable and must carry the shared nav.
+  ok(markup.includes('id="sidebar"'), `${page} has the shared navigation`);
+  ok(/<title>[^<]+<\/title>/.test(markup), `${page} has a title`);
+
+  // Internal links must point at files that exist. A finding linking to a
+  // missing guide page is a dead end at exactly the moment someone wants more.
+  const base = page.includes('/') ? 'guide' : '';
+  for (const m of markup.matchAll(/href="(?!https?:|mailto:|data:|#)([^"#]+)/g)) {
+    const target = m[1].startsWith('../')
+      ? m[1].slice(3)
+      : (base ? `${base}/${m[1]}` : m[1]);
+    ok(existsSync(join(ROOT, target)), `${page} links to a real file`, m[1]);
+  }
+}
+
+// --- the calculators must be self-contained ----------------------------------
+//
+// ES module imports are blocked on file:// URLs, which is why the bundle is
+// inlined. A stray <script src> or an unresolved import would work over HTTP
+// and fail silently for anyone opening the file from disk.
+
+for (const page of ['simulator.html', 'pension.html']) {
+  const html = read(page);
+  ok(!/<script[^>]+\bsrc=/.test(html), `${page} loads no external script`);
+  ok(!/^\s*import\s.*from\s/m.test(html), `${page} has no surviving import statement`);
+  ok(!/^\s*export\s/m.test(html), `${page} has no surviving export statement`);
+  ok(/<script(\s[^>]*)?>[\s\S]*simulate/.test(html), `${page} carries its bundle inline`);
+  // Every module in the bundle should be present exactly once.
+  const marker = 'Estonian tax, social and pension rates';
+  ok(html.split(marker).length === 2, `${page} includes the rates module exactly once`);
+}
+
+// The main simulator carries both sides of the pension comparison. "Without"
+// means zero benefits, not a rewritten employment history without contributions.
+{
+  const html = read('simulator.html');
+  ok(html.includes('Without pension benefits') && html.includes('Including pension benefits'),
+    'simulator ships the side-by-side pension comparison');
+  ok(html.includes('Salary deductions and contributions stay unchanged'),
+    'zero-pension scenario keeps the entered contribution history explicit');
+}
+
+// --- every (i) must open something -------------------------------------------
+//
+// A button whose key has no matching explanation is a dead control: it toggles
+// aria-expanded and nothing appears. Checked against the source rather than the
+// DOM, because the panels only exist once a plan has been rendered.
+
+for (const mod of ['src/ui.js', 'src/pension-ui.js']) {
+  const src = read(mod);
+  const buttons = [...src.matchAll(/infoBtn\('([^']+)'\)/g)].map((m) => m[1]);
+  const bodies = new Set([...src.matchAll(/info(?:Row|Note)\('([^']+)'/g)].map((m) => m[1]));
+  ok(buttons.length > 0, `${mod} has explanation buttons`);
+  ok(new Set(buttons).size === buttons.length, `${mod} has no duplicated explanation key`);
+  for (const key of buttons) {
+    ok(bodies.has(key), `${mod}: the (i) for "${key}" opens an explanation`);
+  }
+  for (const key of bodies) {
+    ok(buttons.includes(key), `${mod}: the explanation for "${key}" is reachable`);
+  }
+}
+
+// The form side pairs buttons with static bodies by key, in the template rather
+// than in JS. Same failure if they drift: an (i) that opens nothing.
+for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) {
+  const html = read(tpl);
+  const buttons = [...html.matchAll(/data-info="([^"]+)"/g)].map((m) => m[1]);
+  const bodies = new Set([...html.matchAll(/data-info-body="([^"]+)"/g)].map((m) => m[1]));
+  ok(new Set(buttons).size === buttons.length, `${tpl} has no duplicated explanation key`);
+  for (const key of buttons) ok(bodies.has(key), `${tpl}: the (i) for "${key}" opens something`);
+  for (const key of bodies) ok(buttons.includes(key), `${tpl}: "${key}" is reachable`);
+}
+
+// Keys must be unique across the whole page: the open set is shared, so a
+// template key colliding with a rendered one would toggle both at once.
+{
+  const tplKeys = [...read('src/simulator.template.html').matchAll(/data-info="([^"]+)"/g)]
+    .map((m) => m[1]);
+  const jsKeys = [...read('src/ui.js').matchAll(/infoBtn\('([^']+)'\)/g)].map((m) => m[1]);
+  for (const k of tplKeys) {
+    ok(!jsKeys.includes(k), `explanation key "${k}" is not used by both the form and the results`);
+  }
+}
+
+// Figures that live in rates.js must not be retyped into the prose. A literal
+// is invisible once rendered - a substituted €100,000 and a hard-coded one look
+// identical on the page - so the check has to run against the source, and it has
+// to be a budget rather than a ban, because a few literals are legitimate:
+// historical facts that must NOT move when the law does, and unrelated uses of
+// the same round number.
+{
+  const ALLOWED = {
+    // Cyprus 2013: the EU limit at the time. History, not current law.
+    'docs/guide/account-protection.md': 3,
+    // A FatFIRE spending tier, nothing to do with deposit protection.
+    'docs/guide/fatfire.md': 5,
+    // A verbatim record of a research answer.
+    'docs/guide/verification.md': 1,
+  };
+  const files = readdirSync(join(ROOT, 'docs')).filter((f) => f.endsWith('.md'))
+    .map((f) => `docs/${f}`)
+    .concat(readdirSync(join(ROOT, 'docs/guide')).filter((f) => f.endsWith('.md'))
+      .map((f) => `docs/guide/${f}`));
+  for (const f of files) {
+    const literals = (read(f).match(/€100,000/g) || []).length;
+    const budget = ALLOWED[f] || 0;
+    ok(literals <= budget,
+       `${f} does not retype the deposit guarantee or custody threshold`,
+       `${literals} literal "€100,000", budget ${budget} — use ` +
+       `{{protection.depositGuarantee|money}} or {{brokers.custodyFreeThreshold|money}}`);
+  }
+}
+
+// The published guide must never assert facts about a reader's finances or
+// household. Second person is useful for instructions; asserting holdings is not.
+{
+  const ASSERTS_HOLDINGS = [
+    /right now (?:the|your) (?:portfolio|position|salary|cash|holdings)/i,
+    /\byou hold\b(?! ?ing)/i,
+    // Narrow on purpose: "either way you own the same net amount" is a general
+    // statement about arithmetic and must stay readable. Naming an asset is what
+    // turns it into a claim about this particular reader.
+    /\byou own (?:a|an|the|your|some)?\s*(?:rental|apartment|flat|property|house|crypto|shares)\b/i,
+    /\byou currently\b/i,
+    // "you already have" was too narrow: "you already hold some" shipped anyway.
+    // Any verb of possession after "you already" makes the same claim.
+    /\byou already (?:have|hold|own|bought|built|keep|carry)\b/i,
+    // Guard against prose that assumes a reader's holdings, household structure
+    // or future plans.
+    /\byour existing (?:stack|holdings?|coins|portfolio|position)\b/i,
+    /\byou have a mortgage application\b/i,
+    /\bthe house (?:should be|is being|will be) bought\b/i,
+    /\bafter the house is bought\b/i,
+    /\bboth pillar iii allowances (?:are|running)\b/i,
+    /\byou'?re doing it for other reasons\b/i,
+    /\byour (?:crypto|tuleva|apartment|flat|rental|portfolio is|holdings)\b/i,
+    /\bin your case\b/i,
+    // Household composition must also remain conditional.
+    // Deliberately only the POSSESSIVE forms. "a parent aged 35 with a child
+    // under 16" describes the KredEx rule, and a guide covering family benefits
+    // has to be able to say that; "your child" is the one that assumes.
+    /\byour (?:child|kids|children|partner|spouse|wife|husband)\b/i,
+    /\byou almost certainly (?:do|don't|do not)\b/i,
+    /is not a risk for you\b/i,
+    /specifically right for you\b/i,
+  ];
+  const files = readdirSync(join(ROOT, 'docs')).filter((f) => f.endsWith('.md'))
+    .map((f) => `docs/${f}`)
+    .concat(readdirSync(join(ROOT, 'docs/guide')).filter((f) => f.endsWith('.md'))
+      .map((f) => `docs/guide/${f}`));
+  for (const f of files) {
+    const text = read(f);
+    for (const pattern of ASSERTS_HOLDINGS) {
+      const hit = text.match(pattern);
+      ok(!hit, `${f} does not assert what the reader owns`,
+         hit ? `"${hit[0]}" — write it conditionally ("if you hold…", "where the balance is…")` : '');
+    }
+  }
+}
+
+// The severity class and the explanation class must stay distinct - `.info`
+// would match `.finding.info` and collapse every info-severity finding.
+{
+  const css = read('styles.css');
+  ok(!/^\.info[\s{:,\[]/m.test(css),
+     'no bare .info rule in the stylesheet (it would match .finding.info)');
+  ok(css.includes('.explain'), 'the explanation styling is present');
+}
+
+// --- rates quoted in prose must match rates.js -------------------------------
+//
+// The build fails loudly on an unknown {{placeholder}}, but says nothing about a
+// figure typed in by hand next to one that is substituted. This catches the case
+// where rates.js moves and a hard-coded twin does not.
+
+{
+  const guide = readdirSync(join(ROOT, 'guide'))
+    .filter((f) => f.endsWith('.html'))
+    .map((f) => read(`guide/${f}`)).join('\n');
+
+  // Figures that changed for 2026 and whose old values must not survive anywhere.
+  const stale = [
+    ['€654', 'the pre-2026 basic exemption'],
+    ['€500 a month', 'the old basic exemption phrasing'],
+    ['20%', 'the pre-2025 income tax rate'],
+  ];
+  for (const [needle, what] of stale) {
+    if (needle === '20%') continue;   // legitimately appears as the rental deduction
+    ok(!guide.includes(needle), `no page still quotes ${what}`, needle);
+  }
+
+  // The current figures should appear at least once, or the prose has silently
+  // stopped mentioning something the engine relies on.
+  const expected = [
+    [`€${RATES.pillar3.maxAnnual.toLocaleString('en-IE')}`, 'the Pillar III cap'],
+    [`€${RATES.healthInsurance.voluntaryMonthly}`, 'the voluntary health premium'],
+  ];
+  for (const [needle, what] of expected) {
+    ok(guide.includes(needle), `the guide still states ${what}`, needle);
+  }
+}
+
+console.log(`\n${checks} output and cross-engine checks`);
+if (failures.length) {
+  console.log(`\n${failures.length} FAILED:`);
+  [...new Set(failures)].slice(0, 15).forEach((f) => console.log('  ' + f));
+  process.exit(1);
+}
+console.log('the built site is consistent with the engine\n');

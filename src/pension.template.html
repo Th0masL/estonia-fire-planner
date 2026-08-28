@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pension calculator — Estonian FIRE Simulator</title>
+<meta name="description" content="What an Estonian salary turns into through pension pillars II and III: contributions, the state's 4%, and the pot at unlock.">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
+</head>
+<body class="sim">
+<a class="skip" href="#main">Skip to content</a>
+
+<!--SIDEBAR-->
+
+<header class="sim-head">
+  <div class="sim-head-inner">
+
+    <h1>What a salary is worth as a pension</h1>
+    <p class="lede">Estonian pension maths is counter-intuitive in two ways that matter when
+      deciding whether a job is worth taking. The state adds <strong>4% of gross</strong> to your
+      second pillar on top of your own contribution — money you get only if you are employed. And
+      the first <strong>€8,400 a year</strong> of any salary is free of income tax, so a modest
+      wage keeps far more of itself than a large one.</p>
+    <p class="privacy">🔒 Runs entirely in your browser. Nothing is uploaded.</p>
+  </div>
+</header>
+
+<main id="main" class="sim-main">
+  <section class="panel" aria-label="Details">
+    <div class="panel-head"><h2>Details</h2></div>
+
+    <fieldset>
+      <legend>The job</legend>
+      <div class="grid">
+        <label>Birth year <input type="number" id="birthYear" min="1930" max="2015" step="1" value="1990"></label>
+        <label>Gross salary <span class="u">€/mo</span><input type="number" id="gross" min="0" step="100" value="1200"></label>
+        <label>Work until age <input type="number" id="until" min="20" max="75" step="1" value="63"></label>
+        <label>Pillar II rate
+          <select id="rate">
+            <option value="0.02">2% — the default</option>
+            <option value="0.04">4%</option>
+            <option value="0.06">6%</option>
+          </select></label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Already saved</legend>
+      <div class="grid">
+        <label>Pillar II balance <span class="u">€</span><input type="number" id="have2" min="0" step="500" value="0"></label>
+        <label>Pillar III balance <span class="u">€</span><input type="number" id="have3" min="0" step="500" value="0"></label>
+        <label>Pillar III paid in <span class="u">€/yr</span><input type="number" id="p3" min="0" step="500" value="0"></label>
+        <label>Real return <span class="u">%</span><input type="number" id="ret" min="0" max="12" step="0.1" value="5"></label>
+      </div>
+      <p class="hint">Pillar III is capped at the lower of 15% of gross and €6,000, and the 22%
+        refund cannot exceed the income tax actually paid — so on a small salary it is worth
+        little or nothing.</p>
+      <p class="sub">Health cover</p>
+      <div class="checks">
+        <label><input type="checkbox" id="uninsured" checked> Would otherwise pay for health insurance</label>
+      </div>
+      <p class="hint">Estonian health cover follows social tax, not residency. Someone not employed
+        generally needs a voluntary contract, so a job removes that cost. Untick if cover comes
+        from somewhere else — parental benefit, raising a child under 3, or a large family.</p>
+    </fieldset>
+  </section>
+
+  <section class="panel results" id="out" aria-live="polite"></section>
+</main>
+
+<footer class="sim-foot">
+  <p>Not financial advice. See <a href="guide/pensions.html">the pensions guide</a> for the rules
+    and sources, or the <a href="simulator.html">full simulator</a> for a whole FIRE plan.</p>
+</footer>
+
+<!--BUNDLE-->
+</body>
+</html>

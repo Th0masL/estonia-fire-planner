@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FIRE fundamentals — Estonian FIRE Simulator</title>
+<meta name="description" content="You are financially independent when:">
+<link rel="stylesheet" href="../styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
+</head>
+<body class="guide">
+<a class="skip" href="#main">Skip to content</a>
+
+<button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
+
+<nav id="sidebar" class="sidebar" aria-label="Contents">
+  <div class="brand">
+    <span class="brand-mark">FI</span>
+    <span class="brand-text">Estonian&nbsp;FIRE<small>Simulator &amp; guide</small></span>
+  </div>
+  <ul class="nav">
+    <li class="nav-doc"><a class="nav-top" href="../index.html">Start here</a></li>
+
+    <li class="nav-group">Calculators</li>
+    <li class="nav-doc"><a class="nav-top" href="../simulator.html">FIRE calculator</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../pension.html">Pension calculator</a></li>
+
+    <li class="nav-group">Guides</li>
+    <li class="nav-doc active"><a class="nav-top" href="../guide/fire-basics.html">FIRE basics</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/tax-overview.html">Estonian tax overview</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/investment-account.html">The investment account</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/pensions.html">Pension pillars</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/health-insurance.html">Health insurance</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/crypto.html">Crypto</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/real-estate.html">Property & rental income</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/company.html">Using an OÜ</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/portfolio.html">Building the portfolio</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/brokers.html">Brokers & parking cash</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/property.html">Buying a home</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/household.html">Household & children</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/fatfire.html">FatFIRE</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/risks.html">Risks & blind spots</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/protection.html">Account protection</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/levers.html">Strategy levers</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/sources.html">Sources & verification</a></li>
+  </ul>
+  <div class="sidebar-foot">
+    <button id="theme" class="theme" aria-label="Toggle colour theme">
+      <span class="theme-icon" aria-hidden="true"></span><span class="theme-text">Theme</span>
+    </button>
+    <p class="note">Not financial advice. Rates last verified August 2026.</p>
+  </div>
+</nav>
+
+<div class="scrim" id="scrim"></div>
+
+<main id="main" class="main">
+  <div class="wrap">
+    <section class="doc">
+      <h1 class="doc-title">FIRE fundamentals</h1>
+<h2 id="the-one-equation">The one equation</h2>
+<p>You are financially independent when:</p>
+<pre><code>portfolio_value × safe_withdrawal_rate ≥ annual_spending
+</code></pre>
+<p>Rearranged, the <strong>FI number</strong>:</p>
+<pre><code>FI_number = annual_spending / SWR
+</code></pre>
+<p>At a 4% SWR that's <strong>25× annual spending</strong>. At 3.5% it's <strong>28.6×</strong>. At 3.25% it's <strong>30.8×</strong>.</p>
+<h2 id="why-spending-is-the-dominant-variable">Why spending is the dominant variable</h2>
+<p>Spending appears on <em>both</em> sides of the problem, which is why it dwarfs every other lever:</p>
+<ol>
+<li>It lowers the target (25× multiplier)</li>
+<li>It raises the savings rate (which sets the timeline)</li>
+</ol>
+<p>Cutting <strong>€500/month</strong> of recurring spend removes <strong>€150,000</strong> from your FI number at 4% — <em>and</em> adds €6,000/year to savings. A €500/month raise, after 22% tax and typical lifestyle creep, does maybe a third as much.</p>
+<h2 id="time-to-fi-is-a-function-of-savings-rate-not-income">Time to FI is a function of savings rate, not income</h2>
+<p>Starting from zero, 5% real return, 4% withdrawal:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Savings rate</th>
+<th style="text-align: right;">Years to FI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">10%</td>
+<td style="text-align: right;">~51</td>
+</tr>
+<tr>
+<td style="text-align: right;">20%</td>
+<td style="text-align: right;">~37</td>
+</tr>
+<tr>
+<td style="text-align: right;">30%</td>
+<td style="text-align: right;">~28</td>
+</tr>
+<tr>
+<td style="text-align: right;">40%</td>
+<td style="text-align: right;">~22</td>
+</tr>
+<tr>
+<td style="text-align: right;">50%</td>
+<td style="text-align: right;">~17</td>
+</tr>
+<tr>
+<td style="text-align: right;">60%</td>
+<td style="text-align: right;">~12.5</td>
+</tr>
+<tr>
+<td style="text-align: right;">70%</td>
+<td style="text-align: right;">~8.5</td>
+</tr>
+<tr>
+<td style="text-align: right;">80%</td>
+<td style="text-align: right;">~5.5</td>
+</tr>
+</tbody>
+</table>
+<p>Income only matters through its effect on this ratio. Two people earning €3k and €10k net with the same 50% savings rate reach FI in the same number of years — they just live very different lives afterwards.</p>
+<p><strong>The Estonian nuance:</strong> the 22% flat income tax means marginal income can be unusually well-preserved compared with many progressive systems. High earners in Estonia may therefore be able to sustain comparatively high savings rates. This is a structural advantage worth quantifying — see <a href="levers.html">strategy-levers.md</a>.</p>
+<h2 id="fire-variants">FIRE variants</h2>
+<table>
+<thead>
+<tr>
+<th>Variant</th>
+<th>Definition</th>
+<th>Fits when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>LeanFIRE</strong></td>
+<td>Cover a minimal budget (~€1,200–1,800/mo in EE)</td>
+<td>Low spend, high flexibility, no kids or grown kids</td>
+</tr>
+<tr>
+<td><strong>RegularFIRE</strong></td>
+<td>Cover current lifestyle</td>
+<td>The default target</td>
+</tr>
+<tr>
+<td><strong>FatFIRE</strong></td>
+<td>Cover an expanded lifestyle (travel, property, no compromise)</td>
+<td>High income, long runway</td>
+</tr>
+<tr>
+<td><strong>CoastFIRE</strong></td>
+<td>Portfolio is big enough that compounding alone reaches FI by traditional retirement age — you stop <em>saving</em>, keep working to cover current spend</td>
+<td>Front-loaded savings; frees you to take a lower-paid, better job</td>
+</tr>
+<tr>
+<td><strong>BaristaFIRE</strong></td>
+<td>Portfolio covers most spend; part-time work covers the rest</td>
+<td><strong>Especially strong in Estonia</strong> — a small salary also keeps health insurance alive</td>
+</tr>
+</tbody>
+</table>
+<p><strong>CoastFIRE deserves attention.</strong> As an illustration, €200k invested at 35 and compounding at 5% real becomes about €860k at 65 with zero further contributions. The point at which no further retirement saving is required can arrive <em>decades</em> before full FI.</p>
+<p><strong>BaristaFIRE deserves more attention in Estonia specifically</strong>, because the health insurance rules make "zero earned income" expensive. See the <a href="health-insurance.html">health-insurance guide</a>.</p>
+<h2 id="safe-withdrawal-rate--where-the-4-rule-breaks">Safe withdrawal rate — where the 4% rule breaks</h2>
+<p>The "4% rule" comes from the Trinity study and Bengen's 1994 work. Its assumptions:</p>
+<ul>
+<li><strong>US</strong> stocks and bonds, <strong>1926–1995</strong></li>
+<li><strong>30-year</strong> horizon</li>
+<li>Fixed real withdrawals, no flexibility</li>
+<li>No fees, no taxes</li>
+</ul>
+<p>Every one of these is wrong for a 40-year-old European.</p>
+<p><strong>Horizon.</strong> Retire at 45, plan to 100 → 55 years, not 30. Failure rates rise sharply past 30 years. Karsten Jeske's (Early Retirement Now) SWR series puts a 50–60 year horizon closer to <strong>3.25–3.5%</strong> for a high success probability.</p>
+<p><strong>Country.</strong> The 4% figure is survivorship bias on the single best-performing large market of the 20th century. Wade Pfau's international work found SWRs below 4% for most developed markets, and well below for some. A globally diversified portfolio is the honest hedge, but it also means you shouldn't expect US-history returns.</p>
+<p><strong>Inflation basket.</strong> Trinity assumes US CPI. Your basket is Estonian. Estonian inflation hit ~19–20% in 2022 against a eurozone average around 8–9% — a small, open, catching-up economy inside a currency union does <em>not</em> track the ECB target. A plan indexed to eurozone CPI would have quietly under-withdrawn by a wide margin that year. <strong>Model with an Estonian inflation assumption above the ECB's 2%</strong> — 2.5–3% is a defensible planning number.</p>
+<p><strong>Practical stance:</strong> plan at <strong>3.25–3.5%</strong>, treat 4% as the optimistic case, and build in flexibility rather than trying to find the one true number. Flexibility is worth more than precision here.</p>
+<h2 id="sequence-of-returns-risk">Sequence-of-returns risk</h2>
+<p>The single biggest threat, and the most misunderstood.</p>
+<p>Two retirees with <em>identical</em> average returns over 30 years can have wildly different outcomes purely from the <strong>order</strong> those returns arrive in. A crash in years 1–5, while you're withdrawing, permanently destroys capital that never gets to participate in the recovery. The same crash in year 25 is nearly harmless.</p>
+<p>Roughly: <strong>the first ~10 years determine the outcome.</strong> After that, you've usually pulled far enough ahead that failure is unlikely.</p>
+<p>Mitigations, roughly in order of effectiveness:</p>
+<ol>
+<li><strong>Flexible spending</strong> — cutting withdrawals 10–20% in bad years does more than any asset allocation trick. This is the big one.</li>
+<li><strong>Earned income in early retirement</strong> — even €500/month of part-time work in a bad stretch changes everything (and see: health insurance).</li>
+<li><strong>Cash / short-bond buffer</strong> — 2–3 years of spending, so you never sell equities into a crash.</li>
+<li><strong>Bond tent / rising equity glidepath</strong> — hold <em>more</em> bonds at the retirement date, then spend them down and let equity share drift back up. Counterintuitive but well-supported.</li>
+<li><strong>Dynamic withdrawal rules</strong> — Guyton-Klinger guardrails, VPW, or CAPE-based rates instead of a fixed real amount.</li>
+</ol>
+<h2 id="accumulation-vs-decumulation-are-different-problems">Accumulation vs decumulation are different problems</h2>
+<p>Worth separating explicitly, because good accumulation advice is often bad decumulation advice:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Accumulation</th>
+<th>Decumulation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Enemy</td>
+<td>Fees, taxes, behaviour</td>
+<td>Sequence risk, inflation, longevity</td>
+</tr>
+<tr>
+<td>Volatility is</td>
+<td>Your friend (buying cheap)</td>
+<td>Your enemy (selling cheap)</td>
+</tr>
+<tr>
+<td>Right allocation</td>
+<td>~100% equities, simple</td>
+<td>Glidepath, buffer, flexibility</td>
+</tr>
+<tr>
+<td>Key metric</td>
+<td>Savings rate</td>
+<td>Withdrawal rate + flexibility</td>
+</tr>
+</tbody>
+</table>
+<p>In Estonia there's a third phase people forget — <strong>the bridge</strong>: from early retirement age to 60/65 when pension pillars unlock. That bridge has to be funded entirely from taxable/investment-account assets. Sizing it is a core planning step.</p>
+<h2 id="reading-list">Reading list</h2>
+<ul>
+<li><strong>Early Retirement Now</strong> — <a href="https://earlyretirementnow.com/safe-withdrawal-rate-series/">SWR series</a>. The most rigorous work on withdrawal rates. Long, worth it.</li>
+<li><strong>Big ERN's Google Sheet toolbox</strong> — historical backtesting with configurable glidepaths</li>
+<li><strong>Bogleheads wiki</strong> — <a href="https://www.bogleheads.org/wiki/Outline_of_non-US_domiciles">Non-US investor pages</a> specifically</li>
+<li><strong>Wade Pfau</strong>, <em>Retirement Planning Guidebook</em> — on glidepaths and annuities</li>
+<li><strong>Kogumispension / Rahandusministeerium</strong> materials for the Estonian pension side</li>
+<li>r/EuropeFIRE, r/Eesti — for local reality checks, with the usual forum caveats</li>
+</ul>
+<h2 id="next">Next</h2>
+<p>The math above is universal. What makes it <em>actionable</em> is the tax wrapper — and Estonia's is unusually useful. See the <a href="investment-account.html">investment-account guide</a>.</p>
+      <nav class="pager"><a class="prev" href="../index.html">← Start here</a><a class="next" href="tax-overview.html">Estonian tax overview →</a></nav>
+    </section>
+  </div>
+</main>
+
+<script src="../src/nav.js"></script>
+</body>
+</html>

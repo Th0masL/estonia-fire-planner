@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crypto — Estonian FIRE Simulator</title>
+<meta name="description" content="Worth knowing precisely, because the rules are unusually unforgiving and easy to get wrong.">
+<link rel="stylesheet" href="../styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
+</head>
+<body class="guide">
+<a class="skip" href="#main">Skip to content</a>
+
+<button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
+
+<nav id="sidebar" class="sidebar" aria-label="Contents">
+  <div class="brand">
+    <span class="brand-mark">FI</span>
+    <span class="brand-text">Estonian&nbsp;FIRE<small>Simulator &amp; guide</small></span>
+  </div>
+  <ul class="nav">
+    <li class="nav-doc"><a class="nav-top" href="../index.html">Start here</a></li>
+
+    <li class="nav-group">Calculators</li>
+    <li class="nav-doc"><a class="nav-top" href="../simulator.html">FIRE calculator</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../pension.html">Pension calculator</a></li>
+
+    <li class="nav-group">Guides</li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/fire-basics.html">FIRE basics</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/tax-overview.html">Estonian tax overview</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/investment-account.html">The investment account</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/pensions.html">Pension pillars</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/health-insurance.html">Health insurance</a></li>
+    <li class="nav-doc active"><a class="nav-top" href="../guide/crypto.html">Crypto</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/real-estate.html">Property & rental income</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/company.html">Using an OÜ</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/portfolio.html">Building the portfolio</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/brokers.html">Brokers & parking cash</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/property.html">Buying a home</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/household.html">Household & children</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/fatfire.html">FatFIRE</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/risks.html">Risks & blind spots</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/protection.html">Account protection</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/levers.html">Strategy levers</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/sources.html">Sources & verification</a></li>
+  </ul>
+  <div class="sidebar-foot">
+    <button id="theme" class="theme" aria-label="Toggle colour theme">
+      <span class="theme-icon" aria-hidden="true"></span><span class="theme-text">Theme</span>
+    </button>
+    <p class="note">Not financial advice. Rates last verified August 2026.</p>
+  </div>
+</nav>
+
+<div class="scrim" id="scrim"></div>
+
+<main id="main" class="main">
+  <div class="wrap">
+    <section class="doc">
+      <h1 class="doc-title">Crypto</h1>
+<p>Worth knowing precisely, because the rules are unusually unforgiving and easy to get wrong.</p>
+<blockquote>
+<p>🟢 <strong>Changed from 1 January 2025:</strong> qualifying crypto acquired through a MiCA-authorised service provider can be treated as a financial asset. If bought with funds from a declared investment account, it can use normal investment-account deferral. Provider authorisation and the acquisition route must be checked for the actual transaction.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Treatment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Investment account eligible?</td>
+<td><strong>Yes, conditionally</strong> — must be acquired via a <strong>MiCA-licensed</strong> provider with IK funds</td>
+</tr>
+<tr>
+<td>Tax on disposal (outside an IK)</td>
+<td><strong>22%</strong> on the gain</td>
+</tr>
+<tr>
+<td>What counts as a disposal</td>
+<td>Selling to EUR, <strong>swapping one coin for another</strong>, and spending it</td>
+</tr>
+<tr>
+<td><strong>Loss offset</strong></td>
+<td><strong>Conditional.</strong> Allowed for qualifying crypto transactions through a MiCA-authorised provider; not allowed under the older "other property" treatment</td>
+</tr>
+<tr>
+<td>Gain on a swap</td>
+<td>Market value received <strong>minus acquisition cost</strong> of what you gave up</td>
+</tr>
+<tr>
+<td>Mining</td>
+<td><strong>Business income</strong>, Form E</td>
+</tr>
+<tr>
+<td>Staking</td>
+<td>Ordinary income at market value on the date received</td>
+</tr>
+<tr>
+<td>Reporting</td>
+<td>Table 6.3 (Estonian) / 8.3 (foreign platforms), or <strong>6.5 if inside an IK</strong></td>
+</tr>
+<tr>
+<td>Long-term holding relief</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Provider constraint</td>
+<td>Verify that the provider was MiCA-authorised on the acquisition date. The simulator does not infer this from the custodian name</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The no-loss-offset rule still applies to non-qualifying holdings.</strong> For crypto remaining under the older “other property” treatment, a losing disposal cannot reduce a gain. Qualifying MiCA-provider transactions receive financial-asset treatment instead. Keep the provider authorisation and acquisition evidence: the distinction is transaction-specific.</p>
+<p><strong>The catch for coins bought before the change.</strong> The new eligibility applies to crypto <em>acquired</em> through a licensed provider using investment-account money. <strong>Self-custodied coins bought outside that route stay under the old regime</strong> — 22% on every disposal, no loss offset. Coins in a hardware wallet cannot be moved into an investment account without being sold first, and that sale is itself the taxable event the account is meant to defer. So the change improves the tax treatment of future purchases only. It does nothing for coins bought earlier.</p>
+<p><strong>Consequences for planning:</strong></p>
+<ul>
+<li>Self-custodied crypto bought outside the regime stays the <strong>least tax-efficient</strong> holding available, and the hardest to restructure</li>
+<li><strong>Every swap is a taxable event.</strong> Rebalancing between coins costs real money in a way that rebalancing inside an IK does not</li>
+<li>There's <strong>no tax reason to delay diversifying out.</strong> No holding-period relief exists, so the decision is purely about your market view, not tax timing</li>
+<li>Reconstruct your <strong>cost basis now</strong>, while records are still retrievable. Doing it years later, after exchanges have shut down or purged history, is genuinely painful</li>
+<li>If you buy more crypto in future, <strong>route it through the IK via a MiCA-licensed provider</strong> — same asset, materially better tax treatment</li>
+<li>If crypto is funding the house deposit, see <a href="property.html#funding-the-down-payment-from-crypto">property-purchase.md</a></li>
+</ul>
+      <nav class="pager"><a class="prev" href="health-insurance.html">← Health insurance</a><a class="next" href="real-estate.html">Property & rental income →</a></nav>
+    </section>
+  </div>
+</main>
+
+<script src="../src/nav.js"></script>
+</body>
+</html>

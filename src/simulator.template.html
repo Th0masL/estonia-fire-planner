@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estonian FIRE Simulator</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
+</head>
+<body class="sim">
+<a class="skip" href="#main">Skip to content</a>
+
+<!--SIDEBAR-->
+
+<header class="sim-head">
+  <div class="sim-head-inner">
+
+    <h1>Estonian FIRE Simulator</h1>
+    <p class="lede">Financial independence maths for Estonian tax residents — the investment
+      account, the pension pillars, and the health insurance gap that most calculators miss.</p>
+    <p class="privacy">🔒 Everything stays in your browser. No account, no upload, no server.
+      Your figures are saved to this device only, and you can export them as a file.</p>
+  </div>
+</header>
+
+<main id="main" class="sim-main">
+
+  <section class="panel" id="inputs" aria-label="Your details">
+    <div class="panel-head">
+      <h2>Your details</h2>
+      <div class="io">
+        <button id="export" class="btn" type="button">Export</button>
+        <button id="import" class="btn" type="button">Import</button>
+        <input type="file" id="importFile" accept="application/json,.json" class="sr-only">
+        <button id="share" class="btn" type="button">Share link</button>
+        <button id="example" class="btn btn-quiet" type="button">Example</button>
+        <button id="reset" class="btn btn-quiet" type="button">Clear</button>
+      </div>
+    </div>
+
+    <fieldset id="peopleWrap">
+      <legend>People</legend>
+      <div id="people"></div>
+      <button id="addPerson" class="btn btn-quiet">+ Add a second person</button>
+      <div id="allocWrap" hidden>
+        <p class="sub">Ownership of future savings</p>
+        <label class="alloc">Split of new savings
+          <input type="range" id="alloc" min="0" max="100" step="5">
+          <output id="allocOut"></output>
+        </label>
+        <p class="hint">All income is pooled and all spending is shared — this decides who
+          <em>owns</em> future savings. Existing assets stay where you entered them.</p>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Household</legend>
+
+      <p class="sub">Other income <button type="button" class="explain" data-info="other-income" aria-expanded="false" aria-label="What this means">i</button></p>
+      <p class="explain-body" data-info-body="other-income" hidden>Income that arrives whether or not anyone goes to work: rent, a
+        pension already in payment, royalties. Enter it <strong>net</strong> — after tax and after
+        the costs of producing it. For Estonian residential rent that means after the 20% automatic
+        expense deduction and the 22% tax on the rest, so about 82% of the rent, less the real
+        costs of ownership. It reduces what the portfolio has to fund, so it lowers the FI target
+        directly.</p>
+      <div class="grid">
+        <label>Rental &amp; other net income <span class="u">€/mo</span>
+          <input type="number" id="otherIncome" min="0" step="50"></label>
+      </div>
+
+      <p class="sub">Monthly spending <button type="button" class="explain" data-info="spending" aria-expanded="false" aria-label="What this means">i</button></p>
+      <p class="explain-body" data-info-body="spending" hidden>The single most important input, and the one people get wrong. Count
+        everything that leaves the account, not what you think you ought to spend — a year of bank
+        statements divided by twelve beats a budget. Leave out anything already entered elsewhere:
+        Pillar III contributions and insurance premiums are deducted separately and would count
+        twice.<br><br><strong>Housing now</strong> is rent or your current mortgage plus utilities
+        and upkeep; if you are buying, it is replaced by the new mortgage and running costs from the
+        move onward. <strong>Child costs</strong> remain in the cash flow until the end year you
+        provide; if blank, the model conservatively assumes no end. <strong>Everything else</strong> and <strong>Buffer</strong>
+        are both permanent, and are what the FI number is actually built from.</p>
+      <div class="grid">
+        <label>Housing now <span class="u">€/mo</span><input type="number" id="sHousing" min="0" step="50"></label>
+        <label>Child costs <span class="u">€/mo, after any allowances</span><input type="number" id="sChild" min="0" step="50"></label>
+        <label>Child costs end <span class="u">calendar year; blank means no assumed end</span><input type="number" id="sChildEnd" min="2026" max="2200" step="1"></label>
+        <label>Everything else <span class="u">€/mo</span><input type="number" id="sOther" min="0" step="50"></label>
+        <label>Buffer for irregular costs <span class="u">€/mo</span><input type="number" id="sBuffer" min="0" step="50"></label>
+      </div>
+      <p class="sub">Circumstances <button type="button" class="explain" data-info="circumstances" aria-expanded="false" aria-label="What this means">i</button></p>
+      <p class="explain-body" data-info-body="circumstances" hidden><strong>Children or other dependents</strong> turns on the checks that
+        only matter when someone relies on your income — chiefly life and disability cover. It does
+        not change any figure by itself; child costs are entered above.<br><br><strong>Exclude
+        crypto</strong> keeps crypto out of the target. On by default: a plan resting on it is a
+        bet rather than a plan, and the balance is still shown so the total is visible. Untick it
+        and it counts as spendable, which will move the FI date a long way.</p>
+      <div class="checks">
+        <label><input type="checkbox" id="hasDependents"> Children or other dependents</label>
+        <label><input type="checkbox" id="excludeCrypto" checked> Exclude crypto from the plan</label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Buying a home <button type="button" class="explain" data-info="house" aria-expanded="false" aria-label="What this means">i</button> <label class="inline"><input type="checkbox" id="buying"> planned</label></legend>
+      <p class="explain-body" data-info-body="house" hidden>Everything here is entered in today's money, like the rest of the page.
+        <strong>Price</strong> and <strong>Deposit</strong> decide the loan and so the LTV, which
+        the Bank of Estonia caps at 85%. <strong>Term</strong> is capped at 30 years by the same
+        rules; a shorter one costs more per month but far less in total interest.
+        <strong>Running costs</strong> are what the home costs to hold — utilities, upkeep, the
+        association fee, insurance — and they are permanent, so unlike the mortgage they stay in
+        the FI target forever. <strong>Moving &amp; furnishing</strong> is a one-off that leaves
+        the portfolio at purchase, alongside about 2% of the price in notary, state and bank fees.
+        <strong>Months away</strong> decides how much longer the money keeps compounding before it
+        is spent.</p>
+      <div id="houseFields" class="grid" hidden>
+        <label>Price <span class="u">€</span><input type="number" id="hPrice" min="0" step="5000"></label>
+        <label>Deposit <span class="u">€</span><input type="number" id="hDeposit" min="0" step="5000"></label>
+        <label>Term <span class="u">years</span><input type="number" id="hTerm" min="5" max="30" step="1"></label>
+        <label>Interest rate <span class="u">%</span><input type="number" id="hRate" min="0" max="15" step="0.1"></label>
+        <label>Running costs <span class="u">€/mo</span><input type="number" id="hRunning" min="0" step="50"></label>
+        <label>Moving &amp; furnishing <span class="u">€ one-off</span><input type="number" id="hMoving" min="0" step="1000"></label>
+        <label>Months away <input type="number" id="hMonths" min="0" max="120" step="1"></label>
+        <label>Collateral valuation <span class="u">€; defaults to price</span><input type="number" id="hCollateral" min="0" step="5000"></label>
+        <label>Other loan &amp; lease payments <span class="u">€/mo</span><input type="number" id="hOtherDebt" min="0" step="50"></label>
+        <label id="paidByWrap" hidden>Deposit paid from
+          <select id="hPaidBy"></select></label>
+      </div>
+      <p id="mortgageEcho" class="hint" hidden></p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Assumptions</legend>
+      <p class="sub">Markets</p>
+      <div class="grid">
+        <label>Real return <span class="u">%</span><input type="number" id="aReturn" min="0" max="12" step="0.1"></label>
+        <label>Cash real return <span class="u">%</span><input type="number" id="aCashReturn" min="-20" max="12" step="0.1"></label>
+        <label>Withdrawal rate <span class="u">%</span><input type="number" id="aSwr" min="2" max="6" step="0.05"></label>
+        <label>Inflation <span class="u">%/yr</span><input type="number" id="aInflation" min="0" max="15" step="0.1"></label>
+      </div>
+
+      <p class="sub">How long, and how much</p>
+      <div class="grid">
+        <label>Plan until age <span class="u">the money must last this long</span><input type="number" id="aPlanToAge" min="75" max="110" step="1"></label>
+        <label>Spending growth <span class="u">%/yr above inflation</span><input type="number" id="aSpendGrowth" min="0" max="5" step="0.1"></label>
+        <label>Work on past the FI date <span class="u">years, for margin</span><input type="number" id="aBufferYears" min="0" max="10" step="0.5"></label>
+        <label>Purchase costs <span class="u">% of price; planning estimate</span><input type="number" id="aTransactionCosts" min="0" max="20" step="0.1"></label>
+        <label>Emergency reserve <span class="u">months after purchase</span>
+          <button type="button" class="explain" data-info="emergency-reserve" aria-expanded="false" aria-label="What this means">i</button>
+          <input type="number" id="aEmergencyMonths" min="0" max="36" step="1"></label>
+      </div>
+      <p class="explain-body" data-info-body="emergency-reserve" hidden>The number of months of
+        <strong>post-purchase household spending</strong> kept available after paying the deposit,
+        transaction costs, and moving or furnishing costs. The simulator adds this cash cushion to
+        the amount required on completion day and does not treat it as available for the purchase.
+        Six months is the default; a less stable income, dependants, or uncertain repair costs may
+        justify more. Setting it to zero assumes no emergency cash remains after completion.</p>
+      <p class="hint">There is no "work until" setting: the age you can stop is what the tool
+        <em>solves for</em>, and it appears in the results as <strong>age at FI</strong>. To move it,
+        change spending, saving, or what the pension is allowed to contribute.</p>
+      <p class="hint" id="returnHint"></p>
+      <p class="hint">More on the withdrawal rate <button type="button" class="explain" data-info="swr" aria-expanded="false" aria-label="What this means">i</button>, spending growth <button type="button" class="explain" data-info="growth" aria-expanded="false" aria-label="What this means">i</button>,
+        how long the money must last <button type="button" class="explain" data-info="horizon" aria-expanded="false" aria-label="What this means">i</button>, and why inflation appears at
+        all <button type="button" class="explain" data-info="inflation" aria-expanded="false" aria-label="What this means">i</button>.</p>
+      <p class="explain-body" data-info-body="swr" hidden>The share of the portfolio you take each year, and the number the whole target
+        is divided by. 3.5% rather than the familiar 4%: that figure came from a study of 30-year
+        retirements, and a plan starting in your forties runs closer to 50. Longer horizons fail
+        more often at the same rate, so a prudent planning rate generally falls as the horizon grows. Every 0.5% you
+        add cuts the target substantially - which is exactly why it deserves suspicion rather than
+        optimism.</p>
+      <p class="explain-body" data-info-body="growth" hidden>Whether the same life gets more expensive <em>faster</em> than inflation.
+        Zero - the usual FIRE assumption - says today's spending stays constant in real terms
+        through the modeled horizon, and is probably a little optimistic: care and health costs outrun the general
+        index, and lifestyles drift. 0.5-1% is a reasonable stress test. It compounds hard over a
+        long retirement, and if it ever reaches the withdrawal rate no finite pot survives it,
+        which the tool will say rather than returning a large number.</p>
+      <p class="explain-body" data-info-body="horizon" hidden>How long the money has to last. In a two-person household it is the
+        <em>younger</em> person who has to reach it, so the older one will be past it - the money
+        has to outlive whoever lives longest. It only bites when the pension is counted: a plan
+        that maintains an SWR capital floor is still tested over this horizon. Estonian remaining life expectancy at
+        65 is about 19 years, so an average pensioner reaches 84 - but the horizon has to cover the
+        tail, not the average, and for a couple the chance one of them passes 95 is not small.
+        Raising it costs surprisingly little, because money needed that far out is discounted by
+        decades of compounding.</p>
+      <p class="explain-body" data-info-body="inflation" hidden>Needed for exactly one thing: a pension annuity is a <strong>fixed nominal
+        amount</strong> for life, with no CPI or wage link and no indexation duty on Pillar II, so
+        its buying power falls every year. Nothing else on this page needs an inflation figure,
+        because the return is already real. 2.5% rather than the ECB's 2% target, since Estonian
+        inflation has run above the euro-area average.</p>
+
+      <p class="sub">What the portfolio has to do</p>
+      <div class="grid">
+        <label>The money must
+          <select id="aPortfolioEnd">
+            <option value="perpetual">Maintain an SWR capital floor — heuristic, not guaranteed</option>
+            <option value="drawdown">Last until the planning age — spent down to nothing</option>
+          </select></label>
+      </div>
+
+      <p class="sub">Letting the pension take over</p>
+      <div class="grid">
+        <label>Count pensions toward the plan
+          <select id="aPensionPolicy">
+            <option value="ignore">None</option>
+            <option value="ownPots">Pillars II &amp; III</option>
+            <option value="all">All pillars, including the state pension</option>
+          </select></label>
+        <label id="drawAgeWrap">Start drawing Pillars II &amp; III
+          <select id="aPillarDrawAge">
+            <option value="unlock">As soon as they unlock — state pension age −5</option>
+            <option value="statePension">At state pension age, with the rest</option>
+          </select></label>
+        <label id="potsShareWrap">Believe Pillars II &amp; III at <span class="u">%</span>
+          <input type="number" id="aPotsShare" min="0" max="100" step="5"></label>
+        <label id="stateShareWrap">Believe the state pension at <span class="u">%</span>
+          <input type="number" id="aStateShare" min="0" max="100" step="5"></label>
+        <label id="earlyWrap">Draw the state pension <span class="u">years early</span>
+          <input type="number" id="aStateEarly" min="0" max="5" step="1"></label>
+        <label id="payoutWrap">Take Pillars II &amp; III as
+          <select id="aPillarPayout">
+            <option value="annuity">A lifetime annuity — paid until you die</option>
+            <option value="fundPension">A fund pension — runs out after ~20 years</option>
+          </select></label>
+      </div>
+      <p class="alert alert-soft" id="pensionEffectHint"></p>
+      <p class="hint">Ignoring pensions means building the selected portfolio target without
+        relying on pension income. The withdrawal-rate target is a planning heuristic, not a guarantee.
+        <strong>Contributions stop on the day you stop working</strong>, so retiring earlier buys a
+        smaller pension; that is priced in. <button type="button" class="explain" data-info="policy" aria-expanded="false" aria-label="What this means">i</button> More on the three settings, on when and how
+        the pots are taken, and <button type="button" class="explain" data-info="believe" aria-expanded="false" aria-label="What this means">i</button> on counting only part of them.</p>
+      <p class="explain-body" data-info-body="believe" hidden><strong>On the state pension
+        specifically.</strong> Sotsiaalkindlustusamet's own calculator returns roughly 70–80% of our
+        Pillar I figure for someone retiring in the 2050s. Every mechanism agrees — its Pillar II
+        reduction matches ours to three decimals — but its absolute level is lower, and that tool is
+        deliberately conservative: its Pillar II projection assumes <em>no investment growth at
+        all</em>, which its own page states. Treat it as a floor rather than a rival forecast.
+        Believing the state pension at <strong>70–80%</strong> is a defensible way to sit between
+        the two, and checking your own case there is better than either number.<br><br><strong>Note what the first option
+        also changes.</strong> Pension counting and the portfolio-end choice are independent.
+        The capital-floor option preserves the selected SWR floor through the modeled horizon;
+        drawdown permits the balance to reach zero at the planning age. Neither is a guarantee.<br><br>Counting a pension at
+        less than 100%
+        is how you build a margin against it disappointing — and the margin lives in the portfolio,
+        because a smaller assumed pension forces a bigger pot. If the pension then arrives in full,
+        the surplus is yours; if it does not, the plan still works. That is the whole trade, and it
+        is bought with working years.<br><br>The two are separate because they fail differently.
+        <strong>Pillars II and III</strong> are a balance you own: what is uncertain is its future
+        value — returns, fees, what an annuity costs to buy, whether one can be bought at all.
+        <strong>Pillar I</strong> is a promise, and what is uncertain is whether it is kept on
+        today's terms. A common shape is to believe your own pots in full and haircut the state
+        pension; American planners routinely count 70–75% of Social Security for the same
+        reason.</p>
+      <p class="explain-body" data-info-body="policy" hidden><strong>Pillars II and III are your own money</strong>, in an account in your
+        name, in funds you chose, and since 2021 the whole balance can be withdrawn early at 22%.
+        <strong>Pillar I is a promise</strong>, funded by whoever is working at the time and indexed
+        80% to social tax receipts - a government can change it without touching anyone's balance,
+        which is why it is off by default. Turn it on to see what it would add, not to depend on
+        it.<br><br><strong>Start drawing</strong> decides whether the pots are taken at the first
+        legal opportunity (state pension age -5) or left invested until the state pension arrives.
+        Deferring compounds the pot for five more years and starts everything together, at the cost
+        of a longer stretch on the portfolio alone.<br><br><strong>Take as</strong> is the choice
+        between a lifetime annuity - paid until you die, but a fixed euro amount that inflation
+        erodes, sold by one insurer - and a fund pension, which rides the fund and needs no
+        insurer, but runs out after about 19 years.</p>
+    </fieldset>
+  </section>
+
+  <section class="panel results" id="results" aria-live="polite">
+    <p id="status" class="status" hidden></p>
+    <div id="shareBox" class="sharebox" hidden>
+      <button id="shareClose" class="sharebox-close" type="button" aria-label="Hide the share link">&times;</button>
+      <label for="shareUrl">Anyone with this link sees these figures</label>
+      <input type="text" id="shareUrl" readonly>
+      <p class="hint">The numbers travel in the part of the address after the <code>#</code>, which
+        browsers never send to a server — so the data stays between you and whoever you send it to.
+        But a link is still a link: it will sit in chat history, mail archives and browser history.
+        Send it the way you would send the numbers themselves.</p>
+    </div>
+    <div id="headline"></div>
+    <div id="chart"></div>
+    <div id="plan"></div>
+  </section>
+
+</main>
+
+<footer class="sim-foot">
+  <p>Not financial advice. Rates verified against emta.ee, pensionikeskus.ee and tf.ee —
+    see <a href="index.html">the guide</a> for sources. Estonian rules change most years.</p>
+</footer>
+
+<!--BUNDLE-->
+</body>
+</html>

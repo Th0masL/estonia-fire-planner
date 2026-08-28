@@ -1,0 +1,5 @@
+# Local-only files are excluded from version control and Pages artifacts.
+private/
+
+__pycache__/
+.DS_Store

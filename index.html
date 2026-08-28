@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estonian FIRE Simulator</title>
+<meta name="description" content="Financial independence planning for Estonian tax residents: the investment account, the pension pillars, and the health insurance gap.">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
+</head>
+<body class="guide">
+<a class="skip" href="#main">Skip to content</a>
+
+<button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
+
+<nav id="sidebar" class="sidebar" aria-label="Contents">
+  <div class="brand">
+    <span class="brand-mark">FI</span>
+    <span class="brand-text">Estonian&nbsp;FIRE<small>Simulator &amp; guide</small></span>
+  </div>
+  <ul class="nav">
+    <li class="nav-doc active"><a class="nav-top" href="index.html">Start here</a></li>
+
+    <li class="nav-group">Calculators</li>
+    <li class="nav-doc"><a class="nav-top" href="simulator.html">FIRE calculator</a></li>
+    <li class="nav-doc"><a class="nav-top" href="pension.html">Pension calculator</a></li>
+
+    <li class="nav-group">Guides</li>
+    <li class="nav-doc"><a class="nav-top" href="guide/fire-basics.html">FIRE basics</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/tax-overview.html">Estonian tax overview</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/investment-account.html">The investment account</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/pensions.html">Pension pillars</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/health-insurance.html">Health insurance</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/crypto.html">Crypto</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/real-estate.html">Property & rental income</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/company.html">Using an OÜ</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/portfolio.html">Building the portfolio</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/brokers.html">Brokers & parking cash</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/property.html">Buying a home</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/household.html">Household & children</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/fatfire.html">FatFIRE</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/risks.html">Risks & blind spots</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/protection.html">Account protection</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/levers.html">Strategy levers</a></li>
+    <li class="nav-doc"><a class="nav-top" href="guide/sources.html">Sources & verification</a></li>
+  </ul>
+  <div class="sidebar-foot">
+    <button id="theme" class="theme" aria-label="Toggle colour theme">
+      <span class="theme-icon" aria-hidden="true"></span><span class="theme-text">Theme</span>
+    </button>
+    <p class="note">Not financial advice. Rates last verified August 2026.</p>
+  </div>
+</nav>
+
+<div class="scrim" id="scrim"></div>
+
+<main id="main" class="main">
+  <div class="wrap">
+    <section class="doc">
+      <h1 class="doc-title">Estonian FIRE Simulator</h1>
+      <p class="lede">Financial independence maths for Estonian tax residents. Most FIRE
+        material is written for the United States — 401(k)s, Roth IRAs, ACA subsidies — and
+        almost none of it transfers. Estonia has its own set of levers, and its own trap.</p>
+
+      <p><a class="cta" href="simulator.html">Open the calculator →</a></p>
+      <p class="hint">It runs entirely in your browser. Nothing is uploaded to anyone, and you
+        can export your figures to a file.</p>
+
+      <h2>What makes Estonia different</h2>
+      <ul>
+        <li><strong>No separate capital gains tax</strong> — gains are income, taxed at a flat 22%.</li>
+        <li><strong>The investment account</strong> defers tax indefinitely, and lets you withdraw
+            everything you put in before any tax is due.</li>
+        <li><strong>0% corporate tax on retained earnings</strong> — a company is a legal
+            tax-deferred wrapper.</li>
+        <li><strong>No wealth tax and no inheritance tax.</strong></li>
+        <li><strong>But health insurance follows social tax, not residency</strong> — stop working
+            and you lose cover. That one fact reshapes an Estonian FIRE plan.</li>
+      </ul>
+
+      <h2>The guide</h2>
+      <div class="cards">
+        <a class="card" href="guide/fire-basics.html">FIRE basics</a>
+        <a class="card" href="guide/tax-overview.html">Estonian tax overview</a>
+        <a class="card" href="guide/investment-account.html">The investment account</a>
+        <a class="card" href="guide/pensions.html">Pension pillars</a>
+        <a class="card" href="guide/health-insurance.html">Health insurance</a>
+        <a class="card" href="guide/crypto.html">Crypto</a>
+        <a class="card" href="guide/real-estate.html">Property & rental income</a>
+        <a class="card" href="guide/company.html">Using an OÜ</a>
+        <a class="card" href="guide/portfolio.html">Building the portfolio</a>
+        <a class="card" href="guide/brokers.html">Brokers & parking cash</a>
+        <a class="card" href="guide/property.html">Buying a home</a>
+        <a class="card" href="guide/household.html">Household & children</a>
+        <a class="card" href="guide/fatfire.html">FatFIRE</a>
+        <a class="card" href="guide/risks.html">Risks & blind spots</a>
+        <a class="card" href="guide/protection.html">Account protection</a>
+        <a class="card" href="guide/levers.html">Strategy levers</a>
+        <a class="card" href="guide/sources.html">Sources & verification</a>
+      </div>
+
+      <nav class="pager"></nav>
+    </section>
+  </div>
+</main>
+
+<script src="src/nav.js"></script>
+</body>
+</html>

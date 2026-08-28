@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estonian tax in one screen — Estonian FIRE Simulator</title>
+<meta name="description" content="The shape of this: Estonia taxes labour moderately and capital lightly, with no wealth or inheritance tax. That is close to an ideal jurisdiction for accum">
+<link rel="stylesheet" href="../styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
+</head>
+<body class="guide">
+<a class="skip" href="#main">Skip to content</a>
+
+<button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
+
+<nav id="sidebar" class="sidebar" aria-label="Contents">
+  <div class="brand">
+    <span class="brand-mark">FI</span>
+    <span class="brand-text">Estonian&nbsp;FIRE<small>Simulator &amp; guide</small></span>
+  </div>
+  <ul class="nav">
+    <li class="nav-doc"><a class="nav-top" href="../index.html">Start here</a></li>
+
+    <li class="nav-group">Calculators</li>
+    <li class="nav-doc"><a class="nav-top" href="../simulator.html">FIRE calculator</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../pension.html">Pension calculator</a></li>
+
+    <li class="nav-group">Guides</li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/fire-basics.html">FIRE basics</a></li>
+    <li class="nav-doc active"><a class="nav-top" href="../guide/tax-overview.html">Estonian tax overview</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/investment-account.html">The investment account</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/pensions.html">Pension pillars</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/health-insurance.html">Health insurance</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/crypto.html">Crypto</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/real-estate.html">Property & rental income</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/company.html">Using an OÜ</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/portfolio.html">Building the portfolio</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/brokers.html">Brokers & parking cash</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/property.html">Buying a home</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/household.html">Household & children</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/fatfire.html">FatFIRE</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/risks.html">Risks & blind spots</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/protection.html">Account protection</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/levers.html">Strategy levers</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/sources.html">Sources & verification</a></li>
+  </ul>
+  <div class="sidebar-foot">
+    <button id="theme" class="theme" aria-label="Toggle colour theme">
+      <span class="theme-icon" aria-hidden="true"></span><span class="theme-text">Theme</span>
+    </button>
+    <p class="note">Not financial advice. Rates last verified August 2026.</p>
+  </div>
+</nav>
+
+<div class="scrim" id="scrim"></div>
+
+<main id="main" class="main">
+  <div class="wrap">
+    <section class="doc">
+      <h1 class="doc-title">Estonian tax in one screen</h1>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Rate</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Personal income tax</td>
+<td><strong>22%</strong> flat ✅</td>
+<td>Raised from 20% on 2025-01-01. The planned 24% "security tax" was enacted in 2024 then <strong>repealed in 2025</strong> — it never took effect</td>
+</tr>
+<tr>
+<td>Basic exemption</td>
+<td><strong>€700/month (€8,400/yr)</strong> ✅</td>
+<td>From 2026-01-01, universal — the income-based taper ("maksuküür") <strong>abolished</strong>. €776/mo at pension age</td>
+</tr>
+<tr>
+<td>Additional exemption for children</td>
+<td><strong>None</strong> ✅</td>
+<td>§23¹ repealed from <strong>2024</strong>, not 2026. Partly replaced by a ~€100/yr per child motor-vehicle tax reduction</td>
+</tr>
+<tr>
+<td>Capital gains</td>
+<td><strong>22%</strong></td>
+<td>No separate CGT regime — gains are ordinary income</td>
+</tr>
+<tr>
+<td>Dividends from EE companies</td>
+<td><strong>0%</strong> to the individual</td>
+<td>Already taxed at company level</td>
+</tr>
+<tr>
+<td>Foreign dividends</td>
+<td><strong>0%</strong> if taxed abroad ✅</td>
+<td>TuMS §18(1¹): exempt if corporate tax was paid on the profit <strong>or</strong> tax was withheld on the dividend. Otherwise 22%. <strong>Must still be declared</strong> (Table 8.8)</td>
+</tr>
+<tr>
+<td>Residential rental income</td>
+<td><strong>17.6% effective</strong> ✅</td>
+<td>22% on 80% of gross — automatic 20% deduction, no receipts needed. Residential only</td>
+</tr>
+<tr>
+<td>Corporate tax on retained earnings</td>
+<td><strong>0%</strong></td>
+<td>The headline feature</td>
+</tr>
+<tr>
+<td>Corporate tax on distributions</td>
+<td><strong>22/78</strong></td>
+<td>= 22% of the gross amount</td>
+</tr>
+<tr>
+<td>Social tax</td>
+<td><strong>33%</strong></td>
+<td>On salary/board fees. <strong>Not</strong> on dividends. Minimum base <strong>€886/mo → €292.38/mo</strong></td>
+</tr>
+<tr>
+<td>Wealth tax</td>
+<td><strong>None</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>Inheritance / gift tax</td>
+<td><strong>None</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>VAT</td>
+<td><strong>24%</strong></td>
+<td>Raised 2025-07-01</td>
+</tr>
+<tr>
+<td>Declaration deadline</td>
+<td><strong>30 April</strong></td>
+<td>For the previous calendar year</td>
+</tr>
+<tr>
+<td>Payment / refund deadline</td>
+<td><strong>1 October</strong></td>
+<td>Anyone declaring foreign income or capital gains settles on this later track, not the March refund wave</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The shape of this:</strong> Estonia taxes <em>labour</em> moderately and <em>capital</em> lightly, with no wealth or inheritance tax. That is close to an ideal jurisdiction for accumulating and holding a FIRE portfolio. The friction is concentrated in one place — health insurance.</p>
+<hr />
+      <nav class="pager"><a class="prev" href="fire-basics.html">← FIRE basics</a><a class="next" href="investment-account.html">The investment account →</a></nav>
+    </section>
+  </div>
+</main>
+
+<script src="../src/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buying a home — Estonian FIRE Simulator</title>
+<meta name="description" content="A near-term home purchase can constrain the rest of a FIRE plan, because the deposit must remain liquid while the future mortgage and running costs alter l">
+<link rel="stylesheet" href="../styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
+</head>
+<body class="guide">
+<a class="skip" href="#main">Skip to content</a>
+
+<button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false">
+  <span></span><span></span><span></span>
+</button>
+
+<nav id="sidebar" class="sidebar" aria-label="Contents">
+  <div class="brand">
+    <span class="brand-mark">FI</span>
+    <span class="brand-text">Estonian&nbsp;FIRE<small>Simulator &amp; guide</small></span>
+  </div>
+  <ul class="nav">
+    <li class="nav-doc"><a class="nav-top" href="../index.html">Start here</a></li>
+
+    <li class="nav-group">Calculators</li>
+    <li class="nav-doc"><a class="nav-top" href="../simulator.html">FIRE calculator</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../pension.html">Pension calculator</a></li>
+
+    <li class="nav-group">Guides</li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/fire-basics.html">FIRE basics</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/tax-overview.html">Estonian tax overview</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/investment-account.html">The investment account</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/pensions.html">Pension pillars</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/health-insurance.html">Health insurance</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/crypto.html">Crypto</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/real-estate.html">Property & rental income</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/company.html">Using an OÜ</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/portfolio.html">Building the portfolio</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/brokers.html">Brokers & parking cash</a></li>
+    <li class="nav-doc active"><a class="nav-top" href="../guide/property.html">Buying a home</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/household.html">Household & children</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/fatfire.html">FatFIRE</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/risks.html">Risks & blind spots</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/protection.html">Account protection</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/levers.html">Strategy levers</a></li>
+    <li class="nav-doc"><a class="nav-top" href="../guide/sources.html">Sources & verification</a></li>
+  </ul>
+  <div class="sidebar-foot">
+    <button id="theme" class="theme" aria-label="Toggle colour theme">
+      <span class="theme-icon" aria-hidden="true"></span><span class="theme-text">Theme</span>
+    </button>
+    <p class="note">Not financial advice. Rates last verified August 2026.</p>
+  </div>
+</nav>
+
+<div class="scrim" id="scrim"></div>
+
+<main id="main" class="main">
+  <div class="wrap">
+    <section class="doc">
+      <h1 class="doc-title">Buying a home</h1>
+<p>A near-term home purchase can constrain the rest of a FIRE plan, because the deposit must remain liquid while the future mortgage and running costs alter long-term spending.</p>
+<blockquote>
+<p>⚠️ Euribor levels, bank margins and KredEx terms move constantly. Every number here needs checking against current offers before it drives a decision.</p>
+</blockquote>
+<h2 id="the-one-non-negotiable-rule">The one non-negotiable rule</h2>
+<p><strong>Money you need within ~3 years does not go into equities.</strong></p>
+<p>This isn't risk tolerance, it's arithmetic. Global equity has drawn down 30–50% multiple times in living memory, and recovery has taken 2–5 years. If a down payment is in VWCE and the market falls 25% in month 10, the intended purchase may become impossible or the loss may have to be crystallised. The expected extra return over a few months does not compensate for that risk.</p>
+<p>So the ETF plan from <a href="portfolio.html">portfolio.md</a> applies to <strong>surplus beyond the house budget</strong>, not to the house budget.</p>
+<h2 id="where-the-down-payment-should-sit">Where the down payment should sit</h2>
+<p>Ranked, best first:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Return</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>EUR money market UCITS ETF, inside the LHV IK</strong></td>
+<td>~ECB rate minus ~0.1%</td>
+<td><strong>Best option</strong> — see the tax point below</td>
+</tr>
+<tr>
+<td><strong>Term deposit</strong> (LHV/Swedbank/SEB/Coop)</td>
+<td>Competitive, fixed</td>
+<td>Interest taxed at 22% immediately if held outside an IK. Match the maturity to the purchase date</td>
+</tr>
+<tr>
+<td><strong>Savings account</strong></td>
+<td>Lower</td>
+<td>Fully liquid, simplest</td>
+</tr>
+<tr>
+<td>Equities</td>
+<td>—</td>
+<td><strong>No</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>The tax point, and it's a good one:</strong> interest earned <em>outside</em> an investment account is taxed at 22% in the year you receive it. Interest earned <em>inside</em> an IK is deferred — and since you'll be withdrawing less than you contributed, that withdrawal is <strong>tax-free</strong>. Parking the down payment in a EUR money market fund inside the LHV investment account therefore earns money-market interest with <strong>no tax at all</strong> on the way out.</p>
+<p>Two practical caveats: allow <strong>T+2 settlement</strong> plus a bank transfer when timing the notary date, and understand a money market fund is not a deposit — it's very low risk, not zero risk.</p>
+<h2 id="estonian-mortgage-mechanics">Estonian mortgage mechanics</h2>
+<p>Bank of Estonia sets binding limits on all housing loans ✅ — <strong>unchanged since 1 March 2015</strong>, no amendment found in the last three years:</p>
+<table>
+<thead>
+<tr>
+<th>Limit</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Max LTV</td>
+<td><strong>85%</strong> (up to 90% with a KredEx guarantee)</td>
+</tr>
+<tr>
+<td>Max DSTI (loan payments / net income)</td>
+<td><strong>50%</strong></td>
+</tr>
+<tr>
+<td>Max maturity</td>
+<td><strong>30 years</strong></td>
+</tr>
+<tr>
+<td>Stress test</td>
+<td>Affordability checked at a higher rate, not the current one</td>
+</tr>
+</tbody>
+</table>
+<p>Other things to budget for:</p>
+<ul>
+<li><strong>Rate</strong> = 6-month Euribor + bank margin (roughly 1.5–2.2% depending on profile and LTV). Almost all Estonian mortgages are <strong>floating</strong> — your payment moves with Euribor. Budget for it being 2pp higher than today</li>
+<li><strong>KredEx guarantee</strong> ✅ — verified, and <strong>the categories are narrower than they sound</strong>. The "young family" category needs a parent ≤35 with a child ≤16, or ≤40 with <em>two</em> children ≤16; every category except large families also requires that the applicant <strong>does not already own a home</strong> unless it is sold within 12 months; and a KredEx-guaranteed property <strong>cannot be rented out</strong>. Applicants with a sufficiently large down payment may not need the guarantee</li>
+<li><strong>Transaction costs</strong>: notary fee + state fee + valuation + bank contract fee. Budget <strong>~1.5–2%</strong> of the purchase price on top of the down payment</li>
+<li><strong>Mortgage interest is not tax-deductible.</strong> The personal deduction was abolished, so don't assume any tax relief</li>
+<li><strong>Home insurance</strong> is mandatory; <strong>land tax</strong> is rising post-reform — check the specific plot</li>
+</ul>
+<p><strong>Avoid reducing assessed net income shortly before applying.</strong> Banks assess affordability on net take-home against the DSTI limit, so raising a Pillar II rate, starting large payroll pension deductions or taking unpaid leave may reduce borrowing capacity. See <a href="pensions.html#2-4-or-6--should-you-raise-your-rate">Pillar II rates</a>.</p>
+<p><strong>Shop the margin.</strong> Get offers from at least three banks. A 0.3pp difference in margin on a €200k, 25-year loan is roughly €9,000 over the life of the loan, and banks negotiate.</p>
+<hr />
+<h2 id="loan-term-deposit-size-and-the-bank-relationship">Loan term, deposit size, and the bank relationship</h2>
+<p>Three structural choices, made once at signing.</p>
+<h3 id="loan-term-it-barely-changes-the-fi-date--choose-it-for-flexibility">Loan term: it barely changes the FI date — choose it for flexibility</h3>
+<p>A shorter term is tempting: less interest, debt gone sooner. But if you can afford either, which actually gets you to FI faster?</p>
+<p><strong>Almost neither — the term makes very little difference.</strong> Worked on a €300,000 loan at 4%, for a household whose surplus is whatever is left after housing:</p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th style="text-align: right;">Payment @4%</th>
+<th style="text-align: right;">Total interest</th>
+<th style="text-align: right;">Extra saved vs 15 yr</th>
+<th>FI reached</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>15 yr</td>
+<td style="text-align: right;">€2,219</td>
+<td style="text-align: right;">€99,431</td>
+<td style="text-align: right;">—</td>
+<td>baseline</td>
+</tr>
+<tr>
+<td>20 yr</td>
+<td style="text-align: right;">€1,818</td>
+<td style="text-align: right;">€136,306</td>
+<td style="text-align: right;">€401/mo</td>
+<td>~same</td>
+</tr>
+<tr>
+<td>25 yr</td>
+<td style="text-align: right;">€1,584</td>
+<td style="text-align: right;">€175,053</td>
+<td style="text-align: right;">€636/mo</td>
+<td>~same</td>
+</tr>
+<tr>
+<td>30 yr</td>
+<td style="text-align: right;">€1,432</td>
+<td style="text-align: right;">€215,609</td>
+<td style="text-align: right;">€787/mo</td>
+<td>~same</td>
+</tr>
+</tbody>
+</table>
+<p><em>(FI here means the portfolio covers the target </em><em>and</em><em> clears whatever mortgage remains — the internally consistent definition.)</em></p>
+<p>They converge because a shorter term doesn't create wealth; it moves money from "portfolio" to "mortgage paid down". Either way you own the same net amount. <strong>A faster mortgage is not a faster retirement.</strong></p>
+<p>So choose the term on the things that genuinely differ:</p>
+<p><strong>1. Cash-flow flexibility.</strong> On the example above, 30 years frees <strong>€787/month</strong> versus 15. That's the difference between a plan that absorbs a job loss, a bad year or a second child, and one that doesn't.</p>
+<p><strong>2. Total wealth on the same budget.</strong> Commit the same amount each month either way — short loan then invest everything afterwards, versus long loan investing the difference throughout — and the longer term ends ahead, because the money invested early compounds for longer than the interest saved late.</p>
+<p><strong>3. Irreversibility.</strong> You can always overpay a 30-year loan (fee capped at 3 months' interest, usually waived with notice). You can never under-pay a 15-year one.</p>
+<p><strong>Recommendation: take the longest term available</strong>, and treat the freed-up monthly amount as a decision you re-make each year against the prepay thresholds above. If you want the debt gone faster, overpay a long loan — same result, and you keep the option to stop.</p>
+<p>⚠️ Check the age cap: many Estonian banks want the loan repaid by 65–70, so if you are over about 37 the real maximum on offer may be shorter than 30 years.</p>
+<h3 id="deposit-size-put-down-exactly-enough-to-reach-the-best-margin-tier">Deposit size: put down exactly enough to reach the best margin tier</h3>
+<p>An extra euro of deposit earns a <strong>guaranteed, tax-free return equal to the mortgage rate</strong> — around 4%. An extra euro invested earns an expected but uncertain 6–7%. On that alone, a smaller deposit wins.</p>
+<p>What breaks it is the <strong>margin ladder</strong>: banks price margin by LTV band, and crossing a band reprices the <em>entire</em> loan, not just the extra slice.</p>
+<p><strong>The method, once you have quotes:</strong></p>
+<ol>
+<li>Ask each bank for its margin at <strong>60%, 70%, 75%, 80% and 85% LTV</strong>. Most have two or three breakpoints.</li>
+<li>Find the <strong>lowest LTV at which the margin stops improving</strong>. That is the efficient deposit.</li>
+<li>Put down exactly that much — <strong>not a euro more</strong>.</li>
+</ol>
+<p>Beyond that point extra deposit earns only the mortgage rate, locked into an illiquid asset. Below it you pay a higher margin on the whole loan.</p>
+<p><strong>Worked example on a €360,000 property.</strong> Margin 1.70% at ≤75% LTV, 2.00% above:</p>
+<table>
+<thead>
+<tr>
+<th>Deposit</th>
+<th style="text-align: right;">Loan</th>
+<th style="text-align: right;">Rate</th>
+<th style="text-align: right;">Annual interest</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>25% (€90,000)</td>
+<td style="text-align: right;">€270,000</td>
+<td style="text-align: right;">3.70%</td>
+<td style="text-align: right;">€9,990</td>
+</tr>
+<tr>
+<td>15% (€54,000)</td>
+<td style="text-align: right;">€306,000</td>
+<td style="text-align: right;">4.00%</td>
+<td style="text-align: right;">€12,240</td>
+</tr>
+</tbody>
+</table>
+<p>The extra €36,000 costs €2,250/year — an <strong>effective marginal rate of 6.25%</strong>, not 4%. If the margin were unchanged, the same €36,000 would cost 3.70%; the repricing of the whole loan changes the answer.</p>
+<p>The efficient deposit is household-specific. Preserve transaction costs, furnishing and an emergency reserve first, then compare the remaining feasible deposits against each bank's actual LTV breakpoints.</p>
+<h3 id="does-holding-your-etf-at-lhv-get-you-a-better-rate">Does holding your ETF at LHV get you a better rate?</h3>
+<p><strong>Possibly, marginally — but don't count on it, and don't let it drive where you invest.</strong></p>
+<p>Estonian banks price the margin mainly on LTV, income stability, DSTI and negotiation. An existing relationship — salary account, investments, other products — does feed the credit assessment and can help at the edges, but it is not a published discount and no bank commits to it.</p>
+<p><strong>It's worth asking about, because the stakes are asymmetric.</strong> A <strong>0.1pp</strong> margin difference on €300,000 over 30 years is roughly <strong>€5,000–5,500</strong> of interest — far more than several years of a small custody fee. So:</p>
+<ul>
+<li><strong>Do</strong> ask each bank directly whether a salary account, existing investments, or bundling affects the margin, and get it in writing</li>
+<li><strong>Do</strong> get offers from at least three banks and use them against each other — this is worth more than any relationship effect</li>
+<li><strong>Don't</strong> move or keep assets at LHV <em>hoping</em> it helps. Decide custody on fees and reporting, then negotiate the mortgage separately</li>
+</ul>
+<h2 id="funding-the-down-payment-from-crypto">Funding the down payment from crypto</h2>
+<p>If any of it comes from crypto, plan this deliberately — Estonia treats crypto harshly:</p>
+<ul>
+<li>Every disposal is taxable at <strong>22% on the gain</strong></li>
+<li><strong>Losses cannot offset gains.</strong> Sell one coin at a profit and another at a loss in the same year, and you pay full tax on the gain with no relief for the loss</li>
+<li>You need per-transaction cost basis in EUR</li>
+</ul>
+<p><strong>Practical implications:</strong></p>
+<ol>
+<li><strong>Compute the tax before committing to a purchase price.</strong> As an illustration, €60k of crypto with a €20k cost basis can create about €8,800 of tax on sale — leaving roughly €51k rather than €60k for the purchase.</li>
+<li><strong>The tax bill lands the following year.</strong> Sell in 2026, <strong>declare by 30 April 2027</strong> and <strong>pay by 1 October 2027</strong> ✅. Note the payment date is the later one — and anyone declaring capital gains or foreign income settles on that October track rather than the March refund wave. Don't spend that money on the house.</li>
+<li><strong>Splitting the sale across two calendar years defers half the bill</strong> but doesn't reduce it — Estonia has no progressive brackets on this, so there's no rate arbitrage, only timing.</li>
+<li><strong>There's no tax reason to hold crypto longer.</strong> No long-term holding relief exists in Estonia. If you'd diversify out of crypto anyway, the house purchase is a natural, honest occasion to do it.</li>
+</ol>
+<h2 id="what-this-does-to-the-fire-plan">What this does to the FIRE plan</h2>
+<p>Worth being clear-eyed, without being preachy about it.</p>
+<p><strong>A bigger home raises the FI number permanently.</strong> Utilities, maintenance, insurance, land tax and furnishing all scale with size. If the new place costs <strong>€400/month more to run</strong>, that's <strong>€4,800/year</strong>, which at a 3.5% SWR adds <strong>~€137,000</strong> to the amount you need before you can stop working. The mortgage payment itself eventually ends; the running costs don't.</p>
+<p>That can still be the right trade: space and stability are legitimate uses of money. But it should be a deliberate decision. <strong>Model the new running cost, not just the mortgage payment.</strong></p>
+<p><strong>Two things that partly offset it:</strong>
+- Your primary residence is <strong>exempt from income tax on sale</strong> in Estonia, so home equity is one of the few genuinely untaxed assets available to you
+- A mortgage is cheap, long-dated leverage against an inflating asset, in a country with no wealth tax</p>
+<p><strong>Mortgage vs invest:</strong> covered properly in its own section below, since the answer moves with Euribor.</p>
+<hr />
+<h2 id="when-does-prepaying-beat-investing">When does prepaying beat investing?</h2>
+<p>Prepaying a mortgage is an <strong>investment with a guaranteed, risk-free, tax-free return exactly equal to your mortgage rate</strong>. So the question is simply: does that beat what the same euro would do in the investment account?</p>
+<h3 id="two-things-that-make-estonia-different">Two things that make Estonia different</h3>
+<p><strong>1. No mortgage interest deduction</strong> (abolished 2024). The headline rate is therefore the borrower's true financing cost, without an income-tax deduction lowering it.</p>
+<p><strong>2. The investment account is unusually tax-efficient</strong>, which pushes the other way. Two cases:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Effective return on the invested euro</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gains eventually taxed at 22%</td>
+<td><strong>5.8–6.3% nominal</strong> (from a 7% gross expectation, depending on horizon)</td>
+</tr>
+<tr>
+<td>Withdrawn inside the tax-free contribution base</td>
+<td><strong>7.0% nominal</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Because the IK lets you withdraw contributions tax-free first — often a decade or more of spending — a large share of what you invest is never taxed at all. There's also a hidden benefit: <strong>every euro contributed raises your future tax-free withdrawal allowance.</strong> Prepaying the mortgage does nothing for that.</p>
+<p>So the honest expectation on invested money is somewhere around <strong>6–7% nominal</strong>, versus a <strong>certain</strong> return equal to the mortgage rate.</p>
+<h3 id="the-thresholds">The thresholds</h3>
+<p>Your all-in rate is <strong>6-month Euribor + your bank margin</strong> (expect ~1.5–2.2%), resetting twice a year.</p>
+<table>
+<thead>
+<tr>
+<th>All-in mortgage rate</th>
+<th>What to do</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Below 4.5%</strong></td>
+<td><strong>Invest everything</strong></td>
+<td>The expected gap is 1.5pp+ and wide enough to survive being wrong</td>
+</tr>
+<tr>
+<td><strong>4.5–5.5%</strong></td>
+<td><strong>Still invest</strong></td>
+<td>Gap narrows but remains positive; liquidity and diversification favour the ETF</td>
+</tr>
+<tr>
+<td><strong>5.5–6.5%</strong></td>
+<td><strong>Split it</strong>, half to each</td>
+<td>Genuinely marginal. A risk-free 6% is a good return; splitting is a legitimate answer, not a fudge</td>
+</tr>
+<tr>
+<td><strong>6.5–7.5%</strong></td>
+<td><strong>Favour prepaying</strong></td>
+<td>You'd be earning your full expected equity return with <strong>zero risk and zero tax</strong></td>
+</tr>
+<tr>
+<td><strong>Above 7.5%</strong></td>
+<td><strong>Prepay aggressively</strong></td>
+<td>Guaranteed return exceeds what equities are likely to deliver</td>
+</tr>
+</tbody>
+</table>
+<p><strong>With a ~1.7% margin, the 6.5% trigger means 6-month Euribor above roughly 4.8%</strong> — higher than its late-2023 peak of ~4%. So on current rates (all-in ~3.5–4.5%), <strong>investing wins clearly</strong>, and it would take an unusual rate environment to change that.</p>
+<h3 id="what-a-rate-rise-actually-costs-you">What a rate rise actually costs you</h3>
+<table>
+<thead>
+<tr>
+<th>All-in rate</th>
+<th style="text-align: right;">Payment on illustrative €300k loan</th>
+<th style="text-align: right;">Total interest over 30 yrs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4%</td>
+<td style="text-align: right;">€1,432</td>
+<td style="text-align: right;">€215,600</td>
+</tr>
+<tr>
+<td>5%</td>
+<td style="text-align: right;">€1,610</td>
+<td style="text-align: right;">€279,800</td>
+</tr>
+<tr>
+<td>6%</td>
+<td style="text-align: right;">€1,799</td>
+<td style="text-align: right;">€347,500</td>
+</tr>
+<tr>
+<td>7%</td>
+<td style="text-align: right;">€1,996</td>
+<td style="text-align: right;">€418,500</td>
+</tr>
+</tbody>
+</table>
+<p>Check the household-specific DSTI in the simulator rather than inferring it from this table. The closer DSTI runs to the regulatory limit, the more the decision becomes about resilience rather than optimisation.</p>
+<h3 id="three-adjustments-worth-making">Three adjustments worth making</h3>
+<p><strong>If a household has no equity exposure yet.</strong> Establishing a diversified portfolio may reduce an existing concentration in local property. This diversification benefit belongs alongside the rate comparison, although it does not eliminate market risk.</p>
+<p><strong>Prepaying is irreversible.</strong> Estonia has no consumer home-equity line to draw the money back out. Money in the IK stays accessible; money in the mortgage doesn't. Before FI, that liquidity has real value.</p>
+<p><strong>The calculus flips near retirement.</strong> In the last ~3 years before FI, a paid-off house is worth more than the rate comparison implies, because eliminating a fixed obligation is the single best defence against a bad sequence of returns in the first decade of withdrawals. Whatever balance remains at that point, clearing it is a reasonable target even if rates never rise — and the calculator will show you what that balance is.</p>
+<h3 id="practical-mechanics">Practical mechanics</h3>
+<ul>
+<li><strong>Ask explicitly for a term reduction, not a payment reduction.</strong> ✅ Both are available at every major Estonian bank — but <strong>the defaults differ</strong>, and some (Citadele, for example) reduce the monthly payment while keeping the end date unless you say otherwise. Keeping the payment constant and shortening the term saves far more interest, so state your preference in writing with each repayment.</li>
+<li><strong>There is an early-repayment fee, but it is capped.</strong> Under <strong>VÕS §403⁴(4)</strong> a bank may claim <strong>up to three months' interest</strong> on the amount repaid early. On a €50,000 prepayment at 4% that's roughly <strong>€500</strong>.</li>
+<li><strong>Advance notice can remove it.</strong> Several banks waive the charge entirely with ~3 months' notice, and most require at least 10 days' notice to process any early repayment. <strong>Give notice and the fee usually disappears</strong> — worth building into the routine rather than prepaying on impulse.</li>
+<li>For a <strong>fixed-rate</strong> period the cap is different: <strong>1% of outstanding principal</strong> if more than a year of the fixed period remains, <strong>0.5%</strong> if less — or an interest-differential charge, which only bites when market rates have fallen below your fixed rate.</li>
+<li><strong>Don't prepay from the emergency fund.</strong> Ever.</li>
+<li><strong>Review at each Euribor reset</strong> (twice a year) rather than continuously. This is a decision to revisit on a schedule, not to agonise over.</li>
+</ul>
+<h2 id="sequencing--what-to-do-in-what-order">Sequencing — what to do in what order</h2>
+<ol>
+<li><strong>Get a mortgage pre-approval now.</strong> It tells you the real budget and therefore the real down payment, which is the input everything else depends on</li>
+<li><strong>Size the cash pile</strong>: down payment + ~2% transaction costs + moving/furnishing + any crypto tax due + <strong>an emergency fund kept separate</strong> (3–6 months of expenses — with dependants and a mortgage, closer to 6)</li>
+<li><strong>Park that in a money market fund inside the LHV IK</strong> (or a matched-maturity deposit)</li>
+<li><strong>Only what's left over goes into the ETF.</strong> It's fine if that is a small amount each month for now. Starting the habit matters more than the size</li>
+<li><strong>Buy the house</strong></li>
+<li><strong>Then</strong> scale up ETF contributions properly, with the new housing cost known rather than estimated</li>
+</ol>
+<p><strong>On starting an ETF before the purchase:</strong> only invest money demonstrably surplus to the complete purchase reserve. A small standing order can test the account mechanics without placing the deposit at market risk.</p>
+      <nav class="pager"><a class="prev" href="brokers.html">← Brokers & parking cash</a><a class="next" href="household.html">Household & children →</a></nav>
+    </section>
+  </div>
+</main>
+
+<script src="../src/nav.js"></script>
+</body>
+</html>
