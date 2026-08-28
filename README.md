@@ -2,6 +2,8 @@
 
 An open-source financial-independence and early-retirement simulator for Estonian tax residents. It models household cash flow, investment accounts, pension pillars, housing, healthcare and retirement bridges in euros.
 
+👉 **Live:** [https://th0masl.github.io/estonia-fire-planner/](https://th0masl.github.io/estonia-fire-planner/)
+
 The project is Estonia-specific because most FIRE material assumes US accounts and healthcare. Estonia instead has the `investeerimiskonto`, three pension pillars, tax on distributed company profits and health coverage that often depends on social-tax payments.
 
 ## What is included
