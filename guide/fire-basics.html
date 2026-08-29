@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>FIRE fundamentals — Estonian FIRE Simulator</title>
 <meta name="description" content="You are financially independent when:">
+<meta name="theme-color" content="#f6f8fb">
+<script>
+(function () {
+  var root = document.documentElement, choice = "system";
+  try { choice = localStorage.getItem("fa-theme") || "system"; } catch (e) {}
+  if (choice !== "light" && choice !== "dark") choice = "system";
+  if (choice !== "system") root.setAttribute("data-theme", choice);
+  var dark = choice === "dark" || (choice === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.querySelector('meta[name="theme-color"]').content = dark ? "#0f1320" : "#f6f8fb";
+})();
+</script>
 <link rel="stylesheet" href="../tokens.css">
 <link rel="stylesheet" href="../styles.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
@@ -15,12 +26,16 @@
 <button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false">
   <span></span><span></span><span></span>
 </button>
+<a class="mobile-brand" href="../index.html" aria-label="Estonian FIRE home">
+  <span class="brand-mark" aria-hidden="true">FI</span>
+  <span>Estonian FIRE</span>
+</a>
 
 <nav id="sidebar" class="sidebar" aria-label="Contents">
-  <div class="brand">
-    <span class="brand-mark">FI</span>
+  <a class="brand" href="../index.html" aria-label="Estonian FIRE home">
+    <span class="brand-mark" aria-hidden="true">FI</span>
     <span class="brand-text">Estonian&nbsp;FIRE<small>Simulator &amp; guide</small></span>
-  </div>
+  </a>
   <ul class="nav">
     <li class="nav-doc"><a class="nav-top" href="../index.html">Start here</a></li>
 
@@ -48,9 +63,11 @@
     <li class="nav-doc"><a class="nav-top" href="../guide/sources.html">Sources & verification</a></li>
   </ul>
   <div class="sidebar-foot">
-    <button id="theme" class="theme" aria-label="Toggle colour theme">
-      <span class="theme-icon" aria-hidden="true"></span><span class="theme-text">Theme</span>
-    </button>
+    <div class="theme-control" role="group" aria-label="Colour theme">
+      <button type="button" data-theme-choice="light" aria-pressed="false">Light</button>
+      <button type="button" data-theme-choice="system" aria-pressed="true">System</button>
+      <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
+    </div>
     <p class="note">Not financial advice. Rates last verified August 2026.</p>
   </div>
 </nav>
@@ -78,7 +95,7 @@
 <p>Cutting <strong>€500/month</strong> of recurring spend removes <strong>€150,000</strong> from your FI number at 4% — <em>and</em> adds €6,000/year to savings. A €500/month raise, after 22% tax and typical lifestyle creep, does maybe a third as much.</p>
 <h2 id="time-to-fi-is-a-function-of-savings-rate-not-income">Time to FI is a function of savings rate, not income</h2>
 <p>Starting from zero, 5% real return, 4% withdrawal:</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th style="text-align: right;">Savings rate</th>
@@ -119,11 +136,11 @@
 <td style="text-align: right;">~5.5</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Income only matters through its effect on this ratio. Two people earning €3k and €10k net with the same 50% savings rate reach FI in the same number of years — they just live very different lives afterwards.</p>
 <p><strong>The Estonian nuance:</strong> the 22% flat income tax means marginal income can be unusually well-preserved compared with many progressive systems. High earners in Estonia may therefore be able to sustain comparatively high savings rates. This is a structural advantage worth quantifying — see <a href="levers.html">strategy-levers.md</a>.</p>
 <h2 id="fire-variants">FIRE variants</h2>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>Variant</th>
@@ -158,7 +175,7 @@
 <td><strong>Especially strong in Estonia</strong> — a small salary also keeps health insurance alive</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>CoastFIRE deserves attention.</strong> As an illustration, €200k invested at 35 and compounding at 5% real becomes about €860k at 65 with zero further contributions. The point at which no further retirement saving is required can arrive <em>decades</em> before full FI.</p>
 <p><strong>BaristaFIRE deserves more attention in Estonia specifically</strong>, because the health insurance rules make "zero earned income" expensive. See the <a href="health-insurance.html">health-insurance guide</a>.</p>
 <h2 id="safe-withdrawal-rate--where-the-4-rule-breaks">Safe withdrawal rate — where the 4% rule breaks</h2>
@@ -188,7 +205,7 @@
 </ol>
 <h2 id="accumulation-vs-decumulation-are-different-problems">Accumulation vs decumulation are different problems</h2>
 <p>Worth separating explicitly, because good accumulation advice is often bad decumulation advice:</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th></th>
@@ -218,7 +235,7 @@
 <td>Withdrawal rate + flexibility</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>In Estonia there's a third phase people forget — <strong>the bridge</strong>: from early retirement age to 60/65 when pension pillars unlock. That bridge has to be funded entirely from taxable/investment-account assets. Sizing it is a core planning step.</p>
 <h2 id="reading-list">Reading list</h2>
 <ul>

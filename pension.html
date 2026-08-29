@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pension calculator — Estonian FIRE Simulator</title>
 <meta name="description" content="What an Estonian salary turns into through pension pillars II and III: contributions, the state's 4%, and the pot at unlock.">
+<meta name="theme-color" content="#f6f8fb">
+<script>
+(function () {
+  var root = document.documentElement, choice = "system";
+  try { choice = localStorage.getItem("fa-theme") || "system"; } catch (e) {}
+  if (choice !== "light" && choice !== "dark") choice = "system";
+  if (choice !== "system") root.setAttribute("data-theme", choice);
+  var dark = choice === "dark" || (choice === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.querySelector('meta[name="theme-color"]').content = dark ? "#0f1320" : "#f6f8fb";
+})();
+</script>
 <link rel="stylesheet" href="tokens.css">
 <link rel="stylesheet" href="styles.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
@@ -15,12 +26,16 @@
 <button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false">
   <span></span><span></span><span></span>
 </button>
+<a class="mobile-brand" href="index.html" aria-label="Estonian FIRE home">
+  <span class="brand-mark" aria-hidden="true">FI</span>
+  <span>Estonian FIRE</span>
+</a>
 
 <nav id="sidebar" class="sidebar" aria-label="Contents">
-  <div class="brand">
-    <span class="brand-mark">FI</span>
+  <a class="brand" href="index.html" aria-label="Estonian FIRE home">
+    <span class="brand-mark" aria-hidden="true">FI</span>
     <span class="brand-text">Estonian&nbsp;FIRE<small>Simulator &amp; guide</small></span>
-  </div>
+  </a>
   <ul class="nav">
     <li class="nav-doc"><a class="nav-top" href="index.html">Start here</a></li>
 
@@ -48,9 +63,11 @@
     <li class="nav-doc"><a class="nav-top" href="guide/sources.html">Sources & verification</a></li>
   </ul>
   <div class="sidebar-foot">
-    <button id="theme" class="theme" aria-label="Toggle colour theme">
-      <span class="theme-icon" aria-hidden="true"></span><span class="theme-text">Theme</span>
-    </button>
+    <div class="theme-control" role="group" aria-label="Colour theme">
+      <button type="button" data-theme-choice="light" aria-pressed="false">Light</button>
+      <button type="button" data-theme-choice="system" aria-pressed="true">System</button>
+      <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
+    </div>
     <p class="note">Not financial advice. Rates last verified August 2026.</p>
   </div>
 </nav>
@@ -1959,19 +1976,35 @@ document.addEventListener('change', render);
 render();
 
 /* ---- nav.js ---- */
-// Shared chrome for the guide pages: theme toggle and the mobile drawer.
+// Shared chrome for the guide pages: theme choice and the mobile drawer.
 (function () {
   var root = document.documentElement;
-  try { var stored = localStorage.getItem('fa-theme'); if (stored) root.setAttribute('data-theme', stored); } catch (e) {}
+  var meta = document.querySelector('meta[name="theme-color"]');
+  var media = matchMedia('(prefers-color-scheme: dark)');
+  var buttons = document.querySelectorAll('[data-theme-choice]');
+  var choice = 'system';
+  try { choice = localStorage.getItem('fa-theme') || 'system'; } catch (e) {}
+  if (choice !== 'light' && choice !== 'dark' && choice !== 'system') choice = 'system';
 
-  var btn = document.getElementById('theme');
-  if (btn) btn.addEventListener('click', function () {
-    var dark = root.getAttribute('data-theme') === 'dark'
-      || (!root.hasAttribute('data-theme') && matchMedia('(prefers-color-scheme: dark)').matches);
-    var next = dark ? 'light' : 'dark';
-    root.setAttribute('data-theme', next);
-    try { localStorage.setItem('fa-theme', next); } catch (e) {}
-  });
+  function applyTheme(next, persist) {
+    choice = next;
+    if (choice === 'system') root.removeAttribute('data-theme');
+    else root.setAttribute('data-theme', choice);
+    for (var i = 0; i < buttons.length; i += 1) {
+      buttons[i].setAttribute('aria-pressed', String(buttons[i].getAttribute('data-theme-choice') === choice));
+    }
+    var dark = choice === 'dark' || (choice === 'system' && media.matches);
+    if (meta) meta.content = dark ? '#0f1320' : '#f6f8fb';
+    if (persist) try { localStorage.setItem('fa-theme', choice); } catch (e) {}
+  }
+
+  for (var i = 0; i < buttons.length; i += 1) {
+    buttons[i].addEventListener('click', function () { applyTheme(this.getAttribute('data-theme-choice'), true); });
+  }
+  function systemChanged() { if (choice === 'system') applyTheme('system', false); }
+  if (media.addEventListener) media.addEventListener('change', systemChanged);
+  else if (media.addListener) media.addListener(systemChanged);
+  applyTheme(choice, false);
 
   var menu = document.getElementById('menu'), scrim = document.getElementById('scrim');
   function setOpen(o) { document.body.classList.toggle('nav-open', o); menu.setAttribute('aria-expanded', String(o)); }

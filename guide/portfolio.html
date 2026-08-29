@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Portfolio implementation — Estonian FIRE Simulator</title>
 <meta name="description" content="How diversified ETFs can fit into an Estonia-based FIRE portfolio, including fund and broker choices.">
+<meta name="theme-color" content="#f6f8fb">
+<script>
+(function () {
+  var root = document.documentElement, choice = "system";
+  try { choice = localStorage.getItem("fa-theme") || "system"; } catch (e) {}
+  if (choice !== "light" && choice !== "dark") choice = "system";
+  if (choice !== "system") root.setAttribute("data-theme", choice);
+  var dark = choice === "dark" || (choice === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.querySelector('meta[name="theme-color"]').content = dark ? "#0f1320" : "#f6f8fb";
+})();
+</script>
 <link rel="stylesheet" href="../tokens.css">
 <link rel="stylesheet" href="../styles.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
@@ -15,12 +26,16 @@
 <button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false">
   <span></span><span></span><span></span>
 </button>
+<a class="mobile-brand" href="../index.html" aria-label="Estonian FIRE home">
+  <span class="brand-mark" aria-hidden="true">FI</span>
+  <span>Estonian FIRE</span>
+</a>
 
 <nav id="sidebar" class="sidebar" aria-label="Contents">
-  <div class="brand">
-    <span class="brand-mark">FI</span>
+  <a class="brand" href="../index.html" aria-label="Estonian FIRE home">
+    <span class="brand-mark" aria-hidden="true">FI</span>
     <span class="brand-text">Estonian&nbsp;FIRE<small>Simulator &amp; guide</small></span>
-  </div>
+  </a>
   <ul class="nav">
     <li class="nav-doc"><a class="nav-top" href="../index.html">Start here</a></li>
 
@@ -48,9 +63,11 @@
     <li class="nav-doc"><a class="nav-top" href="../guide/sources.html">Sources & verification</a></li>
   </ul>
   <div class="sidebar-foot">
-    <button id="theme" class="theme" aria-label="Toggle colour theme">
-      <span class="theme-icon" aria-hidden="true"></span><span class="theme-text">Theme</span>
-    </button>
+    <div class="theme-control" role="group" aria-label="Colour theme">
+      <button type="button" data-theme-choice="light" aria-pressed="false">Light</button>
+      <button type="button" data-theme-choice="system" aria-pressed="true">System</button>
+      <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
+    </div>
     <p class="note">Not financial advice. Rates last verified August 2026.</p>
   </div>
 </nav>
@@ -79,7 +96,7 @@
 <hr />
 <h2 id="vwce-vs-webn">VWCE vs WEBN</h2>
 <p>Both are the right <em>kind</em> of thing: accumulating, Irish-domiciled, global, all-cap-ish, cheap.</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th></th>
@@ -154,7 +171,7 @@
 <td>Amundi — active pattern of merging funds</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>The cost gap is 0.07%/year, which is not enough to decide it.</strong> On a €500k portfolio that's €350/year — real, but small against a fund that is ~25× larger, four years older, and holds a broader slice of the market.</p>
 <p><strong>On Amundi's track record:</strong> WEBN itself has not had its index changed or been merged since launch — but Amundi merged its <em>Prime Global</em> siblings in November 2024, absorbed a €3.8bn Lyxor EM fund, and rebranded ~38 Lyxor ETFs across 2023–24. The pattern is real, even though WEBN hasn't been caught by it yet. Inside an Estonian IK a merger isn't a taxable event, so the <em>tax</em> consequence is neutralised — but you'd still be moved into a fund you didn't choose.</p>
 <p><strong>Recommendation: VWCE.</strong> With the gap at 0.07%, the deeper liquidity, longer record, broader index and vastly larger asset base are worth more than the remaining fee saving — particularly for a position you intend to hold for decades and never think about again. WEBN remains perfectly reasonable if you'd rather have the lowest possible TER; this is a close call, not a clear error either way.</p>
@@ -170,7 +187,7 @@
 <p>So "UCITS ETF" just means an ETF built to EU retail rules. VWCE is one. A "EUR money market UCITS fund" is one too. It matters here for three reasons: UCITS funds are explicitly eligible for the investment account, they hold assets in independent custody (see <a href="protection.html">account-protection.md</a>), and non-UCITS funds are largely unavailable to EU retail investors anyway.</p>
 <h3 id="why-not-just-put-the-house-money-in-the-etf">Why not just put the house money in the ETF?</h3>
 <p>Because they do completely different jobs:</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th></th>
@@ -200,11 +217,11 @@
 <td>10 years+</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>If a deposit is needed in under twelve months, a 25% drawdown in month ten can make the intended purchase impossible or force the loss to be crystallised. There is no expected return that compensates for that risk over a few months.</p>
 <p>The money market fund isn't an investment in any meaningful sense; it's a <strong>parking space that earns the ECB rate instead of nothing</strong>, while staying inside the investment account so the interest is tax-deferred and comes back out tax-free.</p>
 <h3 id="the-vocabulary-since-none-of-this-is-obvious">The vocabulary, since none of this is obvious</h3>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>Term</th>
@@ -229,7 +246,7 @@
 <td>The fund reinvests dividends internally instead of paying them out. No annual dividend to declare</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>How buying actually works:</strong> log into LHV, search the ISIN, choose the Xetra listing, enter an amount, buy. It looks and feels like buying a share. Settlement is T+2.</p>
 <p><strong>Money market funds to look at</strong> (all EUR, all trading on Xetra) — ⚠️ confirm the current ISIN on the issuer's page before buying, as tickers change:</p>
 <ul>
@@ -259,7 +276,7 @@ in the same account adds 24% VAT to the whole fee.</p>
 <p><strong>The trade-off against IBKR is now clearer.</strong> Swedbank is easier (automated reporting, Estonian support) but keeps everything inside the Estonian banking system. IBKR is more work (manual ledger) but is the only option that actually diversifies custody out of Estonia. Which you pick second depends on which goal you weight — see the phasing below.</p>
 <h3 id="example-a-balance-held-at-a-foreign-eea-bank">Example: a balance held at a foreign EEA bank</h3>
 <p>For illustration, short-term cash held at a foreign EEA bank such as N26 may earn less than a money market fund. The table below uses a <strong>1.5% example rate</strong>; current rates must be checked. Interest from a foreign bank is generally <strong>taxable in Estonia at 22%</strong> as received ⚠️ unless the account and assets qualify for the investment-account regime.</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th></th>
@@ -284,7 +301,7 @@ in the same account adds 24% VAT to the whole fee.</p>
 <td style="text-align: right;"><strong>€1,000</strong></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>About <strong>€415/year</strong> in this illustration — small, though consolidating a purchase fund can also simplify IK accounting.</p>
 <p><strong>One point against:</strong> N26 is a German bank, so a balance there sits under Germany's deposit guarantee — a genuinely separate €100,000 bucket from Estonian deposits. That's real diversification. But a money market fund isn't a deposit at all, so it sidesteps the €100,000 question entirely rather than just relocating it (see <a href="protection.html">account-protection.md</a>).</p>
 <h3 id="can-you-invest-through-n26">Can you invest <em>through</em> N26?</h3>
@@ -301,7 +318,7 @@ in the same account adds 24% VAT to the whole fee.</p>
 <p><strong>Second, IBKR Ireland is the tool for this, not N26.</strong> It's confirmed eligible as an investment account, it's an Irish entity outside the Estonian banking system, it has no custody fee, and it gives full market access.</p>
 <h3 id="phasing-if-custody-diversification-matters-to-you">Phasing, if custody diversification matters to you</h3>
 <p>On cost alone, a second account only pays for itself above about €200,000. If holding assets outside the Estonian banking system matters in its own right, bring it forward:</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>Phase</th>
@@ -326,7 +343,7 @@ in the same account adds 24% VAT to the whole fee.</p>
 <td>If you'd rather defer the manual ledger — but it doesn't diversify out of Estonia</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Transfers between declared accounts are tax-neutral and e-MTA aggregates them, so <strong>there is no tax cost to splitting</strong> — the only cost is IBKR's manual ledger. That makes the sequencing purely a question of how much admin you'll tolerate versus how much you want custody outside Estonia.</p>
 <p><strong>Don't open everything at once.</strong> One account until €100,000; the second buys you something real, a third rarely does.</p>
 <h3 id="vwce-at-lhv-webn-at-ibkr">VWCE at LHV, WEBN at IBKR</h3>
@@ -343,7 +360,7 @@ in the same account adds 24% VAT to the whole fee.</p>
 <p><strong>On the custody threshold:</strong> capping LHV around €100,000 is exactly the fee-optimal point, since custody is free up to there and 0.12%/yr above. Note it will drift past €100,000 through market growth alone — that's fine and not worth acting on. At €150,000 the fee is about €60/year. Only revisit if the LHV side grows well beyond that.</p>
 <h3 id="where-short-term-cash-might-sit">Where short-term cash might sit</h3>
 <p>One possible split is:</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>Purpose</th>
@@ -363,13 +380,13 @@ in the same account adds 24% VAT to the whole fee.</p>
 <td>May improve yield, but settlement time and the distinction between a fund and a guaranteed deposit must be understood</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The appropriate institutions and amounts depend on liquidity needs, deposit-guarantee exposure and the purchase date.</p>
 <hr />
 <h2 id="lhv-or-ibkr-for-the-etf-itself">LHV or IBKR for the ETF itself?</h2>
 <h3 id="the-two-costs-that-matter">The two costs that matter</h3>
 <p>Both of these apply, and they pay for different things.</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th></th>
@@ -414,11 +431,11 @@ in the same account adds 24% VAT to the whole fee.</p>
 <td>No</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>LHV is a reasonable default for a first declared investment account.</strong> Its automated IK reporting reduces the risk of misreporting contributions and withdrawals over long periods. That convenience can justify the fee difference while balances are modest.</p>
 <p><strong>But LHV's custody fee sets a crossover point.</strong> Above €100,000 of foreign securities, LHV charges 0.01% per month — <strong>0.12%/year</strong>, which is <em>more than the fund's own TER</em>. At €300k that's €240/year; at €600k, €600/year, growing forever. IBKR has no equivalent charge.</p>
 <p><strong>IBKR is cheaper, but the gap is almost entirely custody, not commission.</strong> On a €5,000 monthly purchase, LHV charges ~€7 and IBKR ~€1–3. That's €50–70 a year: real, but trivial. The custody fee is what compounds:</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th style="text-align: right;">Portfolio</th>
@@ -448,7 +465,7 @@ in the same account adds 24% VAT to the whole fee.</p>
 <td style="text-align: right;">€0</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Recommendation: start at LHV, move to IBKR at around €200,000.</strong></p>
 <p>Starting at LHV can be reasonable because automated IK reporting is valuable and custody below €100k is free. Reassess around €200,000, when the fee reaches about €120 a year and keeps rising and custody outside Estonia may start to matter for its own sake (see <a href="protection.html">account-protection.md</a>).</p>
 <p><strong>Switching later is unusually painless here</strong>, and this is worth knowing in advance: because the investment account defers tax, <strong>selling at LHV and rebuying at IBKR is not a taxable event</strong>. You'd pay spread and commission, nothing more. In most countries changing broker means either an in-kind transfer or a tax bill; in Estonia neither applies, as long as both accounts are declared investment accounts and the cash moves directly between them.</p>
@@ -457,7 +474,7 @@ in the same account adds 24% VAT to the whole fee.</p>
 <p>For a small one-fund global ETF portfolio, LHV provides Xetra access, investment-account integration and automated tax reporting. Below €100,000 its custody fee is zero.</p>
 <p><strong>IBKR currently charges no inactivity fee</strong>, so an unused account need not create an ongoing cost. Confirm the current schedule before relying on this.</p>
 <p><strong>What IBKR would add later:</strong></p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th></th>
@@ -486,7 +503,7 @@ in the same account adds 24% VAT to the whole fee.</p>
 <td>❌ Explicitly not part of this plan</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>On cost grounds alone, IBKR becomes more compelling around €200,000. Broader market access is not itself a benefit to a deliberately simple one-fund plan.</p>
 <p>✅ <strong>IBKR Ireland can be declared as an investment account.</strong> The widened §17² definition explicitly covers accounts at an EEA investment firm ("lepinguriigi investeerimisühing"), and IBKR Ireland appears on Finantsinspektsioon's register of cross-border providers. The only real cost is that you do the contribution/withdrawal bookkeeping by hand.</p>
 <p><strong>Do declare it before trading in it.</strong> An undeclared account means every sale is immediately taxable at 22% and the whole deferral benefit is lost.</p>

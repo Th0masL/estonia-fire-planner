@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Household, not individual — Estonian FIRE Simulator</title>
 <meta name="description" content="Dependants and multiple adults change a FIRE plan in more ways than simply increasing spending. This chapter describes the rules and scenarios that househo">
+<meta name="theme-color" content="#f6f8fb">
+<script>
+(function () {
+  var root = document.documentElement, choice = "system";
+  try { choice = localStorage.getItem("fa-theme") || "system"; } catch (e) {}
+  if (choice !== "light" && choice !== "dark") choice = "system";
+  if (choice !== "system") root.setAttribute("data-theme", choice);
+  var dark = choice === "dark" || (choice === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.querySelector('meta[name="theme-color"]').content = dark ? "#0f1320" : "#f6f8fb";
+})();
+</script>
 <link rel="stylesheet" href="../tokens.css">
 <link rel="stylesheet" href="../styles.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
@@ -15,12 +26,16 @@
 <button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false">
   <span></span><span></span><span></span>
 </button>
+<a class="mobile-brand" href="../index.html" aria-label="Estonian FIRE home">
+  <span class="brand-mark" aria-hidden="true">FI</span>
+  <span>Estonian FIRE</span>
+</a>
 
 <nav id="sidebar" class="sidebar" aria-label="Contents">
-  <div class="brand">
-    <span class="brand-mark">FI</span>
+  <a class="brand" href="../index.html" aria-label="Estonian FIRE home">
+    <span class="brand-mark" aria-hidden="true">FI</span>
     <span class="brand-text">Estonian&nbsp;FIRE<small>Simulator &amp; guide</small></span>
-  </div>
+  </a>
   <ul class="nav">
     <li class="nav-doc"><a class="nav-top" href="../index.html">Start here</a></li>
 
@@ -48,9 +63,11 @@
     <li class="nav-doc"><a class="nav-top" href="../guide/sources.html">Sources & verification</a></li>
   </ul>
   <div class="sidebar-foot">
-    <button id="theme" class="theme" aria-label="Toggle colour theme">
-      <span class="theme-icon" aria-hidden="true"></span><span class="theme-text">Theme</span>
-    </button>
+    <div class="theme-control" role="group" aria-label="Colour theme">
+      <button type="button" data-theme-choice="light" aria-pressed="false">Light</button>
+      <button type="button" data-theme-choice="system" aria-pressed="true">System</button>
+      <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
+    </div>
     <p class="note">Not financial advice. Rates last verified August 2026.</p>
   </div>
 </nav>
@@ -68,7 +85,7 @@
 <h2 id="the-good-news-first">The good news first</h2>
 <h3 id="two-adults--where-the-allowances-do-and-dont-double">Two adults — where the allowances do and don't double</h3>
 <p>Estonian allowances are <strong>per person</strong>, but most of them only have value against actual income:</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>Wrapper</th>
@@ -103,7 +120,7 @@
 <td>Only on earned income</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <blockquote>
 <p><strong>Pillar III capacity is per earner, not per person.</strong> The refund is a deduction against your own income tax, so a partner with no earnings who contributes €6,000 gets <strong>nothing back</strong>. In a single-earner household the usable figure is <strong>€6,000 and €1,320</strong>.</p>
 <p>Unused room cannot be passed to the other spouse: TuMS §28²(1¹) allows spousal transfer only for §25 and §26 deductions (housing interest, training costs, donations), never §28. See <a href="pensions.html#the-spousal-transfer-caveat-for-single-earner-households">Pension pillars II and III</a>.</p>

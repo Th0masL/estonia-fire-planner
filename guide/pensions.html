@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pension pillars II and III — Estonian FIRE Simulator</title>
 <meta name="description" content="So taking Pillar II as a properly-paced fund pension or lifetime annuity is tax-free. Only lump sums and compressed schedules attract the 10%.">
+<meta name="theme-color" content="#f6f8fb">
+<script>
+(function () {
+  var root = document.documentElement, choice = "system";
+  try { choice = localStorage.getItem("fa-theme") || "system"; } catch (e) {}
+  if (choice !== "light" && choice !== "dark") choice = "system";
+  if (choice !== "system") root.setAttribute("data-theme", choice);
+  var dark = choice === "dark" || (choice === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.querySelector('meta[name="theme-color"]').content = dark ? "#0f1320" : "#f6f8fb";
+})();
+</script>
 <link rel="stylesheet" href="../tokens.css">
 <link rel="stylesheet" href="../styles.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
@@ -15,12 +26,16 @@
 <button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false">
   <span></span><span></span><span></span>
 </button>
+<a class="mobile-brand" href="../index.html" aria-label="Estonian FIRE home">
+  <span class="brand-mark" aria-hidden="true">FI</span>
+  <span>Estonian FIRE</span>
+</a>
 
 <nav id="sidebar" class="sidebar" aria-label="Contents">
-  <div class="brand">
-    <span class="brand-mark">FI</span>
+  <a class="brand" href="../index.html" aria-label="Estonian FIRE home">
+    <span class="brand-mark" aria-hidden="true">FI</span>
     <span class="brand-text">Estonian&nbsp;FIRE<small>Simulator &amp; guide</small></span>
-  </div>
+  </a>
   <ul class="nav">
     <li class="nav-doc"><a class="nav-top" href="../index.html">Start here</a></li>
 
@@ -48,9 +63,11 @@
     <li class="nav-doc"><a class="nav-top" href="../guide/sources.html">Sources & verification</a></li>
   </ul>
   <div class="sidebar-foot">
-    <button id="theme" class="theme" aria-label="Toggle colour theme">
-      <span class="theme-icon" aria-hidden="true"></span><span class="theme-text">Theme</span>
-    </button>
+    <div class="theme-control" role="group" aria-label="Colour theme">
+      <button type="button" data-theme-choice="light" aria-pressed="false">Light</button>
+      <button type="button" data-theme-choice="system" aria-pressed="true">System</button>
+      <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
+    </div>
     <p class="note">Not financial advice. Rates last verified August 2026.</p>
   </div>
 </nav>
@@ -68,7 +85,7 @@
 <li><strong>Unlock age = state pension age minus 5</strong> ✅ — the "flexible retirement age". In 2026 that is <strong>60</strong>; it rises in lockstep with the state pension age</li>
 </ul>
 <h3 id="payout-tax--0-is-achievable">Payout tax — 0% is achievable ✅</h3>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>Payout type</th>
@@ -105,7 +122,7 @@
 <td>22%</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>So taking Pillar II as a <strong>properly-paced fund pension or lifetime annuity is tax-free</strong>. Only lump sums and compressed schedules attract the 10%.</p>
 <p>⚠️ <strong>A reform is in draft, not law.</strong> A bill circulated in early 2026 would allow <strong>partial</strong> withdrawals (from ~2028) and cut the rejoin wait to <strong>5 years</strong> (from 1 July 2027). Treat as a proposal. It would also require any future cut to the state's 4% to carry a 5-year notice period.</p>
 <p><strong>The FIRE tension:</strong> Pillar II money may remain locked long after an early-retirement date. But <strong>on exit, the 4% state portion stops flowing to the participant</strong> and reverts to Pillar I. Exiting therefore gives up what is effectively a 4%-of-salary match in exchange for control of the participant's own 2–6%.</p>
@@ -113,7 +130,7 @@
 <p>Second-order: index-tracking Pillar II funds (LHV, Tuleva) beat active ones on fees over decades. If you're staying in, be in a low-cost index fund — check what you're actually in.</p>
 <h3 id="2-4-or-6--should-you-raise-your-rate">2%, 4% or 6% — should you raise your rate?</h3>
 <p><strong>First, the fact that changes the answer: raising your own rate does not increase the state's 4%.</strong> ✅ <strong>Confirmed</strong> — Pensionikeskus states the 2-4-6 reform "concerns only the person's own contribution".</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>Personal rate</th>
@@ -138,11 +155,11 @@
 <td>10%</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Switching windows</strong> ✅: applications go through Pensionikeskus or your bank. Anything received <strong>by 30 November</strong> takes effect the following <strong>1 January</strong>; file in December and it slips a full extra year. The last application before the deadline wins, and you can change once a year.</p>
 <p>The 4% redirected from social tax is fixed. Going from 2% to 6% does <strong>not</strong> get you more from the state — it simply moves an extra 4% of your gross salary out of your take-home pay and into a wrapper you can't touch until 63–65. There is no additional match to capture. This is the most common misconception about the 2025 rate choice.</p>
 <p><strong>The tax treatment is genuinely good, though.</strong> Pillar II contributions come out of gross pay <em>before</em> income tax, and payouts at retirement are taxed at 10% (0% as a lifetime annuity) ⚠️ verify. That's the same pre-tax-in / low-tax-out arbitrage as Pillar III, and by the same arithmetic it beats an investment account — <strong>even if you exit early and pay 22%</strong>:</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>Route (€1,000 of gross salary)</th>
@@ -175,7 +192,7 @@
 <td style="text-align: right;"><strong>€1,997</strong></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>So on tax alone, 6% wins. <strong>The reason to hesitate is liquidity, which can be decisive for early retirement:</strong></p>
 <ol>
 <li><strong>Pillar II unlocks later than everything else</strong> — 63–65, versus 60 for Pillar III. When work is intended to stop much earlier, the <strong>bridge</strong> can be the binding constraint rather than the age-65 bucket. Over-funding Pillar II can leave too little accessible capital before the unlock age.</li>
@@ -185,7 +202,7 @@
 <p><strong>Decision rule:</strong> 2% can suit a plan that still needs to build accessible bridge capital or preserve near-term borrowing capacity. A higher rate can suit a plan whose bridge is already adequately funded, particularly after available Pillar III allowance has been used. Review the choice before the annual 30 November deadline rather than tying it to a specific household timetable.</p>
 <h2 id="pillar-iii-täiendav-kogumispension--the-best-value-wrapper-in-estonia">Pillar III (<code>täiendav kogumispension</code>) — the best-value wrapper in Estonia</h2>
 <p><strong>Yes — there is a contribution-based tax reduction, and it's the most underused allowance in the country.</strong></p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th></th>
@@ -254,11 +271,11 @@
 <td>Pillar III funds <strong>and</strong> voluntary pension insurance contracts</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3 id="why-it-beats-the-investment-account--even-if-you-withdraw-early">Why it beats the investment account — even if you withdraw early</h3>
 <p>The usual objection is "it's locked until 60, and I want to retire at 45". That objection is weaker than it looks, because the refund means you compound <strong>pre-tax</strong> euros.</p>
 <p>Same net outlay of <strong>€4,680</strong> in each case (€6,000 contributed minus the €1,320 refund), same gross return, assume the money triples over ~25 years:</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>Route</th>
@@ -291,7 +308,7 @@
 <td style="text-align: right;"><strong>€11,981</strong></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Even the early-withdrawal case beats the investment account</strong> — by about 17%. Taking it at 60 beats it by about 35%. The refund is doing the work: you're investing €6,000 where the IK route only has €4,680 to invest.</p>
 <p><strong>The one genuine cost is fees.</strong> Pillar III funds run ~0.3–0.5% against ~0.07–0.22% for a global ETF. Over 25 years that gap costs roughly 7% of the final amount — enough to narrow the advantage, nowhere near enough to reverse it. So: <strong>use a low-cost index Pillar III fund</strong> (Tuleva, LHV index), never an actively managed one.</p>
 <h3 id="the-spousal-transfer-caveat-for-single-earner-households">The spousal transfer caveat for single-earner households</h3>
@@ -307,7 +324,7 @@
 <p>Most FIRE arithmetic sets the target at <code>spending / SWR</code> — enough to fund
 spending <strong>forever</strong>, from the day work stops. That quietly assumes no other
 income ever arrives, which is not true. Estonia has three unlock points:</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>Phase</th>
@@ -336,7 +353,7 @@ income ever arrives, which is not true. Estonia has three unlock points:</p>
 <td>free</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Note the middle row. Health insurance follows the <strong>state pension</strong>, not pension
 income generally: RaKS §5 insures you for <em>receiving a state pension</em>, and
 Pillar II money is not one — it is your own capital coming back to you. So the
@@ -386,7 +403,7 @@ instead of 20%, because four points go to your own fund. Both halves of the
 ühendosa fall by that same 16/20, and a member's solidaarosak is separately
 capped at 0.800 rather than 1.000.</p>
 <p>The result is exactly a <strong>20% smaller Pillar I accrual</strong>:</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>40 years at the average wage</th>
@@ -403,7 +420,7 @@ capped at 0.800 rather than 1.000.</p>
 <td><strong>€734.50/month</strong></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The flat base amount is untouched, which is why the total falls by 10% rather
 than 20%.</p>
 <p>That €84 a month is the real price of the second pillar, and it is the number
@@ -437,7 +454,7 @@ ability to earn something if the opening stretch goes badly.</p>
 <h2 id="choosing-the-payout-who-carries-the-longevity-risk">Choosing the payout: who carries the longevity risk</h2>
 <p>The two 0%-taxed options are not the same product, and the difference decides
 who is exposed if you live a long time.</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th></th>
@@ -492,7 +509,7 @@ who is exposed if you live a long time.</p>
 <td>the market</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Neither dominates, and the reason is the last two rows.</strong> The annuity hands
 longevity risk to the insurer and keeps inflation risk. The fund pension does
 the opposite. Which is worse depends on whether you live a long time and on what

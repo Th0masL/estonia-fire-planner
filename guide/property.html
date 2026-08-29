@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Buying a home — Estonian FIRE Simulator</title>
 <meta name="description" content="A near-term home purchase can constrain the rest of a FIRE plan, because the deposit must remain liquid while the future mortgage and running costs alter l">
+<meta name="theme-color" content="#f6f8fb">
+<script>
+(function () {
+  var root = document.documentElement, choice = "system";
+  try { choice = localStorage.getItem("fa-theme") || "system"; } catch (e) {}
+  if (choice !== "light" && choice !== "dark") choice = "system";
+  if (choice !== "system") root.setAttribute("data-theme", choice);
+  var dark = choice === "dark" || (choice === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.querySelector('meta[name="theme-color"]').content = dark ? "#0f1320" : "#f6f8fb";
+})();
+</script>
 <link rel="stylesheet" href="../tokens.css">
 <link rel="stylesheet" href="../styles.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
@@ -15,12 +26,16 @@
 <button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false">
   <span></span><span></span><span></span>
 </button>
+<a class="mobile-brand" href="../index.html" aria-label="Estonian FIRE home">
+  <span class="brand-mark" aria-hidden="true">FI</span>
+  <span>Estonian FIRE</span>
+</a>
 
 <nav id="sidebar" class="sidebar" aria-label="Contents">
-  <div class="brand">
-    <span class="brand-mark">FI</span>
+  <a class="brand" href="../index.html" aria-label="Estonian FIRE home">
+    <span class="brand-mark" aria-hidden="true">FI</span>
     <span class="brand-text">Estonian&nbsp;FIRE<small>Simulator &amp; guide</small></span>
-  </div>
+  </a>
   <ul class="nav">
     <li class="nav-doc"><a class="nav-top" href="../index.html">Start here</a></li>
 
@@ -48,9 +63,11 @@
     <li class="nav-doc"><a class="nav-top" href="../guide/sources.html">Sources & verification</a></li>
   </ul>
   <div class="sidebar-foot">
-    <button id="theme" class="theme" aria-label="Toggle colour theme">
-      <span class="theme-icon" aria-hidden="true"></span><span class="theme-text">Theme</span>
-    </button>
+    <div class="theme-control" role="group" aria-label="Colour theme">
+      <button type="button" data-theme-choice="light" aria-pressed="false">Light</button>
+      <button type="button" data-theme-choice="system" aria-pressed="true">System</button>
+      <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
+    </div>
     <p class="note">Not financial advice. Rates last verified August 2026.</p>
   </div>
 </nav>
@@ -71,7 +88,7 @@
 <p>So the ETF plan from <a href="portfolio.html">portfolio.md</a> applies to <strong>surplus beyond the house budget</strong>, not to the house budget.</p>
 <h2 id="where-the-down-payment-should-sit">Where the down payment should sit</h2>
 <p>Ranked, best first:</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>Option</th>
@@ -101,12 +118,12 @@
 <td><strong>No</strong></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>The tax point, and it's a good one:</strong> interest earned <em>outside</em> an investment account is taxed at 22% in the year you receive it. Interest earned <em>inside</em> an IK is deferred — and since you'll be withdrawing less than you contributed, that withdrawal is <strong>tax-free</strong>. Parking the down payment in a EUR money market fund inside the LHV investment account therefore earns money-market interest with <strong>no tax at all</strong> on the way out.</p>
 <p>Two practical caveats: allow <strong>T+2 settlement</strong> plus a bank transfer when timing the notary date, and understand a money market fund is not a deposit — it's very low risk, not zero risk.</p>
 <h2 id="estonian-mortgage-mechanics">Estonian mortgage mechanics</h2>
 <p>Bank of Estonia sets binding limits on all housing loans ✅ — <strong>unchanged since 1 March 2015</strong>, no amendment found in the last three years:</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>Limit</th>
@@ -131,7 +148,7 @@
 <td>Affordability checked at a higher rate, not the current one</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Other things to budget for:</p>
 <ul>
 <li><strong>Rate</strong> = 6-month Euribor + bank margin (roughly 1.5–2.2% depending on profile and LTV). Almost all Estonian mortgages are <strong>floating</strong> — your payment moves with Euribor. Budget for it being 2pp higher than today</li>
@@ -148,7 +165,7 @@
 <h3 id="loan-term-it-barely-changes-the-fi-date--choose-it-for-flexibility">Loan term: it barely changes the FI date — choose it for flexibility</h3>
 <p>A shorter term is tempting: less interest, debt gone sooner. But if you can afford either, which actually gets you to FI faster?</p>
 <p><strong>Almost neither — the term makes very little difference.</strong> Worked on a €300,000 loan at 4%, for a household whose surplus is whatever is left after housing:</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>Term</th>
@@ -188,7 +205,7 @@
 <td>~same</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><em>(FI here means the portfolio covers the target </em><em>and</em><em> clears whatever mortgage remains — the internally consistent definition.)</em></p>
 <p>They converge because a shorter term doesn't create wealth; it moves money from "portfolio" to "mortgage paid down". Either way you own the same net amount. <strong>A faster mortgage is not a faster retirement.</strong></p>
 <p>So choose the term on the things that genuinely differ:</p>
@@ -208,7 +225,7 @@
 </ol>
 <p>Beyond that point extra deposit earns only the mortgage rate, locked into an illiquid asset. Below it you pay a higher margin on the whole loan.</p>
 <p><strong>Worked example on a €360,000 property.</strong> Margin 1.70% at ≤75% LTV, 2.00% above:</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>Deposit</th>
@@ -231,7 +248,7 @@
 <td style="text-align: right;">€12,240</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The extra €36,000 costs €2,250/year — an <strong>effective marginal rate of 6.25%</strong>, not 4%. If the margin were unchanged, the same €36,000 would cost 3.70%; the repricing of the whole loan changes the answer.</p>
 <p>The efficient deposit is household-specific. Preserve transaction costs, furnishing and an emergency reserve first, then compare the remaining feasible deposits against each bank's actual LTV breakpoints.</p>
 <h3 id="does-holding-your-etf-at-lhv-get-you-a-better-rate">Does holding your ETF at LHV get you a better rate?</h3>
@@ -271,7 +288,7 @@
 <h3 id="two-things-that-make-estonia-different">Two things that make Estonia different</h3>
 <p><strong>1. No mortgage interest deduction</strong> (abolished 2024). The headline rate is therefore the borrower's true financing cost, without an income-tax deduction lowering it.</p>
 <p><strong>2. The investment account is unusually tax-efficient</strong>, which pushes the other way. Two cases:</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th></th>
@@ -288,12 +305,12 @@
 <td><strong>7.0% nominal</strong></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Because the IK lets you withdraw contributions tax-free first — often a decade or more of spending — a large share of what you invest is never taxed at all. There's also a hidden benefit: <strong>every euro contributed raises your future tax-free withdrawal allowance.</strong> Prepaying the mortgage does nothing for that.</p>
 <p>So the honest expectation on invested money is somewhere around <strong>6–7% nominal</strong>, versus a <strong>certain</strong> return equal to the mortgage rate.</p>
 <h3 id="the-thresholds">The thresholds</h3>
 <p>Your all-in rate is <strong>6-month Euribor + your bank margin</strong> (expect ~1.5–2.2%), resetting twice a year.</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>All-in mortgage rate</th>
@@ -328,10 +345,10 @@
 <td>Guaranteed return exceeds what equities are likely to deliver</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>With a ~1.7% margin, the 6.5% trigger means 6-month Euribor above roughly 4.8%</strong> — higher than its late-2023 peak of ~4%. So on current rates (all-in ~3.5–4.5%), <strong>investing wins clearly</strong>, and it would take an unusual rate environment to change that.</p>
 <h3 id="what-a-rate-rise-actually-costs-you">What a rate rise actually costs you</h3>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>All-in rate</th>
@@ -361,7 +378,7 @@
 <td style="text-align: right;">€418,500</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Check the household-specific DSTI in the simulator rather than inferring it from this table. The closer DSTI runs to the regulatory limit, the more the decision becomes about resilience rather than optimisation.</p>
 <h3 id="three-adjustments-worth-making">Three adjustments worth making</h3>
 <p><strong>If a household has no equity exposure yet.</strong> Establishing a diversified portfolio may reduce an existing concentration in local property. This diversification benefit belongs alongside the rate comparison, although it does not eliminate market risk.</p>

@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Account protection and systemic risk — Estonian FIRE Simulator</title>
 <meta name="description" content="Three questions: how IBKR interacts with the investment account, whether the €100,000 guarantee means splitting across banks, and what actually protects yo">
+<meta name="theme-color" content="#f6f8fb">
+<script>
+(function () {
+  var root = document.documentElement, choice = "system";
+  try { choice = localStorage.getItem("fa-theme") || "system"; } catch (e) {}
+  if (choice !== "light" && choice !== "dark") choice = "system";
+  if (choice !== "system") root.setAttribute("data-theme", choice);
+  var dark = choice === "dark" || (choice === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.querySelector('meta[name="theme-color"]').content = dark ? "#0f1320" : "#f6f8fb";
+})();
+</script>
 <link rel="stylesheet" href="../tokens.css">
 <link rel="stylesheet" href="../styles.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
@@ -15,12 +26,16 @@
 <button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false">
   <span></span><span></span><span></span>
 </button>
+<a class="mobile-brand" href="../index.html" aria-label="Estonian FIRE home">
+  <span class="brand-mark" aria-hidden="true">FI</span>
+  <span>Estonian FIRE</span>
+</a>
 
 <nav id="sidebar" class="sidebar" aria-label="Contents">
-  <div class="brand">
-    <span class="brand-mark">FI</span>
+  <a class="brand" href="../index.html" aria-label="Estonian FIRE home">
+    <span class="brand-mark" aria-hidden="true">FI</span>
     <span class="brand-text">Estonian&nbsp;FIRE<small>Simulator &amp; guide</small></span>
-  </div>
+  </a>
   <ul class="nav">
     <li class="nav-doc"><a class="nav-top" href="../index.html">Start here</a></li>
 
@@ -48,9 +63,11 @@
     <li class="nav-doc"><a class="nav-top" href="../guide/sources.html">Sources & verification</a></li>
   </ul>
   <div class="sidebar-foot">
-    <button id="theme" class="theme" aria-label="Toggle colour theme">
-      <span class="theme-icon" aria-hidden="true"></span><span class="theme-text">Theme</span>
-    </button>
+    <div class="theme-control" role="group" aria-label="Colour theme">
+      <button type="button" data-theme-choice="light" aria-pressed="false">Light</button>
+      <button type="button" data-theme-choice="system" aria-pressed="true">System</button>
+      <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
+    </div>
     <p class="note">Not financial advice. Rates last verified August 2026.</p>
   </div>
 </nav>
@@ -66,7 +83,7 @@
 <p><strong>You may hold as many declared investment accounts as you like, at as many institutions as you like.</strong> There is no statutory cap, and they can sit at different banks and in different countries.</p>
 <p><strong>Tax is calculated across all of them together, not per account.</strong> Tax is triggered only when total disbursements from <em>all</em> your investment accounts exceed total contributions into <em>all</em> of them. e-MTA aggregates the reports automatically at declaration time.</p>
 <p><strong>Transfers between your own investment accounts are tax-neutral.</strong> TuMS §17²(4) explicitly excludes them from the definition of a disbursement, and EMTA's Form A instructions equally exclude them from counting as a fresh contribution on the receiving side. Your contribution balance simply carries across. The transfer is disclosed on the return but drops out of the taxable calculation at both ends.</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th></th>
@@ -91,7 +108,7 @@
 <td>Preserved</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>So declare any account before you fund it.</strong> The declaration is what makes the transfer a non-event; without it you spend down the tax-free withdrawal allowance and then pay 22% on every realised gain at the far end.</p>
 <p><strong>Currency conversion inside an investment account is also explicitly not a disbursement</strong> (TuMS §17²) — converting EUR to USD to buy a US-listed security triggers nothing. FX movements only wash into the euro figure at the point of an actual withdrawal, calculated at the ECB daily rate.</p>
 <h3 id="what-the-annual-declaration-looks-like">What the annual declaration looks like</h3>
@@ -110,7 +127,7 @@
 <hr />
 <h2 id="2-the-100000-guarantee--and-why-it-matters-less-than-youd-think">2. The €100,000 guarantee — and why it matters less than you'd think</h2>
 <p><strong>The crucial distinction: cash and securities are protected by completely different regimes.</strong></p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th></th>
@@ -140,7 +157,7 @@
 <td>Your units are <strong>transferred to another custodian</strong>. The €20k scheme is a backstop for a shortfall, not the primary protection</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>This is the key point, and Tagatisfond states it outright:</strong> <em>"Investeerimisfondide varadele Tagatisfondi kaitse ei laiene"</em> — the compensation scheme does <strong>not</strong> extend to investment fund assets, precisely because those are already legally segregated from the manager under depositary rules. The protection is structural, not a compensation cap.</p>
 <p>So a €1,000,000 portfolio of VWCE at LHV is <strong>not</strong> "€980,000 unprotected". The ETF units never belonged to LHV; they sit in segregated custody, outside its insolvency estate. The €20,000 figure is a backstop for the case where segregation broke down and a shortfall exists anyway — as happened with <strong>AS Cresco Väärtpaberid</strong>, whose licence was revoked in 2024 and whose clients were compensated up to €20,000 each.</p>
 <p><strong>So: no, you don't need multiple investment accounts at different banks for securities.</strong> That would add real admin for a risk that the custody structure already handles.</p>
@@ -178,7 +195,7 @@
 <p><strong>Capital controls are the residual risk, and custody location is the answer.</strong> Controls apply to residents, not just institutions — but assets custodied outside the domestic banking system are meaningfully less exposed to a domestic freeze. This is the real argument for eventually holding some of the portfolio at <strong>IBKR Ireland</strong> rather than the fee saving. It also connects to the concentration point in <a href="risks.html">risks.md</a>.</p>
 <p><strong>Estonia is not Greece, and it's worth being accurate about that.</strong> Estonia has the <strong>lowest public debt in the EU</strong> (~20% of GDP against Greece's ~180% in 2010). It has no sovereign debt overhang, and its two largest banks are subsidiaries of Swedish groups rather than domestically-funded institutions. The realistic Estonian tail risks are geopolitical, not fiscal.</p>
 <h3 id="a-possible-priority-order">A possible priority order</h3>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>Priority</th>
@@ -213,7 +230,7 @@
 <td>The base case is that nothing happens</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>What isn't worth doing:</strong> three investment accounts at three banks for securities, physical gold, or holding cash outside the banking system. Those solve problems the custody structure already solves, at real cost in admin and returns.</p>
 <hr />
 <h2 id="sources">Sources</h2>

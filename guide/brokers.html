@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Where to hold it — brokers, and parking cash — Estonian FIRE Simulator</title>
 <meta name="description" content="This guide keeps running into two practical questions. Which provider should you buy through, and where should you put cash that you need soon and don't wa">
+<meta name="theme-color" content="#f6f8fb">
+<script>
+(function () {
+  var root = document.documentElement, choice = "system";
+  try { choice = localStorage.getItem("fa-theme") || "system"; } catch (e) {}
+  if (choice !== "light" && choice !== "dark") choice = "system";
+  if (choice !== "system") root.setAttribute("data-theme", choice);
+  var dark = choice === "dark" || (choice === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.querySelector('meta[name="theme-color"]').content = dark ? "#0f1320" : "#f6f8fb";
+})();
+</script>
 <link rel="stylesheet" href="../tokens.css">
 <link rel="stylesheet" href="../styles.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
@@ -15,12 +26,16 @@
 <button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false">
   <span></span><span></span><span></span>
 </button>
+<a class="mobile-brand" href="../index.html" aria-label="Estonian FIRE home">
+  <span class="brand-mark" aria-hidden="true">FI</span>
+  <span>Estonian FIRE</span>
+</a>
 
 <nav id="sidebar" class="sidebar" aria-label="Contents">
-  <div class="brand">
-    <span class="brand-mark">FI</span>
+  <a class="brand" href="../index.html" aria-label="Estonian FIRE home">
+    <span class="brand-mark" aria-hidden="true">FI</span>
     <span class="brand-text">Estonian&nbsp;FIRE<small>Simulator &amp; guide</small></span>
-  </div>
+  </a>
   <ul class="nav">
     <li class="nav-doc"><a class="nav-top" href="../index.html">Start here</a></li>
 
@@ -48,9 +63,11 @@
     <li class="nav-doc"><a class="nav-top" href="../guide/sources.html">Sources & verification</a></li>
   </ul>
   <div class="sidebar-foot">
-    <button id="theme" class="theme" aria-label="Toggle colour theme">
-      <span class="theme-icon" aria-hidden="true"></span><span class="theme-text">Theme</span>
-    </button>
+    <div class="theme-control" role="group" aria-label="Colour theme">
+      <button type="button" data-theme-choice="light" aria-pressed="false">Light</button>
+      <button type="button" data-theme-choice="system" aria-pressed="true">System</button>
+      <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
+    </div>
     <p class="note">Not financial advice. Rates last verified August 2026.</p>
   </div>
 </nav>
@@ -79,7 +96,7 @@ up.</p>
 Estonia, all four keep your shares separate from their own money, and you can
 move later.</p>
 <h2 id="the-field">The field</h2>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th></th>
@@ -148,7 +165,7 @@ move later.</p>
 <td>Ireland / US</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Luminor also sells securities services, but it publishes very little that you can
 compare against the others. This guide doesn't know enough about it to recommend
 it or to warn you off it.</p>
@@ -187,7 +204,7 @@ each month. LHV's app is nicer to use, but that is a matter of taste.</p>
 <h3 id="the-fee-for-holding-shares-which-is-easy-to-miss">The fee for holding shares, which is easy to miss</h3>
 <p>Above €100,000 the two banks stop being the same.
 Swedbank has a maximum monthly fee. LHV does not.</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>Value of the shares</th>
@@ -217,7 +234,7 @@ Swedbank has a maximum monthly fee. LHV does not.</p>
 <td>€96 a year</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Both banks only charge you on the money above
 €100,000. Swedbank never charges more than
 €8 a month, which is
@@ -268,7 +285,7 @@ account pays almost nothing. The usual answer is to buy a <strong>EUR money mark
 inside your investment account</strong>, though a fixed-term deposit is a real
 alternative and sometimes the better one.</p>
 <h3 id="why-this-beats-a-savings-account">Why this beats a savings account</h3>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th></th>
@@ -298,7 +315,7 @@ alternative and sometimes the better one.</p>
 <td>you sell, wait two days for settlement, then transfer</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The tax difference is the one that grows over time. Interest on a savings account
 is taxed the year you earn it. Money earned inside an investment account is not
 taxed until you take more out of the account than you put in. So the money that
@@ -328,7 +345,7 @@ less effort, but you don't get to choose the fund.</p>
 <p>The ECB deposit facility rate is 2.25%
 (August 2026). Here is what the different routes pay against it, and
 what each one costs in tax and in flexibility.</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>Route</th>
@@ -382,7 +399,7 @@ what each one costs in tax and in flexibility.</p>
 <td>instant</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Three things stand out.</p>
 <p><strong>The smaller Estonian banks pay more than the ECB rate, not less.</strong> Bigbank,
 Holm Bank and Inbank compete for funding and price above the big banks. They are

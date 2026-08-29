@@ -63,12 +63,16 @@ VERIFIED = "August 2026"
 SIDEBAR = """<button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false">
   <span></span><span></span><span></span>
 </button>
+<a class="mobile-brand" href="{root}index.html" aria-label="Estonian FIRE home">
+  <span class="brand-mark" aria-hidden="true">FI</span>
+  <span>Estonian FIRE</span>
+</a>
 
 <nav id="sidebar" class="sidebar" aria-label="Contents">
-  <div class="brand">
-    <span class="brand-mark">FI</span>
+  <a class="brand" href="{root}index.html" aria-label="Estonian FIRE home">
+    <span class="brand-mark" aria-hidden="true">FI</span>
     <span class="brand-text">Estonian&nbsp;FIRE<small>Simulator &amp; guide</small></span>
-  </div>
+  </a>
   <ul class="nav">
     <li class="nav-doc{home_active}"><a class="nav-top" href="{root}index.html">Start here</a></li>
 
@@ -80,9 +84,11 @@ SIDEBAR = """<button id="menu" class="menu" aria-label="Toggle navigation" aria-
 {nav}
   </ul>
   <div class="sidebar-foot">
-    <button id="theme" class="theme" aria-label="Toggle colour theme">
-      <span class="theme-icon" aria-hidden="true"></span><span class="theme-text">Theme</span>
-    </button>
+    <div class="theme-control" role="group" aria-label="Colour theme">
+      <button type="button" data-theme-choice="light" aria-pressed="false">Light</button>
+      <button type="button" data-theme-choice="system" aria-pressed="true">System</button>
+      <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
+    </div>
     <p class="note">Not financial advice. Rates last verified {verified}.</p>
   </div>
 </nav>
@@ -223,6 +229,17 @@ TEMPLATE = """<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title>
 <meta name="description" content="{desc}">
+<meta name="theme-color" content="#f6f8fb">
+<script>
+(function () {{
+  var root = document.documentElement, choice = "system";
+  try {{ choice = localStorage.getItem("fa-theme") || "system"; }} catch (e) {{}}
+  if (choice !== "light" && choice !== "dark") choice = "system";
+  if (choice !== "system") root.setAttribute("data-theme", choice);
+  var dark = choice === "dark" || (choice === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.querySelector('meta[name="theme-color"]').content = dark ? "#0f1320" : "#f6f8fb";
+}})();
+</script>
 <link rel="stylesheet" href="{root}tokens.css">
 <link rel="stylesheet" href="{root}styles.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
@@ -319,6 +336,13 @@ def build() -> None:
 
         body, _ = render(text)
         body = rewrite_links(body, slug)
+        body = re.sub(
+            r"(<table>.*?</table>)",
+            r'<div class="table-scroll" tabindex="0" role="region" '
+            r'aria-label="Scrollable data table">\1</div>',
+            body,
+            flags=re.S,
+        )
 
         prev_l = (f'<a class="prev" href="{pages[i-1][1]}.html">← {pages[i-1][2]}</a>'
                   if i else '<a class="prev" href="../index.html">← Start here</a>')

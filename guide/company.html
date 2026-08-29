@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Using an OÜ as an investment wrapper — Estonian FIRE Simulator</title>
 <meta name="description" content="Because retained earnings are taxed at 0%, an Estonian OÜ is a legal tax-deferred investment vehicle.">
+<meta name="theme-color" content="#f6f8fb">
+<script>
+(function () {
+  var root = document.documentElement, choice = "system";
+  try { choice = localStorage.getItem("fa-theme") || "system"; } catch (e) {}
+  if (choice !== "light" && choice !== "dark") choice = "system";
+  if (choice !== "system") root.setAttribute("data-theme", choice);
+  var dark = choice === "dark" || (choice === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.querySelector('meta[name="theme-color"]').content = dark ? "#0f1320" : "#f6f8fb";
+})();
+</script>
 <link rel="stylesheet" href="../tokens.css">
 <link rel="stylesheet" href="../styles.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
@@ -15,12 +26,16 @@
 <button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false">
   <span></span><span></span><span></span>
 </button>
+<a class="mobile-brand" href="../index.html" aria-label="Estonian FIRE home">
+  <span class="brand-mark" aria-hidden="true">FI</span>
+  <span>Estonian FIRE</span>
+</a>
 
 <nav id="sidebar" class="sidebar" aria-label="Contents">
-  <div class="brand">
-    <span class="brand-mark">FI</span>
+  <a class="brand" href="../index.html" aria-label="Estonian FIRE home">
+    <span class="brand-mark" aria-hidden="true">FI</span>
     <span class="brand-text">Estonian&nbsp;FIRE<small>Simulator &amp; guide</small></span>
-  </div>
+  </a>
   <ul class="nav">
     <li class="nav-doc"><a class="nav-top" href="../index.html">Start here</a></li>
 
@@ -48,9 +63,11 @@
     <li class="nav-doc"><a class="nav-top" href="../guide/sources.html">Sources & verification</a></li>
   </ul>
   <div class="sidebar-foot">
-    <button id="theme" class="theme" aria-label="Toggle colour theme">
-      <span class="theme-icon" aria-hidden="true"></span><span class="theme-text">Theme</span>
-    </button>
+    <div class="theme-control" role="group" aria-label="Colour theme">
+      <button type="button" data-theme-choice="light" aria-pressed="false">Light</button>
+      <button type="button" data-theme-choice="system" aria-pressed="true">System</button>
+      <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
+    </div>
     <p class="note">Not financial advice. Rates last verified August 2026.</p>
   </div>
 </nav>
@@ -63,7 +80,7 @@
       <h1 class="doc-title">Using an OÜ as an investment wrapper</h1>
 <p>Because retained earnings are taxed at <strong>0%</strong>, an Estonian OÜ is a legal tax-deferred investment vehicle.</p>
 <h2 id="oü-vs-investment-account">OÜ vs investment account</h2>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th></th>
@@ -113,7 +130,7 @@
 <td><strong>Yes, via minimal salary</strong></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Rule of thumb:</strong></p>
 <ul>
 <li><strong>Pure liquid portfolio, employed income → investment account.</strong> Simpler, cheaper, and the tax-free-principal-first withdrawal rule is genuinely better than the OÜ's.</li>
@@ -132,7 +149,7 @@
 <h2 id="should-you-create-an-oü-two-specific-cases">Should <em>you</em> create an OÜ? Two specific cases</h2>
 <h3 id="for-holding-securities--no-and-it-would-actively-hurt">For holding securities — no, and it would actively hurt</h3>
 <p>An OÜ only wins when income <strong>arrives in the company pre-tax</strong>. If the money is salary you've already been taxed on at 22%, routing it through a company means paying <strong>22% again</strong> on distribution — the same euro taxed twice, plus accounting fees.</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th></th>
@@ -162,12 +179,12 @@
 <td>€600–1,800/yr</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The investment account already gives you the deferral an OÜ would provide, <strong>and</strong> it lets you withdraw your contribution base tax-free. For salaried income there is no version of this where the OÜ wins.</p>
 <h3 id="for-a-residential-rental--no-unless-its-leveraged">For a residential rental — no, unless it's leveraged</h3>
 <p>This surprises people, because "0% on retained earnings" sounds unbeatable. It isn't, because <strong>the 20% automatic deduction gives individuals a 17.6% effective rate, which is lower than the OÜ's 22% distribution tax</strong> — and companies don't get that deduction, they deduct actual expenses instead.</p>
 <p>Worked on a flat with ~€7,300/yr gross rent, ~€600 of costs, ~€900/yr of accounting:</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th></th>
@@ -202,7 +219,7 @@
 <td style="text-align: right;"><strong>€149,590</strong></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Personal ownership wins by about 9%</strong> — and that's the <em>worst</em> case for the personal route, assuming every euro of gain eventually gets taxed. In practice much of it comes out inside the tax-free contribution base, widening the gap further.</p>
 <p><strong>Three things flip this:</strong></p>
 <ol>

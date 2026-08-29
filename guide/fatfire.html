@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>FatFIRE — Estonian FIRE Simulator</title>
 <meta name="description" content="Exploring the higher-spending end. Tables here are illustrative — run your own figures in the calculator. Throughout: 3.5% withdrawal rate, 5% real return,">
+<meta name="theme-color" content="#f6f8fb">
+<script>
+(function () {
+  var root = document.documentElement, choice = "system";
+  try { choice = localStorage.getItem("fa-theme") || "system"; } catch (e) {}
+  if (choice !== "light" && choice !== "dark") choice = "system";
+  if (choice !== "system") root.setAttribute("data-theme", choice);
+  var dark = choice === "dark" || (choice === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.querySelector('meta[name="theme-color"]').content = dark ? "#0f1320" : "#f6f8fb";
+})();
+</script>
 <link rel="stylesheet" href="../tokens.css">
 <link rel="stylesheet" href="../styles.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
@@ -15,12 +26,16 @@
 <button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false">
   <span></span><span></span><span></span>
 </button>
+<a class="mobile-brand" href="../index.html" aria-label="Estonian FIRE home">
+  <span class="brand-mark" aria-hidden="true">FI</span>
+  <span>Estonian FIRE</span>
+</a>
 
 <nav id="sidebar" class="sidebar" aria-label="Contents">
-  <div class="brand">
-    <span class="brand-mark">FI</span>
+  <a class="brand" href="../index.html" aria-label="Estonian FIRE home">
+    <span class="brand-mark" aria-hidden="true">FI</span>
     <span class="brand-text">Estonian&nbsp;FIRE<small>Simulator &amp; guide</small></span>
-  </div>
+  </a>
   <ul class="nav">
     <li class="nav-doc"><a class="nav-top" href="../index.html">Start here</a></li>
 
@@ -48,9 +63,11 @@
     <li class="nav-doc"><a class="nav-top" href="../guide/sources.html">Sources & verification</a></li>
   </ul>
   <div class="sidebar-foot">
-    <button id="theme" class="theme" aria-label="Toggle colour theme">
-      <span class="theme-icon" aria-hidden="true"></span><span class="theme-text">Theme</span>
-    </button>
+    <div class="theme-control" role="group" aria-label="Colour theme">
+      <button type="button" data-theme-choice="light" aria-pressed="false">Light</button>
+      <button type="button" data-theme-choice="system" aria-pressed="true">System</button>
+      <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
+    </div>
     <p class="note">Not financial advice. Rates last verified August 2026.</p>
   </div>
 </nav>
@@ -64,7 +81,7 @@
 <p>Exploring the higher-spending end. Tables here are illustrative — run your own figures in the <a href="../simulator.html">calculator</a>. Throughout: 3.5% withdrawal rate, 5% real return, pensions excluded.</p>
 <h2 id="the-tiers">The tiers</h2>
 <p>"Perpetual spending" is the annual figure the portfolio must support forever — excluding the mortgage and child costs, including health insurance, net of any rental income.</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>Tier</th>
@@ -99,9 +116,9 @@
 <td style="text-align: right;">€3,750,000</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>That part is universal — the target is simply spending divided by the withdrawal rate. What differs between people is how long each tier takes, which depends entirely on the surplus. As an illustration, a household saving <strong>€60,000 a year</strong> from a standing start at 5% real:</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>Tier</th>
@@ -126,7 +143,7 @@
 <td style="text-align: right;">~31</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>Each step up costs years, and the steps get more expensive.</strong> Doubling target spending does not double the wait — it more than doubles it, because the extra portfolio has to be built out of the same surplus. Somewhere in the upper tiers "early" retirement quietly stops being early.</p>
 <h2 id="what-the-numbers-actually-mean-in-estonia">What the numbers actually mean in Estonia</h2>
 <p>Worth grounding, because "€100,000/year" sounds different in Tallinn than in Paris or London.</p>
@@ -139,7 +156,7 @@
 <p><strong>To retire on high spending, you must not spend highly while accumulating.</strong></p>
 </blockquote>
 <p>A high savings rate depends on holding current spending below income. For an illustrative household currently spending €4,000/month, increasing spending to "grow into" a future lifestyle causes two effects at once: the target rises by roughly 28 times the annual increase, and the savings rate falls.</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>If you spent…</th>
@@ -172,7 +189,7 @@
 <td>Potentially incompatible with early retirement</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Every €1,000/month of permanent spending adds roughly €343,000 to a 3.5%-SWR target. The exact delay depends on income, current assets and returns and should be calculated rather than generalised.</p>
 <h2 id="what-actually-accelerates-fatfire">What actually accelerates FatFIRE</h2>
 <p>Common levers, whose ranking depends on the household:</p>

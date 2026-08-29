@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Health insurance — the Estonian FIRE trap — Estonian FIRE Simulator</title>
 <meta name="description" content="This is the thing that breaks naive Estonian FIRE plans.">
+<meta name="theme-color" content="#f6f8fb">
+<script>
+(function () {
+  var root = document.documentElement, choice = "system";
+  try { choice = localStorage.getItem("fa-theme") || "system"; } catch (e) {}
+  if (choice !== "light" && choice !== "dark") choice = "system";
+  if (choice !== "system") root.setAttribute("data-theme", choice);
+  var dark = choice === "dark" || (choice === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.querySelector('meta[name="theme-color"]').content = dark ? "#0f1320" : "#f6f8fb";
+})();
+</script>
 <link rel="stylesheet" href="../tokens.css">
 <link rel="stylesheet" href="../styles.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
@@ -15,12 +26,16 @@
 <button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false">
   <span></span><span></span><span></span>
 </button>
+<a class="mobile-brand" href="../index.html" aria-label="Estonian FIRE home">
+  <span class="brand-mark" aria-hidden="true">FI</span>
+  <span>Estonian FIRE</span>
+</a>
 
 <nav id="sidebar" class="sidebar" aria-label="Contents">
-  <div class="brand">
-    <span class="brand-mark">FI</span>
+  <a class="brand" href="../index.html" aria-label="Estonian FIRE home">
+    <span class="brand-mark" aria-hidden="true">FI</span>
     <span class="brand-text">Estonian&nbsp;FIRE<small>Simulator &amp; guide</small></span>
-  </div>
+  </a>
   <ul class="nav">
     <li class="nav-doc"><a class="nav-top" href="../index.html">Start here</a></li>
 
@@ -48,9 +63,11 @@
     <li class="nav-doc"><a class="nav-top" href="../guide/sources.html">Sources & verification</a></li>
   </ul>
   <div class="sidebar-foot">
-    <button id="theme" class="theme" aria-label="Toggle colour theme">
-      <span class="theme-icon" aria-hidden="true"></span><span class="theme-text">Theme</span>
-    </button>
+    <div class="theme-control" role="group" aria-label="Colour theme">
+      <button type="button" data-theme-choice="light" aria-pressed="false">Light</button>
+      <button type="button" data-theme-choice="system" aria-pressed="true">System</button>
+      <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
+    </div>
     <p class="note">Not financial advice. Rates last verified August 2026.</p>
   </div>
 </nav>
@@ -68,7 +85,7 @@
 <p><strong>The dependent-spouse route was abolished on 1 January 2026.</strong> The state no longer guarantees coverage for dependent spouses raising children; all such coverage ended by <strong>31 January 2026</strong>. Anyone who was relying on it <strong>has already lost cover</strong> — see <a href="household.html#health-insurance--the-family-exit-closed-in-2026">household.md</a>.</p>
 </blockquote>
 <p>Options, with verified 2026 costs:</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>Route</th>
@@ -127,7 +144,7 @@
 <td><strong>Abolished 1 Jan 2026</strong></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p><strong>The voluntary contract got much better in 2026, and that partly offsets the loss above.</strong> It used to require 12 months of prior insured status within the last 24. That requirement is <strong>gone</strong> — the only condition now is permanent residence in Estonia. Terms: 1-year fixed contract via Terviseportaal, coverage starts one month after signing, covers everything <strong>except sick-leave benefits</strong>, refunded pro-rata if you leave early.</p>
 <p><strong>Budget €3,264/year per uninsured adult.</strong> At a 3.5% SWR that's <strong>~€93,000 of extra FI number per person</strong> — €187,000 for a couple with no earned income. Most FIRE spreadsheets omit this entirely.</p>
 <p><strong>Children remain covered unconditionally</strong> from birth to 19, regardless of either parent's status. That part is unchanged and confirmed.</p>
@@ -150,7 +167,7 @@ career is the point of retiring early, and it is what disqualifies you here.
 Someone stopping at 45 with 20 years of service qualifies for one year, not five.</p>
 <p><strong>And the reduction is permanent.</strong> Sotsiaalkindlustusamet's forecast multipliers
 — they vary by birth date now, and are recalculated each January:</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>Drawn</th>
@@ -183,7 +200,7 @@ Someone stopping at 45 with 20 years of service qualifies for one year, not five
 <td>+33.68%</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Note the asymmetry: <strong>deferring pays more than claiming early costs</strong>, at every
 matching year.</p>
 <p><strong>So the trade genuinely flips</strong>, and the simulator will tell you which side you
@@ -211,7 +228,7 @@ a decade even for someone who qualified.</p>
 <p>Registration itself has no wealth test and is realistically available. It simply
 buys nothing.</p>
 <p><strong>So the voluntary contract is the route</strong>, and its terms matter for planning:</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th></th>
@@ -240,12 +257,12 @@ buys nothing.</p>
 <td>permanent residency, since the 2026 liberalisation removed the insurance-history test</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <h3 id="one-exception-that-does-still-exist">One exception that does still exist</h3>
 <p>There are <strong>two</strong> provisions people call "the dependent spouse route", and
 conflating them is the source of a great deal of confusion — including in earlier
 drafts of this guide.</p>
-<table>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th></th>
@@ -270,7 +287,7 @@ drafts of this guide.</p>
 <td><strong>in force</strong></td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Tervisekassa's announcement that dependent-spouse cover ended in January 2026
 describes the first. The second — no children required, keyed purely on being
 within five years of state pension age and married to or in a registered

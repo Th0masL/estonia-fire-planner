@@ -4,6 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Estonian FIRE Simulator</title>
+<meta name="theme-color" content="#f6f8fb">
+<script>
+(function () {
+  var root = document.documentElement, choice = "system";
+  try { choice = localStorage.getItem("fa-theme") || "system"; } catch (e) {}
+  if (choice !== "light" && choice !== "dark") choice = "system";
+  if (choice !== "system") root.setAttribute("data-theme", choice);
+  var dark = choice === "dark" || (choice === "system" && matchMedia("(prefers-color-scheme: dark)").matches);
+  document.querySelector('meta[name="theme-color"]').content = dark ? "#0f1320" : "#f6f8fb";
+})();
+</script>
 <link rel="stylesheet" href="tokens.css">
 <link rel="stylesheet" href="styles.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#128200;</text></svg>">
@@ -30,12 +41,16 @@
     <div class="panel-head">
       <h2>Your details</h2>
       <div class="io">
-        <button id="export" class="btn" type="button">Export</button>
-        <button id="import" class="btn" type="button">Import</button>
-        <input type="file" id="importFile" accept="application/json,.json" class="sr-only">
-        <button id="share" class="btn" type="button">Share link</button>
-        <button id="example" class="btn btn-quiet" type="button">Example</button>
-        <button id="reset" class="btn btn-quiet" type="button">Clear</button>
+        <div class="io-primary">
+          <button id="export" class="btn" type="button">Export</button>
+          <button id="import" class="btn" type="button">Import</button>
+          <input type="file" id="importFile" accept="application/json,.json" class="sr-only">
+          <button id="share" class="btn" type="button">Share link</button>
+        </div>
+        <div class="io-secondary">
+          <button id="example" class="btn btn-quiet" type="button">Example</button>
+          <button id="reset" class="btn btn-quiet" type="button">Clear</button>
+        </div>
       </div>
     </div>
 

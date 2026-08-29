@@ -127,6 +127,15 @@ for (const page of PAGES) {
   const styleLink = markup.indexOf('styles.css');
   ok(tokenLink >= 0 && tokenLink < styleLink,
     `${page} loads local design tokens before component styles`);
+  const themeInit = html.indexOf('localStorage.getItem("fa-theme")');
+  const rawTokenLink = html.indexOf('tokens.css');
+  ok(themeInit >= 0 && themeInit < rawTokenLink,
+    `${page} resolves a saved theme before styles load`);
+  ok(markup.includes('name="theme-color"'), `${page} declares a browser theme colour`);
+  for (const choice of ['light', 'system', 'dark']) {
+    ok(markup.includes(`data-theme-choice="${choice}"`),
+      `${page} offers the ${choice} theme choice`);
+  }
 
   // Internal links must point at files that exist. A finding linking to a
   // missing guide page is a dead end at exactly the moment someone wants more.
@@ -148,6 +157,15 @@ for (const page of PAGES) {
     'component CSS contains no raw palette colors');
   const workflow = read('.github/workflows/deploy.yml');
   ok(workflow.includes('tokens.css'), 'Pages artifact includes local design tokens');
+  const nav = read('src/nav.js');
+  ok(nav.includes("removeAttribute('data-theme')"),
+    'System theme leaves preference resolution to the operating system');
+  ok(nav.includes("localStorage.setItem('fa-theme', choice)"),
+    'explicit theme choices persist locally');
+  ok(nav.includes("addEventListener('change', systemChanged)"),
+    'System theme responds to operating-system changes');
+  ok(nav.includes("meta.content = dark ? '#0f1320' : '#f6f8fb'"),
+    'browser theme colour follows the resolved palette');
 }
 
 // --- the calculators must be self-contained ----------------------------------
