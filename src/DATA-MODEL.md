@@ -197,8 +197,9 @@ Rate source checked 20 September 2026: [EMTA pension taxation](https://www.emta.
 Special exemptions, non-resident treaty treatment, possible tax-return refunds,
 and future law changes are not inferred. Subsequent investment returns retain the
 existing after-tax-return approximation; transaction-level reinvestment taxes are
-not implemented. Stress affects accessible investments, not the projected pension
-capital before receipt; an initial crash precedes that year's pension receipts.
+not implemented. Stress affects both accessible investments and pension capital
+before receipt; an initial crash precedes that year's pension receipts. Once paid,
+proceeds follow their chosen cash/investment allocation without a second crash.
 
 **Pillar I amount and eligibility use different evidence.** `pillar1Units` is
 authoritative for the accrued amount; `yearsWorkedEstonia` is a separate explicit
@@ -290,10 +291,28 @@ duration. This is an approximation, not monthly transaction accounting.
 Apply the relevant return to each remaining bucket. Stop on an unfunded
 withdrawal; do not let later returns repair a negative opening balance.
 
-An immediate market crash and bad investment-return years affect only invested
-assets, not cash. Cash retains its entered return. Shared shocks to exposed
-pension funds remain a separate roadmap item; until then, stress descriptions
-must explicitly state that pension projections are held unchanged.
+An immediate market crash and bad investment-return years affect accessible
+investments and counted Pillar II/III funds together, not cash. Cash retains its
+entered return; spending and the modeled state pension stay unchanged. This is
+a fully shared market-exposure assumption, not a claim that every pension fund
+has the same asset allocation. No insurer contract is modeled.
+
+Pension amounts are adjusted relative to the normal projection by
+`(1 - crash) * ((1 + stressedReturn) / (1 + normalReturn))^exposedDuration`.
+Duration is the overlap between FI, the pension valuation/receipt date, and the
+opening stressed calendar periods. The first period may be fractional, consistent
+with accessible-portfolio stress timing. After stressed periods end, normal growth
+resumes from the reduced value; the loss is not reset at pension unlock.
+Fund payments use their existing annual valuation convention and remain finite.
+Lump-sum gross capital is shocked before calculating its tax and trusted net
+receipt; no additional pension shock applies after transfer. Invested proceeds
+then earn the accessible portfolio's scenario return, while cash proceeds do not.
+
+For example, a €200,000 pension pot withdrawn at FI gives €180,000 after the
+standard 10% tax. A 40% opening crash leaves €108,000 net, whether its proceeds
+are allocated to cash or investments; reinvestment must not cause another 40%
+loss at the same instant. Stress tests change neither the base FI solution nor
+its displayed normal schedule. They are scenarios, not success probabilities.
 
 ### Worked examples (synthetic, one full year)
 

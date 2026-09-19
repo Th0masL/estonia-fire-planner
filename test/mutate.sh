@@ -80,8 +80,8 @@ check "health cover charged past state pension age" \
   '(x, p) => x + healthPerPerson, 0);'
 
 check "fund payments ignore market returns" \
-  'income += base * active * (1 + a.realReturn) ** Math.max(0, from - draw);' \
-  'income += base * active;'
+  'income += base * active * (1 + a.realReturn) ** Math.max(0, from - draw) *' \
+  'income += base * active *'
 
 check "pension haircut not applied" \
   'const base = (potAtUnlock(p, yearsToFi) / p.payoutYears) * potsShare;' \

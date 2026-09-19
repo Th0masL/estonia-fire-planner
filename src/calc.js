@@ -18,6 +18,15 @@ const annuityFactor = (r, n) => (r === 0 ? n : ((1 + r) ** n - 1) / r);
 const overlapYears = (from, to, activeFrom = -Infinity, activeTo = Infinity) =>
   Math.max(0, Math.min(to, activeTo) - Math.max(from, activeFrom));
 
+// Relative to the base projection, apply the retirement-opening crash and the
+// same stressed return periods to pension units still exposed at valuationDate.
+export function pensionStressFactor(fiYear, valuationDate, normalReturn, stress = null) {
+  if (!stress || valuationDate < fiYear) return 1;
+  const duration = overlapYears(fiYear, valuationDate, fiYear,
+    Math.floor(fiYear) + stress.badYears);
+  return (1 - stress.crash) * ((1 + stress.badReturn) / (1 + normalReturn)) ** duration;
+}
+
 export const portfolioTotal = (balances) => balances.reduce((s, b) => s + b.cash + b.invested, 0);
 const bucketTotal = (balances, key) => balances.reduce((s, b) => s + b[key], 0);
 const takeBucket = (balances, key, amount) => {
@@ -707,7 +716,7 @@ export function simulate(input) {
   // plan is willing to depend on.
   const potsShare = a.potsCountedShare ?? 1;
   const stateShare = a.stateCountedShare ?? 1;
-  const potIncomeIn = (p, year, yearsToFi) => {
+  const potIncomeIn = (p, year, yearsToFi, stress = null) => {
     if (lumpSum) return 0; // Capital transfers are not recurring income.
     if (!p.pensionTermsKnown) return 0;
     const from = Math.max(year, currentYear + yearsToFi);
@@ -720,19 +729,20 @@ export function simulate(input) {
       const active = overlapYears(from, to, draw, draw + p.payoutYears);
       if (!active) continue;
       const base = potAtDraw(p, yearsToFi, kind) / p.payoutYears * potsShare;
-      income += base * active * (1 + a.realReturn) ** Math.max(0, from - draw);
+      income += base * active * (1 + a.realReturn) ** Math.max(0, from - draw) *
+        pensionStressFactor(currentYear + yearsToFi, Math.max(from, draw), a.realReturn, stress);
     }
     return income;
   };
 
-  const pensionBreakdownIn = (year, yearsToFi) => {
+  const pensionBreakdownIn = (year, yearsToFi, stress = null) => {
     let pots = 0, state = 0;
     for (const p of people) {
       // A fund pension stops. That is the whole point of offering the choice:
       // the portfolio has to be able to take over again afterwards.
       if (countPots && year + 1 > Math.min(p.pillar2DrawYear,
           p.pillar3DrawYear ?? Infinity) && year < p.pillarIncomeEndYear) {
-        pots += potIncomeIn(p, year, yearsToFi);
+        pots += potIncomeIn(p, year, yearsToFi, stress);
       }
       if (countState && year + 1 > p.statePensionYear) {
         // Net, not gross: a qualifying fund pension is 0%-taxed but Pillar I is not,
@@ -748,17 +758,18 @@ export function simulate(input) {
     }
     return { pots, state, total: pots + state };
   };
-  const pensionIncomeIn = (year, yearsToFi) => pensionBreakdownIn(year, yearsToFi).total;
+  const pensionIncomeIn = (year, yearsToFi, stress = null) => pensionBreakdownIn(year, yearsToFi, stress).total;
 
-  const lumpEvents = (y, share = potsShare) => {
+  const lumpEvents = (y, share = potsShare, stress = null) => {
     if (!lumpSum || !countPots || share <= 0 || !Number.isFinite(y)) return [];
     return people.flatMap((p, owner) => ['pillar2', 'pillar3'].flatMap((kind) => {
       const selected = kind === 'pillar2' ? p.pillar2DrawYear : p.pillar3DrawYear;
       if (selected == null) return [];
-      const gross = potAtDraw(p, y, kind);
+      const date = Math.max(selected, currentYear + y);
+      const gross = potAtDraw(p, y, kind) * pensionStressFactor(currentYear + y, date, a.realReturn, stress);
       if (gross <= 0) return [];
       const tax = gross * RATES.pillar2.payout.lumpSum;
-      return [{ owner, kind, date: Math.max(selected, currentYear + y), gross, tax,
+      return [{ owner, kind, date, gross, tax,
         net: gross - tax, credited: (gross - tax) * share }];
     }));
   };
@@ -766,18 +777,18 @@ export function simulate(input) {
     balances[event.owner].cash += event.credited * (1 - lumpInvestedShare);
     balances[event.owner].invested += event.credited * lumpInvestedShare;
   };
-  const openingWithLumps = (balances, y, share = potsShare) => {
+  const openingWithLumps = (balances, y, share = potsShare, stress = null) => {
     const result = balances.map((b) => ({ ...b }));
-    for (const event of lumpEvents(y, share)) {
+    for (const event of lumpEvents(y, share, stress)) {
       if (event.date === currentYear + y) creditLump(result, event);
     }
     return result;
   };
   // Split at actual receipt dates: future proceeds cannot fund earlier spending.
   // The annual net spending estimate is spread uniformly within that year.
-  const retirementYear = (opening, withdrawal, year, y, rate = a.realReturn, share = potsShare) => {
+  const retirementYear = (opening, withdrawal, year, y, rate = a.realReturn, share = potsShare, stress = null) => {
     const from = Math.max(year, currentYear + y), to = year + 1;
-    const events = lumpEvents(y, share).filter((e) => e.date >= from && e.date < to)
+    const events = lumpEvents(y, share, stress).filter((e) => e.date >= from && e.date < to)
       .sort((a, b) => a.date - b.date);
     if (!events.length) return { ...retirementStep(opening, withdrawal, to - from,
       a.cashRealReturn ?? 0, rate, retirementReserve), lumpGross: 0, lumpTax: 0, lumpNet: 0 };
@@ -1039,8 +1050,8 @@ export function simulate(input) {
   // "how bad an opening can this plan take before it fails", which is arithmetic
   // and answerable exactly.
   //
-  // The withdrawals are the ones the schedule already computed - spending and
-  // pension income do not change because markets did - so only the returns move.
+  // Spending and state pensions stay unchanged. Market-exposed pension income
+  // and lump sums are recalculated under the same shock as accessible investments.
   const resilience = () => {
     if (!Number.isFinite(yearsToFi)) return null;
     const draws = [], durations = [];
@@ -1051,15 +1062,18 @@ export function simulate(input) {
     }
     if (!draws.length) return null;
     const survives = (badYears, badReturn, crash = 0) => {
+      const stress = { badYears, badReturn, crash };
       let balances = retirementBalances(fiTarget, yearsToFi);
       for (const b of balances) b.invested *= 1 - crash;
       const fiYear = currentYear + yearsToFi;
-      if (portfolioTotal(openingWithLumps(balances, yearsToFi)) - retirementReserve < floorIn(perpetualMode, Math.floor(fiYear), fiYear, yearsToFi) - 1e-6) {
+      if (portfolioTotal(openingWithLumps(balances, yearsToFi, potsShare, stress)) - retirementReserve < floorIn(perpetualMode, Math.floor(fiYear), fiYear, yearsToFi) - 1e-6) {
         return false;
       }
       for (let i = 0; i < draws.length; i++) {
-        const step = retirementYear(balances, draws[i], Math.floor(fiYear) + i, yearsToFi,
-          i < badYears ? badReturn : a.realReturn);
+        const paymentYear = Math.floor(fiYear) + i;
+        const withdrawal = Math.max(0, needIn(paymentYear, fiYear) - pensionIncomeIn(paymentYear, yearsToFi, stress));
+        const step = retirementYear(balances, withdrawal, paymentYear, yearsToFi,
+          i < badYears ? badReturn : a.realReturn, potsShare, stress);
         if (step.shortfall > 1e-6) return false;
         balances = step.balances;
         const year = Math.floor(fiYear) + i + 1;

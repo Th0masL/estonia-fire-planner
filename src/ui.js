@@ -825,8 +825,11 @@ function render() {
     ${infoNote('resilience', `Not a forecast, and deliberately not built on historical returns —
       no data series, no overlapping windows, no American history borrowed for a European
       portfolio. Just arithmetic: <em>how bad an opening can this plan take before the money runs
-      out anyway?</em> Spending and pension income do not change because markets fell, so only the
-      returns move.<br><br><strong>Why the unbuffered plan absorbs nothing.</strong> The date above
+      out anyway?</em> Spending and the modeled state pension stay unchanged. Accessible investments
+      and Pillar II/III funds share the same shock: fund payments and future lump sums are recalculated.
+      Cash retains its configured return. This assumes the same market exposure for all modeled
+      investments, not each fund's actual allocation. The first stressed year may be partial.
+      <br><br><strong>Why the unbuffered plan absorbs nothing.</strong> The date above
       is the <em>earliest</em> one that works, so by construction it leaves no margin — it is a
       boundary, not a target. Margin has to be bought, and <em>Work on past the FI date</em> under
       Assumptions is how. Selling assets to live on while they are down destroys units that cannot
@@ -847,8 +850,8 @@ function render() {
       : `The two rows move differently. Tolerance in <em>years</em> accelerates — each extra year of
          work buys more of it than the last, because the surplus above the bar compounds. The
          <em>crash</em> figure saturates, since it is a share of a portfolio that is itself growing.
-         <br><br>These shocks apply only to accessible investments. Cash keeps its configured
-         return, and pension projections are held unchanged. The protected reserve is not
+         <br><br>These shocks apply to accessible investments and pension funds until withdrawal.
+         Cash keeps its configured return; the modeled state pension is unchanged. The protected reserve is not
          available for ordinary withdrawals, even in these scenarios. Results are deterministic
          scenarios, not probabilities of success.`}</p>` : ''}
 

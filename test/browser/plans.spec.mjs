@@ -91,6 +91,9 @@ test('lump-sum selection shows net capital and persists allocation', async ({ pa
   const shared = decodeState(new URL(await page.locator('#shareUrl').inputValue()).hash.slice(3));
   expect(shared.assumptions.pensionLumpSumInvestedShare).toBe(.6);
   expect(shared.assumptions.pillarPayout).toBe('lumpSum');
+  await page.locator('[data-i="0"][data-k="assets.cash"]').fill('0');
+  await page.locator('[data-i="0"][data-k="assets.pillar2"]').fill('200000');
+  await expect(page.locator('tr').filter({ hasText: 'Single investment crash on day one' })).toContainText('40%');
 });
 
 test('initial shared plans render names literally in all result paths', async ({ page }) => {
