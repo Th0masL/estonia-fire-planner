@@ -235,4 +235,6 @@ test('lifestyle spending growth does not increase fixed mortgage payments', asyn
   await expect(secondYear.locator('td').nth(3)).toHaveText('€2,000');
   await page.locator('#aSpendGrowth').fill('2');
   await expect(secondYear.locator('td').nth(3)).toHaveText('€2,020');
+  await page.locator('#aInflation').fill('10');
+  await expect(secondYear.locator('td').nth(3)).toHaveText('€1,929');
 });

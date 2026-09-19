@@ -125,7 +125,9 @@
         the FI target forever. <strong>Moving &amp; furnishing</strong> is a one-off that leaves
         the portfolio at purchase, alongside about 2% of the price in notary, state and bank fees.
         <strong>Months away</strong> decides how much longer the money keeps compounding before it
-        is spent.</p>
+        is spent. The price and deposit stay in today's purchasing power until completion.
+        After completion, the fixed mortgage payment loses purchasing power with inflation;
+        interest-rate changes are not simulated.</p>
       <div id="houseFields" class="grid" hidden>
         <label>Price <span class="u">€</span><input type="number" id="hPrice" min="0" step="5000"></label>
         <label>Deposit <span class="u">€</span><input type="number" id="hDeposit" min="0" step="5000"></label>
@@ -195,8 +197,8 @@
         index, and lifestyles drift. 0.5-1% is a reasonable stress test. It compounds hard over a
         long retirement, and if it ever reaches the withdrawal rate no finite pot survives it,
         which the tool will say rather than returning a large number. This setting does not
-        increase contractual mortgage payments. Mortgage inflation erosion and interest-rate
-        repricing are not yet modeled: the payment currently stays flat in the real-euro schedule.</p>
+        increase contractual mortgage payments. Their real cost declines with inflation after
+        completion. Interest-rate repricing is not modeled.</p>
       <p class="explain-body" data-info-body="horizon" hidden>How long the money has to last. In a two-person household it is the
         <em>younger</em> person who has to reach it, so the older one will be past it - the money
         has to outlive whoever lives longest. It only bites when the pension is counted: a plan
@@ -205,11 +207,12 @@
         tail, not the average, and for a couple the chance one of them passes 95 is not small.
         Raising it costs surprisingly little, because money needed that far out is discounted by
         decades of compounding.</p>
-      <p class="explain-body" data-info-body="inflation" hidden>Needed for exactly one thing: a pension annuity is a <strong>fixed nominal
-        amount</strong> for life, with no CPI or wage link and no indexation duty on Pillar II, so
-        its buying power falls every year. Nothing else on this page needs an inflation figure,
-        because the return is already real. 2.5% rather than the ECB's 2% target, since Estonian
-        inflation has run above the euro-area average.</p>
+      <p class="explain-body" data-info-body="inflation" hidden>Converts <strong>fixed nominal payments</strong>
+        into today's purchasing power: modeled pension annuities lose real value, and mortgage
+        payments become cheaper in real terms after completion. Mortgage costs use each calendar
+        year's opening price level (completion for the first partial year), before and after FIRE.
+        Returns are already real, so inflation is not deducted from them again. The entered
+        inflation rate is a scenario assumption, not a forecast.</p>
 
       <p class="sub">What the portfolio has to do</p>
       <div class="grid">

@@ -1108,6 +1108,24 @@ function simulate(input) {
   const depleting = Math.max(surplusNow, surplusAfterMove, surplusAfterLoan) <= 0;
   const annualSaving = Math.max(0, surplusAfterMove);
   const houseYears = purchase ? Math.max(0, purchase.monthsAway || 0) / 12 : Infinity;
+  const inflation = a.inflation ?? DEFAULTS.inflation;
+  const purchaseYear = purchase ? currentYear + houseYears : -Infinity;
+  const mortgageEndYear = purchase ? purchaseYear + purchase.termYears : -Infinity;
+  // Inputs describe the purchase in today's purchasing power. Freeze the
+  // nominal payment at completion; deflate thereafter. Use the calendar-year
+  // opening (or completion if later) for every portion of the same year, so
+  // changing the FI date cannot reprice an identical payment.
+  const mortgageAnnualIn = (year) => purchase ? 12 * mort.monthly /
+    (1 + inflation) ** Math.max(0, Math.floor(year) - purchaseYear) : 0;
+  const mortgageCostBetween = (from, to) => {
+    let cost = 0;
+    for (let start = Math.max(from, purchaseYear); start < Math.min(to, mortgageEndYear);) {
+      const end = Math.min(to, mortgageEndYear, Math.floor(start) + 1);
+      cost += mortgageAnnualIn(start) * (end - start);
+      start = end;
+    }
+    return cost;
+  };
   const initialBalances = people.map((p) => ({ cash: p.assets?.cash || 0,
     invested: p.startPortfolio - (p.assets?.cash || 0) }));
   const advance = (balances, surplus, years) => accumulationStep(balances, surplus,
@@ -1134,6 +1152,16 @@ function simulate(input) {
     }
     reserveCash(balances, emergencyFund);
     const elapsed = years - houseYears;
+    if (inflation !== 0) {
+      let projected = balances;
+      const end = Math.min(currentYear + years, mortgageEndYear);
+      for (let start = purchaseYear; start < end;) {
+        const next = Math.min(end, Math.floor(start) + 1);
+        projected = advance(projected, surplusAfterLoan - mortgageAnnualIn(start), next - start);
+        start = next;
+      }
+      return advance(projected, surplusAfterLoan, Math.max(0, elapsed - purchase.termYears));
+    }
     const atPayoff = advance(balances, surplusAfterMove, Math.min(elapsed, purchase.termYears));
     return advance(atPayoff, surplusAfterLoan, Math.max(0, elapsed - purchase.termYears));
   };
@@ -1234,7 +1262,6 @@ function simulate(input) {
   // Holding both flat, as this did, flattered the annuity and understated the
   // fund pension - which is exactly the comparison the payout selector exists
   // to make.
-  const inflation = a.inflation ?? DEFAULTS.inflation;
   // A haircut on what the pension is believed to deliver. Applied to the income,
   // not to the balance: the pot is still the pot, this is how much of it the
   // plan is willing to depend on.
@@ -1293,8 +1320,6 @@ function simulate(input) {
 
   // What a year costs, in today's money: the base plus health cover, grown by
   // however many years have passed since work stopped.
-  const purchaseYear = purchase ? currentYear + houseYears : -Infinity;
-  const mortgageEndYear = purchase ? purchaseYear + purchase.termYears : -Infinity;
   // With no supplied end date, dependent costs continue for the whole plan. It
   // is safer to overfund an unknown liability than erase it on the FI date.
   const childCostsEndYear = s.childCostsEndYear ?? Infinity;
@@ -1307,15 +1332,12 @@ function simulate(input) {
       ? 12 * (s.housing || 0) * overlapYears(from, to, -Infinity, purchaseYear) +
         12 * (purchase.runningCostsMonthly || 0) * overlapYears(from, to, purchaseYear, Infinity)
       : 12 * (s.housing || 0) * duration;
-    const mortgageCost = purchase
-      ? 12 * mort.monthly * overlapYears(from, to, purchaseYear, mortgageEndYear) : 0;
+    const mortgageCost = mortgageCostBetween(from, to);
     const childCost = 12 * (s.childCosts || 0) *
       overlapYears(from, to, -Infinity, childCostsEndYear);
     const base = (discretionaryAnnual - rentalNet) * duration +
       housing + childCost + healthCostBetween(from, to);
     // Lifestyle growth does not reprice the contractual mortgage payment.
-    // Nominal-to-real conversion across accumulation/retirement is a separate
-    // model change; this removes the extra lifestyle-growth index only.
     return base * (1 + g) ** Math.max(0, from - fiYear) + mortgageCost;
   };
 
@@ -1498,7 +1520,8 @@ function simulate(input) {
     : Infinity;
 
   const mortgageAtFi = mort && Number.isFinite(yearsToFi)
-    ? mort.balanceAfter(Math.max(0, yearsToFi - houseYears)) : 0;
+    ? mort.balanceAfter(Math.max(0, yearsToFi - houseYears)) /
+      (1 + inflation) ** Math.max(0, yearsToFi - houseYears) : 0;
 
   // CoastFIRE: stop adding to the portfolio, keep working, and let compounding
   // finish the job by `targetAge`. Under bridging "finished" means the pot

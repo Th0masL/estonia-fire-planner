@@ -77,3 +77,44 @@ near(deficitPlan.schedule[0].openingInvestments, 0);
 plan.persons[0].assets.cash = 10000;
 assert.equal(simulate(plan).timeline.yearsToFi, Infinity,
   'later post-payoff savings cannot repair an unfunded working-year expense');
+
+// Nonzero inflation: independently sum calendar-year real payments. A future
+// purchase keeps its entered real price; erosion starts at completion, not now.
+plan.persons[0].assets.cash = 1000000;
+plan.persons[0].income.netMonthly = 4000;
+plan.household.spending = { housing: 0, other: 0, childCosts: 0, buffer: 0 };
+plan.assumptions.inflation = .025;
+for (const monthsAway of [0, 6, 24]) {
+  plan.household.property.purchase.monthsAway = monthsAway;
+  const start = 2026 + monthsAway / 12;
+  const costIn = (year, from, to) => 12000 * Math.max(0, Math.min(to, start + 10) - Math.max(from, start)) /
+    1.025 ** Math.max(0, year - start);
+  for (const buffer of [0, 3.5, 12]) {
+    plan.assumptions.bufferYears = buffer;
+    const r = simulate(plan);
+    const stop = start + buffer;
+    near(r.timeline.yearsToFi, stop - 2026);
+    let paid = 0;
+    for (let year = 2026; year < stop; year++) paid += costIn(year, year, Math.min(year + 1, stop));
+    const savingWithoutLoan = r.savings.surplusAfterMove + 12000;
+    const expectedAssets = 1000000 + r.savings.surplusNow * (start - 2026) + savingWithoutLoan * buffer - paid;
+    near(r.fi.atFiDate, expectedAssets);
+    let futurePayments = 0;
+    for (const row of r.schedule) {
+      const expected = costIn(row.year, Math.max(row.year, stop), row.year + 1);
+      near(row.need, expected);
+      futurePayments += expected;
+    }
+    near(r.fi.number, futurePayments);
+    near(r.timeline.mortgageBalanceAtFi, Math.max(0, 120000 - buffer * 12000) / 1.025 ** buffer);
+  }
+}
+console.log('Mortgage inflation reconciles accumulation, retirement, delayed purchase and real loan balance');
+plan.household.property.purchase.monthsAway = 0;
+Object.assign(plan.assumptions, { bufferYears: 2, realReturn: .04, cashRealReturn: .01 });
+const growthWithInflation = simulate(plan);
+const savingBeforeMortgage = growthWithInflation.savings.surplusAfterMove + 12000;
+const expectedInvestments = (savingBeforeMortgage - 12000) * 1.04 +
+  savingBeforeMortgage - 12000 / 1.025;
+near(growthWithInflation.schedule[0].openingCash, 1000000 * 1.01 ** 2);
+near(growthWithInflation.schedule[0].openingInvestments, expectedInvestments);

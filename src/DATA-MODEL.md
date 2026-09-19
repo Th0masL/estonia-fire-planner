@@ -151,8 +151,8 @@ five-year holding period, with grandfathering for holdings acquired by 2020.
 until at least state pension age.
 
 **Everything is in real terms.** `realReturn` is net of inflation, so every
-figure the tool shows is in today's money and inflation needs no separate
-handling. `spendingGrowth` is the different question: whether the same life gets
+figure the tool shows is in today's money. Fixed nominal flows need explicit
+conversion; real returns must not be deflated again. `spendingGrowth` is the different question: whether the same life gets
 more expensive *faster* than the general index. It applies from the FI date
 onward, and it turns the perpetual target from `spending / swr` into
 `spending / (swr - growth)` — infinite when growth reaches the withdrawal rate,
@@ -357,12 +357,31 @@ not protected during accumulation. An unfunded expense makes later stop dates
 infeasible even if subsequent savings could replenish assets; no borrowing is
 assumed. The depleting check includes the surplus after mortgage payoff.
 
-This correction does not complete the nominal-flow migration: mortgage payments
-still remain constant in the real-euro projection. Future work must convert them
-consistently during accumulation and retirement, define the price/loan valuation
-date, and document the fixed-rate/no-repricing assumption. Annuity quote dates
-and premium requirements are also unresolved. Tests isolate this correction
-with zero inflation so they do not certify the outstanding conversion model.
+Mortgage inputs (price, deposit, collateral and resulting loan/payment) are in
+today's purchasing power at the planned completion date. They are not nominal
+contract quotes. For a delayed purchase, the model implicitly scales the nominal
+price and loan with inflation until completion, keeping the real purchase cost
+unchanged. It then fixes the nominal payment for the whole loan term; no rate
+repricing, refinancing or property-specific price growth is modeled.
+
+For completion at year `c`, the annual real payment in calendar year `y` is
+`12 * mortgage.monthly / (1 + inflation)^max(0, y - c)`, prorated to the active
+part of the year. This opening-year approximation is shared by accumulation
+and retirement, including a midyear FI date. A €12,000 annual payment starting
+now becomes €12,000 / 1.025 = €11,707.32 in year two at 2.5% inflation. A purchase
+two years from now still starts with €12,000 in today's purchasing power; it is
+not prematurely deflated. Outstanding principal is deflated at the actual FI
+date using elapsed time since completion. The displayed initial payment and
+affordability ratios remain completion-time estimates, not future-year amounts.
+
+At nonzero inflation, accumulation is split at calendar-year boundaries and
+payoff, retaining existing savings/withdrawal timing within each segment. At zero
+inflation, the previous constant-flow calculation is retained. Tests reconcile
+working-year assets, retirement spending, targets and real debt, including
+fractional years and delayed purchases. Existing plans can produce earlier FI
+dates because the real mortgage burden now declines. No stored inputs change.
+Annuity quote dates and premium requirements remain unresolved; the mortgage
+correction does not validate the separate annuity model.
 
 Future qualifying pension service is estimated separately from pension units:
 `elapsed working years × min(1, gross annual salary / annual minimum wage)`.
