@@ -8,19 +8,36 @@ import { infoBtn, infoRow, infoNote, bindExplain } from './explain.js';
 
 const $ = (id) => document.getElementById(id);
 const read = () => ({
-  birthYear: +$('birthYear').value || 1990,
-  grossMonthly: +$('gross').value || 0,
-  workUntilAge: +$('until').value || 63,
-  pillar2Rate: +$('rate').value || 0.02,
-  startingPillar2: +$('have2').value || 0,
-  startingPillar3: +$('have3').value || 0,
-  pillar3Annual: +$('p3').value || 0,
-  realReturn: (+$('ret').value || 5) / 100,
+  birthYear: $('birthYear').valueAsNumber,
+  grossMonthly: $('gross').valueAsNumber,
+  workUntilAge: $('until').valueAsNumber,
+  pillar2Rate: Number($('rate').value),
+  startingPillar2: $('have2').valueAsNumber,
+  startingPillar3: $('have3').valueAsNumber,
+  pillar3Annual: $('p3').valueAsNumber,
+  realReturn: $('ret').valueAsNumber / 100,
   uninsured: $('uninsured').checked,
   currentYear: new Date().getFullYear(),
 });
 
 function render() {
+  // Never substitute a hidden assumption while a field is empty or invalid.
+  // Steps on monetary/return fields are spinner increments, not restrictions
+  // on entered precision. Calendar years and ages must be whole numbers.
+  let valid = true;
+  for (const id of ['birthYear', 'gross', 'until', 'have2', 'have3', 'p3', 'ret']) {
+    const field = $(id);
+    const n = field.valueAsNumber;
+    const invalid = !Number.isFinite(n) || field.validity.rangeUnderflow ||
+      field.validity.rangeOverflow ||
+      ((id === 'birthYear' || id === 'until') && !Number.isInteger(n));
+    field.setAttribute('aria-invalid', String(invalid));
+    valid = valid && !invalid;
+  }
+  if (!valid) {
+    $('out').innerHTML = '<p class="warning">Complete all numeric fields with valid numbers within their allowed ranges. Birth year and work-until age must be whole numbers. Enter 0 for no balance, contribution, or return; no default projection is shown while an input is incomplete.</p>';
+    return;
+  }
   const input = read();
   if (!input.grossMonthly) {
     $('out').innerHTML = '<p class="empty">Enter a gross salary to see what it produces.</p>';
