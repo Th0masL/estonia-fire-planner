@@ -225,7 +225,8 @@ Enforced by `test/invariants.mjs` across generated households:
 - per-person portfolios sum to the household portfolio, and to the FI target
 - money spent on a house leaves someone's balance
 - excluded assets never reach the target
-- a negative surplus yields no FI date — compounding alone does not count
+- zero or negative savings do not rule out FI: existing assets may fund it;
+  working-year deficits must still be funded, and retirement must last to the planning horizon
 - every person has their own age, pension unlock and portfolio; the bridge uses
   the longest wait
 - Pillar III reduces investable surplus by the full payment net of refund;
@@ -400,7 +401,12 @@ existing annuity convention and allocation shares. These are annualized timing
 approximations, not monthly liquidity forecasts. The retirement-only reserve is
 not protected during accumulation. An unfunded expense makes later stop dates
 infeasible even if subsequent savings could replenish assets; no borrowing is
-assumed. The depleting check includes the surplus after mortgage payoff.
+assumed. The depleting flag includes the surplus after mortgage
+payoff; it no longer gates FI calculations. The UI likewise displays
+funded plans without requiring positive income or savings. The date search's
+general monotonicity assumption remains a separate limitation under review.
+CoastFIRE's existing surplus gate remains unchanged pending a separate review
+of its assumption that work covers living expenses while the portfolio compounds.
 
 Mortgage inputs (price, deposit, collateral and resulting loan/payment) are in
 today's purchasing power at the planned completion date. They are not nominal

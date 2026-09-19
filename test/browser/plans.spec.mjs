@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
-import { exampleState, encodeState, decodeState, STORAGE_KEY } from '../../src/state.js';
+import { blankState, exampleState, encodeState, decodeState, STORAGE_KEY } from '../../src/state.js';
 
 // Synthetic names; handlers only set a local marker and never read/send data.
 const hostileName = `Person1 "><img data-injected src=x onerror="window.__injected=true"><svg data-injected onload="window.__injected=true"></svg>`;
@@ -28,6 +28,23 @@ function makePlan(name = hostileName) {
 }
 const fragment = (plan) => '#d=' + encodeState(plan);
 const saved = (page) => page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY);
+
+test('funded retirement remains visible without income or positive savings', async ({ page }) => {
+  const plan = blankState();
+  Object.assign(plan.persons[0], { name: 'Person1', birthYear: new Date().getFullYear() - 55,
+    healthCoveredAfterFi: true, assets: { cash: 500000 },
+    income: { grossMonthly: 0, netMonthly: 0 } });
+  plan.household.spending.other = 1000;
+  Object.assign(plan.assumptions, { realReturn: 0, cashRealReturn: 0,
+    pensionPolicy: 'ignore', portfolioEnd: 'drawdown', planToAge: 75,
+    bufferYears: 0, spendingGrowth: 0 });
+  await page.goto('/simulator.html' + fragment(plan));
+  await expect(page.locator('#headline')).toContainText('age at FI');
+  await expect(page.locator('#headline')).toContainText('55');
+  await expect(page.locator('#headline')).not.toContainText('Add your');
+  await expect(page.locator('body')).toContainText('The modeled assets still support the displayed FI date.');
+  await expect(page.locator('body')).not.toContainText('no FI date to compute');
+});
 
 test('legacy annuity plans require fund duration and never use insurer quotes', async ({ page }) => {
   const plan = makePlan('Person1');

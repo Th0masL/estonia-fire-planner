@@ -1106,8 +1106,8 @@ function simulate(input) {
 
   // ---- timeline -----------------------------------------------------------
   // A negative surplus means the household is drawing down, not saving nothing.
-  // Clamping it to zero would let compounding alone "reach" the target, which is
-  // arithmetically true and completely misleading.
+  // Existing investments can still fund FI without new savings, but every
+  // working-year deficit must be funded; it must not be clamped away.
   const surplusAfterLoan = surplusAfterMove + (mort ? 12 * mort.monthly : 0);
   const depleting = Math.max(surplusNow, surplusAfterMove, surplusAfterLoan) <= 0;
   const annualSaving = Math.max(0, surplusAfterMove);
@@ -1444,7 +1444,7 @@ function simulate(input) {
       lastsFrom(project(totalStart, annualSaving, y), y, perpetualFloor);
     if (ok(0)) return 0;
     const horizon = Math.min(100, planEndYear - currentYear - 1e-6);
-    if (depleting || horizon <= 0 || !ok(horizon)) return Infinity;
+    if (horizon <= 0 || !ok(horizon)) return Infinity;
     let lo = 0, hi = horizon;
     for (let i = 0; i < 50; i++) {
       const mid = (lo + hi) / 2;

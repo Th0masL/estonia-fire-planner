@@ -203,11 +203,11 @@ for (const [i, input] of CASES.entries()) {
   ok(excluded === 0 || r.portfolio.start < excluded + 1e9, `${tag}: excluded assets tracked`);
   close(r.portfolio.excluded, excluded, 0.01, `${tag}: excluded total matches the inputs`);
 
-  // 5. Nothing to invest means no FI date. (Bug: reported "age at FI 122",
-  //    reached by compounding alone.)
-  if (!r.house && r.savings.surplusAfterMove <= 0 && r.fi.number > r.portfolio.start) {
-    ok(!Number.isFinite(r.timeline.yearsToFi) || r.timeline.yearsToFi > 60,
-       `${tag}: no FI date when there is no surplus`);
+  // 5. Existing assets can fund FI without new savings, but never beyond the
+  // modeled lifetime. Surplus alone is not a feasibility test.
+  if (Number.isFinite(r.timeline.yearsToFi)) {
+    ok(r.timeline.yearsToFi < Math.max(...P.map((p) => r.assumptions.planToAge - p.ageNow)),
+       `${tag}: FI occurs before the planning horizon`);
   }
 
   // 6. Every person carries their own age and pension unlock. (Bug: both were

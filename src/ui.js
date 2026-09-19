@@ -632,27 +632,26 @@ function render() {
          ${pct1(sim.fi.inflation)} inflation — the same basket, a bigger number.`
       : '';
 
-  const ready = sim.income.householdNetIncome > 0 && sim.spending.now > 0;
+  const ready = sim.spending.now > 0;
   if (!ready) {
-    $('headline').innerHTML = `<p class="empty">Add your income and spending to see a plan.</p>`;
+    $('headline').innerHTML = `<p class="empty">Add your spending to see a plan.</p>`;
     $('chart').innerHTML = ''; $('plan').innerHTML = '';
     return;
   }
 
   const t = sim.timeline;
-  // Saving nothing still "reaches" the target eventually through compounding
-  // alone, which is a true but useless answer. Treat it as not on track.
+  // Surplus describes current cash flow, not retirement feasibility. Existing
+  // assets may fund a valid plan even with no income or new savings.
   const onTrack = sim.savings.surplusAfterMove > 0;
   // A shortfall worth a fifth of a percent of income is a rounding error, not a
   // crisis. Say so proportionately rather than sounding the same alarm.
   const gapShare = sim.income.householdNetIncome > 0
     ? -sim.savings.surplusAfterMove / sim.income.householdNetIncome : 1;
   const marginal = !onTrack && gapShare < 0.02;
-  const reachable = Number.isFinite(t.yearsToFi) && onTrack;
+  const reachable = Number.isFinite(t.yearsToFi);
 
   const scenarioDate = (scenario) => {
-    const reached = Number.isFinite(scenario.timeline.yearsToFi) &&
-      scenario.savings.surplusAfterMove > 0;
+    const reached = Number.isFinite(scenario.timeline.yearsToFi);
     if (!reached) return 'No FI date on these inputs';
     const ages = scenario.timeline.agesAtFi
       .map((x) => `${escapeHtml(x.name)} age ${x.age.toFixed(0)}`).join(' · ');
@@ -685,7 +684,7 @@ function render() {
     <div class="stat-row">
       <div class="stat"><b>${eur(sim.fi.number)}</b><span>${sim.fi.bridging
         ? 'needed when you stop' : `FI number at ${pct1(sim.assumptions.swr)}`} ${infoBtn('stat-number')}</span></div>
-      <div class="stat ${onTrack ? '' : 'stat-warn'}">${reachable
+      <div class="stat ${reachable ? '' : 'stat-warn'}">${reachable
         ? (t.agesAtFi.length > 1
             ? `<b>${Math.round(t.fiYear)}</b><span>FI year · ${t.agesAtFi.map((a) => `${escapeHtml(a.name)} ${a.age.toFixed(0)}`).join(', ')}</span><span class="stat-sub">${countdown(t.yearsToFi)} to go</span>`
             : `<b>${t.fiAge.toFixed(0)}</b><span>age at FI · ${Math.round(t.fiYear)}</span><span class="stat-sub">${countdown(t.yearsToFi)} to go</span>`)
@@ -697,11 +696,12 @@ function render() {
     ${onTrack ? '' : marginal
       ? `<p class="alert alert-soft">Income and spending are within ${pct(gapShare)} of each other —
          ${eur(-sim.savings.surplusAfterMove)} a year short. Essentially break-even, so nothing is
-         being invested yet, but a small change either way decides it. The figures below assume the
-         gap is closed.</p>`
+         being invested yet. The projection still includes existing assets and any actual
+         shortfall; it does not assume extra income.</p>`
       : `<p class="alert">Spending is ${eur(-sim.savings.surplusAfterMove)} a year more than income
-         — ${pct(gapShare)} of it — so there is nothing to invest and no FI date to compute. Check
-         the figures; those below assume the gap is closed.</p>`}
+         ${sim.income.householdNetIncome > 0 ? `— ${pct(gapShare)} of it` : '(no current income)'}. Existing cash and investments must fund the gap.
+         ${reachable ? 'The modeled assets still support the displayed FI date.' : 'No funded FI date was found within the planning horizon.'}
+         The projection does not assume that the gap is closed.</p>`}
 
     ${infoNote('stat-number', `${sim.fi.bridging
       ? `What the portfolio has to be worth on your last working day. It is <em>not</em> spending
