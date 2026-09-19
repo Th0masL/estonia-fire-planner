@@ -63,9 +63,11 @@ const plan = (monthsAway = 12) => sanitise({
 
 // Mortgage and dependent costs stay in the retirement schedule until dated ends.
 {
-  const r = simulate(plan(12));
+  const input = plan(12);
+  input.household.spending.childCostsEndYear = 2055;
+  const r = simulate(input);
   const beforeChildEnd = r.schedule.find((row) =>
-    row.year >= Math.ceil(r.timeline.fiYear) && row.year < 2040);
+    row.year >= Math.ceil(r.timeline.fiYear) && row.year < 2055);
   ok(r.timeline.mortgageBalanceAtFi > 0, 'outstanding mortgage remains visible at FI');
   ok(beforeChildEnd && beforeChildEnd.need >= r.spending.perpetual + 6000,
     'child costs remain in post-FI need before their end year');

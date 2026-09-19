@@ -411,21 +411,17 @@ export function simulate(input) {
     : 12 * (s.housing || 0);
   const discretionaryAnnual = 12 * ((s.other || 0) + (s.buffer || 0));
 
-  // Health cover runs from the day work stops until STATE PENSION age - not
-  // until the pillars unlock five years earlier. RaKS §5 insures you on the
-  // strength of receiving a state pension, and Pillar II income is not one: it
-  // is your own capital coming back to you. So the five years between the
-  // pillar unlock and the state pension are still a coverage gap, even though
-  // pension money is already arriving. That makes cover a *finite* liability,
-  // priced like the mortgage rather than folded into the perpetual number and
-  // funded forever.
+  // Pension age is not proof of receipt or health entitlement. Coverage dates
+  // are explicit, independent of pension benefit policy/trust. With no confirmed
+  // route, retain premiums throughout retirement (including the capital floor).
   const healthPerPerson = 12 * RATES.healthInsurance.voluntaryMonthly;
+  const healthEndFor = (p) => p.healthCoveredAfterFi ? -Infinity
+    : (Number.isFinite(p.healthCoverageFromYear) && p.healthCoverageFromYear >= 1900 &&
+        p.healthCoverageFromYear <= 2200 ? p.healthCoverageFromYear : Infinity);
+  const ongoingHealthAnnual = people.filter((p) => healthEndFor(p) === Infinity).length * healthPerPerson;
   const healthCostBetween = (from, to) => people.reduce((x, p) => {
-    // A user-confirmed alternative route (foreign S1, student, parental or
-    // voluntary coverage) is authoritative. Otherwise budget voluntary cover
-    // from FI until state-pension coverage begins.
     if (p.healthCoveredAfterFi) return x;
-    return x + healthPerPerson * overlapYears(from, to, -Infinity, p.statePensionYear);
+    return x + healthPerPerson * overlapYears(from, to, -Infinity, healthEndFor(p));
   }, 0);
   const healthCostIn = (year) => healthCostBetween(year, year + 1);
 
@@ -434,9 +430,6 @@ export function simulate(input) {
   // than the general index - applied from the day work stops.
   const g = a.spendingGrowth || 0;
   const perpetual = discretionaryAnnual + housingRunningAnnual - rentalNet;
-  const healthAtFi = people.filter((p) => !p.healthCoveredAfterFi).length * healthPerPerson;
-  const healthUntilYear = Math.max(currentYear,
-    ...people.filter((p) => !p.healthCoveredAfterFi).map((p) => p.statePensionYear));
 
   // ---- allocation shares --------------------------------------------------
   // The split decides ownership of the pooled money, so it has to be known
@@ -547,7 +540,7 @@ export function simulate(input) {
   };
 
   // Present value at the FI date of the health premiums still owed, i.e. those
-  // falling between stopping work and each person's state pension age.
+  // falling between stopping work and confirmed coverage, capped at the horizon.
   // Present value of a payment stream that itself grows at g, discounted at the
   // real return. Reduces to the flat annuity factor when g is zero.
   const pvAnnuity = (n) => {
@@ -558,7 +551,7 @@ export function simulate(input) {
   };
   const healthBridgeAt = (y) => people.reduce(
     (x, p) => x + (p.healthCoveredAfterFi ? 0 : healthPerPerson) * pvAnnuity(
-      Math.max(0, p.statePensionYear - (currentYear + y))), 0);
+      Math.max(0, Math.min(healthEndFor(p), planEndYear) - (currentYear + y))), 0);
 
   const primary = people[0];
   const ageNow = currentYear - primary.birthYear;
@@ -730,7 +723,7 @@ export function simulate(input) {
     if (!perpetualFloor) return 0;
     if (year < permanentIncomeFrom()) return 0;
     if (g >= a.swr) return Infinity;
-    const spend = perpetual * (1 + g) ** Math.max(0, year - fiYear);
+    const spend = (perpetual + ongoingHealthAnnual) * (1 + g) ** Math.max(0, year - fiYear);
     const permanent = countState ? pensionBreakdownIn(year, y).state : 0;
     // Spending grows at g in real terms; the indexed pension is flat in real
     // terms. Capitalise the two streams separately instead of pretending the
@@ -1093,13 +1086,16 @@ export function simulate(input) {
     income: { householdNetIncome, rentalNet, perPerson: people.map((p) => p.netAnnual) },
     spending: {
       now: spendNow, afterMove: spendAfterMove, perpetual,
-      // Health cover is finite, so it is reported apart from the forever number:
-      // what it costs a year, until when, and what funding it takes at FI.
-      healthAtFi,
-      healthUntilYear,
+      // Separate the dated premium budget from permanently unconfirmed cover.
+      ongoingHealthAnnual,
+      healthAtFi: Number.isFinite(yearsToFi) ? people.filter((p) =>
+        healthEndFor(p) > currentYear + yearsToFi).length * healthPerPerson : 0,
+      healthUntilYear: Math.max(currentYear, ...people.map((p) =>
+        Math.min(healthEndFor(p), planEndYear))),
       healthBridgeCost: Number.isFinite(yearsToFi) ? healthBridgeAt(yearsToFi) : 0,
       healthYears: Number.isFinite(yearsToFi)
-        ? Math.max(0, healthUntilYear - (currentYear + yearsToFi))
+        ? Math.max(0, Math.max(currentYear, ...people.map((p) =>
+            Math.min(healthEndFor(p), planEndYear))) - (currentYear + yearsToFi))
         : 0,
     },
     savings: {
@@ -1109,7 +1105,7 @@ export function simulate(input) {
       rateAfterMove: householdNetIncome > 0 ? surplusAfterMove / householdNetIncome : 0,
     },
     fi: {
-      perpetualSpending: perpetual,
+      perpetualSpending: perpetual + ongoingHealthAnnual,
       // Under bridging the number is what the portfolio must be on the day work
       // stops - smaller than spending/SWR, because it is allowed to run down
       // once the pensions arrive.
@@ -1117,7 +1113,7 @@ export function simulate(input) {
       atFiDate: fiTarget,
       perpetualNumber: fiNumber,
       spendingGrowth: g,
-      numberAt4pct: perpetual / 0.04,
+      numberAt4pct: (perpetual + ongoingHealthAnnual) / 0.04,
       // Two different questions that a single flag used to answer badly.
       // `bridging` is about the PORTFOLIO: is it allowed to run down. Whether
       // any pension is actually in play is separate, and is what every pension

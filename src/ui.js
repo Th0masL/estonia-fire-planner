@@ -189,7 +189,12 @@ function renderPeople() {
       <div class="checks">
         <label><input type="checkbox" data-i="${i}" data-k="lifeInsurance" ${p.lifeInsurance ? 'checked' : ''}> Pays for term life cover</label>
         <label><input type="checkbox" data-i="${i}" data-k="healthInsurance" ${p.healthInsurance ? 'checked' : ''}> Pays for a voluntary health contract</label>
-        <label><input type="checkbox" data-i="${i}" data-k="healthCoveredAfterFi" ${p.healthCoveredAfterFi ? 'checked' : ''}> Has another confirmed health-cover route after FI (for example S1)</label>
+        <label><input type="checkbox" data-i="${i}" data-k="healthCoveredAfterFi" ${p.healthCoveredAfterFi ? 'checked' : ''}> Confirmed health cover throughout retirement, with no extra premium (for example S1)</label>
+        <label ${p.healthCoveredAfterFi ? 'hidden' : ''}>Confirmed health-cover start year <span class="u">optional; no extra premium from this date</span><input type="number" min="1900" max="2200" step="1" data-i="${i}" data-k="healthCoverageFromYear" value="${p.healthCoverageFromYear ?? ''}"></label>
+        <p class="hint">Leave the year blank unless an ongoing coverage route is confirmed.
+          Pension age alone is not confirmation. Without a route, premiums continue through
+          the planning horizon and remain in the perpetual-income target. Older plans now
+          use this conservative assumption; confirm your coverage before changing it.</p>
       </div>
       <div class="grid" ${p.lifeInsurance || p.healthInsurance ? '' : 'hidden'}>
         <label ${p.lifeInsurance ? '' : 'hidden'}>Life cover <span class="u">€/mo</span><input type="number" min="0" step="5" data-i="${i}" data-k="lifeInsuranceMonthly" value="${p.lifeInsuranceMonthly ?? 0}"></label>
@@ -467,7 +472,7 @@ function chart(sim) {
          ${pct1(sim.fi.spendingGrowth)} a year <em>above inflation</em>, which is why the total
          column climbs`
       : `Spending is ${eur(sim.spending.perpetual / 12)}/month throughout`}${sim.spending.healthYears > 0.5
-      ? `, plus ${eur(sim.spending.healthAtFi / 12)}/month for health cover until state pension age` : ''}
+      ? `, plus ${eur(sim.spending.healthAtFi / 12)}/month for health cover until a confirmed coverage start, or through the planning horizon` : ''}
       — <strong>in today's money</strong>. A flat column does not mean spending never rises: it
       means it rises <em>exactly</em> with prices, so it buys the same basket. In the euros of the
       day, that ${eur(sim.schedule[sim.schedule.length - 1].need / 12)} in
@@ -706,8 +711,9 @@ function render() {
       <tr class="thead"><th>Every year, once you stop</th><td></td></tr>
       <tr><th>Spending the plan must cover, permanently ${infoBtn('perp-spend')}${sim.fi.spendingGrowth ? ` <span class="muted">rising ${pct1(sim.fi.spendingGrowth)}/yr in real terms</span>` : ''}</th><td>${eur(sim.fi.perpetualSpending)}/yr</td></tr>
       ${infoRow('perp-spend', `The recurring baseline after dated liabilities have ended: the
-        mortgage paid off, dependent costs ended, and health cover supplied through another route.
-        Those dated costs remain in the cash-flow schedule until their actual end.
+        mortgage paid off and dependent costs ended. Health premiums remain in this baseline
+        unless a continuing coverage route is confirmed. Dated costs remain in the cash-flow
+        schedule until their entered end.
         <br><br><strong>On inflation.</strong> This is in <em>today's money</em>, like every figure
         here. It does not need inflating, because the return you set is already net of inflation —
         the two cancel. So a flat figure means spending that keeps pace with prices exactly, buying
@@ -718,13 +724,13 @@ function render() {
           : ` The one thing that would make it rise in real terms is <em>Spending growth</em>,
              currently 0% — that is the cost of the same life outrunning the general index.`}`)}
       ${sim.spending.healthYears > 0.5 ? `
-      <tr><th>Health cover, FI to state pension age ${infoBtn('health')} <span class="muted">${sim.spending.healthYears.toFixed(0)} years, then free</span></th><td>${eur(sim.spending.healthAtFi)}/yr · ${eur(sim.spending.healthBridgeCost)} to fund</td></tr>
-      ${infoRow('health', `Estonian health cover follows social tax, not residency, so it stops when
-        the salary does. It comes back free at <strong>state pension age</strong> — not when the
-        pillars unlock five years earlier, because the law insures you for receiving a <em>state</em>
-        pension, and Pillar II money is your own capital rather than one. Those years need a
-        voluntary Tervisekassa contract at ${eur(RATES.healthInsurance.voluntaryMonthly)}/month each.
-        It remains in the dated cash-flow schedule until cover begins through another route.`)}` : ''}
+      <tr><th>Health-cover budget ${infoBtn('health')} <span class="muted">${sim.spending.healthYears.toFixed(0)} years within the horizon${sim.spending.ongoingHealthAnnual ? '; no confirmed end for some premiums' : ''}</span></th><td>${eur(sim.spending.healthAtFi)}/yr initially · ${eur(sim.spending.healthBridgeCost)} within-horizon funding</td></tr>
+      ${infoRow('health', `Pension-based coverage depends on receiving a state pension, not simply
+        reaching an estimated age. The planner budgets ${eur(RATES.healthInsurance.voluntaryMonthly)}/month
+        per uncovered person until the entered confirmed coverage date. With no date it continues
+        through the horizon and remains in the perpetual target. Pension income policy and trust
+        do not change health eligibility. Confirm the route with Tervisekassa; co-payments and
+        other medical costs are still part of your spending budget.`)}` : ''}
       ${sim.fi.countsPension ? `
       <tr><th>Pension income once it all unlocks ${infoBtn('pens-income')}</th><td>${eur(sim.fi.pensionIncomeAtUnlock)}/yr</td></tr>
       ${infoRow('pens-income', `What the pillars pay once every one of them has started: the pots

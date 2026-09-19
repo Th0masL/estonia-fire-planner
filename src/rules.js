@@ -250,8 +250,8 @@ export function actionPlan(sim, input) {
         `${Math.min(...people.map((p) => p.ageAtFi)).toFixed(0)} leaves about ${Math.round(have)} ` +
         `years, so the request has been capped rather than ignored. The bind is structural: a ` +
         `short career is the point of retiring early, and it is exactly what disqualifies you ` +
-        `here. Working a little longer can unlock a whole year of it — and with it, a year of ` +
-        `free health cover.`,
+        `here. Working longer may establish eligibility. Any health-cover start must be ` +
+        `confirmed separately rather than inferred from this projection.`,
     });
   }
 

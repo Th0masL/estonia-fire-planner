@@ -34,11 +34,16 @@ Options, with verified 2026 costs:
 
 ## The five-year gap, and a lever that might close it
 
-The pillars unlock at state pension age −5. Health cover does not: it returns
-when you actually receive a **state pension**, which is five years later. So a
-plan that stops working early pays for cover through that whole window —
-{{healthInsurance.voluntaryMonthly|money}} a month each, for five years, even
-though pension income has already started.
+Pillar access does not establish health coverage. Pension-based cover depends
+on receiving a **state pension**, not simply reaching an estimated age. The
+planner now budgets {{healthInsurance.voluntaryMonthly|money}} a month per
+uncovered person until a user-confirmed ongoing coverage start. If no date is
+confirmed, premiums continue through the horizon and remain in the perpetual
+target. Selecting zero pension benefits does not cancel a confirmed health route.
+Older plans may therefore show higher targets; review coverage rather than
+assuming automatic entitlement. Temporary routes do not establish lifelong cover.
+See [Tervisekassa's eligibility guidance](https://tervisekassa.ee/en/people/health-insurance/persons-equivalent-insured-persons)
+(checked 19 September 2026).
 
 There is a mechanism that may close it. **RPKS §9¹** allows the state pension
 itself to be taken up to five years early — the *paindlik vanaduspension*. Since

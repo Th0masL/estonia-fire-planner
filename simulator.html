@@ -1169,21 +1169,17 @@ function simulate(input) {
     : 12 * (s.housing || 0);
   const discretionaryAnnual = 12 * ((s.other || 0) + (s.buffer || 0));
 
-  // Health cover runs from the day work stops until STATE PENSION age - not
-  // until the pillars unlock five years earlier. RaKS §5 insures you on the
-  // strength of receiving a state pension, and Pillar II income is not one: it
-  // is your own capital coming back to you. So the five years between the
-  // pillar unlock and the state pension are still a coverage gap, even though
-  // pension money is already arriving. That makes cover a *finite* liability,
-  // priced like the mortgage rather than folded into the perpetual number and
-  // funded forever.
+  // Pension age is not proof of receipt or health entitlement. Coverage dates
+  // are explicit, independent of pension benefit policy/trust. With no confirmed
+  // route, retain premiums throughout retirement (including the capital floor).
   const healthPerPerson = 12 * RATES.healthInsurance.voluntaryMonthly;
+  const healthEndFor = (p) => p.healthCoveredAfterFi ? -Infinity
+    : (Number.isFinite(p.healthCoverageFromYear) && p.healthCoverageFromYear >= 1900 &&
+        p.healthCoverageFromYear <= 2200 ? p.healthCoverageFromYear : Infinity);
+  const ongoingHealthAnnual = people.filter((p) => healthEndFor(p) === Infinity).length * healthPerPerson;
   const healthCostBetween = (from, to) => people.reduce((x, p) => {
-    // A user-confirmed alternative route (foreign S1, student, parental or
-    // voluntary coverage) is authoritative. Otherwise budget voluntary cover
-    // from FI until state-pension coverage begins.
     if (p.healthCoveredAfterFi) return x;
-    return x + healthPerPerson * overlapYears(from, to, -Infinity, p.statePensionYear);
+    return x + healthPerPerson * overlapYears(from, to, -Infinity, healthEndFor(p));
   }, 0);
   const healthCostIn = (year) => healthCostBetween(year, year + 1);
 
@@ -1192,9 +1188,6 @@ function simulate(input) {
   // than the general index - applied from the day work stops.
   const g = a.spendingGrowth || 0;
   const perpetual = discretionaryAnnual + housingRunningAnnual - rentalNet;
-  const healthAtFi = people.filter((p) => !p.healthCoveredAfterFi).length * healthPerPerson;
-  const healthUntilYear = Math.max(currentYear,
-    ...people.filter((p) => !p.healthCoveredAfterFi).map((p) => p.statePensionYear));
 
   // ---- allocation shares --------------------------------------------------
   // The split decides ownership of the pooled money, so it has to be known
@@ -1305,7 +1298,7 @@ function simulate(input) {
   };
 
   // Present value at the FI date of the health premiums still owed, i.e. those
-  // falling between stopping work and each person's state pension age.
+  // falling between stopping work and confirmed coverage, capped at the horizon.
   // Present value of a payment stream that itself grows at g, discounted at the
   // real return. Reduces to the flat annuity factor when g is zero.
   const pvAnnuity = (n) => {
@@ -1316,7 +1309,7 @@ function simulate(input) {
   };
   const healthBridgeAt = (y) => people.reduce(
     (x, p) => x + (p.healthCoveredAfterFi ? 0 : healthPerPerson) * pvAnnuity(
-      Math.max(0, p.statePensionYear - (currentYear + y))), 0);
+      Math.max(0, Math.min(healthEndFor(p), planEndYear) - (currentYear + y))), 0);
 
   const primary = people[0];
   const ageNow = currentYear - primary.birthYear;
@@ -1488,7 +1481,7 @@ function simulate(input) {
     if (!perpetualFloor) return 0;
     if (year < permanentIncomeFrom()) return 0;
     if (g >= a.swr) return Infinity;
-    const spend = perpetual * (1 + g) ** Math.max(0, year - fiYear);
+    const spend = (perpetual + ongoingHealthAnnual) * (1 + g) ** Math.max(0, year - fiYear);
     const permanent = countState ? pensionBreakdownIn(year, y).state : 0;
     // Spending grows at g in real terms; the indexed pension is flat in real
     // terms. Capitalise the two streams separately instead of pretending the
@@ -1851,13 +1844,16 @@ function simulate(input) {
     income: { householdNetIncome, rentalNet, perPerson: people.map((p) => p.netAnnual) },
     spending: {
       now: spendNow, afterMove: spendAfterMove, perpetual,
-      // Health cover is finite, so it is reported apart from the forever number:
-      // what it costs a year, until when, and what funding it takes at FI.
-      healthAtFi,
-      healthUntilYear,
+      // Separate the dated premium budget from permanently unconfirmed cover.
+      ongoingHealthAnnual,
+      healthAtFi: Number.isFinite(yearsToFi) ? people.filter((p) =>
+        healthEndFor(p) > currentYear + yearsToFi).length * healthPerPerson : 0,
+      healthUntilYear: Math.max(currentYear, ...people.map((p) =>
+        Math.min(healthEndFor(p), planEndYear))),
       healthBridgeCost: Number.isFinite(yearsToFi) ? healthBridgeAt(yearsToFi) : 0,
       healthYears: Number.isFinite(yearsToFi)
-        ? Math.max(0, healthUntilYear - (currentYear + yearsToFi))
+        ? Math.max(0, Math.max(currentYear, ...people.map((p) =>
+            Math.min(healthEndFor(p), planEndYear))) - (currentYear + yearsToFi))
         : 0,
     },
     savings: {
@@ -1867,7 +1863,7 @@ function simulate(input) {
       rateAfterMove: householdNetIncome > 0 ? surplusAfterMove / householdNetIncome : 0,
     },
     fi: {
-      perpetualSpending: perpetual,
+      perpetualSpending: perpetual + ongoingHealthAnnual,
       // Under bridging the number is what the portfolio must be on the day work
       // stops - smaller than spending/SWR, because it is allowed to run down
       // once the pensions arrive.
@@ -1875,7 +1871,7 @@ function simulate(input) {
       atFiDate: fiTarget,
       perpetualNumber: fiNumber,
       spendingGrowth: g,
-      numberAt4pct: perpetual / 0.04,
+      numberAt4pct: (perpetual + ongoingHealthAnnual) / 0.04,
       // Two different questions that a single flag used to answer badly.
       // `bridging` is about the PORTFOLIO: is it allowed to run down. Whether
       // any pension is actually in play is separate, and is what every pension
@@ -2246,8 +2242,8 @@ function actionPlan(sim, input) {
         `${Math.min(...people.map((p) => p.ageAtFi)).toFixed(0)} leaves about ${Math.round(have)} ` +
         `years, so the request has been capped rather than ignored. The bind is structural: a ` +
         `short career is the point of retiring early, and it is exactly what disqualifies you ` +
-        `here. Working a little longer can unlock a whole year of it — and with it, a year of ` +
-        `free health cover.`,
+        `here. Working longer may establish eligibility. Any health-cover start must be ` +
+        `confirmed separately rather than inferred from this projection.`,
     });
   }
 
@@ -2531,6 +2527,7 @@ const blankPerson = (name) => ({
   lifeInsurance: false, lifeInsuranceMonthly: 0,
   healthInsurance: false, healthInsuranceMonthly: RATES.healthInsurance.voluntaryMonthly,
   healthCoveredAfterFi: false,
+  healthCoverageFromYear: null,
 });
 
 const baseState = (over = {}) => ({
@@ -2726,6 +2723,10 @@ function sanitise(s) {
     p.lifeInsuranceMonthly = Math.max(0, num(p.lifeInsuranceMonthly));
     p.healthInsurance = bool(p.healthInsurance);
     p.healthCoveredAfterFi = bool(p.healthCoveredAfterFi);
+    p.healthCoverageFromYear = p.healthCoverageFromYear == null || p.healthCoverageFromYear === ''
+      ? null : (Number.isFinite(Number(p.healthCoverageFromYear)) &&
+          Number(p.healthCoverageFromYear) >= 1900 && Number(p.healthCoverageFromYear) <= 2200
+        ? Number(p.healthCoverageFromYear) : null);
     p.healthInsuranceMonthly = Math.max(0,
       num(p.healthInsuranceMonthly, RATES.healthInsurance.voluntaryMonthly));
     p.allocationShare = bounded(p.allocationShare, 0, 1, 1 / s.persons.length);
@@ -2950,7 +2951,12 @@ function renderPeople() {
       <div class="checks">
         <label><input type="checkbox" data-i="${i}" data-k="lifeInsurance" ${p.lifeInsurance ? 'checked' : ''}> Pays for term life cover</label>
         <label><input type="checkbox" data-i="${i}" data-k="healthInsurance" ${p.healthInsurance ? 'checked' : ''}> Pays for a voluntary health contract</label>
-        <label><input type="checkbox" data-i="${i}" data-k="healthCoveredAfterFi" ${p.healthCoveredAfterFi ? 'checked' : ''}> Has another confirmed health-cover route after FI (for example S1)</label>
+        <label><input type="checkbox" data-i="${i}" data-k="healthCoveredAfterFi" ${p.healthCoveredAfterFi ? 'checked' : ''}> Confirmed health cover throughout retirement, with no extra premium (for example S1)</label>
+        <label ${p.healthCoveredAfterFi ? 'hidden' : ''}>Confirmed health-cover start year <span class="u">optional; no extra premium from this date</span><input type="number" min="1900" max="2200" step="1" data-i="${i}" data-k="healthCoverageFromYear" value="${p.healthCoverageFromYear ?? ''}"></label>
+        <p class="hint">Leave the year blank unless an ongoing coverage route is confirmed.
+          Pension age alone is not confirmation. Without a route, premiums continue through
+          the planning horizon and remain in the perpetual-income target. Older plans now
+          use this conservative assumption; confirm your coverage before changing it.</p>
       </div>
       <div class="grid" ${p.lifeInsurance || p.healthInsurance ? '' : 'hidden'}>
         <label ${p.lifeInsurance ? '' : 'hidden'}>Life cover <span class="u">€/mo</span><input type="number" min="0" step="5" data-i="${i}" data-k="lifeInsuranceMonthly" value="${p.lifeInsuranceMonthly ?? 0}"></label>
@@ -3228,7 +3234,7 @@ function chart(sim) {
          ${pct1(sim.fi.spendingGrowth)} a year <em>above inflation</em>, which is why the total
          column climbs`
       : `Spending is ${eur(sim.spending.perpetual / 12)}/month throughout`}${sim.spending.healthYears > 0.5
-      ? `, plus ${eur(sim.spending.healthAtFi / 12)}/month for health cover until state pension age` : ''}
+      ? `, plus ${eur(sim.spending.healthAtFi / 12)}/month for health cover until a confirmed coverage start, or through the planning horizon` : ''}
       — <strong>in today's money</strong>. A flat column does not mean spending never rises: it
       means it rises <em>exactly</em> with prices, so it buys the same basket. In the euros of the
       day, that ${eur(sim.schedule[sim.schedule.length - 1].need / 12)} in
@@ -3467,8 +3473,9 @@ function render() {
       <tr class="thead"><th>Every year, once you stop</th><td></td></tr>
       <tr><th>Spending the plan must cover, permanently ${infoBtn('perp-spend')}${sim.fi.spendingGrowth ? ` <span class="muted">rising ${pct1(sim.fi.spendingGrowth)}/yr in real terms</span>` : ''}</th><td>${eur(sim.fi.perpetualSpending)}/yr</td></tr>
       ${infoRow('perp-spend', `The recurring baseline after dated liabilities have ended: the
-        mortgage paid off, dependent costs ended, and health cover supplied through another route.
-        Those dated costs remain in the cash-flow schedule until their actual end.
+        mortgage paid off and dependent costs ended. Health premiums remain in this baseline
+        unless a continuing coverage route is confirmed. Dated costs remain in the cash-flow
+        schedule until their entered end.
         <br><br><strong>On inflation.</strong> This is in <em>today's money</em>, like every figure
         here. It does not need inflating, because the return you set is already net of inflation —
         the two cancel. So a flat figure means spending that keeps pace with prices exactly, buying
@@ -3479,13 +3486,13 @@ function render() {
           : ` The one thing that would make it rise in real terms is <em>Spending growth</em>,
              currently 0% — that is the cost of the same life outrunning the general index.`}`)}
       ${sim.spending.healthYears > 0.5 ? `
-      <tr><th>Health cover, FI to state pension age ${infoBtn('health')} <span class="muted">${sim.spending.healthYears.toFixed(0)} years, then free</span></th><td>${eur(sim.spending.healthAtFi)}/yr · ${eur(sim.spending.healthBridgeCost)} to fund</td></tr>
-      ${infoRow('health', `Estonian health cover follows social tax, not residency, so it stops when
-        the salary does. It comes back free at <strong>state pension age</strong> — not when the
-        pillars unlock five years earlier, because the law insures you for receiving a <em>state</em>
-        pension, and Pillar II money is your own capital rather than one. Those years need a
-        voluntary Tervisekassa contract at ${eur(RATES.healthInsurance.voluntaryMonthly)}/month each.
-        It remains in the dated cash-flow schedule until cover begins through another route.`)}` : ''}
+      <tr><th>Health-cover budget ${infoBtn('health')} <span class="muted">${sim.spending.healthYears.toFixed(0)} years within the horizon${sim.spending.ongoingHealthAnnual ? '; no confirmed end for some premiums' : ''}</span></th><td>${eur(sim.spending.healthAtFi)}/yr initially · ${eur(sim.spending.healthBridgeCost)} within-horizon funding</td></tr>
+      ${infoRow('health', `Pension-based coverage depends on receiving a state pension, not simply
+        reaching an estimated age. The planner budgets ${eur(RATES.healthInsurance.voluntaryMonthly)}/month
+        per uncovered person until the entered confirmed coverage date. With no date it continues
+        through the horizon and remains in the perpetual target. Pension income policy and trust
+        do not change health eligibility. Confirm the route with Tervisekassa; co-payments and
+        other medical costs are still part of your spending budget.`)}` : ''}
       ${sim.fi.countsPension ? `
       <tr><th>Pension income once it all unlocks ${infoBtn('pens-income')}</th><td>${eur(sim.fi.pensionIncomeAtUnlock)}/yr</td></tr>
       ${infoRow('pens-income', `What the pillars pay once every one of them has started: the pots

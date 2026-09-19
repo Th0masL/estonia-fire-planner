@@ -35,6 +35,7 @@ export const blankPerson = (name) => ({
   lifeInsurance: false, lifeInsuranceMonthly: 0,
   healthInsurance: false, healthInsuranceMonthly: RATES.healthInsurance.voluntaryMonthly,
   healthCoveredAfterFi: false,
+  healthCoverageFromYear: null,
 });
 
 const baseState = (over = {}) => ({
@@ -230,6 +231,10 @@ export function sanitise(s) {
     p.lifeInsuranceMonthly = Math.max(0, num(p.lifeInsuranceMonthly));
     p.healthInsurance = bool(p.healthInsurance);
     p.healthCoveredAfterFi = bool(p.healthCoveredAfterFi);
+    p.healthCoverageFromYear = p.healthCoverageFromYear == null || p.healthCoverageFromYear === ''
+      ? null : (Number.isFinite(Number(p.healthCoverageFromYear)) &&
+          Number(p.healthCoverageFromYear) >= 1900 && Number(p.healthCoverageFromYear) <= 2200
+        ? Number(p.healthCoverageFromYear) : null);
     p.healthInsuranceMonthly = Math.max(0,
       num(p.healthInsuranceMonthly, RATES.healthInsurance.voluntaryMonthly));
     p.allocationShare = bounded(p.allocationShare, 0, 1, 1 / s.persons.length);

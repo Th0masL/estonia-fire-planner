@@ -52,7 +52,10 @@ Object.assign(boundary.assumptions, {
 Object.assign(boundary.persons[0], {
   yearsWorkedEstonia: 12.5, pillar1Units: 20, healthCoveredAfterFi: false,
 });
-assert.equal(simulate(boundary).persons[0].statePensionEarlyYears, 3);
+// Unconfirmed healthcare now delays FI, so the formerly invalid four-year
+// choice may become valid. Assert the entitlement, not the old exact date.
+const boundaryPerson = simulate(boundary).persons[0];
+assert.ok(boundaryPerson.yearsWorkedAtFi >= 15 + 5 * boundaryPerson.statePensionEarlyYears);
 
 for (const mode of ['perpetual', 'drawdown']) {
   for (const count of [1, 2]) {

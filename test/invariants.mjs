@@ -133,7 +133,7 @@ function survivesIndependently(input, r) {
     }
     let health = 0;
     for (const p of r.persons) {
-      if (!p.healthCoveredAfterFi && year < p.statePensionYear) {
+      if (!p.healthCoveredAfterFi && year < (p.healthCoverageFromYear ?? Infinity)) {
         health += 12 * RATES.healthInsurance.voluntaryMonthly;
       }
     }

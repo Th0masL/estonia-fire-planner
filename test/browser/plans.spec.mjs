@@ -164,3 +164,23 @@ test('loss-making asset bases survive sharing, storage, export and import', asyn
   const shared = decodeState(new URL(await page.locator('#shareUrl').inputValue()).hash.slice(3));
   for (const [, basis] of pairs) expect(shared.persons[0].assets[basis]).toBe(100000);
 });
+
+test('confirmed health coverage date is optional and persists without pension income', async ({ page }) => {
+  const plan = makePlan('Person1');
+  plan.assumptions.pensionPolicy = 'ignore';
+  await page.goto('/simulator.html' + fragment(plan));
+  const field = page.locator('[data-i="0"][data-k="healthCoverageFromYear"]');
+  await expect(field).toHaveValue('');
+  await field.fill('2050');
+  await page.reload();
+  await expect(field).toHaveValue('2050');
+  expect(JSON.parse(await saved(page)).persons[0].healthCoverageFromYear).toBe(2050);
+  await page.locator('#share').click();
+  const shared = decodeState(new URL(await page.locator('#shareUrl').inputValue()).hash.slice(3));
+  expect(shared.persons[0].healthCoverageFromYear).toBe(2050);
+  await field.fill('');
+  await page.reload();
+  await expect(field).toHaveValue('');
+  expect(JSON.parse(await saved(page)).persons[0].healthCoverageFromYear).toBeNull();
+  await expect(page.locator('body')).not.toContainText('years, then free');
+});

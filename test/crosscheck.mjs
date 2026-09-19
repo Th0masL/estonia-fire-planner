@@ -31,8 +31,8 @@ const near = (got, want, tol, label) => {
 
 // --- a household with every complication switched off ------------------------
 //
-// Born long ago, so both are past state pension age and no health contract is
-// ever charged. No children, no house, no pensions counted, no spending growth.
+// Confirmed health cover, so no health contract is charged.
+// No children, no house, no pensions counted, no spending growth.
 // What is left is the bare FIRE arithmetic, which has exact answers.
 
 const PLAIN = (over = {}, assumptions = {}) => sanitise({
@@ -44,7 +44,7 @@ const PLAIN = (over = {}, assumptions = {}) => sanitise({
     ...over,
   },
   persons: [{
-    name: 'Person1', birthYear: 1950,
+    name: 'Person1', birthYear: 1950, healthCoveredAfterFi: true,
     income: { grossMonthly: 5000, netMonthly: 4000, otherNetMonthly: 0 },
     assets: { cash: 0, investmentAccount: 100000, investmentAccountContributions: 100000,
               pillar2: 0, pillar3: 0, crypto: 0 },
@@ -290,7 +290,7 @@ for (const rentMonthly of [200, 750]) {
         rentalIncomeNetMonthly: 0, property: null,
       },
       persons: [{
-        name: 'Person1', birthYear: 1950,                // past state pension age: no health contract
+        name: 'Person1', birthYear: 1950, healthCoveredAfterFi: true, // confirmed cover
         income: { grossMonthly: 20_000, netMonthly: NET / 12, otherNetMonthly: 0 },
         assets: { cash: 0, investmentAccount: 0, pillar2: 0, pillar3: 0, crypto: 0 },
         pillar2Rate: 0.02, pillar3Annual: 0, allocationShare: 1,

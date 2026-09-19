@@ -116,8 +116,19 @@ life; a health contract insures one person. Both belong to a person rather than
 the household, both reduce what can be invested, and neither becomes an asset.
 
 **Health cover is dated per person.** `healthInsurance` records a voluntary
-contract paid today. After FI the engine budgets voluntary cover until state
-pension age unless `healthCoveredAfterFi` confirms another route such as S1.
+contract paid today. `healthCoveredAfterFi` confirms ongoing cover without an
+additional premium from FI onward. Otherwise optional `healthCoverageFromYear`
+sets the confirmed start of such coverage; null/missing means unknown. It is
+independent of pension income policy, trust and estimated pension age. Unknown
+coverage means premiums throughout the horizon and in the perpetual capital
+floor. Dated premium PV is reported only within the planning horizon, not as
+an infinite lifetime cost. Other medical expenses remain in household spending.
+Legacy plans retain their inputs but no longer receive automatic age-based
+coverage; the UI asks users to review the changed assumption. This optional
+field needs no conversion of old values and retains the existing data version.
+Reference: [Tervisekassa insured equivalents](https://tervisekassa.ee/en/people/health-insurance/persons-equivalent-insured-persons),
+checked 19 September 2026. An entered date is a user confirmation, not a verified
+legal entitlement; temporary routes need review before being treated as ongoing.
 
 **`pensionPolicy` changes what the FI number *means*.** Under `"ignore"` it is
 the selected SWR capital-floor heuristic. It is tested through `planToAge` and
@@ -210,7 +221,7 @@ Net-income overrides do not establish contributions. This assumes pension
 social tax on the entered salary, not employer minimum top-ups or state-paid
 and special qualifying periods. Such cases need official records; the model
 does not determine legal entitlement. The current minimum-wage assumption is
-held constant in real terms. This does not fix healthcare eligibility.
+held constant in real terms. Healthcare uses the separate confirmed-route inputs above.
 Source: [SKA pension qualifying period](https://www.sotsiaalkindlustusamet.ee/en/pension-and-benefits/applying-pension/pension-qualifying-period),
 checked 19 September 2026.
 
