@@ -122,6 +122,15 @@ export function statePensionNet(grossAnnual, { pensionAge = true } = {}) {
            net: grossAnnual - taxable * RATES.incomeTax };
 }
 
+/** Salary-based service estimate, not a reconstruction of social-tax records.
+ * Assumes contributions on entered salary only; no employer minimum top-up,
+ * state-paid contributions, or special qualifying periods are inferred.
+ * Pillar II membership affects pension units, not qualifying service.
+ */
+export function pensionServicePerYear(grossAnnual) {
+  return clamp(grossAnnual / RATES.minimumAnnualWageForPension, 0, 1);
+}
+
 /** Coefficient earned per year of work at a given wage, in or out of Pillar II. */
 export function pillar1UnitsPerYear(grossAnnual, inPillar2 = true) {
   const p1 = RATES.pillar1;
@@ -157,8 +166,9 @@ export function pillar1Monthly({
   const perYear = pillar1UnitsPerYear(grossAnnual, inPillar2);
   const future = Math.max(0, futureYears);
   const units = Math.max(0, unitsSoFar) + perYear * future;
-  // Service is counted in years worked, not in units earned.
-  const service = serviceYears == null ? future : Math.max(0, serviceYears);
+  // Qualifying service and pension units are separate contribution measures.
+  const service = serviceYears == null
+    ? future * pensionServicePerYear(grossAnnual) : Math.max(0, serviceYears);
   if (service < p1.minServiceYears) return 0;
   return p1.baseMonthly + p1.yearRateMonthly * units;
 }
@@ -257,6 +267,7 @@ export function simulate(input) {
     const gross = (p.income.grossMonthly || 0) * 12;
     const derived = netFromGross(gross, { pillar2Rate: p.pillar2Rate ?? 0.02 });
     p.grossAnnual = gross;
+    p.estimatedServicePerYear = pensionServicePerYear(gross);
     // Trust an explicitly supplied net figure over the model.
     p.netAnnual = p.income.netMonthly != null ? p.income.netMonthly * 12 : derived.net;
     p.tax = derived;
@@ -583,7 +594,8 @@ export function simulate(input) {
   // cannot be reconstructed here, so such cases remain deliberately uncounted.
   const stateMonthlyFor = (p, futureYears) => {
     if (!p.pillar1UnitsKnown || !p.serviceYearsKnown) return 0;
-    const estonianService = p.yearsWorkedSoFar + Math.max(0, futureYears);
+    const estonianService = p.yearsWorkedSoFar +
+      Math.max(0, futureYears) * p.estimatedServicePerYear;
     if (estonianService >= RATES.pillar1.minServiceYears) {
       return pillar1Monthly({
         grossAnnual: p.grossAnnual,
@@ -773,7 +785,7 @@ export function simulate(input) {
     const provisional = solveFor(perpetualMode);
     for (const p of people) {
       const serviceAtFi = p.serviceYearsKnown
-        ? p.yearsWorkedSoFar + (Number.isFinite(provisional) ? provisional : 0)
+        ? p.yearsWorkedSoFar + (Number.isFinite(provisional) ? provisional : 0) * p.estimatedServicePerYear
         : 0;
       p.statePensionEarlyYears = earlyAllowedFor(serviceAtFi);
       p.statePensionYear = p.statePensionStandardYear - p.statePensionEarlyYears;
@@ -1013,7 +1025,7 @@ export function simulate(input) {
         yearsToFi)
       : p.pensionIncome;
     p.yearsWorkedAtFi = p.serviceYearsKnown
-      ? p.yearsWorkedSoFar + (Number.isFinite(yearsToFi) ? yearsToFi : 0)
+      ? p.yearsWorkedSoFar + (Number.isFinite(yearsToFi) ? yearsToFi : 0) * p.estimatedServicePerYear
       : null;
     p.statePensionGross = 12 * stateMonthlyFor(
       p, Number.isFinite(yearsToFi) ? yearsToFi : 0) *

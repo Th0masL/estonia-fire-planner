@@ -143,7 +143,7 @@ function renderPeople() {
         <label>Pillar III contributions <span class="u">€/yr</span><input type="number" min="0" step="500" data-i="${i}" data-k="pillar3Annual" value="${p.pillar3Annual}"></label>
         <label>First Pillar III contribution <span class="u">year; access and tax rules depend on it</span><input type="number" min="1998" max="${RATES.year}" step="1" data-i="${i}" data-k="pillar3FirstContributionYear" value="${p.pillar3FirstContributionYear ?? ''}"></label>
         <label ${state.assumptions.pensionPolicy === 'all' ? '' : 'hidden'}>Pension units earned ${infoBtn('pension-units')} <span class="u">from the state's own record</span><input type="number" min="0" max="60" step="0.1" data-i="${i}" data-k="pillar1Units" value="${p.pillar1Units ?? ''}"></label>
-        <label ${state.assumptions.pensionPolicy === 'all' ? '' : 'hidden'}>Estonian pension service <span class="u">years; required for eligibility</span><input type="number" min="0" max="80" step="0.1" data-i="${i}" data-k="yearsWorkedEstonia" value="${p.yearsWorkedEstonia ?? ''}"></label>
+        <label ${state.assumptions.pensionPolicy === 'all' ? '' : 'hidden'}>Estonian pension service <span class="u">qualifying years already accrued, not calendar years worked</span><input type="number" min="0" max="80" step="0.1" data-i="${i}" data-k="yearsWorkedEstonia" value="${p.yearsWorkedEstonia ?? ''}"></label>
         <label ${state.assumptions.pensionPolicy === 'all' ? '' : 'hidden'}>Other EU/EEA service <span class="u">years; official pro-rata result still required</span><input type="number" min="0" max="80" step="0.1" data-i="${i}" data-k="yearsWorkedEuEea" value="${p.yearsWorkedEuEea ?? 0}"></label>
         <label ${state.assumptions.pensionPolicy === 'all' ? '' : 'hidden'}><input type="checkbox" data-i="${i}" data-k="nationalPensionEligible" ${p.nationalPensionEligible ? 'checked' : ''}> National-pension residence/foreign-pension conditions confirmed</label>
         <label ${state.assumptions.pensionPolicy === 'ignore' || state.assumptions.pillarPayout !== 'annuity' ? 'hidden' : ''}>Current insurer annuity quote <span class="u">€/mo; required to count it</span><input type="number" min="0" step="10" data-i="${i}" data-k="annuityMonthlyQuote" value="${p.annuityMonthlyQuote ?? ''}"></label>
@@ -151,6 +151,11 @@ function renderPeople() {
       </div>
       ${infoNote('pension-units', `Your accrued Pillar I coefficient — what the state has actually
         recorded, rather than anything estimated from a career length.
+        <br><br><strong>Future service is a salary-based estimate.</strong> A year below the
+        annual minimum wage adds a proportional qualifying year; zero gross salary adds none,
+        even with a net-income override. Employer minimum social-tax top-ups, state-paid
+        contributions and special qualifying periods are not inferred. Check your official
+        service record; this estimate is not an eligibility determination.
         <br><br><strong>Where to find it.</strong> Sign in to Sotsiaalkindlustusamet's self-service
         at <a href="https://iseteenindus.sotsiaalkindlustusamet.ee/" target="_blank"
         rel="noopener">iseteenindus.sotsiaalkindlustusamet.ee</a> with an ID-card, Mobile-ID or

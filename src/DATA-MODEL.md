@@ -203,6 +203,18 @@ Enforced by `test/invariants.mjs` across generated households:
 
 ## Changing the shape
 
+Future qualifying pension service is estimated separately from pension units:
+`elapsed working years × min(1, gross annual salary / annual minimum wage)`.
+Entered accrued service remains authoritative; missing service remains unknown.
+Net-income overrides do not establish contributions. This assumes pension
+social tax on the entered salary, not employer minimum top-ups or state-paid
+and special qualifying periods. Such cases need official records; the model
+does not determine legal entitlement. The current minimum-wage assumption is
+held constant in real terms. This does not fix healthcare eligibility or the
+early-pension solver's final-date revalidation.
+Source: [SKA pension qualifying period](https://www.sotsiaalkindlustusamet.ee/en/pension-and-benefits/applying-pension/pension-qualifying-period),
+checked 19 September 2026.
+
 Cost basis and unused contribution allowance are independent of market value;
 losses must not reduce either on load. `investmentAccountContributions` keeps
 its existing serialized key and numeric value, but its label now explicitly

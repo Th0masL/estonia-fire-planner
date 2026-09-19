@@ -880,6 +880,15 @@ function statePensionNet(grossAnnual, { pensionAge = true } = {}) {
            net: grossAnnual - taxable * RATES.incomeTax };
 }
 
+/** Salary-based service estimate, not a reconstruction of social-tax records.
+ * Assumes contributions on entered salary only; no employer minimum top-up,
+ * state-paid contributions, or special qualifying periods are inferred.
+ * Pillar II membership affects pension units, not qualifying service.
+ */
+function pensionServicePerYear(grossAnnual) {
+  return clamp(grossAnnual / RATES.minimumAnnualWageForPension, 0, 1);
+}
+
 /** Coefficient earned per year of work at a given wage, in or out of Pillar II. */
 function pillar1UnitsPerYear(grossAnnual, inPillar2 = true) {
   const p1 = RATES.pillar1;
@@ -915,8 +924,9 @@ function pillar1Monthly({
   const perYear = pillar1UnitsPerYear(grossAnnual, inPillar2);
   const future = Math.max(0, futureYears);
   const units = Math.max(0, unitsSoFar) + perYear * future;
-  // Service is counted in years worked, not in units earned.
-  const service = serviceYears == null ? future : Math.max(0, serviceYears);
+  // Qualifying service and pension units are separate contribution measures.
+  const service = serviceYears == null
+    ? future * pensionServicePerYear(grossAnnual) : Math.max(0, serviceYears);
   if (service < p1.minServiceYears) return 0;
   return p1.baseMonthly + p1.yearRateMonthly * units;
 }
@@ -1015,6 +1025,7 @@ function simulate(input) {
     const gross = (p.income.grossMonthly || 0) * 12;
     const derived = netFromGross(gross, { pillar2Rate: p.pillar2Rate ?? 0.02 });
     p.grossAnnual = gross;
+    p.estimatedServicePerYear = pensionServicePerYear(gross);
     // Trust an explicitly supplied net figure over the model.
     p.netAnnual = p.income.netMonthly != null ? p.income.netMonthly * 12 : derived.net;
     p.tax = derived;
@@ -1341,7 +1352,8 @@ function simulate(input) {
   // cannot be reconstructed here, so such cases remain deliberately uncounted.
   const stateMonthlyFor = (p, futureYears) => {
     if (!p.pillar1UnitsKnown || !p.serviceYearsKnown) return 0;
-    const estonianService = p.yearsWorkedSoFar + Math.max(0, futureYears);
+    const estonianService = p.yearsWorkedSoFar +
+      Math.max(0, futureYears) * p.estimatedServicePerYear;
     if (estonianService >= RATES.pillar1.minServiceYears) {
       return pillar1Monthly({
         grossAnnual: p.grossAnnual,
@@ -1531,7 +1543,7 @@ function simulate(input) {
     const provisional = solveFor(perpetualMode);
     for (const p of people) {
       const serviceAtFi = p.serviceYearsKnown
-        ? p.yearsWorkedSoFar + (Number.isFinite(provisional) ? provisional : 0)
+        ? p.yearsWorkedSoFar + (Number.isFinite(provisional) ? provisional : 0) * p.estimatedServicePerYear
         : 0;
       p.statePensionEarlyYears = earlyAllowedFor(serviceAtFi);
       p.statePensionYear = p.statePensionStandardYear - p.statePensionEarlyYears;
@@ -1771,7 +1783,7 @@ function simulate(input) {
         yearsToFi)
       : p.pensionIncome;
     p.yearsWorkedAtFi = p.serviceYearsKnown
-      ? p.yearsWorkedSoFar + (Number.isFinite(yearsToFi) ? yearsToFi : 0)
+      ? p.yearsWorkedSoFar + (Number.isFinite(yearsToFi) ? yearsToFi : 0) * p.estimatedServicePerYear
       : null;
     p.statePensionGross = 12 * stateMonthlyFor(
       p, Number.isFinite(yearsToFi) ? yearsToFi : 0) *
@@ -2868,7 +2880,7 @@ function renderPeople() {
         <label>Pillar III contributions <span class="u">€/yr</span><input type="number" min="0" step="500" data-i="${i}" data-k="pillar3Annual" value="${p.pillar3Annual}"></label>
         <label>First Pillar III contribution <span class="u">year; access and tax rules depend on it</span><input type="number" min="1998" max="${RATES.year}" step="1" data-i="${i}" data-k="pillar3FirstContributionYear" value="${p.pillar3FirstContributionYear ?? ''}"></label>
         <label ${state.assumptions.pensionPolicy === 'all' ? '' : 'hidden'}>Pension units earned ${infoBtn('pension-units')} <span class="u">from the state's own record</span><input type="number" min="0" max="60" step="0.1" data-i="${i}" data-k="pillar1Units" value="${p.pillar1Units ?? ''}"></label>
-        <label ${state.assumptions.pensionPolicy === 'all' ? '' : 'hidden'}>Estonian pension service <span class="u">years; required for eligibility</span><input type="number" min="0" max="80" step="0.1" data-i="${i}" data-k="yearsWorkedEstonia" value="${p.yearsWorkedEstonia ?? ''}"></label>
+        <label ${state.assumptions.pensionPolicy === 'all' ? '' : 'hidden'}>Estonian pension service <span class="u">qualifying years already accrued, not calendar years worked</span><input type="number" min="0" max="80" step="0.1" data-i="${i}" data-k="yearsWorkedEstonia" value="${p.yearsWorkedEstonia ?? ''}"></label>
         <label ${state.assumptions.pensionPolicy === 'all' ? '' : 'hidden'}>Other EU/EEA service <span class="u">years; official pro-rata result still required</span><input type="number" min="0" max="80" step="0.1" data-i="${i}" data-k="yearsWorkedEuEea" value="${p.yearsWorkedEuEea ?? 0}"></label>
         <label ${state.assumptions.pensionPolicy === 'all' ? '' : 'hidden'}><input type="checkbox" data-i="${i}" data-k="nationalPensionEligible" ${p.nationalPensionEligible ? 'checked' : ''}> National-pension residence/foreign-pension conditions confirmed</label>
         <label ${state.assumptions.pensionPolicy === 'ignore' || state.assumptions.pillarPayout !== 'annuity' ? 'hidden' : ''}>Current insurer annuity quote <span class="u">€/mo; required to count it</span><input type="number" min="0" step="10" data-i="${i}" data-k="annuityMonthlyQuote" value="${p.annuityMonthlyQuote ?? ''}"></label>
@@ -2876,6 +2888,11 @@ function renderPeople() {
       </div>
       ${infoNote('pension-units', `Your accrued Pillar I coefficient — what the state has actually
         recorded, rather than anything estimated from a career length.
+        <br><br><strong>Future service is a salary-based estimate.</strong> A year below the
+        annual minimum wage adds a proportional qualifying year; zero gross salary adds none,
+        even with a net-income override. Employer minimum social-tax top-ups, state-paid
+        contributions and special qualifying periods are not inferred. Check your official
+        service record; this estimate is not an eligibility determination.
         <br><br><strong>Where to find it.</strong> Sign in to Sotsiaalkindlustusamet's self-service
         at <a href="https://iseteenindus.sotsiaalkindlustusamet.ee/" target="_blank"
         rel="noopener">iseteenindus.sotsiaalkindlustusamet.ee</a> with an ID-card, Mobile-ID or
