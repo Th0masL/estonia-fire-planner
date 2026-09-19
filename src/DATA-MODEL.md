@@ -403,14 +403,16 @@ not protected during accumulation. An unfunded expense makes later stop dates
 infeasible even if subsequent savings could replenish assets; no borrowing is
 assumed. The depleting flag includes the surplus after mortgage
 payoff; it no longer gates FI calculations. The UI likewise displays
-funded plans without requiring positive income or savings. The date search's
-general monotonicity assumption remains a separate limitation under review.
-If the last candidate date fails, the solver now probes earlier dates quarterly
-and at purchase, loan-payoff and pension boundaries, then bisects the first
-sampled failing/passing bracket. This catches plans where working to the end
-exhausts assets but earlier retirement is pension-funded. It is not an exhaustive
-global search: narrower feasible windows can be missed, and the original
-bisection path when the endpoint passes still assumes monotonic feasibility.
+funded plans without requiring positive income or savings. The date search
+always probes chronologically at quarterly dates and exact purchase, loan-payoff,
+pension and healthcare boundaries, then bisects the first sampled failing/passing
+bracket. It does not discard earlier windows merely because the endpoint passes
+or fails. This catches plans where working to the end exhausts assets but earlier
+retirement is pension-funded, and sampled disjoint windows before a funded endpoint.
+This is not an exhaustive global search: windows between samples can be missed;
+local bisection retains a tested funded date but cannot prove it is the earliest
+crossing within that bracket. Extra numerical precision is not a guarantee of
+equally precise real-world retirement timing.
 An added buffer is rechecked; later retirement is not automatically safer.
 CoastFIRE stops positive accessible-portfolio saving but continues to fund any
 working-year deficits cash-first. Configured income and pension contributions

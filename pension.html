@@ -560,6 +560,28 @@ const annuityFactor = (r, n) => (r === 0 ? n : ((1 + r) ** n - 1) / r);
 const overlapYears = (from, to, activeFrom = -Infinity, activeTo = Infinity) =>
   Math.max(0, Math.min(to, activeTo) - Math.max(from, activeFrom));
 
+// Chronological quarterly/event search: late feasibility need not imply global
+// monotonicity. Narrow unsampled windows can still be missed. Local bisection
+// retains a tested feasible upper bound, but does not prove a unique crossing.
+function firstFundedDate(ok, horizon, events = []) {
+  if (!Number.isFinite(horizon) || horizon <= 0) return Infinity;
+  if (ok(0)) return 0;
+  const checkpoints = new Set([horizon, ...events]);
+  for (let y = .25; y < horizon; y += .25) checkpoints.add(y);
+  let lo = 0;
+  for (const y of [...checkpoints].filter((y) => Number.isFinite(y) && y > 0 && y <= horizon)
+    .sort((a, b) => a - b)) {
+    if (!ok(y)) { lo = y; continue; }
+    let hi = y;
+    for (let i = 0; i < 50; i++) {
+      const mid = (lo + hi) / 2;
+      if (ok(mid)) hi = mid; else lo = mid;
+    }
+    return hi;
+  }
+  return Infinity;
+}
+
 // Relative to the base projection, apply the retirement-opening crash and the
 // same stressed return periods to pension units still exposed at valuationDate.
 function pensionStressFactor(fiYear, valuationDate, normalReturn, stress = null) {
@@ -1442,39 +1464,16 @@ function simulate(input) {
     const ok = (y) => (!purchase || y >= houseYears) &&
       houseFundingShortfall <= 0 &&
       lastsFrom(project(totalStart, annualSaving, y), y, perpetualFloor);
-    if (ok(0)) return 0;
     const horizon = Math.min(100, planEndYear - currentYear - 1e-6);
     if (horizon <= 0 || houseFundingShortfall > 0) return Infinity;
-    let lo = 0, hi = horizon;
-    if (!ok(horizon)) {
-      // Working until the horizon can exhaust accessible assets even though
-      // retiring earlier unlocks enough pension income. A failed endpoint is
-      // not proof that every earlier stop date fails. Probe quarterly, plus
-      // exact purchase/pension boundaries, before rejecting the plan.
-      // This bounded fallback does not prove global monotonicity or detect
-      // every feasible window narrower than its sampling interval.
-      const checkpoints = new Set([horizon, houseYears,
-        mortgageEndYear - currentYear]);
-      for (const p of people) {
-        for (const date of [p.pillar2DrawYear, p.pillar3DrawYear,
-          p.statePensionYear, p.pillarIncomeEndYear]) {
-          if (date != null) checkpoints.add(date - currentYear);
-        }
+    const events = [houseYears, mortgageEndYear - currentYear];
+    for (const p of people) {
+      for (const date of [p.pillar2DrawYear, p.pillar3DrawYear,
+        p.statePensionYear, p.pillarIncomeEndYear, healthEndFor(p)]) {
+        if (date != null) events.push(date - currentYear);
       }
-      for (let y = .25; y < horizon; y += .25) checkpoints.add(y);
-      hi = Infinity;
-      for (const y of [...checkpoints].filter((y) => y > 0 && y <= horizon)
-        .sort((a, b) => a - b)) {
-        if (ok(y)) { hi = y; break; }
-        lo = y;
-      }
-      if (!Number.isFinite(hi)) return Infinity;
     }
-    for (let i = 0; i < 50; i++) {
-      const mid = (lo + hi) / 2;
-      if (ok(mid)) hi = mid; else lo = mid;
-    }
-    return hi;
+    return firstFundedDate(ok, horizon, events);
   };
 
   const perpetualMode = (a.portfolioEnd || 'perpetual') === 'perpetual';

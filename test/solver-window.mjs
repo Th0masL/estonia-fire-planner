@@ -1,6 +1,21 @@
 import assert from 'node:assert/strict';
 import { blankState } from '../src/state.js';
-import { simulate } from '../src/calc.js';
+import { simulate, firstFundedDate } from '../src/calc.js';
+
+// A globally bisected passing endpoint would land at year 8, missing year 1.
+const islands = (y) => (y >= 1 && y <= 2) || y >= 8;
+assert.equal(firstFundedDate(islands, 10), 1);
+assert.equal(firstFundedDate(islands, 7), 1);
+assert.equal(firstFundedDate(() => true, 10), 0);
+assert.equal(firstFundedDate(() => false, 10), Infinity);
+assert.equal(firstFundedDate(() => true, 0), Infinity);
+assert.equal(firstFundedDate((y) => y >= .1, .1), .1);
+// Exact events recover windows too narrow for the quarterly grid. Sort/filter
+// invalid, duplicate, and out-of-horizon dates without testing outside bounds.
+const narrow = (y) => { assert.ok(y >= 0 && y <= 10); return y >= 1.1 && y <= 1.11; };
+assert.equal(firstFundedDate(narrow, 10, [Infinity, 11, NaN, -1, 1.1, 1.1]), 1.1);
+// Explicit limitation: an unmarked window between samples is not guaranteed.
+assert.equal(firstFundedDate(narrow, 10), Infinity);
 
 const plan = blankState();
 plan.currentYear = 2026;
