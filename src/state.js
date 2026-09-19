@@ -51,6 +51,7 @@ const baseState = (over = {}) => ({
   assumptions: {
     realReturn: DEFAULTS.realReturn,
     cashRealReturn: DEFAULTS.cashRealReturn,
+    retirementCashReserve: DEFAULTS.retirementCashReserve,
     swr: DEFAULTS.swr,
     spendingGrowth: DEFAULTS.spendingGrowth,
     inflation: DEFAULTS.inflation,
@@ -252,6 +253,7 @@ export function sanitise(s) {
   const a = isRecord(s.assumptions) ? s.assumptions : {};
   a.realReturn = bounded(a.realReturn, 0, 0.20, DEFAULTS.realReturn);
   a.cashRealReturn = bounded(a.cashRealReturn, -0.20, 0.20, DEFAULTS.cashRealReturn);
+  a.retirementCashReserve = bounded(a.retirementCashReserve, 0, 1e9, DEFAULTS.retirementCashReserve);
   a.swr = bounded(a.swr, 0.005, 0.10, DEFAULTS.swr);
   a.spendingGrowth = bounded(a.spendingGrowth, 0, 0.05, DEFAULTS.spendingGrowth);
   a.inflation = bounded(a.inflation, 0, 0.15, DEFAULTS.inflation);

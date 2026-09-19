@@ -148,6 +148,7 @@
       <div class="grid">
         <label>Real return <span class="u">%</span><input type="number" id="aReturn" min="0" max="12" step="0.1"></label>
         <label>Cash real return <span class="u">%</span><input type="number" id="aCashReturn" min="-20" max="12" step="0.1"></label>
+        <label>Emergency cash reserve after FIRE <span class="u">€ in today's money</span><input type="number" id="aRetirementReserve" min="0" max="1000000000" step="1000"></label>
         <label>Withdrawal rate <span class="u">%</span><input type="number" id="aSwr" min="2" max="6" step="0.05"></label>
         <label>Inflation <span class="u">%/yr</span><input type="number" id="aInflation" min="0" max="15" step="0.1"></label>
       </div>
@@ -162,6 +163,13 @@
           <button type="button" class="explain" data-info="emergency-reserve" aria-expanded="false" aria-label="What this means">i</button>
           <input type="number" id="aEmergencyMonths" min="0" max="36" step="1"></label>
       </div>
+      <p class="hint">The after-FIRE reserve stays in cash and is never spent on ordinary expenses.
+        Cash above it is spent first, then investments. Investments replenish the reserve if its
+        real value falls. The house-purchase cushion can fund the same reserve; it is not counted
+        twice. Emergency withdrawals are not simulated. Enter 0 to disable protection.</p>
+      <p class="hint">Model update: cash now retains its cash return after FIRE and house completion.
+        Older plans may produce different dates. Market stress affects accessible investments;
+        cash keeps its configured return and pension projections are unchanged in those tests.</p>
       <p class="explain-body" data-info-body="emergency-reserve" hidden>The number of months of
         <strong>post-purchase household spending</strong> kept available after paying the deposit,
         transaction costs, and moving or furnishing costs. The simulator adds this cash cushion to

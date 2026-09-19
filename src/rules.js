@@ -375,9 +375,9 @@ export function actionPlan(sim, input) {
       title: 'No invested assets entered',
       value: eur(totalLiquid) + ' liquid',
       detail:
-        `Everything entered as accessible is cash, yet the projection uses the portfolio real ` +
-        `return. Either add the actual declared investment/brokerage balances or lower the return ` +
-        `assumption to one supportable by the cash products you use.`,
+        `Existing cash keeps the entered cash real return, including after FIRE. Future ` +
+        `investable savings use the investment return. Check that both assumptions reflect ` +
+        `your plan, and enter any actual investment or brokerage balances separately.`,
     });
   }
 

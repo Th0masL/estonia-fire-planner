@@ -105,7 +105,11 @@ function survivesIndependently(input, r) {
   const fiYear = cy + y;
   const end = cy + Math.max(...r.persons.map((p) => a.planToAge - p.ageNow));
   const fund = a.pillarPayout === 'fundPension';
-  let pf = r.fi.number;
+  const first = r.schedule[0];
+  if (!first) return false;
+  let cash = first.openingCash * r.fi.number / first.opening;
+  let investments = r.fi.number - cash;
+  const reserve = a.retirementCashReserve || 0;
   for (let year = Math.floor(fiYear); year < end; year++) {
     const duration = year + 1 - Math.max(year, fiYear);
     let income = 0;
@@ -139,9 +143,20 @@ function survivesIndependently(input, r) {
     }
     const need = (r.spending.perpetual + health) * duration *
       (1 + (a.spendingGrowth || 0)) ** Math.max(0, year - fiYear);
-    pf -= Math.max(0, need - income);
-    if (pf < -1) return false;
-    pf *= (1 + a.realReturn) ** duration;
+    const refill = Math.max(0, reserve - cash);
+    cash += refill;
+    investments -= refill;
+    const draw = Math.max(0, need - income);
+    const cashDraw = Math.min(draw, Math.max(0, cash - reserve));
+    cash -= cashDraw;
+    investments -= draw - cashDraw;
+    if (investments < -1) return false;
+    cash *= (1 + (a.cashRealReturn ?? 0)) ** duration;
+    investments *= (1 + a.realReturn) ** duration;
+    const closingRefill = Math.max(0, reserve - cash);
+    cash += closingRefill;
+    investments -= closingRefill;
+    if (investments < -1) return false;
   }
   return true;
 }
@@ -360,8 +375,12 @@ for (const [i, input] of CASES.entries()) {
       ok(l.pensionIncomeFinal <= l.pensionIncome + 0.01,
          `${tag}: ${l.name} a quoted nominal annuity never gains real value`);
     }
-    ok(survivesIndependently({ ...input, assumptions: { ...input.assumptions, pillarPayout: 'fundPension' } }, fund),
-       `${tag}: the plan survives the fund pension running out`);
+    if (Number.isFinite(fund.timeline.yearsToFi)) {
+      ok(survivesIndependently({ ...input, assumptions: { ...input.assumptions, pillarPayout: 'fundPension' } }, fund),
+         `${tag}: the plan survives the fund pension running out`);
+    } else {
+      ok(fund.schedule.length === 0, `${tag}: no retirement schedule is claimed for an infeasible plan`);
+    }
   }
 
   // 15. Pillar I accrues per year worked, so a shorter career must buy less.
@@ -408,7 +427,9 @@ for (const [i, input] of CASES.entries()) {
             `${tag}: ${row.year} the portfolio covers exactly the shortfall`);
       // And the balance must roll forward the way it claims to.
       close(row.opening, balance, 1, `${tag}: ${row.year} opening balance follows the previous close`);
-      close(row.closing, (row.opening - row.fromPortfolio) *
+      close(row.closing, (row.openingCash - row.fromCash) *
+            (1 + (asm.cashRealReturn ?? 0)) ** row.investedFor +
+            (row.openingInvestments - row.fromInvestments) *
             (1 + asm.realReturn) ** row.investedFor, 1,
             `${tag}: ${row.year} closing balance is the arithmetic it states`);
       ok(row.closing >= -1, `${tag}: ${row.year} the portfolio never goes negative`);

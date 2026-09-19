@@ -267,6 +267,7 @@ function formToState() {
   };
   state.assumptions.realReturn = field('aReturn', DEFAULTS.realReturn * 100) / 100;
   state.assumptions.cashRealReturn = field('aCashReturn', DEFAULTS.cashRealReturn * 100) / 100;
+  state.assumptions.retirementCashReserve = Math.max(0, Math.min(1e9, field('aRetirementReserve', 0)));
   state.assumptions.swr = field('aSwr', DEFAULTS.swr * 100) / 100;
   state.assumptions.planToAge = field('aPlanToAge', DEFAULTS.planToAge);
   state.assumptions.spendingGrowth = field('aSpendGrowth', 0) / 100;
@@ -320,6 +321,7 @@ function stateToForm() {
   $('excludeCrypto').checked = state.excludeCrypto !== false;
   $('aReturn').value = (state.assumptions.realReturn * 100).toFixed(1);
   $('aCashReturn').value = +((state.assumptions.cashRealReturn ?? DEFAULTS.cashRealReturn) * 100).toFixed(2);
+  $('aRetirementReserve').value = state.assumptions.retirementCashReserve ?? 0;
   $('aSwr').value = (state.assumptions.swr * 100).toFixed(2);
   $('aPlanToAge').value = state.assumptions.planToAge ?? DEFAULTS.planToAge;
   $('aSpendGrowth').value = +((state.assumptions.spendingGrowth ?? 0) * 100).toFixed(2);
@@ -426,7 +428,9 @@ function chart(sim) {
       marked; those are the dates the whole plan turns on. The columns are <em>sources</em> and
       <em>Spending</em> is what they have to cover, so they need not add up to it — in a year where
       the pension alone covers everything the portfolio contributes nothing, and anything beyond
-      that shows as <em>Spare</em>. The final balance should land near zero:
+      that shows as <em>Spare</em>. Cash and investments earn their separate returns.
+      The cash column includes the protected reserve, which cannot fund ordinary spending.
+      Balances are totals, not monthly amounts. The final balance includes any protected reserve:
       ${sim.fi.bridging
         ? 'a bridged plan is meant to be spent, not preserved.'
         : 'this plan is not meant to run down at all, so it should still be growing at the end.'}`)}
@@ -443,7 +447,7 @@ function chart(sim) {
           <th>Portfolio</th>
           ${sim.fi.countsPots ? '<th>Pillars II &amp; III</th>' : ''}
           ${sim.fi.policy === 'all' ? '<th>State pension</th>' : ''}
-          <th>Spending</th>${spare ? '<th>Spare</th>' : ''}<th>Portfolio left</th>
+          <th>Spending</th>${spare ? '<th>Spare</th>' : ''}<th>Cash left</th><th>Investments left</th><th>Portfolio left</th>
         </tr>
       </thead>
       <tbody>
@@ -461,7 +465,7 @@ function chart(sim) {
           ${sim.fi.policy === 'all' ? `<td>${mo(row.fromState)}</td>` : ''}
           <td>${eur(row.need / 12)}</td>
           ${spare ? `<td class="${row.unusedPension > 0.5 ? 'spare' : ''}">${mo(row.unusedPension)}</td>` : ''}
-          <td>${eur(row.closing)}</td>
+          <td>${eur(row.cash)}</td><td>${eur(row.investments)}</td><td>${eur(row.closing)}</td>
         </tr>`;
       }).join('')}
       </tbody>
@@ -710,6 +714,8 @@ function render() {
     <h3>The plan</h3>
     <table class="mini">
       <tr class="thead"><th>Every year, once you stop</th><td></td></tr>
+      <tr><th>Protected emergency cash after FIRE <span class="muted">included in the total target, unavailable for ordinary spending</span></th><td>${eur(sim.fi.retirementCashReserve)}</td></tr>
+      <tr><th>Spendable portion of the FIRE target <span class="muted">total target minus protected cash</span></th><td>${eur(Math.max(0, sim.fi.number - sim.fi.retirementCashReserve))}</td></tr>
       <tr><th>Spending the plan must cover, permanently ${infoBtn('perp-spend')}${sim.fi.spendingGrowth ? ` <span class="muted">rising ${pct1(sim.fi.spendingGrowth)}/yr in real terms</span>` : ''}</th><td>${eur(sim.fi.perpetualSpending)}/yr</td></tr>
       ${infoRow('perp-spend', `The recurring baseline after dated liabilities have ended: the
         mortgage paid off and dependent costs ended. Health premiums remain in this baseline
@@ -823,9 +829,9 @@ function render() {
       take part in the recovery, which is why the opening years decide everything and why a few
       extra months of work are worth far more than their face value.`)}
     <table class="mini">
-      <tr><th>Years of zero real return it survives <span class="muted">right at the start</span></th><td><strong>${sim.fi.resilience.flatAll ? 'the whole plan' : sim.fi.resilience.flatYears}</strong></td></tr>
-      <tr><th>Years of −10% a year it survives</th><td><strong>${sim.fi.resilience.bearAll ? 'the whole plan' : sim.fi.resilience.bearYears}</strong></td></tr>
-      <tr><th>Single crash on day one it recovers from</th><td><strong>${pct(sim.fi.resilience.crash)}</strong></td></tr>
+      <tr><th>Years of zero investment real return it survives <span class="muted">right at the start</span></th><td><strong>${sim.fi.resilience.flatAll ? 'the whole plan' : sim.fi.resilience.flatYears}</strong></td></tr>
+      <tr><th>Years of −10% investment return it survives</th><td><strong>${sim.fi.resilience.bearAll ? 'the whole plan' : sim.fi.resilience.bearYears}</strong></td></tr>
+      <tr><th>Single investment crash on day one it recovers from</th><td><strong>${pct(sim.fi.resilience.crash)}</strong></td></tr>
       ${sim.fi.bufferYears ? `<tr><th>Bought by working on <span class="muted">past the earliest date of ${(sim.currentYear + sim.fi.yearsSolved).toFixed(0)}</span></th><td>${sim.fi.bufferYears} ${sim.fi.bufferYears === 1 ? 'year' : 'years'} · ${eur(sim.fi.atFiDate - (sim.fi.number))} above the bar</td></tr>` : ''}
     </table>
     <p class="hint">${sim.fi.resilience.flatYears === 0 && !sim.fi.bufferYears
@@ -837,10 +843,10 @@ function render() {
       : `The two rows move differently. Tolerance in <em>years</em> accelerates — each extra year of
          work buys more of it than the last, because the surplus above the bar compounds. The
          <em>crash</em> figure saturates, since it is a share of a portfolio that is itself growing.
-         <br><br>What buys margin is the money, not where it sits: holding the buffer in cash rather
-         than invested moves the crash figure by a point or two, while a year of work moves it many
-         times that. Cash earns its place for a different reason — it makes it possible not to sell
-         — and about a year of spending is enough for that.`}</p>` : ''}
+         <br><br>These shocks apply only to accessible investments. Cash keeps its configured
+         return, and pension projections are held unchanged. The protected reserve is not
+         available for ordinary withdrawals, even in these scenarios. Results are deterministic
+         scenarios, not probabilities of success.`}</p>` : ''}
 
     ${sim.fi.haircutBuffer != null ? `
     <h3>What the caution buys ${infoBtn('buffer')}</h3>

@@ -15,7 +15,7 @@
 set -e
 cd "$(dirname "$0")/.."
 python3 build.py > /dev/null
-for suite in verify crosscheck audit-fixes pillar3 pension-service health-coverage monotonic invariants roundtrip output; do
+for suite in verify crosscheck audit-fixes pillar3 pension-service health-coverage cash-reserve monotonic invariants roundtrip output; do
   node "test/$suite.mjs"
 done
 echo "all suites passed"

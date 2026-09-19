@@ -195,3 +195,26 @@ test('low-salary pension assumptions are visibly flagged and names remain litera
   await page.locator('[data-i="0"][data-k="income.grossMonthly"]').fill('4000');
   await expect(page.locator('#plan')).not.toContainText('verify pension contribution assumptions');
 });
+
+test('protected retirement reserve persists and is shown separately from spendable assets', async ({ page }, testInfo) => {
+  const plan = makePlan('Person1');
+  plan.persons = [plan.persons[0]];
+  Object.assign(plan.persons[0], { birthYear: 1971, assets: { cash: 800000 }, healthCoveredAfterFi: true, pillar3Annual: 0 });
+  plan.currentYear = 2026;
+  plan.household.property = null;
+  plan.household.spending = { housing: 0, childCosts: 0, other: 2000, buffer: 0 };
+  Object.assign(plan.assumptions, { pensionPolicy: 'ignore', portfolioEnd: 'drawdown',
+    planToAge: 75, bufferYears: 0, cashRealReturn: 0, realReturn: .05 });
+  await page.goto('/simulator.html' + fragment(plan));
+  await page.locator('#aRetirementReserve').fill('20000');
+  await expect(page.locator('tr').filter({ hasText: 'Protected emergency cash after FIRE' })).toContainText('€20,000');
+  await expect(page.locator('tr').filter({ hasText: 'Spendable portion of the FIRE target' })).toContainText('€480,000');
+  await page.reload();
+  await expect(page.locator('#aRetirementReserve')).toHaveValue('20000');
+  await page.locator('#share').click();
+  const shared = decodeState(new URL(await page.locator('#shareUrl').inputValue()).hash.slice(3));
+  expect(shared.assumptions.retirementCashReserve).toBe(20000);
+  await page.locator('#aRetirementReserve').scrollIntoViewIfNeeded();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+  await page.screenshot({ path: testInfo.outputPath('reserve.png') });
+});

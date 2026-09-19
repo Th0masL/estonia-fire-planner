@@ -259,6 +259,7 @@ export const RATES = {
 export const DEFAULTS = {
   realReturn: 0.05,
   cashRealReturn: 0,
+  retirementCashReserve: 0,
   swr: 0.035,
   // Real spending growth after FI: how fast the cost of the same life rises
   // ABOVE inflation. Zero means today's spending stays valid in today's money

@@ -494,6 +494,7 @@ const RATES = {
 const DEFAULTS = {
   realReturn: 0.05,
   cashRealReturn: 0,
+  retirementCashReserve: 0,
   swr: 0.035,
   // Real spending growth after FI: how fast the cost of the same life rises
   // ABOVE inflation. Zero means today's spending stays valid in today's money
@@ -563,6 +564,55 @@ const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 const annuityFactor = (r, n) => (r === 0 ? n : ((1 + r) ** n - 1) / r);
 const overlapYears = (from, to, activeFrom = -Infinity, activeTo = Infinity) =>
   Math.max(0, Math.min(to, activeTo) - Math.max(from, activeFrom));
+
+const portfolioTotal = (balances) => balances.reduce((s, b) => s + b.cash + b.invested, 0);
+const bucketTotal = (balances, key) => balances.reduce((s, b) => s + b[key], 0);
+const takeBucket = (balances, key, amount) => {
+  const total = bucketTotal(balances, key);
+  const taken = Math.min(Math.max(0, amount), Math.max(0, total));
+  if (total > 0) for (const b of balances) b[key] -= taken * b[key] / total;
+  return taken;
+};
+// Reclassify only the shortage, without changing ownership or total assets.
+const reserveCash = (balances, reserve) => {
+  const missing = Math.max(0, reserve - bucketTotal(balances, 'cash'));
+  const invested = bucketTotal(balances, 'invested');
+  const transfer = Math.min(missing, Math.max(0, invested));
+  if (invested > 0) for (const b of balances) {
+    const share = transfer * b.invested / invested;
+    b.invested -= share;
+    b.cash += share;
+  }
+  return missing - transfer;
+};
+const spendPortfolio = (balances, amount, reserve = 0) => {
+  const cash = Math.min(Math.max(0, amount), Math.max(0, bucketTotal(balances, 'cash') - reserve));
+  takeBucket(balances, 'cash', cash);
+  const invested = takeBucket(balances, 'invested', amount - cash);
+  return { cash, invested, shortfall: Math.max(0, amount - cash - invested) };
+};
+
+/** One retirement period. Reserve is in real euros; negative cash returns
+ * require replenishment from investments, never use of protected principal.
+ * This remains an after-tax-reserve approximation, not transaction-level tax.
+ */
+function retirementStep(opening, withdrawal, duration, cashReturn, investmentReturn, reserve = 0) {
+  const balances = opening.map((b) => ({ ...b }));
+  let shortfall = reserveCash(balances, reserve);
+  const spent = spendPortfolio(balances, withdrawal, reserve);
+  shortfall += spent.shortfall;
+  const cashBeforeReturn = bucketTotal(balances, 'cash');
+  const investedBeforeReturn = bucketTotal(balances, 'invested');
+  for (const b of balances) {
+    b.cash *= (1 + cashReturn) ** duration;
+    b.invested *= (1 + investmentReturn) ** duration;
+  }
+  const cashGrowth = bucketTotal(balances, 'cash') - cashBeforeReturn;
+  const investmentGrowth = bucketTotal(balances, 'invested') - investedBeforeReturn;
+  shortfall += reserveCash(balances, reserve);
+  return { balances, shortfall, fromCash: spent.cash, fromInvestments: spent.invested,
+    cashGrowth, investmentGrowth };
+}
 
 // ---------------------------------------------------------------- income tax
 
@@ -1041,48 +1091,47 @@ function simulate(input) {
     : totalStart;
   const houseFundingShortfall = purchase
     ? Math.max(0, cashForHouse + emergencyFund - projectedAtHouse) : 0;
-  const project = (start, save, years) => {
-    // Custom starts are used only for ownership/coast calculations and cannot
-    // be split reliably into cash and risk assets. Treat them as invested.
-    if (start !== totalStart || save !== annualSaving) return grow(start, save, years);
-    if (!purchase || years <= houseYears) {
-      return grow(startingRiskAssets, surplusNow, years) +
-        grow(startingCash, 0, years, a.cashRealReturn ?? 0);
-    }
-    if (houseFundingShortfall > 0) return -Infinity;
-    const afterCompletion = projectedAtHouse - cashForHouse;
-    const reserveCash = Math.min(emergencyFund, afterCompletion);
-    return grow(afterCompletion - reserveCash, surplusAfterMove, years - houseYears) +
-      grow(reserveCash, 0, years - houseYears, a.cashRealReturn ?? 0);
-  };
-  const ownershipAt = (years) => {
-    let balances = people.map((p) => {
+  const balancesAt = (years) => {
+    const balances = people.map((p) => {
       const cash = p.assets?.cash || 0;
       const risk = p.startPortfolio - cash;
       const before = Math.min(years, houseYears);
-      return grow(risk, surplusNow * p.share, before) +
-        grow(cash, 0, before, a.cashRealReturn ?? 0);
+      return { cash: grow(cash, 0, before, a.cashRealReturn ?? 0),
+        invested: grow(risk, surplusNow * p.share, before) };
     });
-    if (!purchase || years <= houseYears || houseFundingShortfall > 0) return balances;
+    if (!purchase || years < houseYears || houseFundingShortfall > 0) return balances;
     let remaining = cashForHouse;
     const payer = purchase.paidBy;
     if (typeof payer === 'number' && people[payer]) {
       const order = [payer, ...people.map((_, i) => i).filter((i) => i !== payer)];
       for (const i of order) {
-        const take = Math.min(balances[i], remaining);
-        balances[i] -= take;
+        const take = Math.min(portfolioTotal([balances[i]]), remaining);
+        spendPortfolio([balances[i]], take);
         remaining -= take;
       }
     } else {
-      const sum = balances.reduce((x, v) => x + v, 0) || 1;
-      balances = balances.map((v) => Math.max(0, v - cashForHouse * v / sum));
+      const sum = portfolioTotal(balances) || 1;
+      for (const b of balances) spendPortfolio([b], cashForHouse * portfolioTotal([b]) / sum);
     }
-    const totalAfter = balances.reduce((x, v) => x + v, 0) || 1;
-    return balances.map((v, i) => {
-      const reserveCash = Math.min(v, emergencyFund * v / totalAfter);
-      return grow(v - reserveCash, surplusAfterMove * people[i].share, years - houseYears) +
-        grow(reserveCash, 0, years - houseYears, a.cashRealReturn ?? 0);
+    reserveCash(balances, emergencyFund);
+    return balances.map((b, i) => {
+      return { invested: grow(b.invested, surplusAfterMove * people[i].share, years - houseYears),
+        cash: grow(b.cash, 0, years - houseYears, a.cashRealReturn ?? 0) };
     });
+  };
+  const project = (_start, _save, years) => purchase && years >= houseYears && houseFundingShortfall > 0
+    ? -Infinity : portfolioTotal(balancesAt(years));
+  const ownershipAt = (years) => balancesAt(years).map((b) => b.cash + b.invested);
+  const retirementReserve = Math.max(0, Math.min(1e9, a.retirementCashReserve || 0));
+  const retirementBalances = (capital, years) => {
+    const projected = balancesAt(years);
+    const total = portfolioTotal(projected);
+    const balances = projected.map((b) => ({
+      cash: total > 0 ? b.cash * capital / total : 0,
+      invested: total > 0 ? b.invested * capital / total : 0,
+    }));
+    reserveCash(balances, retirementReserve);
+    return balances;
   };
 
   // Present value at the FI date of the health premiums still owed, i.e. those
@@ -1280,18 +1329,23 @@ function simulate(input) {
   // One walk answers both questions. The pension settings feed it identically
   // either way, which is why counting no pension and believing a pension at 0%
   // now describe the same plan - they mean the same thing, so they must.
-  const lastsFrom = (portfolioAtStop, y, perpetualFloor) => {
-    let pf = portfolioAtStop;
+  const lastsFrom = (portfolioAtStop, y, perpetualFloor, suppliedBalances = null) => {
+    if (!Number.isFinite(portfolioAtStop) || portfolioAtStop < 0) return false;
+    let balances = suppliedBalances ? suppliedBalances.map((b) => ({ ...b }))
+      : retirementBalances(portfolioAtStop, y);
     const fiYear = currentYear + y;
+    if (balances.some((b) => b.cash < -1e-6 || b.invested < -1e-6)) return false;
+    if (fiYear >= planEndYear || reserveCash(balances, retirementReserve) > 1e-6) return false;
     // Checked on day one as well as every year after: a portfolio that only
     // clears the floor once it has grown was never perpetual-safe to begin with.
-    if (pf < floorIn(perpetualFloor, Math.floor(fiYear), fiYear, y) - 1e-6) return false;
+    if (portfolioTotal(balances) - retirementReserve < floorIn(perpetualFloor, Math.floor(fiYear), fiYear, y) - 1e-6) return false;
     for (let year = Math.floor(fiYear); year < planEndYear; year++) {
-      pf -= Math.max(0, needIn(year, fiYear) - pensionIncomeIn(year, y));
-      if (pf < -1e-6) return false;
       const investedFor = year + 1 - Math.max(year, fiYear);
-      pf *= (1 + a.realReturn) ** investedFor;
-      if (pf < floorIn(perpetualFloor, year + 1, fiYear, y) - 1e-6) return false;
+      const step = retirementStep(balances, Math.max(0, needIn(year, fiYear) - pensionIncomeIn(year, y)),
+        investedFor, a.cashRealReturn ?? 0, a.realReturn, retirementReserve);
+      if (step.shortfall > 1e-6) return false;
+      balances = step.balances;
+      if (portfolioTotal(balances) - retirementReserve < floorIn(perpetualFloor, year + 1, fiYear, y) - 1e-6) return false;
     }
     return true;
   };
@@ -1301,8 +1355,9 @@ function simulate(input) {
       houseFundingShortfall <= 0 &&
       lastsFrom(project(totalStart, annualSaving, y), y, perpetualFloor);
     if (ok(0)) return 0;
-    if (depleting || !ok(100)) return Infinity;
-    let lo = 0, hi = 100;
+    const horizon = Math.min(100, planEndYear - currentYear - 1e-6);
+    if (depleting || horizon <= 0 || !ok(horizon)) return Infinity;
+    let lo = 0, hi = horizon;
     for (let i = 0; i < 50; i++) {
       const mid = (lo + hi) / 2;
       if (ok(mid)) hi = mid; else lo = mid;
@@ -1381,8 +1436,9 @@ function simulate(input) {
   // withdrawals never happens, and pension contributions carry on.
   const bufferYears = Math.max(0, a.bufferYears || 0);
   const yearsToFiSolved = perpetualMode ? yearsToFiPerpetual : yearsToFiBridged;
-  const yearsToFi = Number.isFinite(yearsToFiSolved)
-    ? yearsToFiSolved + bufferYears : yearsToFiSolved;
+  const bufferedDate = yearsToFiSolved + bufferYears;
+  const yearsToFi = Number.isFinite(bufferedDate) && bufferedDate < planEndYear - currentYear &&
+    (!bufferYears || lastsIfStoppingAt(bufferedDate)) ? bufferedDate : Infinity;
 
   // The smallest portfolio that survives from a given stop date. For a date the
   // solver had to search for, this is just what the portfolio will be worth then
@@ -1427,9 +1483,14 @@ function simulate(input) {
     for (let y = 0; y <= 60; y += 0.25) {
       const age = ageNow + y;
       if (age >= targetAge) return null;
-      const pf = project(totalStart, annualSaving, y);
-      const atTarget = pf * (1 + a.realReturn) ** (targetAge - age);
-      const enough = lastsFrom(atTarget, targetAge - ageNow, perpetualMode);
+      if (purchase && y < houseYears) continue; // house funding is not yet complete
+      const balances = balancesAt(y);
+      const pf = portfolioTotal(balances);
+      for (const b of balances) {
+        b.cash *= (1 + (a.cashRealReturn ?? 0)) ** (targetAge - age);
+        b.invested *= (1 + a.realReturn) ** (targetAge - age);
+      }
+      const enough = lastsFrom(portfolioTotal(balances), targetAge - ageNow, perpetualMode, balances);
       if (enough) return { years: y, age, portfolio: pf };
     }
     return null;
@@ -1446,7 +1507,6 @@ function simulate(input) {
   const resilience = () => {
     if (!Number.isFinite(yearsToFi)) return null;
     const draws = [], durations = [];
-    let pf = fiTarget;
     for (let year = Math.floor(currentYear + yearsToFi); year < planEndYear; year++) {
       draws.push(Math.max(0, needIn(year, currentYear + yearsToFi) -
         pensionIncomeIn(year, yearsToFi)));
@@ -1454,17 +1514,19 @@ function simulate(input) {
     }
     if (!draws.length) return null;
     const survives = (badYears, badReturn, crash = 0) => {
-      let bal = fiTarget * (1 - crash);
+      let balances = retirementBalances(fiTarget, yearsToFi);
+      for (const b of balances) b.invested *= 1 - crash;
       const fiYear = currentYear + yearsToFi;
-      if (perpetualMode && bal < floorIn(true, Math.floor(fiYear), fiYear, yearsToFi) - 1) {
+      if (portfolioTotal(balances) - retirementReserve < floorIn(perpetualMode, Math.floor(fiYear), fiYear, yearsToFi) - 1e-6) {
         return false;
       }
       for (let i = 0; i < draws.length; i++) {
-        bal -= draws[i];
-        if (bal < -1) return false;
-        bal *= (1 + (i < badYears ? badReturn : a.realReturn)) ** durations[i];
+        const step = retirementStep(balances, draws[i], durations[i], a.cashRealReturn ?? 0,
+          i < badYears ? badReturn : a.realReturn, retirementReserve);
+        if (step.shortfall > 1e-6) return false;
+        balances = step.balances;
         const year = Math.floor(fiYear) + i + 1;
-        if (perpetualMode && bal < floorIn(true, year, fiYear, yearsToFi) - 1) return false;
+        if (portfolioTotal(balances) - retirementReserve < floorIn(perpetualMode, year, fiYear, yearsToFi) - 1e-6) return false;
       }
       return true;
     };
@@ -1502,7 +1564,7 @@ function simulate(input) {
   let haircutBuffer = null;
   if (Number.isFinite(yearsToFi) && (countPots || countState) &&
       (potsShare < 1 || stateShare < 1)) {
-    let pf = fiTarget;
+    let balances = retirementBalances(fiTarget, yearsToFi);
     for (let year = Math.floor(currentYear + yearsToFi); year < planEndYear; year++) {
       let income = 0;
       for (const p of people) {
@@ -1521,11 +1583,11 @@ function simulate(input) {
           }).net;
         }
       }
-      pf -= Math.max(0, needIn(year, currentYear + yearsToFi) - income);
       const investedFor = year + 1 - Math.max(year, currentYear + yearsToFi);
-      pf *= (1 + a.realReturn) ** investedFor;
+      balances = retirementStep(balances, Math.max(0, needIn(year, currentYear + yearsToFi) - income),
+        investedFor, a.cashRealReturn ?? 0, a.realReturn, retirementReserve).balances;
     }
-    haircutBuffer = Math.max(0, pf);
+    haircutBuffer = Math.max(0, portfolioTotal(balances));
   }
 
   // ---- year-by-year drawdown ----------------------------------------------
@@ -1534,16 +1596,20 @@ function simulate(input) {
   // same order - if it ever disagrees with `lastsFrom` one of them is wrong.
   const schedule = [];
   if (Number.isFinite(yearsToFi)) {
-    let pf = fiTarget;
+    let balances = retirementBalances(fiTarget, yearsToFi);
     for (let year = Math.floor(currentYear + yearsToFi); year < planEndYear; year++) {
       const health = healthCostBetween(
         Math.max(year, currentYear + yearsToFi), year + 1);
       const need = needIn(year, currentYear + yearsToFi);
       const income = pensionBreakdownIn(year, yearsToFi);
       const fromPortfolio = Math.max(0, need - income.total);
-      const opening = pf;
+      const opening = portfolioTotal(balances);
+      const openingCash = bucketTotal(balances, 'cash');
+      const openingInvestments = bucketTotal(balances, 'invested');
       const investedFor = year + 1 - Math.max(year, currentYear + yearsToFi);
-      pf = (pf - fromPortfolio) * (1 + a.realReturn) ** investedFor;
+      const step = retirementStep(balances, fromPortfolio, investedFor,
+        a.cashRealReturn ?? 0, a.realReturn, retirementReserve);
+      balances = step.balances;
       schedule.push({
         year,
         ages: people.map((p) => p.ageNow + (year - currentYear)),
@@ -1554,7 +1620,12 @@ function simulate(input) {
         // Pension income beyond what is needed is not reinvested - conservative,
         // and it keeps the portfolio line meaning "what the portfolio provides".
         unusedPension: Math.max(0, income.total - need),
-        opening, closing: pf, investedFor,
+        opening, closing: portfolioTotal(balances), investedFor,
+        openingCash, openingInvestments, cash: bucketTotal(balances, 'cash'),
+        investments: bucketTotal(balances, 'invested'), protectedReserve: retirementReserve,
+        fromCash: step.fromCash, fromInvestments: step.fromInvestments,
+        cashGrowth: step.cashGrowth, investmentGrowth: step.investmentGrowth,
+        shortfall: step.shortfall,
       });
     }
   }
@@ -1651,15 +1722,16 @@ function simulate(input) {
       rateAfterMove: householdNetIncome > 0 ? surplusAfterMove / householdNetIncome : 0,
     },
     fi: {
+      retirementCashReserve: retirementReserve,
       perpetualSpending: perpetual + ongoingHealthAnnual,
       // Under bridging the number is what the portfolio must be on the day work
       // stops - smaller than spending/SWR, because it is allowed to run down
       // once the pensions arrive.
-      number: bridging ? requiredAt(yearsToFi, perpetualMode) : fiNumber,
+      number: requiredAt(yearsToFi, perpetualMode),
       atFiDate: fiTarget,
       perpetualNumber: fiNumber,
       spendingGrowth: g,
-      numberAt4pct: (perpetual + ongoingHealthAnnual) / 0.04,
+      numberAt4pct: (perpetual + ongoingHealthAnnual) / 0.04 + retirementReserve,
       // Two different questions that a single flag used to answer badly.
       // `bridging` is about the PORTFOLIO: is it allowed to run down. Whether
       // any pension is actually in play is separate, and is what every pension

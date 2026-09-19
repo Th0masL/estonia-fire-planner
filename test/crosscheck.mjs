@@ -44,7 +44,7 @@ const PLAIN = (over = {}, assumptions = {}) => sanitise({
     ...over,
   },
   persons: [{
-    name: 'Person1', birthYear: 1950, healthCoveredAfterFi: true,
+    name: 'Person1', birthYear: 1990, healthCoveredAfterFi: true,
     income: { grossMonthly: 5000, netMonthly: 4000, otherNetMonthly: 0 },
     assets: { cash: 0, investmentAccount: 100000, investmentAccountContributions: 100000,
               pillar2: 0, pillar3: 0, crypto: 0 },
@@ -290,7 +290,7 @@ for (const rentMonthly of [200, 750]) {
         rentalIncomeNetMonthly: 0, property: null,
       },
       persons: [{
-        name: 'Person1', birthYear: 1950, healthCoveredAfterFi: true, // confirmed cover
+        name: 'Person1', birthYear: 2000, healthCoveredAfterFi: true, // horizon includes the 66-year analytical case
         income: { grossMonthly: 20_000, netMonthly: NET / 12, otherNetMonthly: 0 },
         assets: { cash: 0, investmentAccount: 0, pillar2: 0, pillar3: 0, crypto: 0 },
         pillar2Rate: 0.02, pillar3Annual: 0, allocationShare: 1,

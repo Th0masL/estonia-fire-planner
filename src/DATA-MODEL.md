@@ -85,6 +85,7 @@ nothing reaches the engine before `sanitise()` has repaired it. It is covered by
   "assumptions": {
     "realReturn": 0.05,
     "cashRealReturn": 0,
+    "retirementCashReserve": 0, // protected household cash, today's euros, from FI onward
     "swr": 0.035,
     "spendingGrowth": 0,        // real, i.e. ON TOP of inflation, after FI
     "pensionPolicy": "ignore",  // "ignore" | "ownPots" | "all"
@@ -212,7 +213,124 @@ Enforced by `test/invariants.mjs` across generated households:
 - allocation shares sum to 1
 - nothing rendered is `NaN`, `Infinity` or `undefined`
 
-## Changing the shape
+## Cash preservation and protected emergency reserve
+
+This is a modeling policy, not a tax rule or an investment recommendation.
+Cash and investments now remain separate. `retirementCashReserve` is protected
+household cash from FI onward, in today's euros (default zero for older plans).
+It remains part of total assets and the FIRE target, but cannot fund ordinary
+spending or satisfy the spendable SWR capital floor. The target is shown as
+spendable capital plus protected reserve. Emergency events are not simulated.
+
+### Balances and transitions
+
+- Keep accessible `cash` and `invested` balances separately for each person.
+  `invested` initially retains the existing after-reserve valuation of investment
+  accounts, brokerage and included crypto. Pension pots stay separate.
+- Apply `cashRealReturn` only to cash and `realReturn` only to investments.
+  Neither reaching FI nor a house purchase implicitly invests existing cash.
+- Preserve the existing allocation of new investable surplus by `allocationShare`.
+  New surplus continues to enter investments. This policy does not imply that
+  existing cash should be invested too.
+- For a house purchase, preserve the existing payer selection and fallback
+  order. Calculate each person's assigned cost from their accessible balance,
+  then pay from that person's cash first and sell investments for any remainder.
+- The emergency reserve is a minimum cash requirement at house completion.
+  Reclassify only enough remaining investments to cash to meet it; retain any
+  cash already above it. This uses the existing spending-based reserve amount.
+  It is not an additional expense or a second deduction from assets.
+- During retirement, first offset spending by the pension income already
+  counted under the chosen policy and trust settings. Fund the remaining need
+  from household cash above the protected reserve, then investments. Split each bucket's withdrawal among
+  its owners in proportion to their balances in that bucket; no negative balance
+  or silent transfer of ownership is permitted.
+- At FI, reclassify only enough investments to cash to establish the protected
+  reserve. Cash retained after house completion counts toward it: the two reserves
+  are not added together. No reserve is deducted from total assets as an expense.
+- Refill the protected reserve from investments if a negative cash real return
+  reduces its purchasing power. Keep the real reserve constant, so its nominal
+  target rises with inflation. Cash interest above that target is spendable.
+  If investments cannot restore the reserve, or ordinary spending cannot be
+  funded without using protected principal, report infeasibility. Never borrow
+  against the reserve or consume it to make a FIRE date appear feasible.
+- Preserve existing treatment of pension income above spending in this slice;
+  do not silently add reinvestment of that excess as part of a cash-return fix.
+
+### Timing, returns and stress
+
+Retain the current annual convention: the period's required withdrawal happens
+before the period's return. Prorate the first partial year using its actual
+duration. This is an approximation, not monthly transaction accounting.
+Apply the relevant return to each remaining bucket. Stop on an unfunded
+withdrawal; do not let later returns repair a negative opening balance.
+
+An immediate market crash and bad investment-return years affect only invested
+assets, not cash. Cash retains its entered return. Shared shocks to exposed
+pension funds remain a separate roadmap item; until then, stress descriptions
+must explicitly state that pension projections are held unchanged.
+
+### Worked examples (synthetic, one full year)
+
+| Opening cash / investments | Net spending | Cash / investment return | Closing cash / investments |
+|---|---:|---|---|
+| €800,000 / €0 | €24,000 | 0% / 5% | €776,000 / €0 |
+| €40,000 / €760,000 | €24,000 | 0% / 5% | €16,000 / €798,000 |
+| €10,000 / €790,000 | €24,000 | 0% / 5% | €0 / €814,800 |
+| €40,000 / €760,000 | €24,000 | −2% / 5% | €15,680 / €798,000 |
+
+These four rows use zero protected reserve. With a €20,000 reserve, €40,000 cash
+and €760,000 invested, the €24,000 spending draws €20,000 cash and €4,000 investments.
+At 0% cash/5% investment returns the close is €20,000 cash / €793,800 investments.
+With €20,000 cash, €100,000 investments, no spending, −2% cash and 0% investment
+return, €400 is transferred back to cash: closing balances €20,000 / €99,600.
+€20,000 cash alone cannot finance any ordinary spending with a €20,000 reserve.
+
+For a €40,000 cash / €760,000 invested portfolio, a 30% immediate investment
+crash leaves €40,000 cash and €532,000 invested, total €572,000, before spending.
+It must not turn the €40,000 cash into €28,000.
+
+At house completion, €100,000 cash plus €200,000 investments, a €60,000 cost,
+and a €20,000 reserve leave €40,000 cash and €200,000 investments. No investment
+of the excess €20,000 cash is implied. Starting with €10,000 cash instead leaves
+€0 cash / €150,000 invested after payment, then €20,000 cash / €130,000 invested
+after reserving cash. Total assets fall only by the €60,000 purchase cost.
+
+### Integration and acceptance
+
+Use one pure period-transition function (`retirementStep`) in feasibility checks, final schedules,
+stress tests and independent reconciliation tests. Accumulation, house completion,
+ownership and coast calculations must also retain the buckets. Remove scalar
+fallback paths that reinterpret cash as investments. Do not publish corrected
+schedule rows while the FI solver still uses the old scalar model.
+
+The FI-date search must use the actual projected bucket balances. For a displayed
+minimum-capital search at a specified date, scale that date's projected holdings
+proportionally; disclose that the target depends on this cash/investment mix.
+Do not use a pure-investment hypothetical target for a cash-only household.
+If both buckets are zero, test zero-capital feasibility directly and report an
+unavailable target when unmet spending has no specified funding mix.
+
+Reconcile, per person and household: opening balance, new contributions,
+withdrawals, explicit bucket transfers, returns and closing balance. Test the
+examples above, insufficient funds, fractional years, two-person ownership,
+house completion, pension income ending before the horizon, and cash-only
+stress scenarios. Verify the FI boundary with an independent withdrawal walk.
+
+Do not introduce transaction-level withdrawal tax in this slice. Retain existing
+latent-tax reserves and return semantics, with their known limitations. Explicit
+taxation requires a separate migration so tax is not charged twice.
+The optional reserve field defaults to zero; existing cash amounts and returns
+remain unchanged on load, so no saved-data conversion is needed. The published
+model-change notice explains why old plans can produce different results.
+For example, an €800,000 cash-only portfolio at 0% cash/5% investment return,
+spending €24,000, previously closed year one at €814,800 due to the wrong return;
+it now closes at €776,000. With a 20-year zero-return cash-only horizon, required
+capital is €480,000 without protection or €500,000 with a €20,000 protected reserve.
+No FI date is reported beyond the planning horizon, including an excessive
+optional work buffer. Analytical tests use horizons long enough to contain
+their expected retirement dates rather than accepting dates after plan end.
+
+## Compatibility notes
 
 Future qualifying pension service is estimated separately from pension units:
 `elapsed working years × min(1, gross annual salary / annual minimum wage)`.
