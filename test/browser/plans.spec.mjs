@@ -218,3 +218,21 @@ test('protected retirement reserve persists and is shown separately from spendab
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
   await page.screenshot({ path: testInfo.outputPath('reserve.png') });
 });
+
+test('lifestyle spending growth does not increase fixed mortgage payments', async ({ page }) => {
+  const plan = makePlan('Person1');
+  plan.persons = [plan.persons[0]];
+  Object.assign(plan.persons[0], { birthYear: 1971, assets: { cash: 1000000 }, healthCoveredAfterFi: true, pillar3Annual: 0 });
+  plan.currentYear = 2026;
+  plan.household.spending = { housing: 0, other: 1000, childCosts: 0, buffer: 0 };
+  plan.household.property = { purchase: { price: 120000, deposit: 0, collateralValue: 120000,
+    termYears: 10, rate: 0, monthsAway: 0, runningCostsMonthly: 0, movingCosts: 0, paidBy: 0 } };
+  Object.assign(plan.assumptions, { inflation: 0, pensionPolicy: 'ignore', portfolioEnd: 'drawdown',
+    planToAge: 75, bufferYears: 0, realReturn: 0, cashRealReturn: 0, transactionCostRate: 0,
+    emergencyFundMonths: 0, spendingGrowth: 0 });
+  await page.goto('/simulator.html' + fragment(plan));
+  const secondYear = page.locator('.schedule tbody tr').filter({ has: page.getByRole('cell', { name: '2027', exact: true }) });
+  await expect(secondYear.locator('td').nth(3)).toHaveText('€2,000');
+  await page.locator('#aSpendGrowth').fill('2');
+  await expect(secondYear.locator('td').nth(3)).toHaveText('€2,020');
+});

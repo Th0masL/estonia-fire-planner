@@ -744,8 +744,11 @@ export function simulate(input) {
     const childCost = 12 * (s.childCosts || 0) *
       overlapYears(from, to, -Infinity, childCostsEndYear);
     const base = (discretionaryAnnual - rentalNet) * duration +
-      housing + mortgageCost + childCost + healthCostBetween(from, to);
-    return base * (1 + g) ** Math.max(0, from - fiYear);
+      housing + childCost + healthCostBetween(from, to);
+    // Lifestyle growth does not reprice the contractual mortgage payment.
+    // Nominal-to-real conversion across accumulation/retirement is a separate
+    // model change; this removes the extra lifestyle-growth index only.
+    return base * (1 + g) ** Math.max(0, from - fiYear) + mortgageCost;
   };
 
   // The floor the portfolio may never drop below.

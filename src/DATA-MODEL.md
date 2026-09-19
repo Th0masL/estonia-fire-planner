@@ -332,6 +332,21 @@ their expected retirement dates rather than accepting dates after plan end.
 
 ## Compatibility notes
 
+### Mortgage payments and lifestyle growth
+
+`spendingGrowth` increases recurring lifestyle costs after FI, but not the
+contractual mortgage payment. For a €120,000 zero-interest, ten-year loan, the
+payment is €12,000/year whether lifestyle growth is 0% or 2%. With €12,000/year
+living expenses, year two costs €12,240 + €12,000 = €24,240, not €24,480.
+Partial start/end years prorate the mortgage separately from living expenses.
+
+This correction does not complete the nominal-flow migration: mortgage payments
+still remain constant in the real-euro projection. Future work must convert them
+consistently during accumulation and retirement, define the price/loan valuation
+date, and document the fixed-rate/no-repricing assumption. Annuity quote dates
+and premium requirements are also unresolved. Tests isolate this correction
+with zero inflation so they do not certify the outstanding conversion model.
+
 Future qualifying pension service is estimated separately from pension units:
 `elapsed working years × min(1, gross annual salary / annual minimum wage)`.
 Entered accrued service remains authoritative; missing service remains unknown.
