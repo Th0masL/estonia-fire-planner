@@ -114,9 +114,9 @@
         <label>Pillar III paid in <span class="u">€/yr</span><input type="number" id="p3" min="0" step="500" value="0"></label>
         <label>Real return <span class="u">%</span><input type="number" id="ret" min="0" max="12" step="0.1" value="5"></label>
       </div>
-      <p class="hint">Pillar III is capped at the lower of 15% of gross and €6,000, and the 22%
-        refund cannot exceed the income tax actually paid — so on a small salary it is worth
-        little or nothing.</p>
+      <p class="hint">The full Pillar III payment is invested. Only the deduction is capped
+        at the lower of 15% of gross salary and €6,000 here. The refund estimate uses salary
+        tax only; other taxable income and deductions are not modeled.</p>
       <p class="sub">Health cover</p>
       <div class="checks">
         <label><input type="checkbox" id="uninsured" checked> Would otherwise pay for health insurance</label>
@@ -583,19 +583,20 @@ function netFromGross(grossAnnual, { pillar2Rate = 0.02, pensionAge = false } = 
   };
 }
 
-/** Deductible Pillar III contribution and the refund it actually produces. */
+/** Full Pillar III payment, deductible portion, and salary-only refund estimate. */
 function pillar3(grossAnnual, contributionAnnual = null, { pillar2Rate = 0.02 } = {}) {
   const cap = Math.min(RATES.pillar3.maxAnnual, grossAnnual * RATES.pillar3.maxShareOfGross);
-  const contribution = contributionAnnual === null ? cap : Math.min(contributionAnnual, cap);
+  const contribution = contributionAnnual === null ? cap : Math.max(0, contributionAnnual);
+  const deductible = Math.min(contribution, cap);
   const incomeTaxPaid = netFromGross(grossAnnual, { pillar2Rate }).incomeTax;
   // The refund is a deduction against your own tax: no tax, no refund, and it
   // cannot be transferred to a spouse.
-  const refund = Math.min(contribution * RATES.pillar3.refundRate, incomeTaxPaid);
+  const refund = Math.min(deductible * RATES.pillar3.refundRate, incomeTaxPaid);
   // What the refund would be if the allowance were used in full - that is the
   // number a rule needs in order to say what is being left unclaimed.
   const maxRefund = Math.min(cap * RATES.pillar3.refundRate, incomeTaxPaid);
   return {
-    cap, contribution, refund, maxRefund,
+    cap, contribution, deductible, refund, maxRefund,
     unclaimed: Math.max(0, maxRefund - refund),
     wasted: contribution * RATES.pillar3.refundRate - refund,
   };
@@ -1909,8 +1910,8 @@ function render() {
     ${(() => {
       // Show what Pillar III could add even when nothing is entered - otherwise
       // the option is invisible to the person who most needs to see it.
-      const maxed = pillarProjection({ ...input, pillar3Annual: RATES.pillar3.maxAnnual });
-      const cap = maxed.pillar3.cap;
+      const cap = r.pillar3.cap;
+      const maxed = pillarProjection({ ...input, pillar3Annual: cap });
       const refund = maxed.pillar3.refund;
       if (cap < 1) return '';
       const already = c.pillar3Annual >= cap - 1;
@@ -1918,12 +1919,12 @@ function render() {
         ? `15% of gross` : `the €${RATES.pillar3.maxAnnual.toLocaleString()} annual cap`;
       const wasted = cap * RATES.pillar3.refundRate - refund;
       return `
-    <h3>${already ? 'Pillar III — already at the limit' : 'What Pillar III could add'}</h3>
+    <h3>${already ? 'Pillar III — deduction allowance used' : 'What Pillar III could add'}</h3>
     <table class="mini">
-      <tr><th>Most you could pay in <span class="muted">limited by ${capReason}</span></th><td>${eur(cap)}/yr</td></tr>
+      <tr><th>Salary-based deduction allowance <span class="muted">limited by ${capReason}</span></th><td>${eur(cap)}/yr</td></tr>
       <tr><th>Income tax back <span class="muted">at ${pct(RATES.pillar3.refundRate)}</span></th><td><strong>${refund > 0 ? '+' + eur(refund) + '/yr' : 'nothing'}</strong></td></tr>
       <tr><th>Real cost after the refund</th><td>${eur(cap - refund)}/yr</td></tr>
-      <tr><th>Pot at ${r.unlockAge.toFixed(0)} if maxed</th><td>${eur(maxed.total)} <span class="muted">vs ${eur(r.total)}</span></td></tr>
+      <tr><th>Pot at ${r.unlockAge.toFixed(0)} contributing the allowance</th><td>${eur(maxed.total)} <span class="muted">vs ${eur(r.total)}</span></td></tr>
     </table>
     ${(() => {
       // Where the salary sits relative to the points at which Pillar III starts

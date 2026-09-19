@@ -337,12 +337,13 @@ export function actionPlan(sim, input) {
     if (p3.wasted > 1 && (p.pillar3Annual ?? 0) > 0) {
       add({
         id: 'pillar3-no-refund', severity: 'important', link: 'pensions',
-        title: `${p.name || 'This person'}: Pillar III contributions earn no refund`,
-        value: eur(p3.wasted) + ' wasted',
+        title: `${p.name || 'This person'}: Pillar III refund is limited`,
+        value: eur(p3.refund) + '/year estimated refund',
         detail:
-          `The refund is a deduction against your own income tax. With little or no taxable ` +
-          `income there is nothing to refund, and unused allowance cannot be transferred to ` +
-          `a spouse under any marital property regime. Contribute in the earner's name instead.`,
+          `The full ${eur(p3.contribution)} payment enters the pension pot, but only ` +
+          `${eur(p3.deductible)} is within the modeled deduction allowance. The refund also ` +
+          `depends on available income tax. This salary-only estimate excludes other taxable ` +
+          `income and deductions; it is not a full tax-return calculation.`,
       });
     }
   }

@@ -798,19 +798,20 @@ function netFromGross(grossAnnual, { pillar2Rate = 0.02, pensionAge = false } = 
   };
 }
 
-/** Deductible Pillar III contribution and the refund it actually produces. */
+/** Full Pillar III payment, deductible portion, and salary-only refund estimate. */
 function pillar3(grossAnnual, contributionAnnual = null, { pillar2Rate = 0.02 } = {}) {
   const cap = Math.min(RATES.pillar3.maxAnnual, grossAnnual * RATES.pillar3.maxShareOfGross);
-  const contribution = contributionAnnual === null ? cap : Math.min(contributionAnnual, cap);
+  const contribution = contributionAnnual === null ? cap : Math.max(0, contributionAnnual);
+  const deductible = Math.min(contribution, cap);
   const incomeTaxPaid = netFromGross(grossAnnual, { pillar2Rate }).incomeTax;
   // The refund is a deduction against your own tax: no tax, no refund, and it
   // cannot be transferred to a spouse.
-  const refund = Math.min(contribution * RATES.pillar3.refundRate, incomeTaxPaid);
+  const refund = Math.min(deductible * RATES.pillar3.refundRate, incomeTaxPaid);
   // What the refund would be if the allowance were used in full - that is the
   // number a rule needs in order to say what is being left unclaimed.
   const maxRefund = Math.min(cap * RATES.pillar3.refundRate, incomeTaxPaid);
   return {
-    cap, contribution, refund, maxRefund,
+    cap, contribution, deductible, refund, maxRefund,
     unclaimed: Math.max(0, maxRefund - refund),
     wasted: contribution * RATES.pillar3.refundRate - refund,
   };
@@ -2296,12 +2297,13 @@ function actionPlan(sim, input) {
     if (p3.wasted > 1 && (p.pillar3Annual ?? 0) > 0) {
       add({
         id: 'pillar3-no-refund', severity: 'important', link: 'pensions',
-        title: `${p.name || 'This person'}: Pillar III contributions earn no refund`,
-        value: eur(p3.wasted) + ' wasted',
+        title: `${p.name || 'This person'}: Pillar III refund is limited`,
+        value: eur(p3.refund) + '/year estimated refund',
         detail:
-          `The refund is a deduction against your own income tax. With little or no taxable ` +
-          `income there is nothing to refund, and unused allowance cannot be transferred to ` +
-          `a spouse under any marital property regime. Contribute in the earner's name instead.`,
+          `The full ${eur(p3.contribution)} payment enters the pension pot, but only ` +
+          `${eur(p3.deductible)} is within the modeled deduction allowance. The refund also ` +
+          `depends on available income tax. This salary-only estimate excludes other taxable ` +
+          `income and deductions; it is not a full tax-return calculation.`,
       });
     }
   }
@@ -2844,7 +2846,8 @@ function renderPeople() {
       <p class="sub">Paying into pensions ${infoBtn('paying-in')}</p>
       ${infoNote('paying-in', `<strong>Pillar III contributions</strong> are money out, not income:
         they leave what you can invest and land in a pension locked until unlock age, in exchange
-        for ${pct(RATES.pillar3.refundRate)} of them back as an income tax refund. The allowance is
+        for a possible income tax refund on the deductible portion. The full payment is invested;
+        the salary-only refund estimate excludes other income and deductions. The allowance is
         the lower of ${pct(RATES.pillar3.maxShareOfGross)} of gross and
         ${eur(RATES.pillar3.maxAnnual)}, it is per earner, and it cannot be transferred to a
         spouse.${state.assumptions.pensionPolicy === 'all' ? ` <br><br><strong>Pension units

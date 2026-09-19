@@ -165,8 +165,8 @@ function render() {
     ${(() => {
       // Show what Pillar III could add even when nothing is entered - otherwise
       // the option is invisible to the person who most needs to see it.
-      const maxed = pillarProjection({ ...input, pillar3Annual: RATES.pillar3.maxAnnual });
-      const cap = maxed.pillar3.cap;
+      const cap = r.pillar3.cap;
+      const maxed = pillarProjection({ ...input, pillar3Annual: cap });
       const refund = maxed.pillar3.refund;
       if (cap < 1) return '';
       const already = c.pillar3Annual >= cap - 1;
@@ -174,12 +174,12 @@ function render() {
         ? `15% of gross` : `the €${RATES.pillar3.maxAnnual.toLocaleString()} annual cap`;
       const wasted = cap * RATES.pillar3.refundRate - refund;
       return `
-    <h3>${already ? 'Pillar III — already at the limit' : 'What Pillar III could add'}</h3>
+    <h3>${already ? 'Pillar III — deduction allowance used' : 'What Pillar III could add'}</h3>
     <table class="mini">
-      <tr><th>Most you could pay in <span class="muted">limited by ${capReason}</span></th><td>${eur(cap)}/yr</td></tr>
+      <tr><th>Salary-based deduction allowance <span class="muted">limited by ${capReason}</span></th><td>${eur(cap)}/yr</td></tr>
       <tr><th>Income tax back <span class="muted">at ${pct(RATES.pillar3.refundRate)}</span></th><td><strong>${refund > 0 ? '+' + eur(refund) + '/yr' : 'nothing'}</strong></td></tr>
       <tr><th>Real cost after the refund</th><td>${eur(cap - refund)}/yr</td></tr>
-      <tr><th>Pot at ${r.unlockAge.toFixed(0)} if maxed</th><td>${eur(maxed.total)} <span class="muted">vs ${eur(r.total)}</span></td></tr>
+      <tr><th>Pot at ${r.unlockAge.toFixed(0)} contributing the allowance</th><td>${eur(maxed.total)} <span class="muted">vs ${eur(r.total)}</span></td></tr>
     </table>
     ${(() => {
       // Where the salary sits relative to the points at which Pillar III starts

@@ -40,19 +40,20 @@ export function netFromGross(grossAnnual, { pillar2Rate = 0.02, pensionAge = fal
   };
 }
 
-/** Deductible Pillar III contribution and the refund it actually produces. */
+/** Full Pillar III payment, deductible portion, and salary-only refund estimate. */
 export function pillar3(grossAnnual, contributionAnnual = null, { pillar2Rate = 0.02 } = {}) {
   const cap = Math.min(RATES.pillar3.maxAnnual, grossAnnual * RATES.pillar3.maxShareOfGross);
-  const contribution = contributionAnnual === null ? cap : Math.min(contributionAnnual, cap);
+  const contribution = contributionAnnual === null ? cap : Math.max(0, contributionAnnual);
+  const deductible = Math.min(contribution, cap);
   const incomeTaxPaid = netFromGross(grossAnnual, { pillar2Rate }).incomeTax;
   // The refund is a deduction against your own tax: no tax, no refund, and it
   // cannot be transferred to a spouse.
-  const refund = Math.min(contribution * RATES.pillar3.refundRate, incomeTaxPaid);
+  const refund = Math.min(deductible * RATES.pillar3.refundRate, incomeTaxPaid);
   // What the refund would be if the allowance were used in full - that is the
   // number a rule needs in order to say what is being left unclaimed.
   const maxRefund = Math.min(cap * RATES.pillar3.refundRate, incomeTaxPaid);
   return {
-    cap, contribution, refund, maxRefund,
+    cap, contribution, deductible, refund, maxRefund,
     unclaimed: Math.max(0, maxRefund - refund),
     wasted: contribution * RATES.pillar3.refundRate - refund,
   };

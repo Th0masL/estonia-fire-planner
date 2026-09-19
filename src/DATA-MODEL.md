@@ -189,7 +189,8 @@ Enforced by `test/invariants.mjs` across generated households:
 - a negative surplus yields no FI date — compounding alone does not count
 - every person has their own age, pension unlock and portfolio; the bridge uses
   the longest wait
-- Pillar III reduces investable surplus by its cost net of refund
+- Pillar III reduces investable surplus by the full payment net of refund;
+  only the deductible portion is limited, never the pension contribution
 - life and health premiums reduce the surplus and never enter the portfolio
 - nobody paying for cover is told they have none, and nobody without it is missed
 - a bridged plan survives to the end of the plan, checked by an independent

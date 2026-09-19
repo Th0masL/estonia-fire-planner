@@ -60,7 +60,17 @@ So on tax alone, 6% wins. **The reason to hesitate is liquidity, which can be de
 
 ## Pillar III (`täiendav kogumispension`) — the best-value wrapper in Estonia
 
-**Yes — there is a contribution-based tax reduction, and it's the most underused allowance in the country.**
+**Pillar III contributions can qualify for an income-tax deduction.**
+
+The deduction ceiling is not a contribution ceiling. The planner invests the
+full entered payment and reduces accessible savings by that payment minus the
+estimated refund. Its estimate uses gross salary only. Other eligible taxable
+income can increase the allowance; other deductions can reduce the remaining
+refundable tax. Employer contributions and a complete annual tax return are
+not modeled. Verify the final amount in your tax return.
+Source: [EMTA contribution guidance](https://www.emta.ee/en/private-client/taxes-and-payment/tax-incentives/contributions-supplementary-funded-pension),
+checked 19 September 2026; EMTA lists basic exemption and education/donation
+deductions before Pillar III.
 
 | | Rule |
 |---|---|

@@ -119,7 +119,8 @@ function renderPeople() {
       <p class="sub">Paying into pensions ${infoBtn('paying-in')}</p>
       ${infoNote('paying-in', `<strong>Pillar III contributions</strong> are money out, not income:
         they leave what you can invest and land in a pension locked until unlock age, in exchange
-        for ${pct(RATES.pillar3.refundRate)} of them back as an income tax refund. The allowance is
+        for a possible income tax refund on the deductible portion. The full payment is invested;
+        the salary-only refund estimate excludes other income and deductions. The allowance is
         the lower of ${pct(RATES.pillar3.maxShareOfGross)} of gross and
         ${eur(RATES.pillar3.maxAnnual)}, it is per earner, and it cannot be transferred to a
         spouse.${state.assumptions.pensionPolicy === 'all' ? ` <br><br><strong>Pension units

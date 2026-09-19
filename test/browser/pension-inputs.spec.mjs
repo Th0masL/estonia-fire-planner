@@ -60,3 +60,17 @@ test('money accepts exact amounts but fractional calendar years are rejected', a
   await page.locator('#until').fill('50');
   await expect(page.locator('#out .stat b').first()).toHaveText('€63,601');
 });
+
+test('payments above the deduction allowance are invested without extra refund', async ({ page }) => {
+  await zeroReturnPlan(page);
+  await page.locator('#p3').fill('5400');
+  await expect(page.locator('#out .stat b').first()).toHaveText('€105,600');
+  const refund = page.locator('#out tr').filter({ hasText: 'Less the Pillar III tax refund' });
+  await expect(refund).toContainText('€99/mo');
+  await page.locator('#p3').fill('12000');
+  await expect(page.locator('#out .stat b').first()).toHaveText('€171,600');
+  await expect(refund).toContainText('€99/mo');
+  await expect(page.locator('#out tr').filter({ hasText: 'contributing the allowance' }))
+    .toContainText('€105,600');
+  await expect(page.locator('#out')).not.toContainText('Most you could pay in');
+});
