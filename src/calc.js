@@ -1027,17 +1027,27 @@ export function simulate(input) {
   // finish the job by `targetAge`. Under bridging "finished" means the pot
   // survives to the end of the plan rather than reaching a fixed number.
   const coastAt = (targetAge) => {
+    const targetYear = currentYear + targetAge - ageNow;
+    if (targetYear >= planEndYear || houseFundingShortfall > 0) return null;
     for (let y = 0; y <= 60; y += 0.25) {
       const age = ageNow + y;
       if (age >= targetAge) return null;
       if (purchase && y < houseYears) continue; // house funding is not yet complete
-      const balances = balancesAt(y);
+      let balances = balancesAt(y);
       if (balances.shortfall > 1e-6) continue;
       const pf = portfolioTotal(balances);
-      for (const b of balances) {
-        b.cash *= (1 + (a.cashRealReturn ?? 0)) ** (targetAge - age);
-        b.invested *= (1 + a.realReturn) ** (targetAge - age);
+      // Stop positive saving, not spending deficits. Keep the same cash-first
+      // withdrawals, calendar-year mortgage deflation and exact payoff boundary
+      // as accumulation. Configured earnings and pension contributions continue.
+      for (let start = currentYear + y; start < targetYear;) {
+        const end = Math.min(targetYear, Math.floor(start) + 1,
+          mortgageEndYear > start ? mortgageEndYear : Infinity);
+        const surplus = !purchase ? surplusNow : surplusAfterLoan -
+          (start < mortgageEndYear ? mortgageAnnualIn(start) : 0);
+        balances = advance(balances, Math.min(0, surplus), end - start);
+        start = end;
       }
+      if (balances.shortfall > 1e-6) continue;
       const enough = lastsFrom(portfolioTotal(balances), targetAge - ageNow, perpetualMode, balances);
       if (enough) return { years: y, age, portfolio: pf };
     }
@@ -1384,8 +1394,8 @@ export function simulate(input) {
       yearsToFi, fiAge: ageNow + yearsToFi, fiYear: currentYear + yearsToFi,
       agesAtFi: people.map((p) => ({ name: p.name, age: p.ageNow + yearsToFi })),
       mortgageBalanceAtFi: mortgageAtFi,
-      coastToPensionUnlock: depleting ? null : coastAt(ages.pillarUnlockAge),
-      coastTo60: depleting ? null : coastAt(60),
+      coastToPensionUnlock: coastAt(ages.pillarUnlockAge),
+      coastTo60: coastAt(60),
       depleting,
       pension: ages,
       accumulation,

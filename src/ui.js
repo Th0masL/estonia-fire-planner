@@ -777,9 +777,10 @@ function render() {
       ${t.coastToPensionUnlock ? `<tr class="thead"><th>Milestone on the way</th><td></td></tr>
       <tr><th>CoastFIRE ${infoBtn('coast')}</th><td>age ${t.coastToPensionUnlock.age.toFixed(0)}</td></tr>
       ${infoRow('coast', `The age from which you could stop <em>adding</em> to the portfolio and
-        still arrive on target, letting compounding finish the job on its own. You keep working —
-        you just stop saving. It is the point where the plan becomes robust to a pay cut, a career
-        change or a few years at home, which for most people matters more than the FI date itself.`)}` : ''}
+        still fund retirement at pension access. Configured earnings and pension contributions
+        continue; positive savings no longer enter the accessible portfolio, but any spending
+        deficit still comes out of it. A pay cut or career break needs a separate scenario.
+        This milestone is searched in three-month steps.`)}` : ''}
       ${sim.savings.pillar3NetCost || sim.savings.lifeInsuranceCost || sim.savings.healthInsuranceCost ? `
       <tr class="thead"><th>Out of income before investing</th><td></td></tr>
       ${sim.savings.pillar3NetCost ? `<tr><th>Into Pillar III <span class="muted">net of refund</span></th><td>−${eur(sim.savings.pillar3NetCost)}/yr</td></tr>` : ''}

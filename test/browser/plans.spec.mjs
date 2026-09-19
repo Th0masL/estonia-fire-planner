@@ -44,6 +44,8 @@ test('funded retirement remains visible without income or positive savings', asy
   await expect(page.locator('#headline')).not.toContainText('Add your');
   await expect(page.locator('body')).toContainText('The modeled assets still support the displayed FI date.');
   await expect(page.locator('body')).not.toContainText('no FI date to compute');
+  await expect(page.locator('#plan')).toContainText('Configured earnings and pension contributions continue');
+  await expect(page.locator('#plan')).toContainText('A pay cut or career break needs a separate scenario.');
 });
 
 test('legacy annuity plans require fund duration and never use insurer quotes', async ({ page }) => {

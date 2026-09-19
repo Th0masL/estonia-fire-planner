@@ -1799,17 +1799,27 @@ function simulate(input) {
   // finish the job by `targetAge`. Under bridging "finished" means the pot
   // survives to the end of the plan rather than reaching a fixed number.
   const coastAt = (targetAge) => {
+    const targetYear = currentYear + targetAge - ageNow;
+    if (targetYear >= planEndYear || houseFundingShortfall > 0) return null;
     for (let y = 0; y <= 60; y += 0.25) {
       const age = ageNow + y;
       if (age >= targetAge) return null;
       if (purchase && y < houseYears) continue; // house funding is not yet complete
-      const balances = balancesAt(y);
+      let balances = balancesAt(y);
       if (balances.shortfall > 1e-6) continue;
       const pf = portfolioTotal(balances);
-      for (const b of balances) {
-        b.cash *= (1 + (a.cashRealReturn ?? 0)) ** (targetAge - age);
-        b.invested *= (1 + a.realReturn) ** (targetAge - age);
+      // Stop positive saving, not spending deficits. Keep the same cash-first
+      // withdrawals, calendar-year mortgage deflation and exact payoff boundary
+      // as accumulation. Configured earnings and pension contributions continue.
+      for (let start = currentYear + y; start < targetYear;) {
+        const end = Math.min(targetYear, Math.floor(start) + 1,
+          mortgageEndYear > start ? mortgageEndYear : Infinity);
+        const surplus = !purchase ? surplusNow : surplusAfterLoan -
+          (start < mortgageEndYear ? mortgageAnnualIn(start) : 0);
+        balances = advance(balances, Math.min(0, surplus), end - start);
+        start = end;
       }
+      if (balances.shortfall > 1e-6) continue;
       const enough = lastsFrom(portfolioTotal(balances), targetAge - ageNow, perpetualMode, balances);
       if (enough) return { years: y, age, portfolio: pf };
     }
@@ -2156,8 +2166,8 @@ function simulate(input) {
       yearsToFi, fiAge: ageNow + yearsToFi, fiYear: currentYear + yearsToFi,
       agesAtFi: people.map((p) => ({ name: p.name, age: p.ageNow + yearsToFi })),
       mortgageBalanceAtFi: mortgageAtFi,
-      coastToPensionUnlock: depleting ? null : coastAt(ages.pillarUnlockAge),
-      coastTo60: depleting ? null : coastAt(60),
+      coastToPensionUnlock: coastAt(ages.pillarUnlockAge),
+      coastTo60: coastAt(60),
       depleting,
       pension: ages,
       accumulation,
@@ -2617,8 +2627,9 @@ function actionPlan(sim, input) {
       title: c.years <= 0 ? 'You have already reached CoastFIRE' : 'CoastFIRE is within reach',
       value: c.years <= 0 ? 'now' : `age ${c.age.toFixed(0)}`,
       detail:
-        `From that point the portfolio compounds to the target without further saving. It is ` +
-        `usually the milestone that changes how work feels, and it arrives long before FI.`,
+        `From that point no further accessible-portfolio saving is needed to fund retirement ` +
+        `at pension access. Configured earnings and pension contributions continue; spending ` +
+        `deficits still draw down assets. A pay cut or career break needs a separate scenario.`,
     });
   }
 
@@ -3694,9 +3705,10 @@ function render() {
       ${t.coastToPensionUnlock ? `<tr class="thead"><th>Milestone on the way</th><td></td></tr>
       <tr><th>CoastFIRE ${infoBtn('coast')}</th><td>age ${t.coastToPensionUnlock.age.toFixed(0)}</td></tr>
       ${infoRow('coast', `The age from which you could stop <em>adding</em> to the portfolio and
-        still arrive on target, letting compounding finish the job on its own. You keep working —
-        you just stop saving. It is the point where the plan becomes robust to a pay cut, a career
-        change or a few years at home, which for most people matters more than the FI date itself.`)}` : ''}
+        still fund retirement at pension access. Configured earnings and pension contributions
+        continue; positive savings no longer enter the accessible portfolio, but any spending
+        deficit still comes out of it. A pay cut or career break needs a separate scenario.
+        This milestone is searched in three-month steps.`)}` : ''}
       ${sim.savings.pillar3NetCost || sim.savings.lifeInsuranceCost || sim.savings.healthInsuranceCost ? `
       <tr class="thead"><th>Out of income before investing</th><td></td></tr>
       ${sim.savings.pillar3NetCost ? `<tr><th>Into Pillar III <span class="muted">net of refund</span></th><td>−${eur(sim.savings.pillar3NetCost)}/yr</td></tr>` : ''}

@@ -445,8 +445,9 @@ export function actionPlan(sim, input) {
       title: c.years <= 0 ? 'You have already reached CoastFIRE' : 'CoastFIRE is within reach',
       value: c.years <= 0 ? 'now' : `age ${c.age.toFixed(0)}`,
       detail:
-        `From that point the portfolio compounds to the target without further saving. It is ` +
-        `usually the milestone that changes how work feels, and it arrives long before FI.`,
+        `From that point no further accessible-portfolio saving is needed to fund retirement ` +
+        `at pension access. Configured earnings and pension contributions continue; spending ` +
+        `deficits still draw down assets. A pay cut or career break needs a separate scenario.`,
     });
   }
 

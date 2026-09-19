@@ -405,8 +405,13 @@ assumed. The depleting flag includes the surplus after mortgage
 payoff; it no longer gates FI calculations. The UI likewise displays
 funded plans without requiring positive income or savings. The date search's
 general monotonicity assumption remains a separate limitation under review.
-CoastFIRE's existing surplus gate remains unchanged pending a separate review
-of its assumption that work covers living expenses while the portfolio compounds.
+CoastFIRE stops positive accessible-portfolio saving but continues to fund any
+working-year deficits cash-first. Configured income and pension contributions
+continue until the target retirement age. Calendar-year mortgage deflation and
+the exact payoff boundary remain active. Unfunded accumulation, an unfunded
+house purchase, or a target at/beyond the planning horizon excludes the milestone.
+Zero surplus alone does not exclude it. Coast dates use a three-month grid;
+pay cuts and career breaks require separately configured scenarios.
 
 Mortgage inputs (price, deposit, collateral and resulting loan/payment) are in
 today's purchasing power at the planned completion date. They are not nominal
