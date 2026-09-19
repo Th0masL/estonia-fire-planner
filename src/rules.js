@@ -21,6 +21,22 @@ export function actionPlan(sim, input) {
   const hh = input.household;
   const a = sim.assumptions;
 
+  if (a.pensionPolicy === 'all') {
+    for (const [i, p] of people.entries()) {
+      if (p.grossAnnual >= RATES.minimumAnnualWageForPension) continue;
+      add({
+        id: `pension-contributions-unverified-${i}`, severity: 'important', link: 'pensions',
+        title: `${p.name || 'This person'}: verify pension contribution assumptions`,
+        value: `${p.estimatedServicePerYear.toFixed(2)} estimated service years/year`,
+        detail: `Future service and pension units are estimated from entered gross salary only. ` +
+          `Employer minimum social-tax payments, exemptions and state-paid contributions are ` +
+          `not inferred. A net-income override is not evidence of pension contributions. ` +
+          `Check payroll and the official pension record before relying on the projected ` +
+          `eligibility or income; the actual result may differ.`,
+      });
+    }
+  }
+
   // ---------------------------------------------------------------- critical
 
   // RaKS §5(4)(4): a dependent spouse within five years of pension age is

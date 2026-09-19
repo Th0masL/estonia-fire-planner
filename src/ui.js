@@ -137,8 +137,9 @@ function renderPeople() {
         if you are in Pillar II, more on a higher salary.<br><br>It beats any estimate because it
         already accounts for the things an estimate cannot — years worked <em>outside</em> Estonia,
         which build no Estonian pension at all, months between jobs, and a salary that changed.
-        <strong>Years worked in Estonia</strong> is the fallback when you do not have the units, and
-        it is only a starting guess: it assumes today's salary applied throughout.` : ''}`)}
+        <strong>Qualifying service and pension units are separate inputs.</strong> If either is
+        missing, state-pension income is excluded; the planner does not reconstruct past units
+        from years worked or today's salary.` : ''}`)}
       <div class="grid">
         <label>Pillar III contributions <span class="u">€/yr</span><input type="number" min="0" step="500" data-i="${i}" data-k="pillar3Annual" value="${p.pillar3Annual}"></label>
         <label>First Pillar III contribution <span class="u">year; access and tax rules depend on it</span><input type="number" min="1998" max="${RATES.year}" step="1" data-i="${i}" data-k="pillar3FirstContributionYear" value="${p.pillar3FirstContributionYear ?? ''}"></label>

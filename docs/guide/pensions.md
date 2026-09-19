@@ -1,5 +1,21 @@
 # Pension pillars II and III
 
+## Projection limits for low salaries
+
+The planner estimates future pension service and units from gross salary, not
+actual social-tax records. In 2026 the employer minimum social-tax base is
+€886/month (€292.38 tax); this is distinct from the current minimum wage.
+Applicability depends on circumstances and exceptions. The calculator does not
+infer minimum top-ups, state-paid contributions or special qualifying periods.
+Low- and zero-salary state-pension projections therefore carry a warning.
+Check payroll and official records; net income alone does not establish accrual.
+Historical service and accrued units must be entered separately.
+
+Sources checked 19 September 2026:
+[EMTA social tax](https://www.emta.ee/en/business-client/taxes-and-payment/income-and-social-taxes/social-tax)
+and [SKA pension qualifying period](https://www.sotsiaalkindlustusamet.ee/en/pension-and-benefits/applying-pension/pension-qualifying-period).
+The rates are verified; a particular person's entitlement is not.
+
 ## Pillar II (`kogumispension`) — the awkward one
 
 - Voluntary since 2021. Your contribution is **2%, 4% or 6%** (choosable since 2025), plus **4% redirected from social tax** ✅

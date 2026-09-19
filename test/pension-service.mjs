@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { pensionServicePerYear, pillar1Monthly, simulate } from '../src/calc.js';
 import { exampleState } from '../src/state.js';
 import { RATES } from '../src/rates.js';
+import { actionPlan } from '../src/rules.js';
 
 const minimum = RATES.minimumAnnualWageForPension;
 for (const [gross, expected] of [[0, 0], [minimum / 2, 0.5], [minimum, 1], [minimum * 3, 1]]) {
@@ -24,6 +25,9 @@ for (const gross of [0, minimum / 2, minimum, minimum * 3]) {
   p.healthCoveredAfterFi = true;
   const result = simulate(plan);
   const person = result.persons[0];
+  const warnings = actionPlan(result, plan).filter((f) => f.id.startsWith('pension-contributions-unverified-'));
+  assert.equal(warnings.length, gross < minimum ? 1 : 0);
+  if (warnings.length) assert.ok(warnings[0].detail.includes('not inferred'));
   const elapsed = result.timeline.yearsToFi;
   assert.ok(Number.isFinite(elapsed) && elapsed > 0, 'scenario needs future working years');
   assert.ok(Math.abs(person.yearsWorkedAtFi - elapsed * Math.min(1, gross / minimum)) < 1e-8);

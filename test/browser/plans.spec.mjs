@@ -184,3 +184,14 @@ test('confirmed health coverage date is optional and persists without pension in
   expect(JSON.parse(await saved(page)).persons[0].healthCoverageFromYear).toBeNull();
   await expect(page.locator('body')).not.toContainText('years, then free');
 });
+
+test('low-salary pension assumptions are visibly flagged and names remain literal', async ({ page }) => {
+  const plan = makePlan();
+  plan.persons[0].income.grossMonthly = 500;
+  await page.goto('/simulator.html' + fragment(plan));
+  await expect(page.locator('#plan')).toContainText(hostileName + ': verify pension contribution assumptions');
+  await expect(page.locator('#plan')).toContainText('not inferred');
+  expect(await page.evaluate(() => window.__injected)).toBeUndefined();
+  await page.locator('[data-i="0"][data-k="income.grossMonthly"]').fill('4000');
+  await expect(page.locator('#plan')).not.toContainText('verify pension contribution assumptions');
+});

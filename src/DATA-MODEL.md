@@ -222,6 +222,9 @@ social tax on the entered salary, not employer minimum top-ups or state-paid
 and special qualifying periods. Such cases need official records; the model
 does not determine legal entitlement. The current minimum-wage assumption is
 held constant in real terms. Healthcare uses the separate confirmed-route inputs above.
+Low- and zero-salary plans counting state pension produce an explicit action-plan
+warning. The employer minimum social-tax base is not automatically substituted
+for salary: applicability and allocation cannot be established from these inputs.
 Source: [SKA pension qualifying period](https://www.sotsiaalkindlustusamet.ee/en/pension-and-benefits/applying-pension/pension-qualifying-period),
 checked 19 September 2026.
 
