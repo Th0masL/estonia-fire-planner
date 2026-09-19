@@ -43,4 +43,41 @@ for (const gross of [0, minimum / 2, minimum, minimum * 3]) {
   assert.equal(unknown.yearsWorkedAtFi, null);
   assert.equal(unknown.statePensionGross, 0);
 }
-console.log('Pension service: zero/partial/full salary, eligibility and net-only income checks passed');
+// Previously the provisional date granted four early years, then the final
+// date left only 34.85 years of service (less than the required 35).
+const boundary = exampleState();
+Object.assign(boundary.assumptions, {
+  pensionPolicy: 'all', portfolioEnd: 'drawdown', statePensionEarlyYears: 5,
+});
+Object.assign(boundary.persons[0], {
+  yearsWorkedEstonia: 12.5, pillar1Units: 20, healthCoveredAfterFi: false,
+});
+assert.equal(simulate(boundary).persons[0].statePensionEarlyYears, 3);
+
+for (const mode of ['perpetual', 'drawdown']) {
+  for (const count of [1, 2]) {
+    for (const service of [0, 12.5, 19.99, 20, 24.99, 25, 29.99, 30, 34.99, 35, 39.99, 40]) {
+      const plan = structuredClone(boundary);
+      plan.assumptions.portfolioEnd = mode;
+      plan.persons[0].yearsWorkedEstonia = service;
+      if (count === 2) {
+        const second = structuredClone(plan.persons[0]);
+        second.name = 'Person2';
+        second.birthYear -= 5;
+        second.income.grossMonthly = minimum / 24;
+        plan.persons.push(second);
+      }
+      const result = simulate(plan);
+      for (const p of result.persons) {
+        if (!p.statePensionEarlyYears) continue;
+        const years = Math.max(0, Math.min(result.timeline.yearsToFi,
+          p.statePensionYear - (plan.currentYear || RATES.year)));
+        const available = p.yearsWorkedSoFar + years * p.estimatedServicePerYear;
+        assert.ok(available >= 15 + 5 * p.statePensionEarlyYears,
+          `${mode}, ${count} people, ${service} accrued: final early pension must be eligible`);
+        assert.equal(p.statePensionYear, p.statePensionStandardYear - p.statePensionEarlyYears);
+      }
+    }
+  }
+}
+console.log('Pension service and final early-pension boundary checks passed');

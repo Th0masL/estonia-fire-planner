@@ -1533,24 +1533,14 @@ function simulate(input) {
   const lastsIfStoppingAt = (y) =>
     lastsFrom(project(totalStart, annualSaving, y), y, perpetualMode);
 
-  // Drawing the state pension early is circular: it needs a service length,
-  // which needs the FI date, which depends on how long health cover has to be
-  // bought, which is what drawing early changes. Solved by running it twice -
-  // once at the standard age to get a service length, then again with the
-  // dates that service actually permits. The second pass moves the answer by
-  // months, so a third would be noise.
-  if (earlyRequested > 0) {
-    const provisional = solveFor(perpetualMode);
-    for (const p of people) {
-      const serviceAtFi = p.serviceYearsKnown
-        ? p.yearsWorkedSoFar + (Number.isFinite(provisional) ? provisional : 0) * p.estimatedServicePerYear
-        : 0;
-      p.statePensionEarlyYears = earlyAllowedFor(serviceAtFi);
+  const setEarlyPension = (p, earlyYears) => {
+      p.statePensionEarlyYears = earlyYears;
       p.statePensionYear = p.statePensionStandardYear - p.statePensionEarlyYears;
       p.statePensionAdjustment =
         RATES.pillar1.flexibleAdjustment[String(-p.statePensionEarlyYears)] ?? 0;
       if (drawAtStatePensionAge) {
         p.pillar2DrawYear = p.statePensionYear;
+        p.pillar2DrawAge = p.pillar2DrawYear - p.birthYear;
         if (p.pillar3LegalYear != null) {
           p.pillar3DrawYear = Math.max(p.pillar3LegalYear, p.statePensionYear);
         }
@@ -1564,12 +1554,46 @@ function simulate(input) {
         p.pillarIncomeEndAge = Number.isFinite(p.pillarIncomeEndYear)
           ? p.pillarIncomeEndYear - p.birthYear : Infinity;
       }
+  };
+  const earlyAllowedAt = (p, yearsToStop) => {
+    if (!p.serviceYearsKnown) return 0;
+    // Contributions after the proposed pension start cannot establish the
+    // right to draw that pension earlier.
+    for (let early = earlyRequested; early > 0; early--) {
+      const workingYears = Math.max(0, Math.min(
+        Number.isFinite(yearsToStop) ? yearsToStop : 0,
+        p.statePensionStandardYear - early - currentYear));
+      const service = p.yearsWorkedSoFar + workingYears * p.estimatedServicePerYear;
+      if (earlyAllowedFor(service) >= early) return early;
     }
+    return 0;
+  };
+  if (earlyRequested > 0) {
+    const provisional = solveFor(perpetualMode);
+    for (const p of people) setEarlyPension(p, earlyAllowedAt(p, provisional));
   }
 
-  // Both answers, always, so the choice between them stays legible.
-  const yearsToFiPerpetual = solveFor(true);
-  const yearsToFiBridged = solveFor(false);
+  // A provisional date may permit an early pension that moves FI back across
+  // its own service threshold. Re-solve after downgrading unsupported choices.
+  // Never upgrade within this loop: discrete choices then strictly decrease,
+  // so it terminates in at most five downgrades per person, without oscillation.
+  // Both displayed horizons share these dates, so validate against the earlier
+  // finite stop date. This is conservative, not a global pension-date optimizer.
+  let yearsToFiPerpetual, yearsToFiBridged;
+  while (true) {
+    yearsToFiPerpetual = solveFor(true);
+    yearsToFiBridged = solveFor(false);
+    const earliest = Math.min(yearsToFiPerpetual, yearsToFiBridged);
+    let changed = false;
+    for (const p of people) {
+      const allowed = earlyAllowedAt(p, earliest);
+      if (allowed < p.statePensionEarlyYears) {
+        setEarlyPension(p, allowed);
+        changed = true;
+      }
+    }
+    if (!changed) break;
+  }
   const bridging = !perpetualMode;
   // Working past the earliest date buys margin, and buys more of it than the
   // extra savings alone suggest: the portfolio compounds for longer, one year of

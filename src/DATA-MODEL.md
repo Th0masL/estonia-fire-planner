@@ -210,10 +210,18 @@ Net-income overrides do not establish contributions. This assumes pension
 social tax on the entered salary, not employer minimum top-ups or state-paid
 and special qualifying periods. Such cases need official records; the model
 does not determine legal entitlement. The current minimum-wage assumption is
-held constant in real terms. This does not fix healthcare eligibility or the
-early-pension solver's final-date revalidation.
+held constant in real terms. This does not fix healthcare eligibility.
 Source: [SKA pension qualifying period](https://www.sotsiaalkindlustusamet.ee/en/pension-and-benefits/applying-pension/pension-qualifying-period),
 checked 19 September 2026.
+
+Early-pension choices are revalidated after solving both portfolio horizons.
+An unsupported choice is downgraded and both dates are recomputed until stable.
+Service is limited to the earlier of stopping work and starting the pension.
+Choices only decrease, preventing cycles. Using the earlier horizon date and
+excluding optional buffer years is conservative: the solver does not optimize
+every pension-start combination or automatically upgrade a downgraded choice.
+Source: [SKA flexible pension](https://sotsiaalkindlustusamet.ee/en/pension-and-benefits/types-pensions/flexible-pension),
+service thresholds checked 19 September 2026.
 
 Cost basis and unused contribution allowance are independent of market value;
 losses must not reduce either on load. `investmentAccountContributions` keeps
