@@ -37,3 +37,47 @@ export function withdrawInvestmentAccount(account, requestedNet, taxRate) {
     gross, taxable, tax, net, shortfall: Math.max(0, requestedNet - net),
   };
 }
+
+// Adapters for the simulator's real-euro asset/spending basis. Allowance is
+// deliberately nominal across dates; never multiply it by the price level.
+export function investmentAccountPriceLevel(inflation, years) {
+  if (!Number.isFinite(inflation) || inflation <= -1) {
+    throw new RangeError('inflation must be finite and greater than -1');
+  }
+  nonnegative(years, 'years');
+  const factor = (1 + inflation) ** years;
+  if (!Number.isFinite(factor) || factor <= 0) throw new RangeError('invalid price level');
+  return factor;
+}
+
+const nominalAccount = ({ balanceReal, allowanceNominal }, priceLevel) => {
+  if (!Number.isFinite(priceLevel) || priceLevel <= 0) throw new RangeError('invalid price level');
+  nonnegative(balanceReal, 'balanceReal');
+  const account = { balance: balanceReal * priceLevel, allowance: allowanceNominal };
+  validate(account);
+  return account;
+};
+const realAccount = (account, priceLevel) => {
+  const balanceReal = account.balance / priceLevel;
+  nonnegative(balanceReal, 'balanceReal');
+  return { balanceReal, allowanceNominal: account.allowance };
+};
+
+export function contributeRealInvestmentAccount(account, amountReal, priceLevel) {
+  const nominal = nominalAccount(account, priceLevel);
+  nonnegative(amountReal, 'amountReal');
+  return realAccount(contributeInvestmentAccount(nominal, amountReal * priceLevel), priceLevel);
+}
+
+export function withdrawRealInvestmentAccount(account, requestedNetReal, taxRate, priceLevel) {
+  const nominal = nominalAccount(account, priceLevel);
+  nonnegative(requestedNetReal, 'requestedNetReal');
+  const result = withdrawInvestmentAccount(nominal, requestedNetReal * priceLevel, taxRate);
+  const output = { account: realAccount(result.account, priceLevel) };
+  for (const key of ['gross', 'taxable', 'tax', 'net', 'shortfall']) {
+    const value = result[key] / priceLevel;
+    nonnegative(value, `${key}Real`);
+    output[`${key}Real`] = value;
+  }
+  return output;
+}

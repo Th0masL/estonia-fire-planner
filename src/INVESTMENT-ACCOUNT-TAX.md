@@ -52,6 +52,30 @@ and the shortfall is €7,800. These are arithmetic examples, not personal tax a
 
 ## Migration gates before enabling
 
+### Implemented real/nominal adapter
+
+The isolated ledger now also accepts `{ balanceReal, allowanceNominal }` through
+`contributeRealInvestmentAccount` and `withdrawRealInvestmentAccount`. Supply the
+price level for the actual cash-flow date; `investmentAccountPriceLevel` computes
+`(1 + inflation)^years`, including fractional years. All returned cash-flow fields
+end in `Real`; the remaining allowance explicitly stays `allowanceNominal`.
+
+The adapter converts value and the requested payment to nominal euros, applies
+the nominal ledger, and converts value and cash flows back. It never indexes the
+allowance. At a price level of 2, a €60,000 nominal allowance covers only €30,000
+of real spending. A €69,000 real spending request at a supplied 22% rate needs
+€80,000 real gross withdrawal, including €11,000 real tax reserve. No new deposit
+or return is inferred merely because the event date changes.
+
+Tests cover zero/positive inflation, deflation, fractional dates, deposits at
+different price levels, depleted accounts and reconciliation in both units.
+Invalid or unrepresentable price levels/converted amounts are rejected. Deflation
+support is arithmetic capability, not a change to permitted UI assumptions.
+Callers remain responsible for applying investment returns between events and
+for choosing event dates; this adapter does not choose annual/monthly timing.
+
+### Remaining integration gates
+
 1. Preserve investment-account value separately from brokerage, crypto and cash
    in every projection path. Remove only the investment-account opening tax
    reserve when enabling explicit taxation. Do not tax a net-of-reserve balance
@@ -68,6 +92,8 @@ and the shortfall is €7,800. These are arithmetic examples, not personal tax a
    convert real spending/value to nominal for the event and convert results back.
    Do not index unused allowance with inflation or consume real-euro spending
    directly against a nominal allowance. Cover fractional dates and zero inflation.
+   The adapter above is tested; integration into dated household cash flows is
+   still required. Do not use a single year's factor for all future withdrawals.
 5. Apply the same withdrawal primitive to working deficits, home completion,
    retirement, reserve replenishment, coast and stress paths. Pension lump-sum
    reinvestment must follow the explicit wrapper allocation and correct owner.
