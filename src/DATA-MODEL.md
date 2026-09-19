@@ -405,6 +405,13 @@ assumed. The depleting flag includes the surplus after mortgage
 payoff; it no longer gates FI calculations. The UI likewise displays
 funded plans without requiring positive income or savings. The date search's
 general monotonicity assumption remains a separate limitation under review.
+If the last candidate date fails, the solver now probes earlier dates quarterly
+and at purchase, loan-payoff and pension boundaries, then bisects the first
+sampled failing/passing bracket. This catches plans where working to the end
+exhausts assets but earlier retirement is pension-funded. It is not an exhaustive
+global search: narrower feasible windows can be missed, and the original
+bisection path when the endpoint passes still assumes monotonic feasibility.
+An added buffer is rechecked; later retirement is not automatically safer.
 CoastFIRE stops positive accessible-portfolio saving but continues to fund any
 working-year deficits cash-first. Configured income and pension contributions
 continue until the target retirement age. Calendar-year mortgage deflation and

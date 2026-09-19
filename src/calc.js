@@ -902,8 +902,32 @@ export function simulate(input) {
       lastsFrom(project(totalStart, annualSaving, y), y, perpetualFloor);
     if (ok(0)) return 0;
     const horizon = Math.min(100, planEndYear - currentYear - 1e-6);
-    if (horizon <= 0 || !ok(horizon)) return Infinity;
+    if (horizon <= 0 || houseFundingShortfall > 0) return Infinity;
     let lo = 0, hi = horizon;
+    if (!ok(horizon)) {
+      // Working until the horizon can exhaust accessible assets even though
+      // retiring earlier unlocks enough pension income. A failed endpoint is
+      // not proof that every earlier stop date fails. Probe quarterly, plus
+      // exact purchase/pension boundaries, before rejecting the plan.
+      // This bounded fallback does not prove global monotonicity or detect
+      // every feasible window narrower than its sampling interval.
+      const checkpoints = new Set([horizon, houseYears,
+        mortgageEndYear - currentYear]);
+      for (const p of people) {
+        for (const date of [p.pillar2DrawYear, p.pillar3DrawYear,
+          p.statePensionYear, p.pillarIncomeEndYear]) {
+          if (date != null) checkpoints.add(date - currentYear);
+        }
+      }
+      for (let y = .25; y < horizon; y += .25) checkpoints.add(y);
+      hi = Infinity;
+      for (const y of [...checkpoints].filter((y) => y > 0 && y <= horizon)
+        .sort((a, b) => a - b)) {
+        if (ok(y)) { hi = y; break; }
+        lo = y;
+      }
+      if (!Number.isFinite(hi)) return Infinity;
+    }
     for (let i = 0; i < 50; i++) {
       const mid = (lo + hi) / 2;
       if (ok(mid)) hi = mid; else lo = mid;
@@ -977,9 +1001,8 @@ export function simulate(input) {
     if (!changed) break;
   }
   const bridging = !perpetualMode;
-  // Working past the earliest date buys margin, and buys more of it than the
-  // extra savings alone suggest: the portfolio compounds for longer, one year of
-  // withdrawals never happens, and pension contributions carry on.
+  // Extra working years can buy margin, but deficits may instead exhaust the
+  // accessible portfolio before pensions are drawn. Recheck the buffered date.
   const bufferYears = Math.max(0, a.bufferYears || 0);
   const yearsToFiSolved = perpetualMode ? yearsToFiPerpetual : yearsToFiBridged;
   const bufferedDate = yearsToFiSolved + bufferYears;

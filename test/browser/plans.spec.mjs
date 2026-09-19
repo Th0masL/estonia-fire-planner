@@ -29,6 +29,23 @@ function makePlan(name = hostileName) {
 const fragment = (plan) => '#d=' + encodeState(plan);
 const saved = (page) => page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY);
 
+test('pension-funded retirement is found despite an unfunded late working path', async ({ page }) => {
+  const plan = blankState();
+  Object.assign(plan.persons[0], { name: 'Person1', birthYear: 1971,
+    healthCoveredAfterFi: true, assets: { cash: 50000, pillar2: 400000 },
+    income: { grossMonthly: 0, netMonthly: 500 }, fundPensionYears: 30 });
+  plan.household.spending.other = 1000;
+  Object.assign(plan.assumptions, { realReturn: 0, cashRealReturn: 0,
+    pensionPolicy: 'ownPots', portfolioEnd: 'drawdown', planToAge: 80,
+    bufferYears: 0, spendingGrowth: 0, potsCountedShare: 1 });
+  await page.clock.install({ time: new Date('2026-09-20T12:00:00Z') });
+  await page.goto('/simulator.html' + fragment(plan));
+  await expect(page.locator('#headline')).toContainText('age at FI');
+  await expect(page.locator('#headline .stat b').nth(1)).toHaveText('59');
+  await page.locator('#aPensionPolicy').selectOption('ignore');
+  await expect(page.locator('#headline')).not.toContainText('age at FI');
+});
+
 test('funded retirement remains visible without income or positive savings', async ({ page }) => {
   const plan = blankState();
   Object.assign(plan.persons[0], { name: 'Person1', birthYear: new Date().getFullYear() - 55,
