@@ -267,10 +267,7 @@ export const DEFAULTS = {
   // optimistic - care and health costs outrun the general index, and lifestyle
   // drifts. Left at zero by default because it is a judgement, not a fact.
   spendingGrowth: 0,
-  // Only used for one thing: eroding a pension annuity, which is fixed in
-  // NOMINAL euros. Everything else on the site is in real terms and needs no
-  // inflation figure at all. 2.5% rather than the ECB's 2% target because
-  // Estonian inflation has run above the euro-area average.
+  // Erodes fixed nominal mortgage payments after completion; returns are real.
   inflation: 0.025,
   // 100, not 95. Estonian remaining life expectancy at 65 is about 19 years, so
   // an average pensioner reaches ~84 - but the horizon has to cover the person
@@ -290,10 +287,8 @@ export const DEFAULTS = {
   // 'unlock'       - draw the pots as soon as the law allows, state pension age - 5.
   // 'statePension' - leave them to compound and start everything together.
   pillarDrawAge: 'unlock',
-  // 'annuity'     - eluaegne pensionileping: paid for life, 0% tax, one seller.
-  // 'fundPension' - fondipension: 0% tax at the recommended duration, but it
-  //                 runs out, and the portfolio has to cover what follows.
-  pillarPayout: 'annuity',
+  // Fund withdrawals stop after the entered official duration.
+  pillarPayout: 'fundPension',
   // How much of each pension to actually believe. 1 = count it in full. The two
   // are separate because they fail for different reasons: your own pots are a
   // balance whose future VALUE is uncertain (returns, fees, annuity pricing),

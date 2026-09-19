@@ -117,10 +117,23 @@ ok(Math.abs(pensionAges(1962).statePensionAge - (65 + 1 / 12)) < 1e-12,
   const x = plan(12);
   x.assumptions.pensionPolicy = 'ownPots';
   x.assumptions.pillarPayout = 'annuity';
-  x.persons[0].annuityMonthlyQuote = null;
+  x.persons[0].annuityMonthlyQuote = 1000;
+  x.persons[0].fundPensionYears = null;
   const r = simulate(x);
   ok(r.persons[0].pensionIncome === 0,
-    'annuity income is excluded without an insurer quote');
+    'legacy quotes cannot create fund income without a duration');
+  const restored = sanitise(x);
+  ok(restored.assumptions.pillarPayout === 'fundPension' &&
+    restored.persons[0].annuityMonthlyQuote === undefined &&
+    restored.persons[0].fundPensionYears === null,
+    'legacy payout normalizes without inventing a fund duration');
+  x.persons[0].fundPensionYears = 20;
+  x.persons[0].assets.pillar2 = 0;
+  x.persons[0].assets.pillar3 = 0;
+  x.persons[0].income.grossMonthly = 0;
+  x.persons[0].pillar3Annual = 0;
+  ok(simulate(x).persons[0].pensionIncome === 0,
+    'an obsolete quote cannot create income from empty pension funds');
 }
 {
   const x = plan(12);

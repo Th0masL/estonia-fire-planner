@@ -385,7 +385,7 @@ export function simulate(input) {
     }
     return Math.min(allowed, earlyRequested);
   };
-  const fundPension = (a.pillarPayout || 'annuity') === 'fundPension';
+  a.pillarPayout = 'fundPension';
   for (const p of people) {
     p.pension = pensionAges(p.birthYear);
     p.pensionUnlockYear = p.birthYear + p.pension.pillarUnlockAge;
@@ -416,17 +416,15 @@ export function simulate(input) {
     p.pillarDrawAge = p.pillarDrawYear - p.birthYear;
     // Do not invent an insurer price or an official tax-free duration. Those
     // must come from a current quote / Pensionikeskus result supplied by the user.
-    p.payoutYears = fundPension && p.fundPensionYears != null
+    p.payoutYears = p.fundPensionYears != null
       ? Math.max(1, p.fundPensionYears) : null;
-    p.annuityMonthlyQuote = p.annuityMonthlyQuote == null
-      ? null : Math.max(0, p.annuityMonthlyQuote);
-    p.pensionTermsKnown = fundPension ? p.payoutYears != null : p.annuityMonthlyQuote != null;
-    p.pillarIncomeEndYear = fundPension && p.payoutYears != null
+    p.pensionTermsKnown = p.payoutYears != null;
+    p.pillarIncomeEndYear = p.payoutYears != null
       ? Math.max(p.pillar2DrawYear + p.payoutYears,
           (p.pillar3DrawYear ?? p.pillar2DrawYear) + p.payoutYears)
-      : (fundPension ? p.pillarDrawYear : Infinity);
-    p.pillarIncomeEndAge = fundPension && p.payoutYears != null
-      ? p.pillarDrawAge + p.payoutYears : (fundPension ? p.pillarDrawAge : Infinity);
+      : p.pillarDrawYear;
+    p.pillarIncomeEndAge = p.payoutYears != null
+      ? p.pillarDrawAge + p.payoutYears : p.pillarDrawAge;
     p.ageNow = currentYear - p.birthYear;
     // Pillar I accrual comes from the accrued coefficient and nothing else. No
     // estimate from a career length: it could only ever be worse than the figure
@@ -699,22 +697,8 @@ export function simulate(input) {
     return p.nationalPensionEligible ? RATES.pillar1.nationalPensionMonthly : 0;
   };
 
-  // Annual pension income in a given calendar year, for an FI date `yearsToFi`
-  // away. A lifetime annuity is assumed: it is the only Pillar II payout that
-  // is both 0%-taxed and genuinely lifelong. A fund pension paced over the
-  // recommended duration would stop partway through the plan.
-  // What the pots actually pay in a given year, in today's money. The two
-  // payouts behave in opposite directions, and neither is flat:
-  //
-  //   annuity     - a fixed nominal euro amount set at signing, with no CPI or
-  //                 wage link, so its real value decays at the inflation rate.
-  //   fundPension - a fixed number of units redeemed each time, valued at the
-  //                 fund's NAV, so the payment rides the fund. The balance stays
-  //                 invested while it is drawn down, so in real terms it climbs.
-  //
-  // Holding both flat, as this did, flattered the annuity and understated the
-  // fund pension - which is exactly the comparison the payout selector exists
-  // to make.
+  // Fund withdrawals redeem fixed units over the entered duration. Remaining
+  // units stay invested; payments follow returns and stop when units run out.
   // A haircut on what the pension is believed to deliver. Applied to the income,
   // not to the balance: the pot is still the pot, this is how much of it the
   // plan is willing to depend on.
@@ -724,12 +708,7 @@ export function simulate(input) {
     if (!p.pensionTermsKnown) return 0;
     const from = Math.max(year, currentYear + yearsToFi);
     const to = year + 1;
-    if (!fundPension) {
-      const active = overlapYears(from, to, p.pillarDrawYear, Infinity);
-      if (!active) return 0;
-      return p.annuityMonthlyQuote * 12 * potsShare * active /
-        (1 + inflation) ** Math.max(0, from - p.pillarDrawYear);
-    }
+
     let income = 0;
     for (const kind of ['pillar2', 'pillar3']) {
       const draw = kind === 'pillar2' ? p.pillar2DrawYear : p.pillar3DrawYear;
@@ -752,7 +731,7 @@ export function simulate(input) {
         pots += potIncomeIn(p, year, yearsToFi);
       }
       if (countState && year + 1 > p.statePensionYear) {
-        // Net, not gross: a Pillar II annuity is 0%-taxed but Pillar I is not,
+        // Net, not gross: a qualifying fund pension is 0%-taxed but Pillar I is not,
         // and only what survives the tax can be spent.
         const gross = 12 * stateMonthlyFor(p, yearsToFi) *
           (1 + p.statePensionAdjustment);
@@ -800,7 +779,7 @@ export function simulate(input) {
   //   perpetual - the capital that funds permanent spending at the withdrawal
   //               rate indefinitely, less any income that is itself permanent.
   //               Only the state pension qualifies: it is indexed by law,
-  //               whereas an annuity is fixed in euros and decays and a fund
+  //               whereas a fund
   //               pension stops outright. Counting those as permanent would be
   //               the optimistic error.
   //
@@ -882,10 +861,10 @@ export function simulate(input) {
         p.pillarDrawYear = Math.max(
           p.pillar2DrawYear, p.pillar3DrawYear ?? p.pillar2DrawYear);
         p.pillarDrawAge = p.pillarDrawYear - p.birthYear;
-        p.pillarIncomeEndYear = fundPension && p.payoutYears != null
+        p.pillarIncomeEndYear = p.payoutYears != null
           ? Math.max(p.pillar2DrawYear + p.payoutYears,
               (p.pillar3DrawYear ?? p.pillar2DrawYear) + p.payoutYears)
-          : (fundPension ? p.pillarDrawYear : Infinity);
+          : p.pillarDrawYear;
         p.pillarIncomeEndAge = Number.isFinite(p.pillarIncomeEndYear)
           ? p.pillarIncomeEndYear - p.birthYear : Infinity;
       }
@@ -1149,10 +1128,8 @@ export function simulate(input) {
     // ignoring them stays visible.
     // The first year's payment. It does not stay there: see potIncomeIn.
     p.pensionIncome = p.pensionTermsKnown
-      ? (fundPension
-          ? ((potAtDraw(p, yearsToFi, 'pillar2') + potAtDraw(p, yearsToFi, 'pillar3')) /
+      ? ((potAtDraw(p, yearsToFi, 'pillar2') + potAtDraw(p, yearsToFi, 'pillar3')) /
               p.payoutYears) * potsShare
-          : p.annuityMonthlyQuote * 12 * potsShare)
       : 0;
     p.pensionIncomeFinal = Number.isFinite(yearsToFi)
       ? potIncomeIn(p, Math.min(planEndYear - 1,
@@ -1243,7 +1220,7 @@ export function simulate(input) {
       countsPension: (countPots && potsShare > 0) || (countState && stateShare > 0),
       policy,
       pillarDrawAge: a.pillarDrawAge || 'unlock',
-      pillarPayout: a.pillarPayout || 'annuity',
+      pillarPayout: 'fundPension',
       bufferYears,
       yearsSolved: yearsToFiSolved,
       resilience: resilience(),
@@ -1252,10 +1229,8 @@ export function simulate(input) {
       inflation, potsShare, stateShare, haircutBuffer,
       // When the pots stop paying, if they do. The years after this are back on
       // the portfolio alone, plus the state pension if it is being counted.
-      pillarIncomeEndsYear: fundPension
-        ? Math.max(...people.map((p) => p.pillarIncomeEndYear)) : null,
-      pillarIncomeEndsAge: fundPension
-        ? Math.max(...people.map((p) => p.pillarIncomeEndAge)) : null,
+      pillarIncomeEndsYear: Math.max(...people.map((p) => p.pillarIncomeEndYear)),
+      pillarIncomeEndsAge: Math.max(...people.map((p) => p.pillarIncomeEndAge)),
       // Both answers, always, so the cost of the choice is legible.
       yearsPerpetual: yearsToFiPerpetual,
       yearsBridged: yearsToFiBridged,

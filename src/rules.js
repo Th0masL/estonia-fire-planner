@@ -129,45 +129,6 @@ export function actionPlan(sim, input) {
       });
     }
 
-    if (sim.fi.pillarPayout === 'annuity' && !RATES.pillar2.annuityIndexed) {
-      const first = people.reduce((x, p) => x + p.pensionIncome, 0);
-      const end = people.reduce((x, p) => x + p.pensionIncomeFinal, 0);
-      if (first > 0 && end < first * 0.95) {
-        add({
-          id: 'annuity-not-indexed', severity: 'important', link: 'pensions',
-          title: 'The annuity is fixed in euros, so it shrinks',
-          value: pct(1 - end / first) + ' of its value',
-          detail:
-            `A pension contract pays a fixed number of euros for life. There is no CPI or wage ` +
-            `link, and no indexation duty on Pillar II — unlike Pillar I, which is indexed by law ` +
-            `every April. At ${pct(sim.assumptions.inflation ?? 0.025)} inflation the ` +
-            `${eur(first / 12)}/month it starts at is worth ${eur(end / 12)}/month by the end of ` +
-            `the plan. The insurer may share technical profit, but its own terms say it is not ` +
-            `obliged to and you cannot demand it, so that is modelled as zero. A fund pension ` +
-            `moves with the fund instead, which over a long payout has historically beaten ` +
-            `prices — at the cost of running out, and of having no floor.`,
-        });
-      }
-    }
-
-    if (sim.fi.pillarPayout === 'annuity' && RATES.pillar2.annuityProviders <= 1) {
-      add({
-        id: 'annuity-single-provider', severity: 'important', link: 'pensions',
-        title: 'Lifetime annuities have one seller left',
-        value: eur(sim.fi.pensionIncomeAtUnlock) + '/yr assumed',
-        detail:
-          `These figures assume a lifetime annuity, the only Pillar II payout that is both ` +
-          `0%-taxed and genuinely lifelong. Compensa Life is currently the only insurer writing ` +
-          `them, and an insurer may refuse a balance too small to be worth administering. The ` +
-          `alternative, a fund pension paced over the recommended duration, runs out after about ` +
-          `${RATES.pillar2.annuityYears} years — around age ` +
-          `${Math.round(people[0].pension.pillarUnlockAge + RATES.pillar2.annuityYears)} — ` +
-          `leaving the rest of the plan unfunded.`,
-      });
-    }
-
-    // A payout that runs out hands the household back to the portfolio, at the
-    // oldest and least recoverable point in the plan.
     if (sim.fi.pillarPayout === 'fundPension' && sim.fi.pillarIncomeEndsAge) {
       const endAge = sim.fi.pillarIncomeEndsAge;
       const alone = Math.max(0, sim.assumptions.planToAge - endAge);
@@ -180,7 +141,7 @@ export function actionPlan(sim, input) {
           `lifetime income. From ${Math.round(sim.fi.pillarIncomeEndsYear)} the portfolio carries ` +
           `the household again${sim.fi.policy === 'all' ? ', with only the state pension alongside it' : ' alone'}, ` +
           `for the last ${alone.toFixed(0)} years to ${sim.assumptions.planToAge}. That is priced ` +
-          `into the target above, which is why it is higher than the annuity case. The advantage ` +
+          `into the target above. The advantage ` +
           `is that it depends on no insurer: you take it through your own pension fund.`,
       });
     }
@@ -209,11 +170,8 @@ export function actionPlan(sim, input) {
           id: `pension-terms-${p.name}`, severity: 'critical', link: 'pensions',
           title: `${p.name}: pension income cannot be verified`,
           value: 'excluded from the plan',
-          detail: a.pillarPayout === 'fundPension'
-            ? `Enter the recommended tax-free duration returned by Pensionikeskus. It depends on ` +
-              `age, sex and the applicable Statistics Estonia life table.`
-            : `Enter a current insurer annuity quote. Dividing the pot by life expectancy is not ` +
-              `an annuity price and is no longer used.`,
+          detail: `Enter the recommended tax-free duration returned by Pensionikeskus. It depends on ` +
+              `age, sex and the applicable Statistics Estonia life table.`,
         });
       }
       if (!p.pillar3EligibilityKnown) {

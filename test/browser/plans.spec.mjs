@@ -29,6 +29,32 @@ function makePlan(name = hostileName) {
 const fragment = (plan) => '#d=' + encodeState(plan);
 const saved = (page) => page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY);
 
+test('legacy annuity plans require fund duration and never use insurer quotes', async ({ page }) => {
+  const plan = makePlan('Person1');
+  plan.assumptions.pillarPayout = 'annuity';
+  for (const person of plan.persons) {
+    person.annuityMonthlyQuote = 99999;
+    person.fundPensionYears = null;
+  }
+  await page.goto('/simulator.html' + fragment(plan));
+  await expect(page.locator('#aPillarPayout')).toHaveCount(0);
+  await expect(page.locator('[data-k="annuityMonthlyQuote"]')).toHaveCount(0);
+  await expect(page.locator('#plan')).toContainText('Person1: pension income cannot be verified');
+  const duration = page.locator('[data-i="0"][data-k="fundPensionYears"]');
+  await expect(duration).toHaveValue('');
+  await duration.fill('20');
+  await page.reload();
+  await expect(duration).toHaveValue('20');
+  const restored = JSON.parse(await saved(page));
+  expect(restored.assumptions.pillarPayout).toBe('fundPension');
+  expect(restored.persons[0].annuityMonthlyQuote).toBeUndefined();
+  expect(restored.persons[1].fundPensionYears).toBeNull();
+  await page.locator('#aPensionPolicy').selectOption('ignore');
+  await expect(duration).toBeHidden();
+  await page.locator('#aPensionPolicy').selectOption('ownPots');
+  await expect(duration).toBeVisible();
+});
+
 async function assertSafeNames(page, name = hostileName) {
   await expect(page.locator('.pname').first()).toHaveValue(name);
   await expect(page.locator('.pname').nth(1)).toHaveValue(plainName);
@@ -46,7 +72,7 @@ test('initial shared plans render names literally in all result paths', async ({
   await page.goto('/simulator.html' + fragment(makePlan()));
   await assertSafeNames(page);
   await expect(page).toHaveURL(/simulator\.html$/);
-  await page.locator('#aPillarPayout').selectOption('annuity');
+  await expect(page.locator('#aPillarPayout')).toHaveCount(0);
   await assertSafeNames(page);
   await page.locator('#aPensionPolicy').selectOption('ignore');
   await assertSafeNames(page);

@@ -233,7 +233,7 @@ checks++;
 }
 
 // Inflation erodes a fixed-euro annuity and touches nothing else.
-for (const [payout, expectHarm] of [['annuity', true], ['fundPension', false]]) {
+for (const [payout, expectHarm] of [['fundPension', false]]) {
   checks++;
   const low = BASE(); low.assumptions.portfolioEnd = 'drawdown';
   low.assumptions.pensionPolicy = 'ownPots';
@@ -250,17 +250,7 @@ for (const [payout, expectHarm] of [['annuity', true], ['fundPension', false]]) 
     failures.push(`inflation moved a fund pension, which is valued in units (${fmt(a)} -> ${fmt(b)})`);
   }
 }
-// A frozen annuity loses real value; a fund pension gains it.
-checks++;
-{
-  const s2 = BASE(); s2.assumptions.portfolioEnd = 'drawdown';
-  s2.assumptions.pensionPolicy = 'ownPots'; s2.assumptions.pillarPayout = 'annuity';
-  const p = simulate(s2).persons[0];
-  if (!(p.pensionIncomeFinal < p.pensionIncome)) {
-    failures.push(`a fixed-euro annuity did not lose real value ` +
-                  `(${fmt(p.pensionIncome)} -> ${fmt(p.pensionIncomeFinal)})`);
-  }
-}
+// Fund payments reflect positive real returns.
 checks++;
 {
   const s2 = BASE(); s2.assumptions.portfolioEnd = 'drawdown';

@@ -79,11 +79,9 @@ check "health cover charged past state pension age" \
   '(x, p) => x + (year < p.statePensionYear ? healthPerPerson : 0), 0);' \
   '(x, p) => x + healthPerPerson, 0);'
 
-check "annuity treated as inflation-proof" \
-  'return fundPension
-      ? base * (1 + a.realReturn) ** t
-      : base / (1 + inflation) ** t;' \
-  'return base;'
+check "fund payments ignore market returns" \
+  'income += base * active * (1 + a.realReturn) ** Math.max(0, from - draw);' \
+  'income += base * active;'
 
 check "pension haircut not applied" \
   'const base = (potAtUnlock(p, yearsToFi) / p.payoutYears) * potsShare;' \

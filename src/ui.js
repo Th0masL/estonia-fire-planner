@@ -147,8 +147,7 @@ function renderPeople() {
         <label ${state.assumptions.pensionPolicy === 'all' ? '' : 'hidden'}>Estonian pension service <span class="u">qualifying years already accrued, not calendar years worked</span><input type="number" min="0" max="80" step="0.1" data-i="${i}" data-k="yearsWorkedEstonia" value="${p.yearsWorkedEstonia ?? ''}"></label>
         <label ${state.assumptions.pensionPolicy === 'all' ? '' : 'hidden'}>Other EU/EEA service <span class="u">years; official pro-rata result still required</span><input type="number" min="0" max="80" step="0.1" data-i="${i}" data-k="yearsWorkedEuEea" value="${p.yearsWorkedEuEea ?? 0}"></label>
         <label ${state.assumptions.pensionPolicy === 'all' ? '' : 'hidden'}><input type="checkbox" data-i="${i}" data-k="nationalPensionEligible" ${p.nationalPensionEligible ? 'checked' : ''}> National-pension residence/foreign-pension conditions confirmed</label>
-        <label ${state.assumptions.pensionPolicy === 'ignore' || state.assumptions.pillarPayout !== 'annuity' ? 'hidden' : ''}>Current insurer annuity quote <span class="u">€/mo; required to count it</span><input type="number" min="0" step="10" data-i="${i}" data-k="annuityMonthlyQuote" value="${p.annuityMonthlyQuote ?? ''}"></label>
-        <label ${state.assumptions.pensionPolicy === 'ignore' || state.assumptions.pillarPayout !== 'fundPension' ? 'hidden' : ''}>Official fund-pension duration <span class="u">years, from Pensionikeskus</span><input type="number" min="1" max="60" step="1" data-i="${i}" data-k="fundPensionYears" value="${p.fundPensionYears ?? ''}"></label>
+        <label ${state.assumptions.pensionPolicy === 'ignore' ? 'hidden' : ''}>Official fund-pension duration <span class="u">years, from Pensionikeskus</span><input type="number" min="1" max="60" step="1" data-i="${i}" data-k="fundPensionYears" value="${p.fundPensionYears ?? ''}"></label>
       </div>
       ${infoNote('pension-units', `Your accrued Pillar I coefficient — what the state has actually
         recorded, rather than anything estimated from a career length.
@@ -278,13 +277,11 @@ function formToState() {
   // Counting Pillar I needs a career length, so that field comes and goes with
   // the policy. Safe to re-render here: focus is on the select, not on a card.
   const policyBefore = state.assumptions.pensionPolicy;
-  const payoutBefore = state.assumptions.pillarPayout;
   state.assumptions.pensionPolicy = $('aPensionPolicy').value || 'ignore';
   state.assumptions.portfolioEnd = $('aPortfolioEnd').value || 'perpetual';
-  if ((policyBefore === 'all') !== (state.assumptions.pensionPolicy === 'all')) renderPeople();
+  if (policyBefore !== state.assumptions.pensionPolicy) renderPeople();
   state.assumptions.pillarDrawAge = $('aPillarDrawAge').value || 'unlock';
-  state.assumptions.pillarPayout = $('aPillarPayout').value || 'annuity';
-  if (payoutBefore !== state.assumptions.pillarPayout) renderPeople();
+  state.assumptions.pillarPayout = 'fundPension';
   state.assumptions.potsCountedShare = field('aPotsShare', 100) / 100;
   state.assumptions.stateCountedShare = field('aStateShare', 100) / 100;
   state.assumptions.statePensionEarlyYears = field('aStateEarly', 0);
@@ -332,7 +329,6 @@ function stateToForm() {
   $('aPensionPolicy').value = state.assumptions.pensionPolicy || 'ignore';
   $('aPortfolioEnd').value = state.assumptions.portfolioEnd || 'perpetual';
   $('aPillarDrawAge').value = state.assumptions.pillarDrawAge || 'unlock';
-  $('aPillarPayout').value = state.assumptions.pillarPayout || 'annuity';
   $('aPotsShare').value = +((state.assumptions.potsCountedShare ?? 1) * 100).toFixed(0);
   $('aStateShare').value = +((state.assumptions.stateCountedShare ?? 1) * 100).toFixed(0);
   $('aStateEarly').value = state.assumptions.statePensionEarlyYears ?? 0;
@@ -592,11 +588,7 @@ function render() {
         const missingTerms = sim.portfolio.perPerson.some((p) =>
           p.pensionAtUnlock > 1 && !p.pensionTermsKnown);
         if (missingTerms) {
-          messages.push(`Pillars II and III cannot affect the result for one or more people yet. Enter ${
-            sim.fi.pillarPayout === 'annuity'
-              ? 'a current insurer annuity quote'
-              : 'the official fund-pension duration'
-          } under <strong>Paying into pensions</strong>.`);
+          messages.push(`Pillars II and III cannot affect the result for one or more people yet. Enter the official fund-pension duration under <strong>Paying into pensions</strong>.`);
         }
       }
 
@@ -741,7 +733,7 @@ function render() {
       ${sim.fi.countsPension ? `
       <tr><th>Pension income once it all unlocks ${infoBtn('pens-income')}</th><td>${eur(sim.fi.pensionIncomeAtUnlock)}/yr</td></tr>
       ${infoRow('pens-income', `What the pillars pay once every one of them has started: the pots
-        using the entered ${sim.fi.pillarPayout === 'annuity' ? 'insurer quote' : 'official fund-pension duration'}${sim.fi.policy === 'all' ? ', plus the state pension' : ''}.
+        using the entered official fund-pension duration${sim.fi.policy === 'all' ? ', plus the state pension' : ''}.
         Pillar II generally opens five years before state pension; Pillar III follows its own
         first-contribution and five-year holding rules. Contributions stop the day you stop working, so this already
         reflects the shorter career the plan implies.`)}
@@ -902,8 +894,7 @@ function render() {
          rather than taking each at its first legal opportunity. They keep
          compounding in the meantime, so the pot is larger when it does start and everything —
          pots, state pension and free health cover — begins together. The price is a longer stretch
-         on the portfolio alone. The figures here are conservative: an annuity bought later is also
-         priced over a shorter life expectancy and so pays more per year, which is not counted.`
+         on the portfolio alone. Payments depend on the projected fund balance and entered duration.`
       : `Pillar II is drawn at state pension age minus five. Pillar III is drawn at its separately
          calculated legal date, which depends on the first contribution and holding period. Leaving either invested until state pension age grows the pot and
          starts everything at once — set <em>Start drawing Pillars II &amp; III</em> under
@@ -919,41 +910,19 @@ function render() {
         <td>${eur(p.pensionNow)} today → <strong>${eur(p.pensionAtUnlock)}</strong>${sim.fi.countsPension
           ? ` · ${eur(p.pensionIncome)}/yr${Number.isFinite(p.incomeEndAge) ? ` until ${Math.floor(p.incomeEndYear)}` : ''}` : ''}</td></tr>`).join('')}
       ${sim.fi.countsPots ? sim.persons.filter((p) => p.pensionIncome > 1).map((p) => `
-        <tr><th>${escapeHtml(p.name)}: what that is worth by the end ${infoBtn('erosion')} <span class="muted">${sim.fi.pillarPayout === 'fundPension'
-          ? 'the fund keeps growing while it pays out' : 'fixed in euros, so it buys less each year'}</span></th>
+        <tr><th>${escapeHtml(p.name)}: what that is worth by the end ${infoBtn('erosion')} <span class="muted">payments follow the fund's returns</span></th>
         <td><strong>${eur(p.pensionIncomeFinal / 12)}</strong>/mo <span class="muted">vs ${eur(p.pensionIncome / 12)} at the start</span></td></tr>`).join('') : ''}
       ${sim.fi.countsPots ? `
-      <tr><th>Taken as ${infoBtn('payout')}</th><td><strong>${sim.fi.pillarPayout === 'fundPension'
-        ? `a fund pension` : `a lifetime annuity`}</strong> · 0% tax${sim.fi.pillarPayout === 'fundPension'
-        ? ` · ${sim.persons[0].payoutYears ?? 'official duration not supplied'} years` : ` · for life`}</td></tr>
-      ${sim.persons.some((p) => !p.pensionTermsKnown) ? `<tr class="bad"><th>Pension income excluded</th><td>Enter ${sim.fi.pillarPayout === 'fundPension' ? 'the Pensionikeskus duration' : 'a current insurer quote'} for each person</td></tr>` : ''}
+      <tr><th>Taken as ${infoBtn('payout')}</th><td><strong>a fund pension</strong> · 0% tax · ${sim.persons[0].payoutYears ?? 'official duration not supplied'} years</td></tr>
+      ${sim.persons.some((p) => !p.pensionTermsKnown) ? `<tr class="bad"><th>Pension income excluded</th><td>Enter the Pensionikeskus duration for each person</td></tr>` : ''}
       ${sim.fi.pillarPayout === 'fundPension' && sim.fi.countsPots && sim.persons.every((p) => p.payoutYears != null) ? (() => {
         const last = sim.persons.reduce((a, b) => (b.pillarIncomeEndYear > a.pillarIncomeEndYear ? b : a));
         const years = sim.assumptions.planToAge - last.pillarIncomeEndAge;
         return `<tr><th>Portfolio carries it again <span class="muted">once ${escapeHtml(last.name)}'s pot runs dry</span></th>
           <td>from ${Math.floor(last.pillarIncomeEndYear)} · ${years.toFixed(0)} years${sim.fi.countsState ? ', with the state pension' : ' alone'}</td></tr>`;
       })() : ''}
-      ${infoNote('erosion', `${sim.fi.pillarPayout === 'fundPension'
-        ? `A fund pension redeems a set number of units each time and values them at whatever the
-           fund is worth that day. The balance stays invested while it is being drawn down, so at a
-           ${pct1(sim.assumptions.realReturn)} real return the payment <strong>rises</strong> in
-           today's money across the payout — which is why the last one is larger than the first.
-           It also means it can fall: this rides the market, with no floor, and a bad decade shows
-           up directly in the payment.`
-        : `A pension contract pays a <strong>fixed number of euros</strong>, set when you sign it
-           from the premium, your age and a guaranteed interest rate. There is no CPI or wage link,
-           and Estonia imposes no indexation duty on Pillar II — unlike Pillar I, which is indexed
-           by law every April. So the amount never changes while prices do: at
-           ${pct1(sim.assumptions.inflation)} inflation it buys
-           ${pct(1 - sim.persons[0].pensionIncomeFinal / (sim.persons[0].pensionIncome || 1))} less
-           by the end of the plan.
-           <br><br>The one route upward is <em>lisakasum</em>, a share of the insurer's technical
-           profit. It is modelled as zero here, deliberately: Compensa's own terms state the
-           insurer has no obligation to pay it and you have no right to demand it, and a rise worth
-           under 5% may be handed over as a one-off rather than raised into the payment, so small
-           allocations never compound.`}`)}
-      ${infoRow('payout', `${sim.fi.pillarPayout === 'fundPension'
-        ? `A <em>fondipension</em> is paid out of your own pension fund with no insurer involved,
+      ${infoNote('erosion', `Fund payments follow the market value of the units redeemed. Returns can increase or decrease payments; there is no guaranteed income floor.`)}
+      ${infoRow('payout', `A <em>fondipension</em> is paid out of your own pension fund with no insurer involved,
            and is taxed at <strong>0%</strong> so long as it is paced over the statutory recommended
            duration — remaining life expectancy at the age you start. The entered official result is
            ${sim.persons[0].payoutYears?.toFixed(0) ?? 'not supplied'} years. Paced faster it is taxed at
@@ -966,18 +935,8 @@ function render() {
            to carry the household again for the last
            ${(sim.assumptions.planToAge - sim.fi.pillarIncomeEndsAge).toFixed(0)} years. Its
            strength is that it depends on nobody: no insurance contract, no company that might stop
-           selling one.`
-        : `An <em>eluaegne pensionileping</em> — a lifetime annuity — pays until you die and is
-           taxed at <strong>0%</strong> unconditionally. It is the only payout that is both of those
-           things. The simulator uses only the monthly insurer quote entered for the person; it no
-           longer estimates a quote by dividing the pot by life expectancy. The insurer carries the
-           longevity risk.
-           <br><br>The catch is availability. ${RATES.pillar2.annuityProviders === 1
-             ? 'Only one insurer still writes these contracts'
-             : `Only ${RATES.pillar2.annuityProviders} insurers still write these contracts`}, and
-           an insurer may refuse a pot too small to be worth administering. Switch to a fund pension
-           to see the plan that depends on no insurer at all.`}
-        <br><br>Both are Pillars II and III. The state pension is different: it <em>is</em> taxable,
+           selling one.
+        <br><br>This applies to Pillars II and III. The state pension is different: it <em>is</em> taxable,
         so it is shown net of income tax after the larger
         ${eur(12 * RATES.basicExemptionPensionAge)} pension-age exemption.`)}` : ''}
       ${sim.fi.policy === 'all' ? sim.persons.map((p) => `

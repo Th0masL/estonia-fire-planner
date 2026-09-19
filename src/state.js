@@ -30,7 +30,6 @@ export const blankPerson = (name) => ({
   yearsWorkedEuEea: 0,
   nationalPensionEligible: false,
   pillar3FirstContributionYear: null,
-  annuityMonthlyQuote: null,
   fundPensionYears: null,
   lifeInsurance: false, lifeInsuranceMonthly: 0,
   healthInsurance: false, healthInsuranceMonthly: RATES.healthInsurance.voluntaryMonthly,
@@ -145,7 +144,6 @@ const SPEND_KEYS = ['housing', 'childCosts', 'other', 'buffer'];
 const POLICIES = ['ignore', 'ownPots', 'all'];
 const PORTFOLIO_ENDS = ['perpetual', 'drawdown'];
 const DRAW_AGES = ['unlock', 'statePension'];
-const PAYOUTS = ['annuity', 'fundPension'];
 const isRecord = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);
 
 /**
@@ -224,8 +222,7 @@ export function sanitise(s) {
     p.nationalPensionEligible = bool(p.nationalPensionEligible);
     p.pillar3FirstContributionYear = p.pillar3FirstContributionYear == null ? null
       : bounded(p.pillar3FirstContributionYear, 1998, RATES.year, RATES.year);
-    p.annuityMonthlyQuote = p.annuityMonthlyQuote == null ? null
-      : Math.max(0, num(p.annuityMonthlyQuote));
+    delete p.annuityMonthlyQuote; // Removed insurer quotes never become fund income.
     p.fundPensionYears = p.fundPensionYears == null ? null
       : bounded(p.fundPensionYears, 1, 60, 20);
     p.lifeInsurance = bool(p.lifeInsurance);
@@ -265,7 +262,7 @@ export function sanitise(s) {
   a.pensionPolicy = POLICIES.includes(a.pensionPolicy) ? a.pensionPolicy : DEFAULTS.pensionPolicy;
   a.portfolioEnd = PORTFOLIO_ENDS.includes(a.portfolioEnd) ? a.portfolioEnd : DEFAULTS.portfolioEnd;
   a.pillarDrawAge = DRAW_AGES.includes(a.pillarDrawAge) ? a.pillarDrawAge : DEFAULTS.pillarDrawAge;
-  a.pillarPayout = PAYOUTS.includes(a.pillarPayout) ? a.pillarPayout : DEFAULTS.pillarPayout;
+  a.pillarPayout = 'fundPension';
   a.planToAge = bounded(a.planToAge, 75, 110, DEFAULTS.planToAge);
   a.emergencyFundMonths = bounded(a.emergencyFundMonths, 0, 36, DEFAULTS.emergencyFundMonths);
   a.transactionCostRate = bounded(a.transactionCostRate, 0, 0.20, DEFAULTS.transactionCostRate);

@@ -66,7 +66,6 @@ nothing reaches the engine before `sanitise()` has repaired it. It is covered by
       "pillar2Rate": 0.02,      // optional; 2%, 4% or 6%
       "pillar3Annual": 0,       // contribution, not balance
       "pillar3FirstContributionYear": null,
-      "annuityMonthlyQuote": null, // required to count annuity income
       "fundPensionYears": null,    // official Pensionikeskus duration
       "lifeInsurance": false,      // pays for term life cover
       "lifeInsuranceMonthly": 0,   // premium; deducted only when the flag is set
@@ -90,7 +89,7 @@ nothing reaches the engine before `sanitise()` has repaired it. It is covered by
     "spendingGrowth": 0,        // real, i.e. ON TOP of inflation, after FI
     "pensionPolicy": "ignore",  // "ignore" | "ownPots" | "all"
     "pillarDrawAge": "unlock",  // "unlock" | "statePension"
-    "pillarPayout": "annuity",  // "annuity" | "fundPension"
+    "pillarPayout": "fundPension", // only supported payout
     "transactionCostRate": 0.02,
     "emergencyFundMonths": 6
   }
@@ -158,21 +157,14 @@ onward, and it turns the perpetual target from `spending / swr` into
 `spending / (swr - growth)` — infinite when growth reaches the withdrawal rate,
 which is the honest answer rather than a large finite number.
 
-Quoted annuity income is fixed nominally and therefore decays using `inflation`.
-Fund-pension income follows the modeled fund return until its entered duration
-ends.
+Fund-pension income follows the modeled fund return until its entered duration ends.
 
-**`pillarPayout` decides whether the pension income ever stops.** An `annuity`
-is paid for life, so it runs to the end of the plan. A `fundPension` is paced
-over the recommended duration and then ends, and the portfolio has to carry the
-household again from `fi.pillarIncomeEndsAge` to `planToAge` — priced into the
-target, which is why it is higher. The duration shrinks the later the payout
-starts, since it tracks remaining life expectancy at that age.
-
-**Pension income is not invented.** An annuity counts only when the user enters
-an insurer's monthly quote. A fund pension counts only when the user enters the
-recommended duration returned by Pensionikeskus. Without that evidence the pot
-is displayed but its income contribution is zero.
+**Fund withdrawals only.** Insurer annuities are not modeled. Old payout selections
+normalize to fundPension; obsolete monthly quotes are discarded on load and never
+used by the engine. Existing official fund durations are retained. Missing durations
+remain unknown (income is excluded), rather than assuming a 20-year payout. The
+remaining portfolio must cover expenses after fund payments stop. No income is
+created from an empty fund.
 
 **Pillar I amount and eligibility use different evidence.** `pillar1Units` is
 authoritative for the accrued amount; `yearsWorkedEstonia` is a separate explicit
@@ -180,7 +172,7 @@ input for statutory eligibility. One is never inferred from the other. EU/EEA
 service may establish entitlement, but the simulator excludes the amount where
 an official cross-border pro-rata calculation is required.
 
-**Pillar I is reported net, Pillars II and III gross.** The annuity is 0%-taxed
+**Pillar I is reported net, Pillars II and III gross.** A qualifying fund pension is 0%-taxed
 so gross and net are the same thing; the state pension is ordinary taxable
 income, charged at `incomeTax` above the larger `basicExemptionPensionAge`.
 Mixing the two would overstate spendable income.
@@ -380,8 +372,8 @@ inflation, the previous constant-flow calculation is retained. Tests reconcile
 working-year assets, retirement spending, targets and real debt, including
 fractional years and delayed purchases. Existing plans can produce earlier FI
 dates because the real mortgage burden now declines. No stored inputs change.
-Annuity quote dates and premium requirements remain unresolved; the mortgage
-correction does not validate the separate annuity model.
+Insurer-annuity modeling has been removed because future pricing and availability
+cannot be established; no insurer income is inferred from projected pension pots.
 
 Future qualifying pension service is estimated separately from pension units:
 `elapsed working years × min(1, gross annual salary / annual minimum wage)`.

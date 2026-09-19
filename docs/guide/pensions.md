@@ -190,10 +190,8 @@ you to take either pot immediately. Leaving them invested has two effects:
   five years at a {{defaults.realReturn|pct}} real return is about 28% more; and
 - the portfolio has to carry you five years longer with no income at all.
 
-There is a third effect in your favour that the simulator does **not** count: an
-annuity bought at a later age is priced over a shorter remaining life
-expectancy, so it pays more per year for the same pot. Leaving that out keeps
-the comparison conservative.
+The simulator models withdrawals from invested pension funds only. It does not
+predict future insurer prices or assume that an annuity will be available.
 
 Deferring also lines everything up — pots, state pension and free health cover
 all begin on the same date, which makes the plan simpler to hold in your head
@@ -334,13 +332,14 @@ portfolio, at the oldest and least recoverable point in the plan.
 
 One caveat on that number: Statistics Estonia publishes it by age **and sex**,
 and the gap is wide — about 16 years for men against 21 for women at
-{{pillar2.payoutYearsAtAge}}. The simulator uses the combined figure, and
-Pensionikeskus's own calculator applies the life table from the year before
-last, rounded to whole years. Treat the end date as approximate.
+{{pillar2.payoutYearsAtAge}}. The simulator requires the official duration from
+Pensionikeskus rather than assuming the combined figure. Missing durations
+exclude fund income until supplied.
 
-**So model it both ways.** The simulator will do either, and the difference is
-the price of not depending on an insurer. If the plan only works with the
-annuity, it has a single point of failure that no amount of saving fixes — and
-that is worth knowing now, decades before the contract has to be signed.
+**The simulator uses fund-based withdrawals only.** The annuity discussion above
+is background, not an available simulator feature. Future insurer prices and
+availability cannot be established. Legacy insurer quotes are ignored; a supplied
+fund duration and projected pension assets determine income instead. Once those
+payments end, the accessible portfolio must cover the remaining spending gap.
 
 ---

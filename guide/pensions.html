@@ -410,10 +410,8 @@ you to take either pot immediately. Leaving them invested has two effects:</p>
   five years at a 5% real return is about 28% more; and</li>
 <li>the portfolio has to carry you five years longer with no income at all.</li>
 </ul>
-<p>There is a third effect in your favour that the simulator does <strong>not</strong> count: an
-annuity bought at a later age is priced over a shorter remaining life
-expectancy, so it pays more per year for the same pot. Leaving that out keeps
-the comparison conservative.</p>
+<p>The simulator models withdrawals from invested pension funds only. It does not
+predict future insurer prices or assume that an annuity will be available.</p>
 <p>Deferring also lines everything up — pots, state pension and free health cover
 all begin on the same date, which makes the plan simpler to hold in your head
 and removes the awkward five-year window where pension income has started but
@@ -589,13 +587,14 @@ combined — and the years from there to 100 come back to the
 portfolio, at the oldest and least recoverable point in the plan.</p>
 <p>One caveat on that number: Statistics Estonia publishes it by age <strong>and sex</strong>,
 and the gap is wide — about 16 years for men against 21 for women at
-65. The simulator uses the combined figure, and
-Pensionikeskus's own calculator applies the life table from the year before
-last, rounded to whole years. Treat the end date as approximate.</p>
-<p><strong>So model it both ways.</strong> The simulator will do either, and the difference is
-the price of not depending on an insurer. If the plan only works with the
-annuity, it has a single point of failure that no amount of saving fixes — and
-that is worth knowing now, decades before the contract has to be signed.</p>
+65. The simulator requires the official duration from
+Pensionikeskus rather than assuming the combined figure. Missing durations
+exclude fund income until supplied.</p>
+<p><strong>The simulator uses fund-based withdrawals only.</strong> The annuity discussion above
+is background, not an available simulator feature. Future insurer prices and
+availability cannot be established. Legacy insurer quotes are ignored; a supplied
+fund duration and projected pension assets determine income instead. Once those
+payments end, the accessible portfolio must cover the remaining spending gap.</p>
 <hr />
       <nav class="pager"><a class="prev" href="investment-account.html">← The investment account</a><a class="next" href="health-insurance.html">Health insurance →</a></nav>
     </section>

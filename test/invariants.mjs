@@ -104,7 +104,7 @@ function survivesIndependently(input, r) {
   const cy = r.currentYear;
   const fiYear = cy + y;
   const end = cy + Math.max(...r.persons.map((p) => a.planToAge - p.ageNow));
-  const fund = a.pillarPayout === 'fundPension';
+  const fund = true;
   const first = r.schedule[0];
   if (!first) return false;
   let cash = first.openingCash * r.fi.number / first.opening;
@@ -364,17 +364,7 @@ for (const [i, input] of CASES.entries()) {
       ok(p.pillarIncomeEndYear > p.pillarDrawYear,
          `${tag}: ${p.name} fund pension ends after it starts`);
     }
-    for (const p of life.persons) {
-      ok(!Number.isFinite(p.pillarIncomeEndYear),
-         `${tag}: ${p.name} lifetime annuity never ends`);
-    }
-    // A real annuity quote is an external price, so it cannot be ordered against
-    // a fund pension derived from the pot. We only assert its nominal payment
-    // does not gain real purchasing power.
-    for (const l of life.persons) {
-      ok(l.pensionIncomeFinal <= l.pensionIncome + 0.01,
-         `${tag}: ${l.name} a quoted nominal annuity never gains real value`);
-    }
+    ok(life.fi.number === fund.fi.number, `${tag}: legacy payout option uses the fund model`);
     if (Number.isFinite(fund.timeline.yearsToFi)) {
       ok(survivesIndependently({ ...input, assumptions: { ...input.assumptions, pillarPayout: 'fundPension' } }, fund),
          `${tag}: the plan survives the fund pension running out`);
