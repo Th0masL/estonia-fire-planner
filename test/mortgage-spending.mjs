@@ -36,3 +36,28 @@ plan.assumptions.spendingGrowth = 0;
 const flat = simulate(plan);
 near(flat.schedule.find((r) => r.year === 2030).need, 24000);
 console.log('Mortgage payments stay fixed while living costs grow; partial and final loan years reconcile');
+
+// Work beyond payoff: the former payment is saved, not charged forever.
+// Buffer years choose an exact stop date independently of the FI search.
+for (const monthsAway of [0, 6]) {
+  for (const rate of [0, .04]) {
+    plan.household.property.purchase.monthsAway = monthsAway;
+    plan.assumptions.realReturn = rate;
+    for (const buffer of [9, 10, 10.5, 12]) {
+      plan.assumptions.bufferYears = buffer;
+      const result = simulate(plan);
+      const before = monthsAway / 12;
+      near(result.timeline.yearsToFi, before + buffer);
+      const grow = (capital, saving, years) => capital * (1 + rate) ** years + saving *
+        (rate === 0 ? years : ((1 + rate) ** years - 1) / rate);
+      const atPurchase = grow(0, result.savings.surplusNow, before);
+      const atLoanEnd = grow(atPurchase, result.savings.surplusAfterMove, Math.min(buffer, 10));
+      const expected = 1000000 + grow(atLoanEnd, result.savings.surplusAfterMove + 12000,
+        Math.max(0, buffer - 10));
+      near(result.fi.atFiDate, expected);
+      near(result.fi.ownershipAtFi[0].portfolio, expected);
+      near(result.schedule[0].opening, expected);
+    }
+  }
+}
+console.log('Accumulation stops charging paid-off loans at exact and partial-year boundaries');

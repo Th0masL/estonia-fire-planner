@@ -532,6 +532,7 @@ export function simulate(input) {
   // A negative surplus means the household is drawing down, not saving nothing.
   // Clamping it to zero would let compounding alone "reach" the target, which is
   // arithmetically true and completely misleading.
+  const surplusAfterLoan = surplusAfterMove + (mort ? 12 * mort.monthly : 0);
   const depleting = Math.max(surplusNow, surplusAfterMove) <= 0;
   const annualSaving = Math.max(0, surplusAfterMove);
   const houseYears = purchase ? Math.max(0, purchase.monthsAway || 0) / 12 : Infinity;
@@ -568,7 +569,14 @@ export function simulate(input) {
     }
     reserveCash(balances, emergencyFund);
     return balances.map((b, i) => {
-      return { invested: grow(b.invested, surplusAfterMove * people[i].share, years - houseYears),
+      const elapsed = years - houseYears;
+      const paying = Math.min(elapsed, purchase.termYears);
+      const paidOff = Math.max(0, elapsed - purchase.termYears);
+      const atPayoff = grow(b.invested, surplusAfterMove * people[i].share, paying);
+      // Once the finite loan ends, its payment becomes available for saving.
+      // Keep the same ownership shares and contribution timing in both stages.
+      return { invested: grow(atPayoff,
+        surplusAfterLoan * people[i].share, paidOff),
         cash: grow(b.cash, 0, years - houseYears, a.cashRealReturn ?? 0) };
     });
   };

@@ -340,6 +340,18 @@ payment is €12,000/year whether lifestyle growth is 0% or 2%. With €12,000/y
 living expenses, year two costs €12,240 + €12,000 = €24,240, not €24,480.
 Partial start/end years prorate the mortgage separately from living expenses.
 
+Accumulation also stops deducting payments at purchase completion plus the loan
+term. The former payment then becomes additional savings, allocated using the
+existing household ownership shares and contribution timing. For example, a
+€12,000 annual payment ending after ten years increases annual savings by
+€12,000 thereafter; two further working years add €24,000 at zero return.
+Purchase timing, fractional years and investment growth are retained in both
+stages. This changes projections for households working beyond mortgage payoff.
+Accumulation deficits remain a limitation: a negative surplus is assigned to
+investments rather than withdrawn from cash first, and the solver's depleting
+shortcut can reject a household whose surplus becomes positive only at payoff.
+The payoff correction does not resolve those deficit-path assumptions.
+
 This correction does not complete the nominal-flow migration: mortgage payments
 still remain constant in the real-euro projection. Future work must convert them
 consistently during accumulation and retirement, define the price/loan valuation
