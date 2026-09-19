@@ -1,7 +1,27 @@
 import assert from 'node:assert/strict';
-import { retirementStep, portfolioTotal, simulate } from '../src/calc.js';
+import { accumulationStep, retirementStep, portfolioTotal, simulate } from '../src/calc.js';
 import { exampleState, sanitise, encodeState, decodeState } from '../src/state.js';
 const near = (actual, expected) => assert.ok(Math.abs(actual - expected) < 0.01, `${actual} vs ${expected}`);
+
+const cashDeficit = accumulationStep([{ cash: 20000, invested: 100000 }], -12000, 1, 0, .05, [1]);
+near(cashDeficit[0].cash, 8000);
+near(cashDeficit[0].invested, 105000);
+near(cashDeficit.shortfall, 0);
+const mixedDeficit = accumulationStep([{ cash: 6000, invested: 10000 }], -12000, 1.5, 0, 0, [1]);
+near(portfolioTotal(mixedDeficit), 0);
+near(mixedDeficit.shortfall, 2000);
+const noRecovery = accumulationStep(mixedDeficit, 100000, 10, 0, .05, [1]);
+near(noRecovery.shortfall, 2000);
+near(portfolioTotal(noRecovery), 0);
+const sharedDeficit = accumulationStep([{ cash: 9000, invested: 20000 }, { cash: 3000, invested: 60000 }],
+  -20000, 1, 0, 0, [.5, .5]);
+near(sharedDeficit[0].cash, 0);
+near(sharedDeficit[1].cash, 0);
+near(sharedDeficit[0].invested, 18000);
+near(sharedDeficit[1].invested, 54000);
+const partialDeficit = accumulationStep([{ cash: 20000, invested: 0 }], -12000, .5, 0, .05, [1]);
+near(partialDeficit[0].cash, 14000);
+near(partialDeficit[0].invested, 0);
 
 for (const [cash, invested, reserve, expectedCash, expectedInvested] of [
   [800000, 0, 0, 776000, 0], [40000, 760000, 0, 16000, 798000],

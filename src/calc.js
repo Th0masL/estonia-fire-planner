@@ -67,6 +67,33 @@ export function retirementStep(opening, withdrawal, duration, cashReturn, invest
     cashGrowth, investmentGrowth };
 }
 
+// Accumulation deficits are funded at period end, cash first. Positive savings
+// retain the existing annuity convention. No borrowing or later recovery from
+// an unfunded expense is assumed. The retirement-only reserve is not active yet.
+export function accumulationStep(opening, surplus, years, cashReturn, investmentReturn, shares) {
+  const balances = opening.map((b) => ({ ...b }));
+  let shortfall = opening.shortfall || 0;
+  if (surplus >= 0 && !shortfall) {
+    for (const [i, b] of balances.entries()) {
+      b.cash *= (1 + cashReturn) ** years;
+      b.invested = b.invested * (1 + investmentReturn) ** years +
+        surplus * shares[i] * annuityFactor(investmentReturn, years);
+    }
+  } else if (!shortfall) {
+    for (let elapsed = 0; elapsed < years; elapsed += 1) {
+      const duration = Math.min(1, years - elapsed);
+      for (const b of balances) {
+        b.cash *= (1 + cashReturn) ** duration;
+        b.invested *= (1 + investmentReturn) ** duration;
+      }
+      shortfall += spendPortfolio(balances, -surplus * duration).shortfall;
+      if (shortfall > 1e-6) break;
+    }
+  }
+  balances.shortfall = shortfall;
+  return balances;
+}
+
 // ---------------------------------------------------------------- income tax
 
 /** Estonian take-home from a gross annual salary. */
@@ -525,34 +552,25 @@ export function simulate(input) {
   }
 
   const totalStart = people.reduce((sum, p) => sum + p.startPortfolio, 0);
-  const startingCash = people.reduce((sum, p) => sum + (p.assets?.cash || 0), 0);
-  const startingRiskAssets = totalStart - startingCash;
 
   // ---- timeline -----------------------------------------------------------
   // A negative surplus means the household is drawing down, not saving nothing.
   // Clamping it to zero would let compounding alone "reach" the target, which is
   // arithmetically true and completely misleading.
   const surplusAfterLoan = surplusAfterMove + (mort ? 12 * mort.monthly : 0);
-  const depleting = Math.max(surplusNow, surplusAfterMove) <= 0;
+  const depleting = Math.max(surplusNow, surplusAfterMove, surplusAfterLoan) <= 0;
   const annualSaving = Math.max(0, surplusAfterMove);
   const houseYears = purchase ? Math.max(0, purchase.monthsAway || 0) / 12 : Infinity;
-  const grow = (start, save, years, rate = a.realReturn) =>
-    start * (1 + rate) ** Math.max(0, years) +
-      save * annuityFactor(rate, Math.max(0, years));
-  const projectedAtHouse = purchase
-    ? grow(startingRiskAssets, surplusNow, houseYears) +
-      grow(startingCash, 0, houseYears, a.cashRealReturn ?? 0)
-    : totalStart;
+  const initialBalances = people.map((p) => ({ cash: p.assets?.cash || 0,
+    invested: p.startPortfolio - (p.assets?.cash || 0) }));
+  const advance = (balances, surplus, years) => accumulationStep(balances, surplus,
+    years, a.cashRealReturn ?? 0, a.realReturn, people.map((p) => p.share));
+  const beforeHouse = purchase ? advance(initialBalances, surplusNow, houseYears) : initialBalances;
+  const projectedAtHouse = beforeHouse.shortfall > 1e-6 ? -Infinity : portfolioTotal(beforeHouse);
   const houseFundingShortfall = purchase
     ? Math.max(0, cashForHouse + emergencyFund - projectedAtHouse) : 0;
   const balancesAt = (years) => {
-    const balances = people.map((p) => {
-      const cash = p.assets?.cash || 0;
-      const risk = p.startPortfolio - cash;
-      const before = Math.min(years, houseYears);
-      return { cash: grow(cash, 0, before, a.cashRealReturn ?? 0),
-        invested: grow(risk, surplusNow * p.share, before) };
-    });
+    const balances = advance(initialBalances, surplusNow, Math.min(years, houseYears));
     if (!purchase || years < houseYears || houseFundingShortfall > 0) return balances;
     let remaining = cashForHouse;
     const payer = purchase.paidBy;
@@ -568,20 +586,15 @@ export function simulate(input) {
       for (const b of balances) spendPortfolio([b], cashForHouse * portfolioTotal([b]) / sum);
     }
     reserveCash(balances, emergencyFund);
-    return balances.map((b, i) => {
-      const elapsed = years - houseYears;
-      const paying = Math.min(elapsed, purchase.termYears);
-      const paidOff = Math.max(0, elapsed - purchase.termYears);
-      const atPayoff = grow(b.invested, surplusAfterMove * people[i].share, paying);
-      // Once the finite loan ends, its payment becomes available for saving.
-      // Keep the same ownership shares and contribution timing in both stages.
-      return { invested: grow(atPayoff,
-        surplusAfterLoan * people[i].share, paidOff),
-        cash: grow(b.cash, 0, years - houseYears, a.cashRealReturn ?? 0) };
-    });
+    const elapsed = years - houseYears;
+    const atPayoff = advance(balances, surplusAfterMove, Math.min(elapsed, purchase.termYears));
+    return advance(atPayoff, surplusAfterLoan, Math.max(0, elapsed - purchase.termYears));
   };
   const project = (_start, _save, years) => purchase && years >= houseYears && houseFundingShortfall > 0
-    ? -Infinity : portfolioTotal(balancesAt(years));
+    ? -Infinity : (() => {
+      const balances = balancesAt(years);
+      return balances.shortfall > 1e-6 ? -Infinity : portfolioTotal(balances);
+    })();
   const ownershipAt = (years) => balancesAt(years).map((b) => b.cash + b.invested);
   const retirementReserve = Math.max(0, Math.min(1e9, a.retirementCashReserve || 0));
   const retirementBalances = (capital, years) => {
@@ -949,6 +962,7 @@ export function simulate(input) {
       if (age >= targetAge) return null;
       if (purchase && y < houseYears) continue; // house funding is not yet complete
       const balances = balancesAt(y);
+      if (balances.shortfall > 1e-6) continue;
       const pf = portfolioTotal(balances);
       for (const b of balances) {
         b.cash *= (1 + (a.cashRealReturn ?? 0)) ** (targetAge - age);

@@ -61,3 +61,19 @@ for (const monthsAway of [0, 6]) {
   }
 }
 console.log('Accumulation stops charging paid-off loans at exact and partial-year boundaries');
+
+// Savings are negative now and during the mortgage, but positive after payoff.
+// With zero returns: assets at t = 200000 - 6000t, retirement need before
+// payoff = 12000(20-t) + 12000(10-t). Equality gives t = 160000/18000.
+plan.household.property.purchase.monthsAway = 0;
+plan.household.spending.housing = 2000;
+Object.assign(plan.persons[0], { pillar3Annual: 0, assets: { cash: 200000 },
+  income: { grossMonthly: 2000, netMonthly: 1500 } });
+Object.assign(plan.assumptions, { realReturn: 0, bufferYears: 0 });
+const deficitPlan = simulate(plan);
+near(deficitPlan.timeline.yearsToFi, 160000 / 18000);
+near(deficitPlan.fi.atFiDate, 200000 - 6000 * 160000 / 18000);
+near(deficitPlan.schedule[0].openingInvestments, 0);
+plan.persons[0].assets.cash = 10000;
+assert.equal(simulate(plan).timeline.yearsToFi, Infinity,
+  'later post-payoff savings cannot repair an unfunded working-year expense');

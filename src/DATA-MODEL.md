@@ -347,10 +347,15 @@ existing household ownership shares and contribution timing. For example, a
 €12,000 thereafter; two further working years add €24,000 at zero return.
 Purchase timing, fractional years and investment growth are retained in both
 stages. This changes projections for households working beyond mortgage payoff.
-Accumulation deficits remain a limitation: a negative surplus is assigned to
-investments rather than withdrawn from cash first, and the solver's depleting
-shortcut can reject a household whose surplus becomes positive only at payoff.
-The payoff correction does not resolve those deficit-path assumptions.
+Accumulation deficits are withdrawn from pooled cash first, then investments,
+proportionally to ownership within each bucket. They are not negative investment
+contributions. Returns accrue before each annual withdrawal; a final partial year
+uses fractional compounding and a prorated deficit. Positive savings retain the
+existing annuity convention and allocation shares. These are annualized timing
+approximations, not monthly liquidity forecasts. The retirement-only reserve is
+not protected during accumulation. An unfunded expense makes later stop dates
+infeasible even if subsequent savings could replenish assets; no borrowing is
+assumed. The depleting check includes the surplus after mortgage payoff.
 
 This correction does not complete the nominal-flow migration: mortgage payments
 still remain constant in the real-euro projection. Future work must convert them
