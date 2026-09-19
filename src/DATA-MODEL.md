@@ -480,6 +480,11 @@ Previously truncated figures require re-entry from records. No schema change
 is made in this preservation fix. The current tax reserve is a snapshot
 approximation; future withdrawal taxation remains outside this fix.
 
+The isolated [investment-account tax foundation](INVESTMENT-ACCOUNT-TAX.md)
+defines nominal contribution-first ledger arithmetic and the integration gates.
+It is not enabled in the simulator; existing tax reserves and return semantics
+remain unchanged until the full migration is implemented and verified.
+
 Reference: [EMTA securities and investment-account guidance](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account),
 contributions and payments section, checked 19 September 2026.
 
