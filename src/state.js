@@ -62,6 +62,7 @@ const baseState = (over = {}) => ({
     pensionPolicy: DEFAULTS.pensionPolicy,
     pillarDrawAge: DEFAULTS.pillarDrawAge,
     pillarPayout: DEFAULTS.pillarPayout,
+    pensionLumpSumInvestedShare: 0,
     planToAge: DEFAULTS.planToAge,
   },
   ...over,
@@ -262,7 +263,8 @@ export function sanitise(s) {
   a.pensionPolicy = POLICIES.includes(a.pensionPolicy) ? a.pensionPolicy : DEFAULTS.pensionPolicy;
   a.portfolioEnd = PORTFOLIO_ENDS.includes(a.portfolioEnd) ? a.portfolioEnd : DEFAULTS.portfolioEnd;
   a.pillarDrawAge = DRAW_AGES.includes(a.pillarDrawAge) ? a.pillarDrawAge : DEFAULTS.pillarDrawAge;
-  a.pillarPayout = 'fundPension';
+  a.pillarPayout = a.pillarPayout === 'lumpSum' ? 'lumpSum' : 'fundPension';
+  a.pensionLumpSumInvestedShare = bounded(a.pensionLumpSumInvestedShare, 0, 1, 0);
   a.planToAge = bounded(a.planToAge, 75, 110, DEFAULTS.planToAge);
   a.emergencyFundMonths = bounded(a.emergencyFundMonths, 0, 36, DEFAULTS.emergencyFundMonths);
   a.transactionCostRate = bounded(a.transactionCostRate, 0, 0.20, DEFAULTS.transactionCostRate);

@@ -147,7 +147,7 @@ function renderPeople() {
         <label ${state.assumptions.pensionPolicy === 'all' ? '' : 'hidden'}>Estonian pension service <span class="u">qualifying years already accrued, not calendar years worked</span><input type="number" min="0" max="80" step="0.1" data-i="${i}" data-k="yearsWorkedEstonia" value="${p.yearsWorkedEstonia ?? ''}"></label>
         <label ${state.assumptions.pensionPolicy === 'all' ? '' : 'hidden'}>Other EU/EEA service <span class="u">years; official pro-rata result still required</span><input type="number" min="0" max="80" step="0.1" data-i="${i}" data-k="yearsWorkedEuEea" value="${p.yearsWorkedEuEea ?? 0}"></label>
         <label ${state.assumptions.pensionPolicy === 'all' ? '' : 'hidden'}><input type="checkbox" data-i="${i}" data-k="nationalPensionEligible" ${p.nationalPensionEligible ? 'checked' : ''}> National-pension residence/foreign-pension conditions confirmed</label>
-        <label ${state.assumptions.pensionPolicy === 'ignore' ? 'hidden' : ''}>Official fund-pension duration <span class="u">years, from Pensionikeskus</span><input type="number" min="1" max="60" step="1" data-i="${i}" data-k="fundPensionYears" value="${p.fundPensionYears ?? ''}"></label>
+        <label ${state.assumptions.pensionPolicy === 'ignore' || state.assumptions.pillarPayout === 'lumpSum' ? 'hidden' : ''}>Official fund-pension duration <span class="u">years, from Pensionikeskus</span><input type="number" min="1" max="60" step="1" data-i="${i}" data-k="fundPensionYears" value="${p.fundPensionYears ?? ''}"></label>
       </div>
       ${infoNote('pension-units', `Your accrued Pillar I coefficient — what the state has actually
         recorded, rather than anything estimated from a career length.
@@ -281,13 +281,17 @@ function formToState() {
   state.assumptions.portfolioEnd = $('aPortfolioEnd').value || 'perpetual';
   if (policyBefore !== state.assumptions.pensionPolicy) renderPeople();
   state.assumptions.pillarDrawAge = $('aPillarDrawAge').value || 'unlock';
-  state.assumptions.pillarPayout = 'fundPension';
+  const payoutBefore = state.assumptions.pillarPayout;
+  state.assumptions.pillarPayout = $('aPillarPayout').value;
+  state.assumptions.pensionLumpSumInvestedShare = field('aLumpInvestedShare', 0) / 100;
+  if (payoutBefore !== state.assumptions.pillarPayout) renderPeople();
   state.assumptions.potsCountedShare = field('aPotsShare', 100) / 100;
   state.assumptions.stateCountedShare = field('aStateShare', 100) / 100;
   state.assumptions.statePensionEarlyYears = field('aStateEarly', 0);
   // Only meaningful once something is being counted.
   $('drawAgeWrap').hidden = state.assumptions.pensionPolicy === 'ignore';
   $('payoutWrap').hidden = state.assumptions.pensionPolicy === 'ignore';
+  $('lumpShareWrap').hidden = state.assumptions.pensionPolicy === 'ignore' || state.assumptions.pillarPayout !== 'lumpSum';
   $('potsShareWrap').hidden = state.assumptions.pensionPolicy === 'ignore';
   $('stateShareWrap').hidden = state.assumptions.pensionPolicy !== 'all';
   $('earlyWrap').hidden = state.assumptions.pensionPolicy !== 'all';
@@ -334,6 +338,9 @@ function stateToForm() {
   $('aStateEarly').value = state.assumptions.statePensionEarlyYears ?? 0;
   $('drawAgeWrap').hidden = (state.assumptions.pensionPolicy || 'ignore') === 'ignore';
   $('payoutWrap').hidden = (state.assumptions.pensionPolicy || 'ignore') === 'ignore';
+  $('aPillarPayout').value = state.assumptions.pillarPayout || 'fundPension';
+  $('aLumpInvestedShare').value = (state.assumptions.pensionLumpSumInvestedShare ?? 0) * 100;
+  $('lumpShareWrap').hidden = state.assumptions.pensionPolicy === 'ignore' || state.assumptions.pillarPayout !== 'lumpSum';
   $('potsShareWrap').hidden = (state.assumptions.pensionPolicy || 'ignore') === 'ignore';
   $('stateShareWrap').hidden = (state.assumptions.pensionPolicy || 'ignore') !== 'all';
   $('earlyWrap').hidden = (state.assumptions.pensionPolicy || 'ignore') !== 'all';
@@ -418,7 +425,8 @@ function chart(sim) {
     ${sim.schedule.length ? `
     <h3>Where the money comes from, year by year ${infoBtn('schedule')}</h3>
     ${infoNote('schedule', `Every year from the day you stop working to age ${sim.assumptions.planToAge},
-      in euros per month. This is the actual drawdown the FI date was solved against, not an
+      with recurring income and spending in euros per month. Lump-sum proceeds and their tax
+      are annual totals, while cash and investment columns are balances. This is the actual drawdown the FI date was solved against, not an
       illustration — the portfolio column is what is being taken out, and the last column is what
       remains after that year's withdrawal and growth. Rows where the composition changes are
       marked; those are the dates the whole plan turns on. The columns are <em>sources</em> and
@@ -442,6 +450,7 @@ function chart(sim) {
           <th>Year</th><th>Age</th>
           <th>Portfolio</th>
           ${sim.fi.countsPots ? '<th>Pillars II &amp; III</th>' : ''}
+          ${sim.fi.countsPots && sim.fi.pillarPayout === 'lumpSum' ? '<th>Counted net lump sum (annual)</th><th>Withdrawal tax (annual)</th>' : ''}
           ${sim.fi.policy === 'all' ? '<th>State pension</th>' : ''}
           <th>Spending</th>${spare ? '<th>Spare</th>' : ''}<th>Cash left</th><th>Investments left</th><th>Portfolio left</th>
         </tr>
@@ -458,6 +467,7 @@ function chart(sim) {
           <td>${row.ages.map((a) => a.toFixed(0)).join(' · ')}</td>
           <td>${mo(row.fromPortfolio)}</td>
           ${sim.fi.countsPots ? `<td>${mo(row.fromPots)}</td>` : ''}
+          ${sim.fi.countsPots && sim.fi.pillarPayout === 'lumpSum' ? `<td>${eur(row.lumpNet)}</td><td>${eur(row.lumpTax)}</td>` : ''}
           ${sim.fi.policy === 'all' ? `<td>${mo(row.fromState)}</td>` : ''}
           <td>${eur(row.need / 12)}</td>
           ${spare ? `<td class="${row.unusedPension > 0.5 ? 'spare' : ''}">${mo(row.unusedPension)}</td>` : ''}
@@ -600,7 +610,9 @@ function render() {
         }
       }
 
-      if (!sim.fi.bridging) {
+      if (!sim.fi.bridging && sim.fi.pillarPayout === 'lumpSum') {
+        messages.push('<strong>Capital-floor mode is selected.</strong> A counted net lump sum adds accessible capital when received; it is not permanent income and does not reduce the spending-based capital floor. Future receipts cannot satisfy that floor before they arrive.');
+      } else if (!sim.fi.bridging) {
         messages.push('<strong>Capital-floor mode is selected.</strong> Pillars II and III are not permanent indexed income, so they cannot by themselves lower the headline FI number or date. Only a countable indexed state pension can lower that floor. Choose <strong>Last until the planning age</strong> if the portfolio may be spent down as pensions take over.');
       } else if (!messages.length) {
         messages.push('<strong>Pension settings are active.</strong> They are included in both the amount needed when work stops and the calculated FI date.');
@@ -731,9 +743,9 @@ function render() {
         do not change health eligibility. Confirm the route with Tervisekassa; co-payments and
         other medical costs are still part of your spending budget.`)}` : ''}
       ${sim.fi.countsPension ? `
-      <tr><th>Pension income once it all unlocks ${infoBtn('pens-income')}</th><td>${eur(sim.fi.pensionIncomeAtUnlock)}/yr</td></tr>
+      <tr><th>Recurring pension income once it all unlocks ${infoBtn('pens-income')}</th><td>${eur(sim.fi.pensionIncomeAtUnlock)}/yr</td></tr>
       ${infoRow('pens-income', `What the pillars pay once every one of them has started: the pots
-        using the entered official fund-pension duration${sim.fi.policy === 'all' ? ', plus the state pension' : ''}.
+        using the entered official fund-pension duration${sim.fi.policy === 'all' ? ', plus the state pension' : ''}. Lump sums are capital transfers, not recurring income, and are listed separately below.
         Pillar II generally opens five years before state pension; Pillar III follows its own
         first-contribution and five-year holding rules. Contributions stop the day you stop working, so this already
         reflects the shorter career the plan implies.`)}
@@ -907,12 +919,13 @@ function render() {
             ? ` — unconfirmed scenario; official state-pension age range ${p.pensionAgeRange.min.toFixed(1)}–${p.pensionAgeRange.max.toFixed(1)}` : ''}${!p.pillar3EligibilityKnown
             ? ' — Pillar III excluded: first-contribution year missing' : p.pillar3DrawYear != null && p.pillar3DrawYear !== p.pillar2DrawYear
               ? ` — Pillar II starts ${Math.round(p.pillar2DrawYear)}, Pillar III ${Math.round(p.pillar3DrawYear)}` : ''}</span></th>
-        <td>${eur(p.pensionNow)} today → <strong>${eur(p.pensionAtUnlock)}</strong>${sim.fi.countsPension
+        <td>${eur(p.pensionNow)} today → <strong>${eur(p.pensionAtUnlock)}</strong>${sim.fi.countsPension && sim.fi.pillarPayout === 'fundPension'
           ? ` · ${eur(p.pensionIncome)}/yr${Number.isFinite(p.incomeEndAge) ? ` until ${Math.floor(p.incomeEndYear)}` : ''}` : ''}</td></tr>`).join('')}
       ${sim.fi.countsPots ? sim.persons.filter((p) => p.pensionIncome > 1).map((p) => `
         <tr><th>${escapeHtml(p.name)}: what that is worth by the end ${infoBtn('erosion')} <span class="muted">payments follow the fund's returns</span></th>
         <td><strong>${eur(p.pensionIncomeFinal / 12)}</strong>/mo <span class="muted">vs ${eur(p.pensionIncome / 12)} at the start</span></td></tr>`).join('') : ''}
-      ${sim.fi.countsPots ? `
+      ${sim.fi.countsPots && sim.fi.pillarPayout === 'lumpSum' ? sim.fi.lumpSums.map((e) => `<tr><th>${escapeHtml(sim.persons[e.owner].name)}: ${e.kind === 'pillar2' ? 'Pillar II' : 'Pillar III'} lump sum <span class="muted">${e.date.toFixed(1)}</span></th><td>${eur(e.gross)} gross − ${eur(e.tax)} tax = ${eur(e.net)} net; <strong>${eur(e.credited)} counted</strong></td></tr>`).join('') : ''}
+      ${sim.fi.countsPots && sim.fi.pillarPayout === 'fundPension' ? `
       <tr><th>Taken as ${infoBtn('payout')}</th><td><strong>a fund pension</strong> · 0% tax · ${sim.persons[0].payoutYears ?? 'official duration not supplied'} years</td></tr>
       ${sim.persons.some((p) => !p.pensionTermsKnown) ? `<tr class="bad"><th>Pension income excluded</th><td>Enter the Pensionikeskus duration for each person</td></tr>` : ''}
       ${sim.fi.pillarPayout === 'fundPension' && sim.fi.countsPots && sim.persons.every((p) => p.payoutYears != null) ? (() => {

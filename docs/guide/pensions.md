@@ -336,7 +336,12 @@ and the gap is wide — about 16 years for men against 21 for women at
 Pensionikeskus rather than assuming the combined figure. Missing durations
 exclude fund income until supplied.
 
-**The simulator uses fund-based withdrawals only.** The annuity discussion above
+**The simulator defaults to fund-based withdrawals.** An optional lump-sum mode
+deducts standard 10% withdrawal tax at qualifying ages and transfers the counted
+net proceeds into cash and investments using an explicit allocation. It takes
+each pot at the later of FIRE and the selected qualifying draw date; early exits,
+special exemptions and tax-return refunds are not modeled. Unknown Pillar III
+eligibility remains excluded. The annuity discussion above
 is background, not an available simulator feature. Future insurer prices and
 availability cannot be established. Legacy insurer quotes are ignored; a supplied
 fund duration and projected pension assets determine income instead. Once those

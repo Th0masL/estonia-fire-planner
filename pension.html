@@ -927,7 +927,9 @@ function simulate(input) {
     }
     return Math.min(allowed, earlyRequested);
   };
-  a.pillarPayout = 'fundPension';
+  const lumpSum = a.pillarPayout === 'lumpSum';
+  a.pillarPayout = lumpSum ? 'lumpSum' : 'fundPension';
+  const lumpInvestedShare = clamp(a.pensionLumpSumInvestedShare ?? 0, 0, 1);
   for (const p of people) {
     p.pension = pensionAges(p.birthYear);
     p.pensionUnlockYear = p.birthYear + p.pension.pillarUnlockAge;
@@ -960,7 +962,7 @@ function simulate(input) {
     // must come from a current quote / Pensionikeskus result supplied by the user.
     p.payoutYears = p.fundPensionYears != null
       ? Math.max(1, p.fundPensionYears) : null;
-    p.pensionTermsKnown = p.payoutYears != null;
+    p.pensionTermsKnown = lumpSum || p.payoutYears != null;
     p.pillarIncomeEndYear = p.payoutYears != null
       ? Math.max(p.pillar2DrawYear + p.payoutYears,
           (p.pillar3DrawYear ?? p.pillar2DrawYear) + p.payoutYears)
@@ -1199,8 +1201,9 @@ function simulate(input) {
   // retiring early costs pension, and why the FI date and the pension it
   // produces have to be solved together rather than one after the other.
   const potAtDraw = (p, yearsToFi, kind) => {
-    const drawYear = kind === 'pillar2' ? p.pillar2DrawYear : p.pillar3DrawYear;
-    if (drawYear == null) return 0;
+    const selected = kind === 'pillar2' ? p.pillar2DrawYear : p.pillar3DrawYear;
+    if (selected == null) return 0;
+    const drawYear = lumpSum ? Math.max(selected, currentYear + (Number.isFinite(yearsToFi) ? yearsToFi : 0)) : selected;
     const yrs = Math.max(0, drawYear - currentYear);
     const contributing = Math.min(yearsToFi, yrs);
     const idle = (v) => v * (1 + a.realReturn) ** Math.max(0, yrs - contributing);
@@ -1247,6 +1250,7 @@ function simulate(input) {
   const potsShare = a.potsCountedShare ?? 1;
   const stateShare = a.stateCountedShare ?? 1;
   const potIncomeIn = (p, year, yearsToFi) => {
+    if (lumpSum) return 0; // Capital transfers are not recurring income.
     if (!p.pensionTermsKnown) return 0;
     const from = Math.max(year, currentYear + yearsToFi);
     const to = year + 1;
@@ -1287,6 +1291,59 @@ function simulate(input) {
     return { pots, state, total: pots + state };
   };
   const pensionIncomeIn = (year, yearsToFi) => pensionBreakdownIn(year, yearsToFi).total;
+
+  const lumpEvents = (y, share = potsShare) => {
+    if (!lumpSum || !countPots || share <= 0 || !Number.isFinite(y)) return [];
+    return people.flatMap((p, owner) => ['pillar2', 'pillar3'].flatMap((kind) => {
+      const selected = kind === 'pillar2' ? p.pillar2DrawYear : p.pillar3DrawYear;
+      if (selected == null) return [];
+      const gross = potAtDraw(p, y, kind);
+      if (gross <= 0) return [];
+      const tax = gross * RATES.pillar2.payout.lumpSum;
+      return [{ owner, kind, date: Math.max(selected, currentYear + y), gross, tax,
+        net: gross - tax, credited: (gross - tax) * share }];
+    }));
+  };
+  const creditLump = (balances, event) => {
+    balances[event.owner].cash += event.credited * (1 - lumpInvestedShare);
+    balances[event.owner].invested += event.credited * lumpInvestedShare;
+  };
+  const openingWithLumps = (balances, y, share = potsShare) => {
+    const result = balances.map((b) => ({ ...b }));
+    for (const event of lumpEvents(y, share)) {
+      if (event.date === currentYear + y) creditLump(result, event);
+    }
+    return result;
+  };
+  // Split at actual receipt dates: future proceeds cannot fund earlier spending.
+  // The annual net spending estimate is spread uniformly within that year.
+  const retirementYear = (opening, withdrawal, year, y, rate = a.realReturn, share = potsShare) => {
+    const from = Math.max(year, currentYear + y), to = year + 1;
+    const events = lumpEvents(y, share).filter((e) => e.date >= from && e.date < to)
+      .sort((a, b) => a.date - b.date);
+    if (!events.length) return { ...retirementStep(opening, withdrawal, to - from,
+      a.cashRealReturn ?? 0, rate, retirementReserve), lumpGross: 0, lumpTax: 0, lumpNet: 0 };
+    let balances = opening.map((b) => ({ ...b })), cursor = from;
+    const totals = { shortfall: 0, fromCash: 0, fromInvestments: 0, cashGrowth: 0,
+      investmentGrowth: 0, lumpGross: 0, lumpTax: 0, lumpNet: 0 };
+    const advanceTo = (end) => {
+      if (end <= cursor) return;
+      const step = retirementStep(balances, withdrawal * (end - cursor) / (to - from),
+        end - cursor, a.cashRealReturn ?? 0, rate, retirementReserve);
+      balances = step.balances;
+      for (const key of ['shortfall', 'fromCash', 'fromInvestments', 'cashGrowth', 'investmentGrowth']) totals[key] += step[key];
+      cursor = end;
+    };
+    for (const event of events) {
+      advanceTo(event.date);
+      creditLump(balances, event);
+      totals.lumpGross += event.gross;
+      totals.lumpTax += event.tax;
+      totals.lumpNet += event.credited;
+    }
+    advanceTo(to);
+    return { balances, ...totals };
+  };
 
   // The plan has to hold until the youngest person reaches the planning age.
   const planEndYear = currentYear +
@@ -1355,14 +1412,14 @@ function simulate(input) {
       : retirementBalances(portfolioAtStop, y);
     const fiYear = currentYear + y;
     if (balances.some((b) => b.cash < -1e-6 || b.invested < -1e-6)) return false;
-    if (fiYear >= planEndYear || reserveCash(balances, retirementReserve) > 1e-6) return false;
+    const opening = openingWithLumps(balances, y);
+    if (fiYear >= planEndYear || reserveCash(opening, retirementReserve) > 1e-6) return false;
     // Checked on day one as well as every year after: a portfolio that only
     // clears the floor once it has grown was never perpetual-safe to begin with.
-    if (portfolioTotal(balances) - retirementReserve < floorIn(perpetualFloor, Math.floor(fiYear), fiYear, y) - 1e-6) return false;
+    if (portfolioTotal(opening) - retirementReserve < floorIn(perpetualFloor, Math.floor(fiYear), fiYear, y) - 1e-6) return false;
     for (let year = Math.floor(fiYear); year < planEndYear; year++) {
       const investedFor = year + 1 - Math.max(year, fiYear);
-      const step = retirementStep(balances, Math.max(0, needIn(year, fiYear) - pensionIncomeIn(year, y)),
-        investedFor, a.cashRealReturn ?? 0, a.realReturn, retirementReserve);
+      const step = retirementYear(balances, Math.max(0, needIn(year, fiYear) - pensionIncomeIn(year, y)), year, y);
       if (step.shortfall > 1e-6) return false;
       balances = step.balances;
       if (portfolioTotal(balances) - retirementReserve < floorIn(perpetualFloor, year + 1, fiYear, y) - 1e-6) return false;
@@ -1539,12 +1596,12 @@ function simulate(input) {
       let balances = retirementBalances(fiTarget, yearsToFi);
       for (const b of balances) b.invested *= 1 - crash;
       const fiYear = currentYear + yearsToFi;
-      if (portfolioTotal(balances) - retirementReserve < floorIn(perpetualMode, Math.floor(fiYear), fiYear, yearsToFi) - 1e-6) {
+      if (portfolioTotal(openingWithLumps(balances, yearsToFi)) - retirementReserve < floorIn(perpetualMode, Math.floor(fiYear), fiYear, yearsToFi) - 1e-6) {
         return false;
       }
       for (let i = 0; i < draws.length; i++) {
-        const step = retirementStep(balances, draws[i], durations[i], a.cashRealReturn ?? 0,
-          i < badYears ? badReturn : a.realReturn, retirementReserve);
+        const step = retirementYear(balances, draws[i], Math.floor(fiYear) + i, yearsToFi,
+          i < badYears ? badReturn : a.realReturn);
         if (step.shortfall > 1e-6) return false;
         balances = step.balances;
         const year = Math.floor(fiYear) + i + 1;
@@ -1606,8 +1663,8 @@ function simulate(input) {
         }
       }
       const investedFor = year + 1 - Math.max(year, currentYear + yearsToFi);
-      balances = retirementStep(balances, Math.max(0, needIn(year, currentYear + yearsToFi) - income),
-        investedFor, a.cashRealReturn ?? 0, a.realReturn, retirementReserve).balances;
+      balances = retirementYear(balances, Math.max(0, needIn(year, currentYear + yearsToFi) - income),
+        year, yearsToFi, a.realReturn, 1).balances;
     }
     haircutBuffer = Math.max(0, portfolioTotal(balances));
   }
@@ -1629,13 +1686,13 @@ function simulate(input) {
       const openingCash = bucketTotal(balances, 'cash');
       const openingInvestments = bucketTotal(balances, 'invested');
       const investedFor = year + 1 - Math.max(year, currentYear + yearsToFi);
-      const step = retirementStep(balances, fromPortfolio, investedFor,
-        a.cashRealReturn ?? 0, a.realReturn, retirementReserve);
+      const step = retirementYear(balances, fromPortfolio, year, yearsToFi);
       balances = step.balances;
       schedule.push({
         year,
         ages: people.map((p) => p.ageNow + (year - currentYear)),
         need, health,
+        lumpGross: step.lumpGross, lumpTax: step.lumpTax, lumpNet: step.lumpNet,
         fromPots: income.pots,
         fromState: income.state,
         fromPortfolio,
@@ -1669,7 +1726,7 @@ function simulate(input) {
     // the assumptions above. Reported whatever the policy, so the cost of
     // ignoring them stays visible.
     // The first year's payment. It does not stay there: see potIncomeIn.
-    p.pensionIncome = p.pensionTermsKnown
+    p.pensionIncome = !lumpSum && p.pensionTermsKnown
       ? ((potAtDraw(p, yearsToFi, 'pillar2') + potAtDraw(p, yearsToFi, 'pillar3')) /
               p.payoutYears) * potsShare
       : 0;
@@ -1762,7 +1819,8 @@ function simulate(input) {
       countsPension: (countPots && potsShare > 0) || (countState && stateShare > 0),
       policy,
       pillarDrawAge: a.pillarDrawAge || 'unlock',
-      pillarPayout: 'fundPension',
+      pillarPayout: a.pillarPayout,
+      lumpSums: lumpEvents(yearsToFi),
       bufferYears,
       yearsSolved: yearsToFiSolved,
       resilience: resilience(),

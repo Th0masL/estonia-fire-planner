@@ -242,10 +242,20 @@
           <input type="number" id="aStateShare" min="0" max="100" step="5"></label>
         <label id="earlyWrap">Draw the state pension <span class="u">years early</span>
           <input type="number" id="aStateEarly" min="0" max="5" step="1"></label>
-        <p id="payoutWrap">Fund-based withdrawals only. Payments stop after the entered duration.</p>
+        <label id="payoutWrap">Pillar II &amp; III withdrawals
+          <select id="aPillarPayout">
+            <option value="fundPension">Fund withdrawals — over the entered duration</option>
+            <option value="lumpSum">Lump sum — 10% withdrawal tax assumed</option>
+          </select></label>
+        <label id="lumpShareWrap">Invest the net lump sum <span class="u">%; remainder stays in cash</span>
+          <input type="number" id="aLumpInvestedShare" min="0" max="100" step="5"></label>
       </div>
       <p class="alert alert-soft" id="pensionEffectHint"></p>
-      <p class="hint">Insurer annuities are no longer modeled. Old quotes are ignored; supply an official fund-pension duration to count fund income.</p>
+      <p class="hint">Insurer annuities are not modeled; old quotes are ignored. Fund withdrawals require an official duration.
+        Lump sums are taken at the later of FIRE and each pillar's selected qualifying draw date.
+        Standard Estonian-resident 10% withholding is assumed; early exits, special exemptions,
+        non-resident treaties and tax-return refunds are not modeled. Unknown Pillar III eligibility remains excluded.
+        The pension trust percentage limits the net proceeds counted. Existing cash is not automatically invested.</p>
       <p class="hint">Ignoring pensions means building the selected portfolio target without
         relying on pension income. The withdrawal-rate target is a planning heuristic, not a guarantee.
         <strong>Contributions stop on the day you stop working</strong>, so retiring earlier buys a

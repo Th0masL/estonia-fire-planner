@@ -37,7 +37,8 @@ test('legacy annuity plans require fund duration and never use insurer quotes', 
     person.fundPensionYears = null;
   }
   await page.goto('/simulator.html' + fragment(plan));
-  await expect(page.locator('#aPillarPayout')).toHaveCount(0);
+  await expect(page.locator('#aPillarPayout')).toHaveValue('fundPension');
+  await expect(page.locator('#aPillarPayout option[value="annuity"]')).toHaveCount(0);
   await expect(page.locator('[data-k="annuityMonthlyQuote"]')).toHaveCount(0);
   await expect(page.locator('#plan')).toContainText('Person1: pension income cannot be verified');
   const duration = page.locator('[data-i="0"][data-k="fundPensionYears"]');
@@ -66,13 +67,39 @@ async function assertSafeNames(page, name = hostileName) {
   expect(await page.evaluate(() => window.__injected)).toBeUndefined();
 }
 
+test('lump-sum selection shows net capital and persists allocation', async ({ page }) => {
+  const plan = makePlan('Person1');
+  plan.persons = [plan.persons[0]];
+  Object.assign(plan.persons[0], { birthYear: 1960, healthCoveredAfterFi: true,
+    assets: { cash: 500000, pillar2: 100000 }, income: { grossMonthly: 4000, netMonthly: 3000 },
+    pillar3Annual: 0, fundPensionYears: null });
+  plan.currentYear = 2026;
+  plan.household.property = null;
+  plan.household.spending = { other: 1000 };
+  Object.assign(plan.assumptions, { pensionPolicy: 'ownPots', portfolioEnd: 'drawdown',
+    planToAge: 75, realReturn: 0, cashRealReturn: 0, bufferYears: 0 });
+  await page.goto('/simulator.html' + fragment(plan));
+  await page.locator('#aPillarPayout').selectOption('lumpSum');
+  await page.locator('#aLumpInvestedShare').fill('60');
+  await expect(page.locator('[data-k="fundPensionYears"]')).toBeHidden();
+  await expect(page.locator('tr').filter({ hasText: 'Person1: Pillar II lump sum' })).toContainText('€90,000 net');
+  await expect(page.locator('.schedule tbody tr').first()).toContainText('€54,000');
+  await page.reload();
+  await expect(page.locator('#aPillarPayout')).toHaveValue('lumpSum');
+  await expect(page.locator('#aLumpInvestedShare')).toHaveValue('60');
+  await page.locator('#share').click();
+  const shared = decodeState(new URL(await page.locator('#shareUrl').inputValue()).hash.slice(3));
+  expect(shared.assumptions.pensionLumpSumInvestedShare).toBe(.6);
+  expect(shared.assumptions.pillarPayout).toBe('lumpSum');
+});
+
 test('initial shared plans render names literally in all result paths', async ({ page }) => {
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/simulator.html' + fragment(makePlan()));
   await assertSafeNames(page);
   await expect(page).toHaveURL(/simulator\.html$/);
-  await expect(page.locator('#aPillarPayout')).toHaveCount(0);
+  await expect(page.locator('#aPillarPayout option[value="annuity"]')).toHaveCount(0);
   await assertSafeNames(page);
   await page.locator('#aPensionPolicy').selectOption('ignore');
   await assertSafeNames(page);

@@ -89,7 +89,8 @@ nothing reaches the engine before `sanitise()` has repaired it. It is covered by
     "spendingGrowth": 0,        // real, i.e. ON TOP of inflation, after FI
     "pensionPolicy": "ignore",  // "ignore" | "ownPots" | "all"
     "pillarDrawAge": "unlock",  // "unlock" | "statePension"
-    "pillarPayout": "fundPension", // only supported payout
+    "pillarPayout": "fundPension", // "fundPension" | "lumpSum"
+    "pensionLumpSumInvestedShare": 0, // 0–1 of net counted proceeds; rest is cash
     "transactionCostRate": 0.02,
     "emergencyFundMonths": 6
   }
@@ -159,12 +160,45 @@ which is the honest answer rather than a large finite number.
 
 Fund-pension income follows the modeled fund return until its entered duration ends.
 
-**Fund withdrawals only.** Insurer annuities are not modeled. Old payout selections
+**Fund withdrawals by default.** Insurer annuities are not modeled. Old annuity selections
 normalize to fundPension; obsolete monthly quotes are discarded on load and never
 used by the engine. Existing official fund durations are retained. Missing durations
 remain unknown (income is excluded), rather than assuming a 20-year payout. The
 remaining portfolio must cover expenses after fund payments stop. No income is
 created from an empty fund.
+
+### Optional lump sum
+
+`pillarPayout: "lumpSum"` transfers each eligible Pillar II/III pot once into its
+owner's accessible assets; it produces no recurring fund income. Transfer occurs
+at the later of the selected qualifying draw date and FI. Working-year lump-sum
+withdrawals and early taxable exits are not supported. Pension assets remain
+invested and contributions continue while working until that modeled transfer.
+Unknown Pillar III eligibility excludes that pot, not the known Pillar II pot.
+
+Standard Estonian-resident withholding is modeled as 10% of the entire pot:
+€100,000 gross − €10,000 tax = €90,000 net. The trust percentage applies to that
+net capital, not to the tax rate. `pensionLumpSumInvestedShare` (0–1, default 0)
+allocates counted proceeds between investments and cash, preserving ownership.
+An allocation of 60% puts €54,000 into investments and €36,000 into cash at full
+trust. Existing accessible assets are not reallocated. An ignored pension or 0%
+trust contributes zero capital. Quotes from the removed annuity mode stay unused.
+
+The solver, schedule, coast and stress calculations share dated receipt events.
+Years containing receipts split at those dates; annual net spending is spread
+uniformly across those subperiods, an approximation rather than monthly cash-flow
+precision. Receipt cannot repair a prior shortfall. Schedule fields `lumpGross`,
+`lumpTax` and `lumpNet` are annual totals (the latter is counted after trust), not
+monthly income. Opening accessible assets exclude that year's receipts, so
+closing = opening + counted receipts − withdrawals + cash/investment growth.
+The FIRE target continues to mean required accessible assets before receipts.
+
+Rate source checked 20 September 2026: [EMTA pension taxation](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/pension-and-insurance-indemnities).
+Special exemptions, non-resident treaty treatment, possible tax-return refunds,
+and future law changes are not inferred. Subsequent investment returns retain the
+existing after-tax-return approximation; transaction-level reinvestment taxes are
+not implemented. Stress affects accessible investments, not the projected pension
+capital before receipt; an initial crash precedes that year's pension receipts.
 
 **Pillar I amount and eligibility use different evidence.** `pillar1Units` is
 authoritative for the accrued amount; `yearsWorkedEstonia` is a separate explicit
