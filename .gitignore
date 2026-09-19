@@ -1,5 +1,9 @@
 # Local-only files are excluded from version control and Pages artifacts.
 private/
+/ROADMAP.md
 
 __pycache__/
 .DS_Store
+node_modules/
+test-results/
+playwright-report/

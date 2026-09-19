@@ -7,10 +7,12 @@
 // Severity ordering: critical > important > opportunity > info.
 
 import { RATES, DEFAULTS } from './rates.js';
-import { eur, pct } from './format.js';
+import { eur, pct, escapeHtml } from './format.js';
 
 const SEVERITY_ORDER = { critical: 0, important: 1, opportunity: 2, info: 3 };
 
+// Titles and values are plain text. Details contain authored HTML; escape any
+// user text at interpolation sites in details, not in the underlying plan.
 /** @returns {Array<{id,severity,title,detail,value,link}>} */
 export function actionPlan(sim, input) {
   const out = [];
@@ -282,7 +284,7 @@ export function actionPlan(sim, input) {
       value: takingMortgage ? eur(sim.house.loan) + ' of debt' : 'dependents',
       detail:
         `With dependents${takingMortgage ? ' and a mortgage' : ''}, losing ` +
-        `${uncovered.length === people.length ? 'an earner' : uncovered[0].name} undoes the ` +
+        `${uncovered.length === people.length ? 'an earner' : escapeHtml(uncovered[0].name)} undoes the ` +
         `whole plan. Term life is cheap at working age and should cover at least the outstanding ` +
         `loan plus several years of household spending, on ` +
         `${people.length > 1 ? 'both adults' : 'the earner'}. Disability cover matters more ` +
@@ -485,7 +487,7 @@ export function actionPlan(sim, input) {
         (sim.timeline.pensionPerPerson.length > 1
           ? `, and each person has their own date — ` +
             sim.timeline.pensionPerPerson
-              .map((x) => `${x.name} at ${x.unlockAge.toFixed(0)} in ${Math.round(x.unlockYear)}`)
+              .map((x) => `${escapeHtml(x.name)} at ${x.unlockAge.toFixed(0)} in ${Math.round(x.unlockYear)}`)
               .join(', ') + `. The longer wait is the one that binds`
           : `, projected at about ${sim.timeline.pension.pillarUnlockAge.toFixed(0)} for this birth year`) +
         `. Everything before then comes from the investment account — which is why the target ` +

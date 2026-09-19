@@ -9,6 +9,12 @@
 
 const GUARD = '—';
 
+// For text inserted into HTML/SVG markup or quoted HTML attributes only.
+// Keep stored data unescaped; never use this for JavaScript, CSS, or URLs.
+export const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (c) => ({
+  '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+}[c]));
+
 export const eur = (n) => (Number.isFinite(n)
   ? '€' + Math.round(n).toLocaleString('en-IE')
   : GUARD);

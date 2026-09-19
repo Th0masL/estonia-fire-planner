@@ -1,0 +1,12 @@
+{
+  "name": "estonia-fire-planner",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "bash test/run.sh",
+    "test:browser": "python3 build.py && playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
+  }
+}

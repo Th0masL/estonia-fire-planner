@@ -144,6 +144,7 @@ const POLICIES = ['ignore', 'ownPots', 'all'];
 const PORTFOLIO_ENDS = ['perpetual', 'drawdown'];
 const DRAW_AGES = ['unlock', 'statePension'];
 const PAYOUTS = ['annuity', 'fundPension'];
+const isRecord = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);
 
 /**
  * Accept only a shape the engine can actually handle.
@@ -152,9 +153,9 @@ const PAYOUTS = ['annuity', 'fundPension'];
  * Mutates and returns the input, so callers should not keep the original.
  */
 export function sanitise(s) {
-  if (!s || typeof s !== 'object') return null;
+  if (!isRecord(s)) return null;
   if (!Array.isArray(s.persons) || !s.persons.length) return null;
-  if (!s.household || typeof s.household !== 'object') return null;
+  if (!s.persons.every(isRecord) || !isRecord(s.household)) return null;
 
   if (s.persons.length > MAX_PERSONS) s.persons = s.persons.slice(0, MAX_PERSONS);
   const incomingVersion = num(s.version, 1);
@@ -166,14 +167,14 @@ export function sanitise(s) {
   const h = s.household;
   h.hasDependents = bool(h.hasDependents);
   h.lifeInsurance = bool(h.lifeInsurance);
-  h.spending = h.spending && typeof h.spending === 'object' ? h.spending : {};
+  h.spending = isRecord(h.spending) ? h.spending : {};
   for (const k of SPEND_KEYS) h.spending[k] = Math.max(0, num(h.spending[k]));
   h.spending.childCostsEndYear = h.spending.childCostsEndYear == null ? null
     : bounded(h.spending.childCostsEndYear, RATES.year, 2200, RATES.year + 18);
   h.rentalIncomeNetMonthly = num(h.rentalIncomeNetMonthly);
 
   const buy = h.property?.purchase;
-  if (buy && typeof buy === 'object') {
+  if (isRecord(buy)) {
     buy.price = Math.max(0, num(buy.price));
     buy.deposit = Math.max(0, num(buy.deposit));
     buy.deposit = Math.min(buy.deposit, buy.price);
@@ -194,12 +195,12 @@ export function sanitise(s) {
   s.persons.forEach((p, i) => {
     p.name = typeof p.name === 'string' && p.name.trim() ? p.name : (i ? 'Partner' : 'You');
     p.birthYear = bounded(p.birthYear, 1900, RATES.year, 1990);
-    p.income = p.income && typeof p.income === 'object' ? p.income : {};
+    p.income = isRecord(p.income) ? p.income : {};
     p.income.grossMonthly = Math.max(0, num(p.income.grossMonthly));
     p.income.netMonthly = p.income.netMonthly == null ? null
       : Math.max(0, num(p.income.netMonthly));
     p.income.otherNetMonthly = num(p.income.otherNetMonthly);
-    p.assets = p.assets && typeof p.assets === 'object' ? p.assets : {};
+    p.assets = isRecord(p.assets) ? p.assets : {};
     for (const k of NUMERIC_ASSETS) p.assets[k] = Math.max(0, num(p.assets[k]));
     p.assets.investmentAccountContributions = Math.min(
       p.assets.investmentAccount, p.assets.investmentAccountContributions);
@@ -245,7 +246,7 @@ export function sanitise(s) {
     s.persons.forEach((p) => { p.allocationShare = sum > 0 ? p.allocationShare / sum : 0.5; });
   }
 
-  const a = s.assumptions && typeof s.assumptions === 'object' ? s.assumptions : {};
+  const a = isRecord(s.assumptions) ? s.assumptions : {};
   a.realReturn = bounded(a.realReturn, 0, 0.20, DEFAULTS.realReturn);
   a.cashRealReturn = bounded(a.cashRealReturn, -0.20, 0.20, DEFAULTS.cashRealReturn);
   a.swr = bounded(a.swr, 0.005, 0.10, DEFAULTS.swr);

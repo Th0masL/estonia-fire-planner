@@ -9,7 +9,7 @@ import {
   MAX_PERSONS, STORAGE_KEY, HASH_KEY, blankPerson, blankState, exampleState,
   encodeState, decodeState, sanitise,
 } from './state.js';
-import { eur, pct, pct1 } from './format.js';
+import { eur, pct, pct1, escapeHtml } from './format.js';
 import { infoBtn, infoRow, infoNote, bindExplain } from './explain.js';
 
 const $ = (id) => document.getElementById(id);
@@ -44,8 +44,10 @@ function fromHash() {
   const h = location.hash.slice(1);
   if (!h.startsWith(HASH_KEY)) return null;
   try {
-    return sanitise(decodeState(h.slice(HASH_KEY.length)));
-  } catch { return null; }
+    const next = sanitise(decodeState(h.slice(HASH_KEY.length)));
+    if (next) return next;
+  } catch { /* Report malformed payloads without replacing the current plan. */ }
+  throw new Error('Could not read the shared plan. Your existing plan has been kept.');
 }
 
 function load() {
@@ -58,7 +60,8 @@ function save() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {}
 }
 
-const shared = fromHash();
+let shared = null, sharedError = null;
+try { shared = fromHash(); } catch (e) { sharedError = e.message; }
 let state = shared || load() || blankState();
 
 // ------------------------------------------------------------------ people UI
@@ -71,7 +74,7 @@ function renderPeople() {
     card.className = 'person';
     card.innerHTML = `
       <div class="person-head">
-        <label class="pname-field">Name<input class="pname" data-i="${i}" data-k="name" value="${p.name}"></label>
+        <label class="pname-field">Name<input class="pname" data-i="${i}" data-k="name"></label>
         <label class="byear">Born<input type="number" min="1930" max="2015" step="1" data-i="${i}" data-k="birthYear" value="${p.birthYear}"></label>
         ${state.persons.length > 1 ? `<button class="btn btn-quiet rm" data-i="${i}">Remove</button>` : ''}
       </div>
@@ -180,22 +183,27 @@ function renderPeople() {
         <label ${p.healthInsurance ? '' : 'hidden'}>Health contract <span class="u">€/mo</span><input type="number" min="0" step="1" data-i="${i}" data-k="healthInsuranceMonthly" value="${p.healthInsuranceMonthly ?? RATES.healthInsurance.voluntaryMonthly}"></label>
       </div>
 `;
+    card.querySelector('.pname').value = p.name;
     wrap.appendChild(card);
   });
+
+  updatePersonLabels();
+  $('addPerson').hidden = state.persons.length > 1;
+  $('allocWrap').hidden = state.persons.length < 2;
+}
+
+function updatePersonLabels() {
 
   // Who funds the house only needs asking when there is more than one person.
   const pb = $('paidByWrap'), sel = $('hPaidBy');
   pb.hidden = state.persons.length < 2;
   if (!pb.hidden) {
     const cur = state.household.property?.purchase?.paidBy ?? 'proportional';
-    sel.innerHTML =
-      `<option value="proportional">Both, in proportion to cash</option>` +
-      state.persons.map((p, i) => `<option value="${i}">${p.name}</option>`).join('');
+    sel.replaceChildren(new Option('Both, in proportion to cash', 'proportional'),
+      ...state.persons.map((p, i) => new Option(p.name, String(i))));
     sel.value = String(cur);
   }
 
-  $('addPerson').hidden = state.persons.length > 1;
-  $('allocWrap').hidden = state.persons.length < 2;
   if (state.persons.length === 2) {
     const share = Math.round((state.persons[0].allocationShare ?? 0.5) * 100);
     $('alloc').value = share;
@@ -476,7 +484,7 @@ function chart(sim) {
       ${ticks}
     </svg>
     ${series.length > 1 ? `<p class="legend">${series.map((s, i) =>
-      `<span class="key k${i}"></span>${s.name}`).join(' ')}</p>` : ''}
+      `<span class="key k${i}"></span>${escapeHtml(s.name)}`).join(' ')}</p>` : ''}
   `;
 }
 
@@ -620,7 +628,7 @@ function render() {
       scenario.savings.surplusAfterMove > 0;
     if (!reached) return 'No FI date on these inputs';
     const ages = scenario.timeline.agesAtFi
-      .map((x) => `${x.name} age ${x.age.toFixed(0)}`).join(' · ');
+      .map((x) => `${escapeHtml(x.name)} age ${x.age.toFixed(0)}`).join(' · ');
     return `FI ${Math.round(scenario.timeline.fiYear)} · ${ages}`;
   };
   const pensionTrust = sim.fi.policy === 'all'
@@ -652,7 +660,7 @@ function render() {
         ? 'needed when you stop' : `FI number at ${pct1(sim.assumptions.swr)}`} ${infoBtn('stat-number')}</span></div>
       <div class="stat ${onTrack ? '' : 'stat-warn'}">${reachable
         ? (t.agesAtFi.length > 1
-            ? `<b>${Math.round(t.fiYear)}</b><span>FI year · ${t.agesAtFi.map((a) => `${a.name} ${a.age.toFixed(0)}`).join(', ')}</span><span class="stat-sub">${countdown(t.yearsToFi)} to go</span>`
+            ? `<b>${Math.round(t.fiYear)}</b><span>FI year · ${t.agesAtFi.map((a) => `${escapeHtml(a.name)} ${a.age.toFixed(0)}`).join(', ')}</span><span class="stat-sub">${countdown(t.yearsToFi)} to go</span>`
             : `<b>${t.fiAge.toFixed(0)}</b><span>age at FI · ${Math.round(t.fiYear)}</span><span class="stat-sub">${countdown(t.yearsToFi)} to go</span>`)
         : `<b>—</b><span>${onTrack ? 'not reached' : marginal ? 'break-even' : 'spending exceeds income'}</span>`}</div>
       <div class="stat"><b>${pct(sim.savings.rateAfterMove)}</b><span>savings rate ${infoBtn('stat-rate')}</span></div>
@@ -876,7 +884,7 @@ function render() {
          Assumptions to compare.`}`)}
     <table class="mini">
       ${sim.portfolio.perPerson.filter((p) => p.pensionNow > 0 || p.pensionAtUnlock > 1).map((p) => `
-        <tr><th>${p.name} <span class="muted">${p.deferred
+        <tr><th>${escapeHtml(p.name)} <span class="muted">${p.deferred
           ? `unlocks ${Math.round(p.unlockYear)} at ${p.unlockAge.toFixed(0)}, taken ${Math.round(p.drawYear)} at ${p.drawAge.toFixed(0)}`
           : `unlocks ${Math.round(p.unlockYear)}, age ${p.unlockAge.toFixed(0)}`}${!p.pensionAgeConfirmed && p.pensionAgeRange
             ? ` — unconfirmed scenario; official state-pension age range ${p.pensionAgeRange.min.toFixed(1)}–${p.pensionAgeRange.max.toFixed(1)}` : ''}${!p.pillar3EligibilityKnown
@@ -885,7 +893,7 @@ function render() {
         <td>${eur(p.pensionNow)} today → <strong>${eur(p.pensionAtUnlock)}</strong>${sim.fi.countsPension
           ? ` · ${eur(p.pensionIncome)}/yr${Number.isFinite(p.incomeEndAge) ? ` until ${Math.floor(p.incomeEndYear)}` : ''}` : ''}</td></tr>`).join('')}
       ${sim.fi.countsPots ? sim.persons.filter((p) => p.pensionIncome > 1).map((p) => `
-        <tr><th>${p.name}: what that is worth by the end ${infoBtn('erosion')} <span class="muted">${sim.fi.pillarPayout === 'fundPension'
+        <tr><th>${escapeHtml(p.name)}: what that is worth by the end ${infoBtn('erosion')} <span class="muted">${sim.fi.pillarPayout === 'fundPension'
           ? 'the fund keeps growing while it pays out' : 'fixed in euros, so it buys less each year'}</span></th>
         <td><strong>${eur(p.pensionIncomeFinal / 12)}</strong>/mo <span class="muted">vs ${eur(p.pensionIncome / 12)} at the start</span></td></tr>`).join('') : ''}
       ${sim.fi.countsPots ? `
@@ -896,7 +904,7 @@ function render() {
       ${sim.fi.pillarPayout === 'fundPension' && sim.fi.countsPots && sim.persons.every((p) => p.payoutYears != null) ? (() => {
         const last = sim.persons.reduce((a, b) => (b.pillarIncomeEndYear > a.pillarIncomeEndYear ? b : a));
         const years = sim.assumptions.planToAge - last.pillarIncomeEndAge;
-        return `<tr><th>Portfolio carries it again <span class="muted">once ${last.name}'s pot runs dry</span></th>
+        return `<tr><th>Portfolio carries it again <span class="muted">once ${escapeHtml(last.name)}'s pot runs dry</span></th>
           <td>from ${Math.floor(last.pillarIncomeEndYear)} · ${years.toFixed(0)} years${sim.fi.countsState ? ', with the state pension' : ' alone'}</td></tr>`;
       })() : ''}
       ${infoNote('erosion', `${sim.fi.pillarPayout === 'fundPension'
@@ -947,7 +955,7 @@ function render() {
         so it is shown net of income tax after the larger
         ${eur(12 * RATES.basicExemptionPensionAge)} pension-age exemption.`)}` : ''}
       ${sim.fi.policy === 'all' ? sim.persons.map((p) => `
-        <tr><th>${p.name}: state pension <span class="muted">from ${Math.round(p.statePensionYear)}, ${p.yearsWorkedAtFi == null ? 'service years not supplied — income excluded' : `after ${p.yearsWorkedAtFi.toFixed(0)} Estonian service years`}, net of tax${p.statePensionEarlyYears ? `, drawn ${p.statePensionEarlyYears} ${p.statePensionEarlyYears === 1 ? 'year' : 'years'} early using the 2026 average forecast reduction of ${pct(-p.statePensionAdjustment)} for life` : ''}</span></th>
+        <tr><th>${escapeHtml(p.name)}: state pension <span class="muted">from ${Math.round(p.statePensionYear)}, ${p.yearsWorkedAtFi == null ? 'service years not supplied — income excluded' : `after ${p.yearsWorkedAtFi.toFixed(0)} Estonian service years`}, net of tax${p.statePensionEarlyYears ? `, drawn ${p.statePensionEarlyYears} ${p.statePensionEarlyYears === 1 ? 'year' : 'years'} early using the 2026 average forecast reduction of ${pct(-p.statePensionAdjustment)} for life` : ''}</span></th>
         <td><strong>${eur(p.statePensionIncome / 12)}</strong>/mo${p.statePensionIfWorkedOn - p.statePensionIncome > 12
           ? ` <span class="muted">vs ${eur(p.statePensionIfWorkedOn / 12)} working to ${p.pension.statePensionAge.toFixed(0)}</span>` : ''}</td></tr>`).join('') : ''}
     </table>
@@ -967,7 +975,7 @@ function render() {
       balances stay with whoever holds them. It matters for anything decided per person rather than
       per household, and it is deliberately not a separation model.`)}
     <table class="mini">
-      ${sim.fi.ownershipAtFi.map((o) => `<tr><th>${o.name} <span class="muted">age ${o.ageAtFi.toFixed(0)}</span></th><td>${pct(o.share)} of new savings${o.portfolio == null ? '' : ` → ${eur(o.portfolio)}`}</td></tr>`).join('')}
+      ${sim.fi.ownershipAtFi.map((o) => `<tr><th>${escapeHtml(o.name)} <span class="muted">age ${o.ageAtFi.toFixed(0)}</span></th><td>${pct(o.share)} of new savings${o.portfolio == null ? '' : ` → ${eur(o.portfolio)}`}</td></tr>`).join('')}
     </table>
     <p class="hint">The split governs <em>future savings</em>. Existing assets stay with whoever
       holds them and keep compounding there, so the balances will not match the slider unless the
@@ -997,7 +1005,7 @@ function render() {
         const g = GUIDE[f.link];
         return `
         <article class="finding ${f.severity}">
-          <header><h4>${f.title}</h4><span class="val">${f.value}</span></header>
+          <header><h4>${escapeHtml(f.title)}</h4><span class="val">${escapeHtml(f.value)}</span></header>
           <p>${f.detail}${g ? ` <a class="more" href="${g[0]}">${g[1]} →</a>` : ''}</p>
         </article>`;
       }).join('')
@@ -1016,7 +1024,8 @@ document.addEventListener('input', (e) => {
       : el.type === 'number' ? (el.value === '' ? null : +el.value)
       : el.value;
     setDeep(p, el.dataset.k, raw);
-    if (['name', 'lifeInsurance', 'healthInsurance', 'healthCoveredAfterFi'].includes(el.dataset.k)) renderPeople();
+    if (el.dataset.k === 'name') updatePersonLabels();
+    if (['lifeInsurance', 'healthInsurance', 'healthCoveredAfterFi'].includes(el.dataset.k)) renderPeople();
     save(); render();
     return;
   }
@@ -1032,25 +1041,24 @@ document.addEventListener('input', (e) => {
   onChange();
 });
 
-document.addEventListener('change', (e) => {
+document.addEventListener('change', async (e) => {
   if (e.target.id === 'buying') { $('houseFields').hidden = !e.target.checked; onChange(); }
   if (e.target.id === 'importFile') {
     const file = e.target.files[0];
     if (!file) return;
-    file.text().then((txt) => {
-      try {
-        const parsed = sanitise(JSON.parse(txt));
-        if (!parsed) throw new Error('not a simulator file');
-        state = parsed;
-        save(); stateToForm(); render();
-        flash(`Loaded ${file.name} — ${parsed.persons.length} ` +
-              `${parsed.persons.length === 1 ? 'person' : 'people'}.`);
-      } catch (err) {
-        flash(`Could not read ${file.name}: ${err.message}`, false);
-      }
+    try {
+      const parsed = sanitise(JSON.parse(await file.text()));
+      if (!parsed) throw new Error('not a simulator file');
+      state = parsed;
+      save(); stateToForm(); render();
+      flash(`Loaded ${file.name} — ${parsed.persons.length} ` +
+            `${parsed.persons.length === 1 ? 'person' : 'people'}.`);
+    } catch (err) {
+      flash(`Could not read ${file.name}: ${err.message}`, false);
+    } finally {
       // Reset so selecting the same file again still fires a change event.
       e.target.value = '';
-    });
+    }
   }
 });
 
@@ -1128,10 +1136,13 @@ function adoptShared(next, announce) {
 stateToForm();
 render();
 if (shared) adoptShared(shared, true);
+else if (sharedError) flash(sharedError, false);
 
 // A link pasted into an already-open tab changes only the fragment, which does
 // not reload the page - so listen for it explicitly.
 addEventListener('hashchange', () => {
-  const next = fromHash();
-  if (next) adoptShared(next, true);
+  try {
+    const next = fromHash();
+    if (next) adoptShared(next, true);
+  } catch (e) { flash(e.message, false); }
 });

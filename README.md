@@ -45,6 +45,21 @@ bash test/run.sh
 
 `build.py` generates `index.html`, the calculator bundles and `guide/*.html`. Edit Markdown or files under `src/`, then rebuild rather than editing generated HTML directly. Interface styles consume the local semantic tokens in `tokens.css`.
 
+Browser security and sharing tests use Playwright as a development dependency;
+the website itself still runs without JavaScript packages or network access:
+
+```sh
+npm ci
+npx playwright install chromium
+npm run test:browser
+```
+
+To use an existing Chrome installation, set `CHROME_PATH` to its executable
+when running the browser tests. Tests use isolated browser contexts and synthetic
+plans, including HTML-like names, and cover desktop/mobile in light/dark themes.
+Pushes to `main` and pull requests run both suites without deploying. Releases
+also run both suites before deployment.
+
 ## GitHub Pages
 
 The workflow in [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) builds, tests and deploys only browser-facing files. It runs when a GitHub release is published and can also be started manually from the Actions tab.

@@ -43,6 +43,14 @@ jobs:
       - name: Build and test
         run: bash test/run.sh
 
+      - name: Install browser test dependencies
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Browser security and sharing tests
+        run: npx playwright test
+
       # Publish only browser-facing artifacts. Source documents, tests,
       # repository metadata and ignored private files never enter the Pages
       # artifact.
