@@ -131,3 +131,36 @@ test('standalone file works offline with a hostile shared name', async ({ page }
   await page.goto(file + fragment(makePlan()));
   await assertSafeNames(page);
 });
+
+test('loss-making asset bases survive sharing, storage, export and import', async ({ page }) => {
+  const plan = makePlan('Person1');
+  const pairs = [
+    ['investmentAccount', 'investmentAccountContributions'],
+    ['brokerage', 'brokerageCostBasis'], ['crypto', 'cryptoCostBasis'],
+  ];
+  for (const [asset, basis] of pairs) {
+    plan.persons[0].assets[asset] = 80000;
+    plan.persons[0].assets[basis] = 100000;
+  }
+  await page.goto('/simulator.html' + fragment(plan));
+  const check = async () => {
+    for (const [asset, basis] of pairs) {
+      await expect(page.locator(`[data-i="0"][data-k="assets.${asset}"]`)).toHaveValue('80000');
+      await expect(page.locator(`[data-i="0"][data-k="assets.${basis}"]`)).toHaveValue('100000');
+      expect(JSON.parse(await saved(page)).persons[0].assets[basis]).toBe(100000);
+    }
+  };
+  await check();
+  await page.reload();
+  await check();
+  const downloading = page.waitForEvent('download');
+  await page.locator('#export').click();
+  const download = await downloading;
+  const buffer = await readFile(await download.path());
+  for (const [, basis] of pairs) expect(JSON.parse(buffer).persons[0].assets[basis]).toBe(100000);
+  await page.locator('#importFile').setInputFiles({ name: 'synthetic.json', mimeType: 'application/json', buffer });
+  await check();
+  await page.locator('#share').click();
+  const shared = decodeState(new URL(await page.locator('#shareUrl').inputValue()).hash.slice(3));
+  for (const [, basis] of pairs) expect(shared.persons[0].assets[basis]).toBe(100000);
+});

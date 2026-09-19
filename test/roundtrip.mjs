@@ -263,6 +263,28 @@ for (const [label, mutate] of degenerate) {
   runsClean(sanitise(s), label);
 }
 
+// Historical costs/allowances survive losses independently of market value.
+for (const value of [0, 80000, 120000]) {
+  const input = exampleState();
+  input.excludeCrypto = false;
+  Object.assign(input.persons[0].assets, {
+    investmentAccount: value, investmentAccountContributions: 100000,
+    brokerage: value, brokerageCostBasis: 100000,
+    crypto: value, cryptoCostBasis: 100000,
+  });
+  for (const candidate of [input, JSON.parse(JSON.stringify(input)), decodeState(encodeState(input))]) {
+    const clean = sanitise(candidate);
+    for (const key of ['investmentAccountContributions', 'brokerageCostBasis', 'cryptoCostBasis']) {
+      ok(clean.persons[0].assets[key] === 100000, `${key} survives value ${value}`);
+    }
+    const person = simulate(clean).persons[0];
+    const expected = Math.max(0, value - 100000) * RATES.incomeTax;
+    ok(person.investmentTaxReserve === expected, 'investment reserve uses preserved allowance');
+    ok(person.brokerageTaxReserve === expected, 'brokerage reserve uses preserved basis');
+    ok(person.cryptoTaxReserve === expected, 'crypto reserve uses preserved basis');
+  }
+}
+
 console.log(`\n${checks} state and round-trip checks`);
 if (failures.length) {
   console.log(`\n${failures.length} FAILED:`);

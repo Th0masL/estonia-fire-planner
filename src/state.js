@@ -202,10 +202,8 @@ export function sanitise(s) {
     p.income.otherNetMonthly = num(p.income.otherNetMonthly);
     p.assets = isRecord(p.assets) ? p.assets : {};
     for (const k of NUMERIC_ASSETS) p.assets[k] = Math.max(0, num(p.assets[k]));
-    p.assets.investmentAccountContributions = Math.min(
-      p.assets.investmentAccount, p.assets.investmentAccountContributions);
-    p.assets.cryptoCostBasis = Math.min(p.assets.crypto, p.assets.cryptoCostBasis);
-    p.assets.brokerageCostBasis = Math.min(p.assets.brokerage, p.assets.brokerageCostBasis);
+    // Losses do not reduce recorded acquisition costs or unused investment-
+    // account contribution allowance. Preserve these independently of value.
     p.assets.cryptoMicaEligible = bool(p.assets.cryptoMicaEligible);
     // Only the three statutory rates exist; anything else would be rejected by
     // the pension registry, so it cannot be modelled honestly.

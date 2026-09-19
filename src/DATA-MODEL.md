@@ -58,7 +58,7 @@ nothing reaches the engine before `sanitise()` has repaired it. It is covered by
       "assets": {
         "cash": 24000,            // counted
         "investmentAccount": 0,    // counted net of latent tax below
-        "investmentAccountContributions": 0, // cumulative tax basis
+        "investmentAccountContributions": 0, // unused contribution allowance after prior withdrawals
         "pillar2": 21000,          // excluded — locked until unlock age
         "pillar3": 0,              // excluded
         "crypto": 4000           // excluded unless excludeCrypto is false
@@ -202,6 +202,18 @@ Enforced by `test/invariants.mjs` across generated households:
 - nothing rendered is `NaN`, `Infinity` or `undefined`
 
 ## Changing the shape
+
+Cost basis and unused contribution allowance are independent of market value;
+losses must not reduce either on load. `investmentAccountContributions` keeps
+its existing serialized key and numeric value, but its label now explicitly
+means the unused allowance after prior reportable withdrawals, not lifetime
+deposits. Older ambiguous inputs require user review, not guessed conversion.
+Previously truncated figures require re-entry from records. No schema change
+is made in this preservation fix. The current tax reserve is a snapshot
+approximation; future withdrawal taxation remains outside this fix.
+
+Reference: [EMTA securities and investment-account guidance](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account),
+contributions and payments section, checked 19 September 2026.
 
 Bump `version` and handle the older shape on load. Share links and exported
 files from earlier versions are in the wild the moment anyone uses them.

@@ -2662,10 +2662,8 @@ function sanitise(s) {
     p.income.otherNetMonthly = num(p.income.otherNetMonthly);
     p.assets = isRecord(p.assets) ? p.assets : {};
     for (const k of NUMERIC_ASSETS) p.assets[k] = Math.max(0, num(p.assets[k]));
-    p.assets.investmentAccountContributions = Math.min(
-      p.assets.investmentAccount, p.assets.investmentAccountContributions);
-    p.assets.cryptoCostBasis = Math.min(p.assets.crypto, p.assets.cryptoCostBasis);
-    p.assets.brokerageCostBasis = Math.min(p.assets.brokerage, p.assets.brokerageCostBasis);
+    // Losses do not reduce recorded acquisition costs or unused investment-
+    // account contribution allowance. Preserve these independently of value.
     p.assets.cryptoMicaEligible = bool(p.assets.cryptoMicaEligible);
     // Only the three statutory rates exist; anything else would be rejected by
     // the pension registry, so it cannot be modelled honestly.
@@ -2819,15 +2817,22 @@ function renderPeople() {
         protection is ${eur(RATES.protection.depositGuarantee)} per person per bank, so a large
         balance in one place is uninsured above that. <strong>Investment account</strong> means an
         Estonian declared <em>investeerimiskonto</em>. Tax is deferred until withdrawals exceed
-        contributions; the simulator reserves 22% of the gain, so enter cumulative contributions too.
+        the unused contribution allowance; the simulator estimates a tax reserve on value above
+        that allowance, not transaction-by-transaction tax. Enter the remaining allowance after
+        prior reportable withdrawals, not lifetime deposits. It can exceed current value after losses.
         Enter what each person holds in their own name — it decides who owns what at FI.`)}
       <div class="grid">
         <label>Cash <span class="u">€</span><input type="number" min="0" step="1000" data-i="${i}" data-k="assets.cash" value="${p.assets.cash}"></label>
         <label>Investment account <span class="u">€</span><input type="number" min="0" step="1000" data-i="${i}" data-k="assets.investmentAccount" value="${p.assets.investmentAccount}"></label>
-        <label>Investment-account contributions <span class="u">€ cumulative tax basis</span><input type="number" min="0" step="1000" data-i="${i}" data-k="assets.investmentAccountContributions" value="${p.assets.investmentAccountContributions ?? 0}"></label>
+        <label>Investment-account unused contribution allowance <span class="u">€ remaining after prior withdrawals</span><input type="number" min="0" step="1000" data-i="${i}" data-k="assets.investmentAccountContributions" value="${p.assets.investmentAccountContributions ?? 0}"></label>
         <label>Ordinary brokerage account <span class="u">€</span><input type="number" min="0" step="1000" data-i="${i}" data-k="assets.brokerage" value="${p.assets.brokerage ?? 0}"></label>
         <label>Brokerage cost basis <span class="u">€</span><input type="number" min="0" step="1000" data-i="${i}" data-k="assets.brokerageCostBasis" value="${p.assets.brokerageCostBasis ?? 0}"></label>
       </div>
+
+      <p class="hint">Review older plans: the contribution field previously said “cumulative tax basis”.
+        Existing values are retained, but lifetime deposits may need correcting for prior withdrawals.
+        Older saves may also have reduced cost basis or allowance to market value; re-enter the
+        original figures from your records if affected. Lost values cannot be recovered automatically.</p>
 
       <p class="sub">Not counted toward FI ${infoBtn('counted-out')}</p>
       ${infoNote('counted-out', `Shown so the total is visible, never added to the target. The
