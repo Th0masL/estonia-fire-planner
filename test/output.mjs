@@ -638,6 +638,30 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
   ok(reference.length === 12 && reference[0] === '2024-10' && reference.at(-1) === '2025-09' && household.includes('October 2024–September 2025'), 'shared-benefit example uses preceding twelve months');
 }
 
+{
+  const source = read('docs/guide/fatfire.md');
+  const built = read('guide/fatfire.html').replace(/\s+/g, ' ');
+  const euro = n => `€${Math.round(n).toLocaleString('en-IE')}`;
+  for (const spending of [30000, 50000, 100000, 150000]) {
+    const target = spending / .035;
+    ok(source.includes(`| ${euro(spending)} | ${euro(target)} | ${euro(spending / .04)} |`), 'FatFIRE target row reconciles both rates');
+    let pot = 0, years = 0;
+    while (pot < target) { pot = pot * 1.05 + 60000; years++; }
+    const n = Math.log1p(target * .05 / 60000) / Math.log1p(.05);
+    ok(source.includes(`| ${euro(spending)} | ${n.toFixed(2)} | ${years} |`), 'FatFIRE formula and independent annual crossing reconcile');
+  }
+  for (const extra of [1000, 2000, 4000]) {
+    ok(source.includes(`| ${euro(4000 + extra)} | ${euro(extra)} | ${euro(extra * 12 / .035)} | ${euro(extra * 12)} |`), 'FatFIRE permanent-spending increment reconciles');
+  }
+  ok(built.includes(euro(100000 / .035 - 100000 / .04)), 'FatFIRE withdrawal-rate capital difference reconciles');
+  for (const phrase of ['it more than doubles it', 'the biggest single lever', 'about four years of work', '€208,000 vs €162,000']) {
+    ok(!built.includes(phrase), `FatFIRE removes unsupported assertion: ${phrase}`);
+  }
+  for (const phrase of ['less than double', 'remaining declared allowance', 'not forecasts', 'year-end contribution', 'no corporate-account mode']) {
+    ok(built.includes(phrase), `FatFIRE retains qualification: ${phrase}`);
+  }
+}
+
 console.log(`\n${checks} output and cross-engine checks`);
 if (failures.length) {
   console.log(`\n${failures.length} FAILED:`);

@@ -1,112 +1,167 @@
 # FatFIRE
 
-Exploring the higher-spending end. Tables here are illustrative — run your own figures in the [calculator](../simulator.html). Throughout: 3.5% withdrawal rate, 5% real return, pensions excluded.
+FatFIRE is an informal label for a higher-spending retirement, not a verified
+Estonian budget band. Separate essential spending from discretionary goals and
+compare your own scenarios in the [calculator](../simulator.html).
 
-## The tiers
+> **Limited review — 20 September 2026:** the tables below are conditional
+> arithmetic, not forecasts or withdrawal-success estimates. Local lifestyle
+> costs, future returns, individual tax outcomes and an optimal strategy remain
+> unverified.
 
-"Perpetual spending" is the annual figure the portfolio must support forever — excluding the mortgage and child costs, including health insurance, net of any rental income.
+## Illustrative spending targets
 
-| Tier | Perpetual spending | Portfolio at 3.5% | Portfolio at 4% |
+For this table only, divide ongoing annual spending by an assumed initial
+withdrawal rate. All amounts are in today's purchasing power; targets are rounded
+to the nearest euro.
+
+| Ongoing annual spending | Baseline at 3.5% | Baseline at 4% |
+|---|---:|---:|
+| €30,000 | €857,143 | €750,000 |
+| €50,000 | €1,428,571 | €1,250,000 |
+| €100,000 | €2,857,143 | €2,500,000 |
+| €150,000 | €4,285,714 | €3,750,000 |
+
+These are baseline spending multiples, not the simulator's complete FI targets.
+The example excludes pension benefits, other income, withdrawal taxes, protected
+cash and dated liabilities. In a real plan, fund mortgage payments and child costs
+for their actual duration; do not simply exclude them. Include continuing housing
+costs after a mortgage ends and healthcare for the actual uncovered period.
+
+Both withdrawal rates are assumptions. See the
+[withdrawal-research limitations](fire-basics.md#safe-withdrawal-rate--what-the-research-can-tell-us).
+
+## How long a fixed saving amount takes
+
+Assume zero starting assets, €60,000 invested at each year-end, a constant 5%
+annual real return after investment costs, no further tax drag, and no withdrawals.
+The target is the unrounded 3.5% baseline above, held constant in real terms.
+
+```
+balance after n years = 60,000 × ((1.05^n - 1) / 0.05)
+formula years = ln(1 + target × 0.05 / 60,000) / ln(1.05)
+```
+
+| Annual spending target | Formula years | First completed saving year |
+|---|---:|---:|
+| €30,000 | 11.05 | 12 |
+| €50,000 | 16.07 | 17 |
+| €100,000 | 24.97 | 25 |
+| €150,000 | 31.15 | 32 |
+
+Formula years interpolate the annual model; they are not monthly FI dates.
+The completed year is the first year-end contribution at which the target is
+reached. At zero return, the corresponding formula is simply target / annual saving.
+
+In this model, doubling spending from €50k to €100k doubles the target but raises
+formula time from 16.07 to 24.97 years, **less than double**. Compounding explains
+the difference. If higher current spending also reduces saving, that is a
+different scenario; recalculate both inputs rather than assuming the same result.
+
+## What the budget includes
+
+An illustrative €100k annual budget averages about €8,333/month. Paying off a
+mortgage does not make this “everything except housing”: maintenance, utilities,
+insurance, taxes and future repairs may remain. Define the included costs before
+comparing lifestyles.
+
+No Tallinn-versus-Paris-or-London price comparison has been verified here.
+Relocation needs a new budget and tax/healthcare review, not just a currency
+conversion. See [location choices](strategy-levers.md#9-geographic-arbitrage).
+
+## Spending now versus spending in retirement
+
+Assume current spending is €4,000/month, net income is unchanged, and an increase
+starts now and continues permanently into retirement. Then the extra spending
+both reduces annual saving and raises the simple 3.5% baseline:
+
+| New monthly spending | Extra per month | Baseline target increase | Annual saving reduction |
 |---|---:|---:|---:|
-| **Lean** | €30,000 | €857,000 | €750,000 |
-| **Comfortable** | €50,000 | €1,429,000 | €1,250,000 |
-| **Fat** | €100,000 | €2,857,000 | €2,500,000 |
-| **Very fat** | €150,000 | €4,286,000 | €3,750,000 |
+| €5,000 | €1,000 | €342,857 | €12,000 |
+| €6,000 | €2,000 | €685,714 | €24,000 |
+| €8,000 | €4,000 | €1,371,429 | €48,000 |
 
-That part is universal — the target is simply spending divided by the withdrawal rate. What differs between people is how long each tier takes, which depends entirely on the surplus. As an illustration, a household saving **€60,000 a year** from a standing start at 5% real:
+This does not quantify the FI-date delay. Temporary spending, a retirement-only
+increase, changing income or insufficient surplus require different cash flows.
+Higher-spending retirement does not universally require low spending while
+working; what matters is affordable saving and existing resources relative to
+the chosen target.
 
-| Tier | Years to reach it |
-|---|---:|
-| Lean (€857,000) | ~11 |
-| Comfortable (€1,429,000) | ~16 |
-| Fat (€2,857,000) | ~25 |
-| Very fat (€4,286,000) | ~31 |
+## Choices to compare, not ranked shortcuts
 
-**Each step up costs years, and the steps get more expensive.** Doubling target spending does not double the wait — it more than doubles it, because the extra portfolio has to be built out of the same surplus. Somewhere in the upper tiers "early" retirement quietly stops being early.
+### Additional earned income
 
-## What the numbers actually mean in Estonia
+€2,000/month of extra net income provides €24,000/year before related costs.
+Subtract childcare, commuting, lost benefits and other changes. Another adult's
+income is not automatically the largest lever or the preferred household choice.
+Check [health coverage](health-insurance.md) and actual
+[pension contributions and deduction capacity](pensions.md) separately; neither
+is established merely by entering net income.
 
-Worth grounding, because "€100,000/year" sounds different in Tallinn than in Paris or London.
+### Genuine business income and an OÜ
 
-In an illustrative four-person household, €100,000/year of *perpetual* spending — with housing debt already cleared — means roughly **€8,300/month on everything except housing**. That is a high-spending scenario by Estonian standards.
+Retained company profit is not spendable personal wealth.
+[EMTA's dividend guidance](https://www.emta.ee/en/business-client/taxes-and-payment/income-and-social-taxes/taxation-dividends)
+sets the standard distribution tax at 22/78 of the net dividend from 2025, with
+transitional exceptions. A comparison must include extraction, business costs,
+appropriate remuneration and the same starting budget.
 
-This illustrates the geographic-arbitrage point from [strategy-levers.md](strategy-levers.md#9-geographic-arbitrage): the same portfolio can support very different lifestyles in different places.
+The old 15-year comparison of company assets with personal assets omitted that
+reconciliation and confused a single starting sum with repeated annual saving.
+It did not demonstrate a net advantage. Use the
+[reconciled company examples](company.md), not an assumed 22% saving from
+“restructuring” salary. The simulator has no corporate-account mode.
 
-The corollary is a risk: **a move abroad changes the FatFIRE number** through both local prices and taxation. A €2.86M portfolio supporting a high-spending Estonian lifestyle may support less elsewhere.
+### Income growth and housing choices
 
-## The central tension
+Compare saving an affordable net raise with spending it. Model a proposed housing
+upgrade using its deposit, debt, running costs and reserves. Neither keeping the
+same home nor raising the savings rate is universally optimal.
 
-FatFIRE has a structural awkwardness that lean plans don't:
+[Investor.gov's allocation guidance](https://www.investor.gov/introduction-investing/getting-started/asset-allocation)
+relates investment choices to time horizon and risk tolerance. Different goals
+can require different liquidity and risk choices now, not only near retirement.
 
-> **To retire on high spending, you must not spend highly while accumulating.**
+## Withdrawal assumptions and risk
 
-A high savings rate depends on holding current spending below income. For an illustrative household currently spending €4,000/month, increasing spending to "grow into" a future lifestyle causes two effects at once: the target rises by roughly 28 times the annual increase, and the savings rate falls.
+For €100k/year, the 3.5% and 4% baselines differ by approximately **€357,143**.
+That is a capital difference, not a verified four-year work extension. Its effect
+on the date depends on current assets, saving, returns and the rest of the plan.
 
-| If you spent… | Extra per month | Target rises by | Savings fall by | Net effect on FI age |
-|---|---:|---:|---:|---|
-| €5,000/mo | €1,000 | €343,000 | €12,000/yr | Later; calculate from the household's starting point |
-| €6,000/mo | €2,000 | €686,000 | €24,000/yr | Later by more than the target increase alone implies |
-| €8,000/mo | €4,000 | €1,371,000 | €48,000/yr | Potentially incompatible with early retirement |
+A shorter horizon can change a withdrawal analysis, but a higher-spending label
+or later retirement does not establish that a higher rate is safe. Test the
+actual horizon, spending flexibility, taxes and pensions.
 
-Every €1,000/month of permanent spending adds roughly €343,000 to a 3.5%-SWR target. The exact delay depends on income, current assets and returns and should be calculated rather than generalised.
+A larger portfolio can improve the margin if spending is held fixed; scaling
+both spending and assets proportionally does not by itself remove sequence risk.
+Losses later in retirement can still matter. See [risks and blind spots](risks.md).
+Neither this guide nor constant-return arithmetic supplies a success probability.
 
-## What actually accelerates FatFIRE
+## Investment-account allowance is a ledger, not wealth
 
-Common levers, whose ranking depends on the household:
+[EMTA's investment-account guidance](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account)
+calculates taxable payments chronologically across the same taxpayer's accounts.
+Portfolio market value does not establish remaining contribution allowance.
 
-### 1. A second earner — the biggest single lever
+For example, a €2.86M portfolio with **€1.5M of remaining declared allowance**
+could support €1.5M of qualifying outward payments before that allowance is
+exhausted, assuming no intervening changes and continued eligibility. Previously
+used contributions cannot be counted again; partners have separate ledgers.
+This is a tax-deferral illustration, not guaranteed spending capacity.
 
-In an illustrative single-earner household, if the second adult begins earning **€2,000/month net**, four things may happen simultaneously:
+Losing Estonian tax residence ends this deferral and requires a closure
+declaration and settlement of the resulting Estonian tax liability; it does not
+necessarily require closing the bank account. See the
+[investment-account guide](investment-account.md). Destination-country outcomes
+and future law remain unverified.
 
-- Household saving capacity rises by **€24,000 a year** before any associated costs
-- **Check health coverage separately.** Qualifying work may provide coverage, but the saving depends on actual eligibility and the uncovered period, not a universal €93,000 target reduction. See the [health-insurance guide](health-insurance.md).
-- Another Pillar III deduction may become usable, subject to that person's taxable income ([Pillar III](pensions.md))
-- **Pillar II starts accruing** for them again
+## A practical comparison
 
-Whether this is desirable is a household decision rather than a purely financial optimisation.
+1. Define essential spending and optional goals, including irregular costs.
+2. Compare complete scenarios at several spending levels, not just target multiples.
+3. Check bridge funding, protected cash, pensions and eventual fund exhaustion.
+4. Stress income, returns, longevity and spending; revisit material life changes.
 
-### 2. Restructuring income through an OÜ
-
-For legitimately independent business revenue, retained earnings can compound before personal distribution tax. This does not apply merely because an employee would prefer to invoice through an OÜ.
-
-Investing €100,000 rather than €78,000 for 15 years at 5% real is **€208,000 vs €162,000** — and that's per €100k of restructured income, per year.
-
-⚠️ **Only viable if the work genuinely is independent business activity.** It requires real business substance and professional accounting and tax advice.
-
-### 3. Holding spending flat as income rises
-
-Directing income growth to saving rather than lifestyle inflation pulls FatFIRE closer without raising the target.
-
-### 4. Not buying more house later
-
-Repeated housing upgrades can reset the calculation. Model each proposed purchase with its permanent running costs rather than treating the current housing budget as fixed.
-
-## Traps specific to FatFIRE
-
-**The target moves.** Lean plans have a floor — you can't spend less than you need. Fat plans have no natural ceiling, so "enough" keeps drifting upward as income and peers do. Pick the number now, in writing, and revisit deliberately rather than continuously.
-
-**SWR sensitivity is amplified.** At €100k of spending, the gap between 3.5% and 4% is **€357,000** — about four years of work. Since retiring at 59 implies a shorter horizon than retiring at 49, you could arguably use a slightly higher SWR for the fat tiers, which partly offsets the extra years. Worth modelling properly if you get serious about a specific tier.
-
-**"One more year" syndrome.** Higher tiers can push the date close to conventional retirement. Working longer to spend substantially more is a legitimate choice, but it is a different objective rather than a strictly better version of the same plan.
-
-**Sequence risk doesn't shrink.** A bigger portfolio isn't a safer one; the first decade of withdrawals still dominates. All of [risks.md](risks.md) applies unchanged.
-
-## The Estonian advantage at fat spending levels
-
-One genuinely good interaction worth knowing: **the investment account's contributions-out-first rule scales with the portfolio.**
-
-For example, a €2.86M portfolio with a €1.5M investment-account contribution base could fund up to €1.5M of withdrawals before cumulative withdrawals exceed contributions. Actual taxation depends on the account ledger and future law.
-
-The Estonian contribution-first mechanism can defer tax on a large amount of retirement spending. Its value should be compared with the rules of any future country of tax residence rather than treated as permanent.
-
-## A sensible way to approach it
-
-**A tier need not be chosen at the start.** Early inputs are uncertain, and the same accumulation practices support several later choices.
-
-The useful structure is:
-
-1. Calculate CoastFIRE as the first optionality milestone rather than assuming a universal age.
-2. Reassess a few years before the leanest target with observed spending, income and portfolio data.
-3. Compare the additional working years required for each spending tier, then choose deliberately.
-
-Everything that gets you to tier 1 also gets you toward tier 3. **The actions don't diverge until much later**, which means the right move today is identical either way: get invested, keep the savings rate high, and keep the option open.
+CoastFIRE can be another scenario, not a mandatory first milestone. More work for
+more discretionary spending is a preference to evaluate, not a mathematically
+superior form of retirement.

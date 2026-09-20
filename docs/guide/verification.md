@@ -19,6 +19,28 @@ neither the website nor an offline copy automatically updates legislation.
 
 ## Checked rules
 
+### FatFIRE illustrations and comparisons
+
+**Checked:** 20 September 2026. Baseline targets, fixed-saving accumulation,
+spending increments and withdrawal-rate differences are conditional arithmetic.
+Tests independently accumulate year-end contributions and verify target crossings;
+the formula interpolation is not a monthly FI date or success probability.
+
+[EMTA dividend guidance](https://www.emta.ee/en/business-client/taxes-and-payment/income-and-social-taxes/taxation-dividends)
+supports the standard distribution rate from 2025 and transition caveat.
+[EMTA investment-account guidance](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account),
+taxable-gain and residence sections, supports taxpayer-level chronological
+allowance tracking and termination of deferral on loss of residence.
+[Investor.gov allocation guidance](https://www.investor.gov/introduction-investing/getting-started/asset-allocation)
+supports horizon/risk-dependent choices, not a universally identical strategy.
+
+**Affected:** FatFIRE guide. Corrected the doubling-time claim; removed the
+unreconciled company/personal comparison, ranked second-earner prescription,
+fixed work-delay claim and universal Estonian budget labels. No engine changes.
+**Open:** actual lifestyle costs, future returns, success rates, personal tax
+outcomes, company extraction details and relocation arrangements. The tables do
+not include all liabilities, reserves or tax costs required by a complete plan.
+
 ### Household benefits, costs and risk guidance
 
 **Checked:** 20 September 2026. Limited agency-guidance review; no benefit engine added.

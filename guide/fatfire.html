@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>FatFIRE — Estonian FIRE Simulator</title>
-<meta name="description" content="Exploring the higher-spending end. Tables here are illustrative — run your own figures in the calculator. Throughout: 3.5% withdrawal rate, 5% real return,">
+<meta name="description" content="FatFIRE is an informal label for a higher-spending retirement, not a verified Estonian budget band. Separate essential spending from discretionary goals an">
 <meta name="theme-color" content="#f6f8fb">
 <script>
 (function () {
@@ -78,156 +78,210 @@
   <div class="wrap">
     <section class="doc">
       <h1 class="doc-title">FatFIRE</h1>
-<p>Exploring the higher-spending end. Tables here are illustrative — run your own figures in the <a href="../simulator.html">calculator</a>. Throughout: 3.5% withdrawal rate, 5% real return, pensions excluded.</p>
-<h2 id="the-tiers">The tiers</h2>
-<p>"Perpetual spending" is the annual figure the portfolio must support forever — excluding the mortgage and child costs, including health insurance, net of any rental income.</p>
+<p>FatFIRE is an informal label for a higher-spending retirement, not a verified
+Estonian budget band. Separate essential spending from discretionary goals and
+compare your own scenarios in the <a href="../simulator.html">calculator</a>.</p>
+<blockquote>
+<p><strong>Limited review — 20 September 2026:</strong> the tables below are conditional
+arithmetic, not forecasts or withdrawal-success estimates. Local lifestyle
+costs, future returns, individual tax outcomes and an optimal strategy remain
+unverified.</p>
+</blockquote>
+<h2 id="illustrative-spending-targets">Illustrative spending targets</h2>
+<p>For this table only, divide ongoing annual spending by an assumed initial
+withdrawal rate. All amounts are in today's purchasing power; targets are rounded
+to the nearest euro.</p>
 <div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
-<th>Tier</th>
-<th style="text-align: right;">Perpetual spending</th>
-<th style="text-align: right;">Portfolio at 3.5%</th>
-<th style="text-align: right;">Portfolio at 4%</th>
+<th>Ongoing annual spending</th>
+<th style="text-align: right;">Baseline at 3.5%</th>
+<th style="text-align: right;">Baseline at 4%</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Lean</strong></td>
-<td style="text-align: right;">€30,000</td>
-<td style="text-align: right;">€857,000</td>
+<td>€30,000</td>
+<td style="text-align: right;">€857,143</td>
 <td style="text-align: right;">€750,000</td>
 </tr>
 <tr>
-<td><strong>Comfortable</strong></td>
-<td style="text-align: right;">€50,000</td>
-<td style="text-align: right;">€1,429,000</td>
+<td>€50,000</td>
+<td style="text-align: right;">€1,428,571</td>
 <td style="text-align: right;">€1,250,000</td>
 </tr>
 <tr>
-<td><strong>Fat</strong></td>
-<td style="text-align: right;">€100,000</td>
-<td style="text-align: right;">€2,857,000</td>
+<td>€100,000</td>
+<td style="text-align: right;">€2,857,143</td>
 <td style="text-align: right;">€2,500,000</td>
 </tr>
 <tr>
-<td><strong>Very fat</strong></td>
-<td style="text-align: right;">€150,000</td>
-<td style="text-align: right;">€4,286,000</td>
+<td>€150,000</td>
+<td style="text-align: right;">€4,285,714</td>
 <td style="text-align: right;">€3,750,000</td>
 </tr>
 </tbody>
 </table></div>
-<p>That part is universal — the target is simply spending divided by the withdrawal rate. What differs between people is how long each tier takes, which depends entirely on the surplus. As an illustration, a household saving <strong>€60,000 a year</strong> from a standing start at 5% real:</p>
+<p>These are baseline spending multiples, not the simulator's complete FI targets.
+The example excludes pension benefits, other income, withdrawal taxes, protected
+cash and dated liabilities. In a real plan, fund mortgage payments and child costs
+for their actual duration; do not simply exclude them. Include continuing housing
+costs after a mortgage ends and healthcare for the actual uncovered period.</p>
+<p>Both withdrawal rates are assumptions. See the
+<a href="fire-basics.html#safe-withdrawal-rate--what-the-research-can-tell-us">withdrawal-research limitations</a>.</p>
+<h2 id="how-long-a-fixed-saving-amount-takes">How long a fixed saving amount takes</h2>
+<p>Assume zero starting assets, €60,000 invested at each year-end, a constant 5%
+annual real return after investment costs, no further tax drag, and no withdrawals.
+The target is the unrounded 3.5% baseline above, held constant in real terms.</p>
+<pre><code>balance after n years = 60,000 × ((1.05^n - 1) / 0.05)
+formula years = ln(1 + target × 0.05 / 60,000) / ln(1.05)
+</code></pre>
 <div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
-<th>Tier</th>
-<th style="text-align: right;">Years to reach it</th>
+<th>Annual spending target</th>
+<th style="text-align: right;">Formula years</th>
+<th style="text-align: right;">First completed saving year</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Lean (€857,000)</td>
-<td style="text-align: right;">~11</td>
+<td>€30,000</td>
+<td style="text-align: right;">11.05</td>
+<td style="text-align: right;">12</td>
 </tr>
 <tr>
-<td>Comfortable (€1,429,000)</td>
-<td style="text-align: right;">~16</td>
+<td>€50,000</td>
+<td style="text-align: right;">16.07</td>
+<td style="text-align: right;">17</td>
 </tr>
 <tr>
-<td>Fat (€2,857,000)</td>
-<td style="text-align: right;">~25</td>
+<td>€100,000</td>
+<td style="text-align: right;">24.97</td>
+<td style="text-align: right;">25</td>
 </tr>
 <tr>
-<td>Very fat (€4,286,000)</td>
-<td style="text-align: right;">~31</td>
+<td>€150,000</td>
+<td style="text-align: right;">31.15</td>
+<td style="text-align: right;">32</td>
 </tr>
 </tbody>
 </table></div>
-<p><strong>Each step up costs years, and the steps get more expensive.</strong> Doubling target spending does not double the wait — it more than doubles it, because the extra portfolio has to be built out of the same surplus. Somewhere in the upper tiers "early" retirement quietly stops being early.</p>
-<h2 id="what-the-numbers-actually-mean-in-estonia">What the numbers actually mean in Estonia</h2>
-<p>Worth grounding, because "€100,000/year" sounds different in Tallinn than in Paris or London.</p>
-<p>In an illustrative four-person household, €100,000/year of <em>perpetual</em> spending — with housing debt already cleared — means roughly <strong>€8,300/month on everything except housing</strong>. That is a high-spending scenario by Estonian standards.</p>
-<p>This illustrates the geographic-arbitrage point from <a href="levers.html#9-geographic-arbitrage">strategy-levers.md</a>: the same portfolio can support very different lifestyles in different places.</p>
-<p>The corollary is a risk: <strong>a move abroad changes the FatFIRE number</strong> through both local prices and taxation. A €2.86M portfolio supporting a high-spending Estonian lifestyle may support less elsewhere.</p>
-<h2 id="the-central-tension">The central tension</h2>
-<p>FatFIRE has a structural awkwardness that lean plans don't:</p>
-<blockquote>
-<p><strong>To retire on high spending, you must not spend highly while accumulating.</strong></p>
-</blockquote>
-<p>A high savings rate depends on holding current spending below income. For an illustrative household currently spending €4,000/month, increasing spending to "grow into" a future lifestyle causes two effects at once: the target rises by roughly 28 times the annual increase, and the savings rate falls.</p>
+<p>Formula years interpolate the annual model; they are not monthly FI dates.
+The completed year is the first year-end contribution at which the target is
+reached. At zero return, the corresponding formula is simply target / annual saving.</p>
+<p>In this model, doubling spending from €50k to €100k doubles the target but raises
+formula time from 16.07 to 24.97 years, <strong>less than double</strong>. Compounding explains
+the difference. If higher current spending also reduces saving, that is a
+different scenario; recalculate both inputs rather than assuming the same result.</p>
+<h2 id="what-the-budget-includes">What the budget includes</h2>
+<p>An illustrative €100k annual budget averages about €8,333/month. Paying off a
+mortgage does not make this “everything except housing”: maintenance, utilities,
+insurance, taxes and future repairs may remain. Define the included costs before
+comparing lifestyles.</p>
+<p>No Tallinn-versus-Paris-or-London price comparison has been verified here.
+Relocation needs a new budget and tax/healthcare review, not just a currency
+conversion. See <a href="levers.html#9-geographic-arbitrage">location choices</a>.</p>
+<h2 id="spending-now-versus-spending-in-retirement">Spending now versus spending in retirement</h2>
+<p>Assume current spending is €4,000/month, net income is unchanged, and an increase
+starts now and continues permanently into retirement. Then the extra spending
+both reduces annual saving and raises the simple 3.5% baseline:</p>
 <div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
-<th>If you spent…</th>
+<th>New monthly spending</th>
 <th style="text-align: right;">Extra per month</th>
-<th style="text-align: right;">Target rises by</th>
-<th style="text-align: right;">Savings fall by</th>
-<th>Net effect on FI age</th>
+<th style="text-align: right;">Baseline target increase</th>
+<th style="text-align: right;">Annual saving reduction</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>€5,000/mo</td>
+<td>€5,000</td>
 <td style="text-align: right;">€1,000</td>
-<td style="text-align: right;">€343,000</td>
-<td style="text-align: right;">€12,000/yr</td>
-<td>Later; calculate from the household's starting point</td>
+<td style="text-align: right;">€342,857</td>
+<td style="text-align: right;">€12,000</td>
 </tr>
 <tr>
-<td>€6,000/mo</td>
+<td>€6,000</td>
 <td style="text-align: right;">€2,000</td>
-<td style="text-align: right;">€686,000</td>
-<td style="text-align: right;">€24,000/yr</td>
-<td>Later by more than the target increase alone implies</td>
+<td style="text-align: right;">€685,714</td>
+<td style="text-align: right;">€24,000</td>
 </tr>
 <tr>
-<td>€8,000/mo</td>
+<td>€8,000</td>
 <td style="text-align: right;">€4,000</td>
-<td style="text-align: right;">€1,371,000</td>
-<td style="text-align: right;">€48,000/yr</td>
-<td>Potentially incompatible with early retirement</td>
+<td style="text-align: right;">€1,371,429</td>
+<td style="text-align: right;">€48,000</td>
 </tr>
 </tbody>
 </table></div>
-<p>Every €1,000/month of permanent spending adds roughly €343,000 to a 3.5%-SWR target. The exact delay depends on income, current assets and returns and should be calculated rather than generalised.</p>
-<h2 id="what-actually-accelerates-fatfire">What actually accelerates FatFIRE</h2>
-<p>Common levers, whose ranking depends on the household:</p>
-<h3 id="1-a-second-earner--the-biggest-single-lever">1. A second earner — the biggest single lever</h3>
-<p>In an illustrative single-earner household, if the second adult begins earning <strong>€2,000/month net</strong>, four things may happen simultaneously:</p>
-<ul>
-<li>Household saving capacity rises by <strong>€24,000 a year</strong> before any associated costs</li>
-<li><strong>Check health coverage separately.</strong> Qualifying work may provide coverage, but the saving depends on actual eligibility and the uncovered period, not a universal €93,000 target reduction. See the <a href="health-insurance.html">health-insurance guide</a>.</li>
-<li>Another Pillar III deduction may become usable, subject to that person's taxable income (<a href="pensions.html">Pillar III</a>)</li>
-<li><strong>Pillar II starts accruing</strong> for them again</li>
-</ul>
-<p>Whether this is desirable is a household decision rather than a purely financial optimisation.</p>
-<h3 id="2-restructuring-income-through-an-oü">2. Restructuring income through an OÜ</h3>
-<p>For legitimately independent business revenue, retained earnings can compound before personal distribution tax. This does not apply merely because an employee would prefer to invoice through an OÜ.</p>
-<p>Investing €100,000 rather than €78,000 for 15 years at 5% real is <strong>€208,000 vs €162,000</strong> — and that's per €100k of restructured income, per year.</p>
-<p>⚠️ <strong>Only viable if the work genuinely is independent business activity.</strong> It requires real business substance and professional accounting and tax advice.</p>
-<h3 id="3-holding-spending-flat-as-income-rises">3. Holding spending flat as income rises</h3>
-<p>Directing income growth to saving rather than lifestyle inflation pulls FatFIRE closer without raising the target.</p>
-<h3 id="4-not-buying-more-house-later">4. Not buying more house later</h3>
-<p>Repeated housing upgrades can reset the calculation. Model each proposed purchase with its permanent running costs rather than treating the current housing budget as fixed.</p>
-<h2 id="traps-specific-to-fatfire">Traps specific to FatFIRE</h2>
-<p><strong>The target moves.</strong> Lean plans have a floor — you can't spend less than you need. Fat plans have no natural ceiling, so "enough" keeps drifting upward as income and peers do. Pick the number now, in writing, and revisit deliberately rather than continuously.</p>
-<p><strong>SWR sensitivity is amplified.</strong> At €100k of spending, the gap between 3.5% and 4% is <strong>€357,000</strong> — about four years of work. Since retiring at 59 implies a shorter horizon than retiring at 49, you could arguably use a slightly higher SWR for the fat tiers, which partly offsets the extra years. Worth modelling properly if you get serious about a specific tier.</p>
-<p><strong>"One more year" syndrome.</strong> Higher tiers can push the date close to conventional retirement. Working longer to spend substantially more is a legitimate choice, but it is a different objective rather than a strictly better version of the same plan.</p>
-<p><strong>Sequence risk doesn't shrink.</strong> A bigger portfolio isn't a safer one; the first decade of withdrawals still dominates. All of <a href="risks.html">risks.md</a> applies unchanged.</p>
-<h2 id="the-estonian-advantage-at-fat-spending-levels">The Estonian advantage at fat spending levels</h2>
-<p>One genuinely good interaction worth knowing: <strong>the investment account's contributions-out-first rule scales with the portfolio.</strong></p>
-<p>For example, a €2.86M portfolio with a €1.5M investment-account contribution base could fund up to €1.5M of withdrawals before cumulative withdrawals exceed contributions. Actual taxation depends on the account ledger and future law.</p>
-<p>The Estonian contribution-first mechanism can defer tax on a large amount of retirement spending. Its value should be compared with the rules of any future country of tax residence rather than treated as permanent.</p>
-<h2 id="a-sensible-way-to-approach-it">A sensible way to approach it</h2>
-<p><strong>A tier need not be chosen at the start.</strong> Early inputs are uncertain, and the same accumulation practices support several later choices.</p>
-<p>The useful structure is:</p>
+<p>This does not quantify the FI-date delay. Temporary spending, a retirement-only
+increase, changing income or insufficient surplus require different cash flows.
+Higher-spending retirement does not universally require low spending while
+working; what matters is affordable saving and existing resources relative to
+the chosen target.</p>
+<h2 id="choices-to-compare-not-ranked-shortcuts">Choices to compare, not ranked shortcuts</h2>
+<h3 id="additional-earned-income">Additional earned income</h3>
+<p>€2,000/month of extra net income provides €24,000/year before related costs.
+Subtract childcare, commuting, lost benefits and other changes. Another adult's
+income is not automatically the largest lever or the preferred household choice.
+Check <a href="health-insurance.html">health coverage</a> and actual
+<a href="pensions.html">pension contributions and deduction capacity</a> separately; neither
+is established merely by entering net income.</p>
+<h3 id="genuine-business-income-and-an-oü">Genuine business income and an OÜ</h3>
+<p>Retained company profit is not spendable personal wealth.
+<a href="https://www.emta.ee/en/business-client/taxes-and-payment/income-and-social-taxes/taxation-dividends">EMTA's dividend guidance</a>
+sets the standard distribution tax at 22/78 of the net dividend from 2025, with
+transitional exceptions. A comparison must include extraction, business costs,
+appropriate remuneration and the same starting budget.</p>
+<p>The old 15-year comparison of company assets with personal assets omitted that
+reconciliation and confused a single starting sum with repeated annual saving.
+It did not demonstrate a net advantage. Use the
+<a href="company.html">reconciled company examples</a>, not an assumed 22% saving from
+“restructuring” salary. The simulator has no corporate-account mode.</p>
+<h3 id="income-growth-and-housing-choices">Income growth and housing choices</h3>
+<p>Compare saving an affordable net raise with spending it. Model a proposed housing
+upgrade using its deposit, debt, running costs and reserves. Neither keeping the
+same home nor raising the savings rate is universally optimal.</p>
+<p><a href="https://www.investor.gov/introduction-investing/getting-started/asset-allocation">Investor.gov's allocation guidance</a>
+relates investment choices to time horizon and risk tolerance. Different goals
+can require different liquidity and risk choices now, not only near retirement.</p>
+<h2 id="withdrawal-assumptions-and-risk">Withdrawal assumptions and risk</h2>
+<p>For €100k/year, the 3.5% and 4% baselines differ by approximately <strong>€357,143</strong>.
+That is a capital difference, not a verified four-year work extension. Its effect
+on the date depends on current assets, saving, returns and the rest of the plan.</p>
+<p>A shorter horizon can change a withdrawal analysis, but a higher-spending label
+or later retirement does not establish that a higher rate is safe. Test the
+actual horizon, spending flexibility, taxes and pensions.</p>
+<p>A larger portfolio can improve the margin if spending is held fixed; scaling
+both spending and assets proportionally does not by itself remove sequence risk.
+Losses later in retirement can still matter. See <a href="risks.html">risks and blind spots</a>.
+Neither this guide nor constant-return arithmetic supplies a success probability.</p>
+<h2 id="investment-account-allowance-is-a-ledger-not-wealth">Investment-account allowance is a ledger, not wealth</h2>
+<p><a href="https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account">EMTA's investment-account guidance</a>
+calculates taxable payments chronologically across the same taxpayer's accounts.
+Portfolio market value does not establish remaining contribution allowance.</p>
+<p>For example, a €2.86M portfolio with <strong>€1.5M of remaining declared allowance</strong>
+could support €1.5M of qualifying outward payments before that allowance is
+exhausted, assuming no intervening changes and continued eligibility. Previously
+used contributions cannot be counted again; partners have separate ledgers.
+This is a tax-deferral illustration, not guaranteed spending capacity.</p>
+<p>Losing Estonian tax residence ends this deferral and requires a closure
+declaration and settlement of the resulting Estonian tax liability; it does not
+necessarily require closing the bank account. See the
+<a href="investment-account.html">investment-account guide</a>. Destination-country outcomes
+and future law remain unverified.</p>
+<h2 id="a-practical-comparison">A practical comparison</h2>
 <ol>
-<li>Calculate CoastFIRE as the first optionality milestone rather than assuming a universal age.</li>
-<li>Reassess a few years before the leanest target with observed spending, income and portfolio data.</li>
-<li>Compare the additional working years required for each spending tier, then choose deliberately.</li>
+<li>Define essential spending and optional goals, including irregular costs.</li>
+<li>Compare complete scenarios at several spending levels, not just target multiples.</li>
+<li>Check bridge funding, protected cash, pensions and eventual fund exhaustion.</li>
+<li>Stress income, returns, longevity and spending; revisit material life changes.</li>
 </ol>
-<p>Everything that gets you to tier 1 also gets you toward tier 3. <strong>The actions don't diverge until much later</strong>, which means the right move today is identical either way: get invested, keep the savings rate high, and keep the option open.</p>
+<p>CoastFIRE can be another scenario, not a mandatory first milestone. More work for
+more discretionary spending is a preference to evaluate, not a mathematically
+superior form of retirement.</p>
       <nav class="pager"><a class="prev" href="household.html">← Household & children</a><a class="next" href="risks.html">Risks & blind spots →</a></nav>
     </section>
   </div>
