@@ -73,7 +73,11 @@ Every one of these is wrong for a 40-year-old European.
 
 **Country.** The 4% figure is survivorship bias on the single best-performing large market of the 20th century. Wade Pfau's international work found SWRs below 4% for most developed markets, and well below for some. A globally diversified portfolio is the honest hedge, but it also means you shouldn't expect US-history returns.
 
-**Inflation basket.** Trinity assumes US CPI. Your basket is Estonian. Estonian inflation hit ~19–20% in 2022 against a eurozone average around 8–9% — a small, open, catching-up economy inside a currency union does *not* track the ECB target. A plan indexed to eurozone CPI would have quietly under-withdrawn by a wide margin that year. **Model with an Estonian inflation assumption above the ECB's 2%** — 2.5–3% is a defensible planning number.
+**Inflation basket.** A household's spending need not track an aggregate price
+index. The [ECB's 2% target](https://www.ecb.europa.eu/mopo/strategy/pricestab/html/index.en.html)
+concerns the euro area over the medium term, not a household forecast. Test
+several assumptions; this guide has not established 2.5–3% as a sufficient range
+for every Estonian plan. See [inflation risk](risks.md#estonian-inflation--eurozone-inflation).
 
 **Practical stance:** plan at **3.25–3.5%**, treat 4% as the optimistic case, and build in flexibility rather than trying to find the one true number. Flexibility is worth more than precision here.
 

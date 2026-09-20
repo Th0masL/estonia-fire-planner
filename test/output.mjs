@@ -548,6 +548,21 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
   }
 }
 
+{
+  const risks = read('guide/risks.html').replace(/\s+/g, ' ');
+  for (const phrase of ['Cheap insurance', 'one bet placed five times', 'all more likely', 'use 2.5–3%']) {
+    ok(!risks.includes(phrase), `risk checklist removes unsupported assurance: ${phrase}`);
+  }
+  for (const phrase of ['Crisis access remains unverified', 'requires closure', 'not a retirement success-rate estimate', 'not a ranking of failure probabilities']) {
+    ok(risks.includes(phrase), `risk checklist retains qualification: ${phrase}`);
+  }
+  const balance = returns => returns.reduce((pot, rate) => pot * (1 + rate) - 10, 100);
+  ok(balance([-.2, .25]) === 77.5 && risks.includes('€77.50'), 'bad-first sequence example reconciles');
+  ok(balance([.25, -.2]) === 82 && risks.includes('€82'), 'good-first sequence example reconciles');
+  const anchor = 'estonian-inflation--eurozone-inflation';
+  ok(risks.includes(`id="${anchor}"`) && read('guide/fire-basics.html').includes(`risks.html#${anchor}`), 'inflation cross-reference resolves');
+}
+
 console.log(`\n${checks} output and cross-engine checks`);
 if (failures.length) {
   console.log(`\n${failures.length} FAILED:`);

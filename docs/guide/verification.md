@@ -19,6 +19,23 @@ neither the website nor an offline copy automatically updates legislation.
 
 ## Checked rules
 
+### Risk-checklist qualifications
+
+**Checked:** 20 September 2026. [ECB target](https://www.ecb.europa.eu/mopo/strategy/pricestab/html/index.en.html)
+supports only the euro-area, medium-term target, not a personal inflation forecast.
+[EMTA investment-account guidance](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account)
+supports the Estonian residency/closure warning; destination treatment remains open.
+[Investor.gov](https://www.investor.gov/introduction-investing/getting-started/asset-allocation)
+supports the general allocation/diversification distinction, not guaranteed crisis
+access or a particular portfolio. The sequence example is independent arithmetic,
+not a success-rate study. Removed unsupported probability rankings and universal
+inflation/custody assurances. No engine changes.
+
+**Affected:** risk checklist and only the repeated inflation paragraph in FIRE
+basics. **Open:** future inflation/returns, personal risk probabilities, crisis
+outcomes and destination-country tax. Other FIRE-basics research claims still
+need separate review; this entry does not certify that whole guide.
+
 ### Rental-property guide qualifications
 
 **Checked:** 20 September 2026. [EMTA rental guidance](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/income-lease-and-rent-licence-fees)
