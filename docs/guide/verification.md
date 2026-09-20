@@ -178,6 +178,24 @@ protection. No engine changes. **Limits:** exact redemption/settlement routes,
 broker-held cash, foreign schemes, investor compensation and crisis scenarios
 still require review. XEON's regulatory MMF status is not established here.
 
+### Account protection and disrupted access
+
+**Status:** limited legal/procedural distinctions. **Checked:** 20 September 2026.
+[Tagatisfond depositor FAQ](https://www.tf.ee/en/protection-depositors/faq) and
+[investor FAQ](https://www.tf.ee/en/investor-protection/faq) support the stated
+limits and distinctions in the account-protection guide.
+[ESMA's MiFID II Article 16](https://www.esma.europa.eu/publications-and-data/interactive-single-rulebook/mifid-ii/article-16-organisational-requirements),
+paragraphs 8–9, covers safeguarding duties.
+[European Commission guidance](https://finance.ec.europa.eu/financial-markets/financial-markets-policy/securities-markets/investor-compensation-schemes_en)
+distinguishes asset-return failures from market losses.
+[EMTA](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account)
+supports dated aggregation, own-account transfers and annual reporting.
+
+**Affected:** account-protection guide and a rates comment; no numerical or
+engine change. **Limits:** individual eligibility, custody chains, foreign schemes,
+actual recovery and crisis restrictions remain open. Removed unsupported crisis
+predictions and automatic-access assurances rather than certifying them.
+
 ## Model assumptions and known limits
 
 - Investment-account tax is reserved immediately when money leaves the wrapper. This is a cash-planning convention, not the statutory tax-payment deadline.
@@ -206,7 +224,7 @@ remain useful leads, but their presence is not a completed cross-guide audit.
 | Crypto and foreign accounts | Actual provider licences, historic lots, migrations and foreign-account arrangements; general crypto distinctions checked above | Tax and account guidance; crypto approximation |
 | Housing and family benefits | Lending constraints, guarantees, repayment terms, property taxes and benefit eligibility | Housing guidance and household inputs |
 | Cross-border and ownership | Residency changes, treaties, gifts, marital property and inheritance | Account ownership and relocation guidance |
-| Protection schemes | Eligible institutions, deposits, investment claims, temporary balances and exclusions | Cash and custody guidance |
+| Protection schemes | Core distinctions checked above; actual eligibility, foreign schemes, custody chains and recovery outcomes remain open | Cash and custody guidance |
 | Provider and fund comparisons | Fees, availability, fund characteristics and broker reporting, each with a quote date | Commercial snapshots in investment guides |
 
 Before acting on one of these topics, check the relevant authority or provider

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Account protection and systemic risk — Estonian FIRE Simulator</title>
-<meta name="description" content="Three questions: how IBKR interacts with the investment account, whether the €100,000 guarantee means splitting across banks, and what actually protects yo">
+<meta name="description" content="Checked 20 September 2026: the limited rules below are supported by the linked authorities. They do not certify a particular account's eligibility, custody">
 <meta name="theme-color" content="#f6f8fb">
 <script>
 (function () {
@@ -78,173 +78,126 @@
   <div class="wrap">
     <section class="doc">
       <h1 class="doc-title">Account protection and systemic risk</h1>
-<p>Three questions: how IBKR interacts with the investment account, whether the €100,000 guarantee means splitting across banks, and what actually protects you in a Greece- or Cyprus-shaped crisis.</p>
-<p><strong>Pending review:</strong> the account procedures, custody conclusions and crisis
-examples below are not verified recommendations. For the narrower checked
-deposit-versus-fund distinction, see <a href="brokers.html#deposits-and-funds-do-different-jobs">the cash guide</a>.
-Securities segregation is not a guarantee of value or immediate access.</p>
+<p><strong>Checked 20 September 2026:</strong> the limited rules below are supported by the linked
+authorities. They do not certify a particular account's eligibility, custody
+chain or accessibility during a crisis.</p>
 <h2 id="1-multiple-investment-accounts--how-it-actually-works">1. Multiple investment accounts — how it actually works</h2>
-<p><strong>You may hold as many declared investment accounts as you like, at as many institutions as you like.</strong> There is no statutory cap, and they can sit at different banks and in different countries.</p>
-<p><strong>Tax is calculated across all of them together, not per account.</strong> Tax is triggered only when total disbursements from <em>all</em> your investment accounts exceed total contributions into <em>all</em> of them. e-MTA aggregates the reports automatically at declaration time.</p>
-<p><strong>Transfers between your own investment accounts are tax-neutral.</strong> TuMS §17²(4) explicitly excludes them from the definition of a disbursement, and EMTA's Form A instructions equally exclude them from counting as a fresh contribution on the receiving side. Your contribution balance simply carries across. The transfer is disclosed on the return but drops out of the taxable calculation at both ends.</p>
+<p><a href="https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account">EMTA's investment-account guidance</a>,
+“How are taxable gains calculated” and declaration sections, allows several
+accounts and calculates contributions/payments across them <strong>in date order</strong>.
+It is not simply a year-end netting exercise.</p>
+<p>Transfers between the taxpayer's own investment accounts do not create a fresh
+contribution or a taxable payment. This assumes qualifying accounts and correct
+treatment of the transfer, not merely two accounts carrying the same app label.</p>
+<p>Declare account details and relevant movements in the annual return, table 6.5.
+Keep records from the start and review reports before submission. A provider's
+report cannot establish what happened at another institution. Do not confuse
+preparing an account correctly before investing with a requirement to file the
+annual declaration before the first trade.</p>
+<p><strong>Open review:</strong> account-specific foreign-provider eligibility, correction of old
+filings, foreign-currency reporting and provider workflows. Follow the
+<a href="investment-account.html">investment-account guide</a> and obtain clarification where
+the actual arrangement is uncertain. Transfers can have commercial costs even
+when their tax treatment is neutral.</p>
+<h2 id="2-deposit-guarantees-and-investor-compensation">2. Deposit guarantees and investor compensation</h2>
 <div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
-<th></th>
-<th>IBKR <strong>not</strong> declared</th>
-<th>IBKR <strong>declared</strong> as an IK</th>
+<th>Protection</th>
+<th>What it addresses</th>
+<th>What it does not promise</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>LHV → IBKR transfer</td>
-<td>A <strong>disbursement</strong> from the LHV IK</td>
-<td><strong>Disregarded</strong> — tax-neutral, balance carries over</td>
+<td>Deposit guarantee</td>
+<td>Eligible bank deposits within the applicable limit</td>
+<td>Unlimited cover or uninterrupted access</td>
 </tr>
 <tr>
-<td>Assets bought at IBKR</td>
-<td><strong>Outside the regime.</strong> Every sale immediately taxable at 22%</td>
-<td>Deferred as normal</td>
+<td>Client-asset safeguarding</td>
+<td>Arrangements protecting ownership of client securities</td>
+<td>Stable investment value or an immediate transfer after failure</td>
 </tr>
 <tr>
-<td>Your contribution base</td>
-<td>Falls by the transferred amount</td>
-<td>Preserved</td>
+<td>Investor compensation</td>
+<td>Eligible claims when an institution cannot return client assets</td>
+<td>Compensation for ordinary market losses</td>
 </tr>
 </tbody>
 </table></div>
-<p><strong>So declare any account before you fund it.</strong> The declaration is what makes the transfer a non-event; without it you spend down the tax-free withdrawal allowance and then pay 22% on every realised gain at the far end.</p>
-<p><strong>Currency conversion inside an investment account is also explicitly not a disbursement</strong> (TuMS §17²) — converting EUR to USD to buy a US-listed security triggers nothing. FX movements only wash into the euro figure at the point of an actual withdrawal, calculated at the ECB daily rate.</p>
-<h3 id="what-the-annual-declaration-looks-like">What the annual declaration looks like</h3>
-<p>You report <strong>each investment account separately</strong> on Form A — its own contributions and disbursements. So:</p>
-<ul>
-<li><strong>LHV</strong> generates its report automatically (one click, matching Table 6.5 Part II)</li>
-<li><strong>IBKR</strong> does not. You maintain the ledger yourself: every euro in, every euro out, dated, in EUR</li>
-</ul>
-<p><strong>The LHV-side movements alone are not sufficient.</strong> LHV can only see what happens in its own account. Once money is at IBKR, LHV has no visibility, and the transfer out is exactly the event that needs correct treatment.</p>
-<h3 id="practical-consequences">Practical consequences</h3>
-<ul>
-<li><strong>Keep the ledger from day one.</strong> A dated spreadsheet of every transfer in and out of the IBKR account. Reconstructing it years later is far worse than maintaining it.</li>
-<li><strong>Currency conversion is safe.</strong> Converting inside the account isn't a taxable event, so buying in USD wouldn't create a problem. Buying the Irish ETF <strong>in EUR on Xetra</strong> is still simpler and avoids the spread.</li>
-<li><strong>The admin, not the tax, is the reason to keep accounts few.</strong> Transfers are free and the tax is aggregated, so the only real cost of a second account is the second ledger — and only at IBKR, since Estonian banks report automatically.</li>
-</ul>
-<hr />
-<h2 id="2-the-100000-guarantee--and-why-it-matters-less-than-youd-think">2. The €100,000 guarantee — and why it matters less than you'd think</h2>
-<p><strong>The crucial distinction: cash and securities are protected by completely different regimes.</strong></p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
-<thead>
-<tr>
-<th></th>
-<th><strong>Deposits</strong> (cash)</th>
-<th><strong>Securities</strong> (ETF units, shares)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Scheme</td>
-<td>Deposit Guarantee Scheme — Estonian <strong>Tagatisfond</strong></td>
-<td>Investor Compensation Scheme</td>
-</tr>
-<tr>
-<td>Limit</td>
-<td><strong>€100,000</strong> per depositor, per bank (aggregate of all your accounts there)</td>
-<td><strong>€20,000</strong> per investor, per firm</td>
-</tr>
-<tr>
-<td>Why the limit is what it is</td>
-<td>A deposit is a <strong>loan to the bank</strong>. If it fails, you're a creditor</td>
-<td>Securities are <strong>your property</strong>, held in segregated custody, not on the bank's balance sheet</td>
-</tr>
-<tr>
-<td>If the bank fails</td>
-<td>You claim from Tagatisfond up to €100k, paid within 7 working days</td>
-<td>Your units are <strong>transferred to another custodian</strong>. The €20k scheme is a backstop for a shortfall, not the primary protection</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>This is the key point, and Tagatisfond states it outright:</strong> <em>"Investeerimisfondide varadele Tagatisfondi kaitse ei laiene"</em> — the compensation scheme does <strong>not</strong> extend to investment fund assets, precisely because those are already legally segregated from the manager under depositary rules. The protection is structural, not a compensation cap.</p>
-<p>So a €1,000,000 portfolio of VWCE at LHV is <strong>not</strong> "€980,000 unprotected". The ETF units never belonged to LHV; they sit in segregated custody, outside its insolvency estate. The €20,000 figure is a backstop for the case where segregation broke down and a shortfall exists anyway — as happened with <strong>AS Cresco Väärtpaberid</strong>, whose licence was revoked in 2024 and whose clients were compensated up to €20,000 each.</p>
-<p><strong>So: no, you don't need multiple investment accounts at different banks for securities.</strong> That would add real admin for a risk that the custody structure already handles.</p>
+<h3 id="eligible-bank-deposits">Eligible bank deposits</h3>
+<p>Estonia's ordinary limit is <strong>€100,000 per depositor
+per credit institution</strong>, including accrued interest across accounts. Different
+brands or branches are not automatically separate institutions.</p>
+<p>Tagatisfond describes a seven-working-day compensation deadline after suspension,
+subject to its conditions; this is not continuous access. Joint holders are treated
+as depositors for their shares, alongside their other deposits at that institution.</p>
+<p>An additional <strong>€100,000</strong> may apply to qualifying
+personal receipts credited within the preceding <strong>6
+months</strong>, including specified residential-property transactions and life events.
+Ordinary savings for a future purchase do not qualify merely because of their size.</p>
+<p>Source: <a href="https://www.tf.ee/en/protection-depositors/faq">Tagatisfond depositor FAQ</a>,
+limit, payment, joint-deposit and temporary-balance sections. Confirm exclusions,
+ownership, evidence and the applicable scheme with the institution. Foreign
+branches and broker-held cash require account-specific checks.</p>
+<h3 id="securities-and-missing-assets">Securities and missing assets</h3>
+<p><a href="https://www.esma.europa.eu/publications-and-data/interactive-single-rulebook/mifid-ii/article-16-organisational-requirements">MiFID II Article 16(8)–(9), published by ESMA</a>
+requires arrangements safeguarding client ownership and funds, including in
+insolvency. This legal duty is not evidence that every provider's records and
+custody arrangements will work without a shortfall or delay.</p>
+<p>The <a href="https://finance.ec.europa.eu/financial-markets/financial-markets-policy/securities-markets/investor-compensation-schemes_en">European Commission's explanation</a>
+distinguishes failure to return assets from investment losses. A fall in an
+ETF's price is not an investor-compensation claim.</p>
+<p><a href="https://www.tf.ee/en/investor-protection/faq">Tagatisfond's investor FAQ</a> states an
+Estonian compensation limit of <strong>€20,000</strong> for
+eligible investments, with exclusions. The limit applies per investor at an
+institution, not per security. It covers qualifying obligations to return money
+or securities, not a promise that a portfolio can never lose more than that sum.
+The investor process has its own timetable and may take months; do not apply
+the deposit scheme's seven-working-day rule to it.</p>
+<p>There are two distinct levels: <strong>your claim for fund units held through an
+intermediary</strong>, and <strong>the assets owned within the fund</strong>. The FAQ lists fund units
+among covered instruments but excludes investment fund assets themselves.
+Do not read that exclusion as either “ETF units can never be covered” or
+“everything inside a fund is guaranteed”.</p>
 <h3 id="example-a-temporarily-large-cash-balance">Example: a temporarily large cash balance</h3>
-<p>Suppose a property sale temporarily leaves <strong>€175,000 at one bank</strong>. Everything above <strong>€100,000</strong> ranks as an ordinary claim if the bank fails, unless the balance qualifies for temporary-high-balance protection.</p>
-<p>Possible controls include:</p>
-<ol>
-<li><strong>Compare eligible deposits with investment alternatives.</strong> Moving money into a fund replaces deposit exposure with the fund's risks; it does not establish a better trade. Use the <a href="property.html#where-the-down-payment-should-sit">purchase-reserve checklist</a> before putting a dated payment at investment risk.</li>
-<li><strong>Split the money across banks.</strong> Keep less than €100,000 at each of LHV, Swedbank and SEB. Note Swedbank and SEB Estonia are subsidiaries of <em>Swedish</em> parents while LHV is purely domestic, so this diversifies the parent risk too. But it's three sets of admin, and if you want each to stay inside the IK regime, three declared accounts.</li>
-<li><strong>Assess any uncovered balance explicitly.</strong> A short holding period does not make an uninsured deposit safe; determine whether a loss or access delay would jeopardize the payment.</li>
-</ol>
-<p><strong>Temporary high-balance protection may apply.</strong> Estonia applies an <strong>additional €100,000</strong> on top of the standard limit, for <strong>6 months</strong>, to qualifying money received from a residential property transaction. Tagatisfond's current guidance is the source used here.</p>
-<p>The catch is the direction of travel: it covers <strong>sale proceeds</strong>, not savings accumulated in order to buy. A deposit saved up over years falls outside it; the proceeds of selling a home do not.</p>
-<p><strong>Joint accounts are covered per holder</strong> — a two-holder joint account can carry <strong>twice the limit</strong>, with €100,000 attributed to each holder's share. Eligibility and ownership should be confirmed with the bank rather than assumed.</p>
-<hr />
-<h2 id="3-what-actually-protects-you-in-a-systemic-crisis">3. What actually protects you in a systemic crisis</h2>
-<p>Greece and Cyprus are the two precedents worth knowing, and they failed in quite different ways.</p>
-<h3 id="what-happened">What happened</h3>
-<p><strong>Cyprus, 2013: the bail-in.</strong> This is the example that matters most here. The EU limit then was also €100,000, and these are the figures as they stood — they are history, not current law. Deposits <strong>above</strong> €100,000 at Laiki and Bank of Cyprus were seized: at Bank of Cyprus roughly 47.5% of the excess was forcibly converted to equity. Deposits <strong>under €100,000 were fully protected</strong> and honoured. <strong>Shares held in custody were not touched at all</strong>, because they were never the bank's to take.</p>
-<p><strong>Greece, 2015 — capital controls.</strong> A different failure. Banks weren't bailed in, but a three-week bank holiday was imposed, ATM withdrawals were capped at €60/day, and transfers abroad were restricted. Controls persisted in some form until 2019. Your money was <em>safe</em> but <em>unreachable</em> — which for a year or more is nearly as bad.</p>
-<p><strong>Neither country left the euro.</strong> Redenomination remained a tail risk that didn't materialise.</p>
-<h3 id="what-the-rules-say-now">What the rules say now</h3>
-<p>Cyprus led directly to the EU <strong>Bank Recovery and Resolution Directive (BRRD)</strong>, which formalised the loss hierarchy. In a failing bank, losses fall in this order:</p>
-<ol>
-<li>Shareholders</li>
-<li>Junior/subordinated debt</li>
-<li>Senior unsecured debt</li>
-<li><strong>Uninsured deposits — the portion above €100,000</strong></li>
-<li><strong>Covered deposits (under €100,000) — explicitly excluded from bail-in</strong></li>
-</ol>
-<p>So the €100,000 line isn't just a compensation ceiling; it's a <strong>statutory position in the queue</strong>. Below it you're protected by design. Above it you are, by design, part of the loss-absorbing capital.</p>
-<h3 id="what-this-means-for-a-fire-plan">What this means for a FIRE plan</h3>
-<p><strong>The strongest protection is structural: own securities, not deposits.</strong> Converting a large cash balance into a global equity ETF moves you from "unsecured creditor of an Estonian bank" to "owner of ~3,700 companies worldwide, held in segregated custody". That is the single biggest improvement to resilience available here, and it is something a FIRE plan does anyway for unrelated reasons.</p>
-<p><strong>A global equity fund is a natural hedge against a eurozone crisis.</strong> VWCE is ~60%+ US assets, denominated in dollars, yen and pounds. If the euro fell sharply, those holdings would rise <strong>in euro terms</strong>. A eurozone-specific crisis is close to the one scenario where a globally diversified equity portfolio does its job best for a euro-based investor.</p>
-<p><strong>Capital controls are the residual risk, and custody location is the answer.</strong> Controls apply to residents, not just institutions — but assets custodied outside the domestic banking system are meaningfully less exposed to a domestic freeze. This is the real argument for eventually holding some of the portfolio at <strong>IBKR Ireland</strong> rather than the fee saving. It also connects to the concentration point in <a href="risks.html">risks.md</a>.</p>
-<p><strong>Estonia is not Greece, and it's worth being accurate about that.</strong> Estonia has the <strong>lowest public debt in the EU</strong> (~20% of GDP against Greece's ~180% in 2010). It has no sovereign debt overhang, and its two largest banks are subsidiaries of Swedish groups rather than domestically-funded institutions. The realistic Estonian tail risks are geopolitical, not fiscal.</p>
-<h3 id="a-possible-priority-order">A possible priority order</h3>
-<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
-<thead>
-<tr>
-<th>Priority</th>
-<th>Action</th>
-<th>Addresses</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>1</strong></td>
-<td>Keep bare deposits within the applicable guarantee, or evaluate a suitable money market fund inside the IK</td>
-<td>Deposit-limit exposure and forgone interest</td>
-</tr>
-<tr>
-<td><strong>2</strong></td>
-<td>Use diversified securities for genuinely long-term money</td>
-<td>Converts creditor exposure into ownership; global currency diversification</td>
-</tr>
-<tr>
-<td><strong>3</strong></td>
-<td>Consider a second custodian once the portfolio and risk justify the extra administration</td>
-<td>Custody outside Estonia; access-path resilience</td>
-</tr>
-<tr>
-<td>4</td>
-<td>Keep documents portable — statements, ISINs, account numbers, off one machine</td>
-<td>Practical access in any disruption</td>
-</tr>
-<tr>
-<td>5</td>
-<td>Don't over-engineer beyond this</td>
-<td>The base case is that nothing happens</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>What isn't worth doing:</strong> three investment accounts at three banks for securities, physical gold, or holding cash outside the banking system. Those solve problems the custody structure already solves, at real cost in admin and returns.</p>
-<hr />
-<h2 id="sources">Sources</h2>
-<p>This page's previous research-round completion label is not sufficient evidence
-that every account rule, guarantee limit or broker comparison is current.
-Protection schemes and commercial comparisons remain open in the
-<a href="sources.html#open-review">evidence register</a>. Check the applicable Income Tax
-Act, Guarantee Fund Act, Tagatisfond guidance and provider terms before relying
-on the figures; this register update did not reverify them.</p>
-<p>The temporary-high-balance protection is narrow and time-limited. Confirm that the source of funds and dates qualify with Tagatisfond or the bank before relying on it.</p>
+<p>For an eligible ordinary deposit of <strong>€175,000</strong>, ignoring interest and other
+balances, the standard limit leaves <strong>€75,000 above the ordinary cover</strong>.
+This is an uncovered amount, not a prediction of loss. A qualifying temporary
+balance could change the result; evidence of the source and dates is essential.</p>
+<p>Check legal institutions and guarantee headroom before splitting deposits.
+Moving the money into an ETF changes the risk rather than increasing the deposit
+guarantee. Use the <a href="property.html#where-the-down-payment-should-sit">purchase-reserve checklist</a>
+for money needed on a particular date.</p>
+<h2 id="3-planning-for-disrupted-access">3. Planning for disrupted access</h2>
+<p><strong>Ownership, compensation and access are separate questions.</strong> A second provider
+may offer another operational route, but this is a planning consideration—not
+a verified guarantee against capital controls, outages or shared custodians.</p>
+<p>Before relying on a second account:</p>
+<ul>
+<li>Identify the contracting entity, regulator and relevant compensation scheme.</li>
+<li>Ask where client cash and securities are held, including nominee or subcustodian
+  arrangements and any securities-lending or collateral terms.</li>
+<li>Check transfer-out procedures, records, fees and account-recovery options.</li>
+<li>Keep recent statements and ownership records securely accessible.</li>
+<li>Keep essential near-term spending available without depending on a market sale
+  or a compensation claim.</li>
+</ul>
+<p>A broker's registered country does not describe the entire custody chain.
+Foreign assets do not establish immunity from restrictions affecting residents.
+Nor does global equity guarantee a positive euro return in a eurozone crisis:
+currency changes do not eliminate equity losses.</p>
+<p><strong>Still unverified:</strong> provider-specific custody and protection, foreign compensation
+percentages/limits, future capital controls, actual recovery timelines and the
+precise resolution loss hierarchy. Historical Greece/Cyprus figures and macro-risk
+rankings have been removed rather than used as predictions for Estonia.
+There is no universal account count or portfolio threshold that solves these risks.</p>
+<h2 id="sources-and-scope">Sources and scope</h2>
+<p>The links above support only the specified rules, as checked on the stated date.
+The simulator does not model bank failures, asset-recovery proceedings or legal
+restrictions on access. Its emergency reserve is a planning allocation, not an
+insured product. See <a href="sources.html#open-review">sources and remaining review</a>.</p>
       <nav class="pager"><a class="prev" href="risks.html">← Risks & blind spots</a><a class="next" href="levers.html">Strategy levers →</a></nav>
     </section>
   </div>

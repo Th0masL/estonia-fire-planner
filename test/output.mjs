@@ -467,6 +467,18 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
   ok(!read('guide/protection.html').includes('A few weeks is fine'), 'protection guide does not endorse short uninsured exposure as safe');
 }
 
+{
+  const protection = read('guide/protection.html');
+  for (const phrase of ['in date order', 'ordinary market losses', 'fund units held through an', 'Still unverified', 'annual declaration before the first trade']) {
+    ok(protection.includes(phrase), `protection guide preserves distinction: ${phrase}`);
+  }
+  const uncovered = Math.max(0, 175000 - RATES.protection.depositGuarantee);
+  ok(protection.includes(`€${uncovered.toLocaleString('en-IE')} above the ordinary cover`), 'ordinary uncovered-balance example reconciles');
+  for (const obsolete of ['Every sale immediately taxable', 'natural hedge', 'lowest public debt', '47.5%', 'Transfers are free']) {
+    ok(!protection.includes(obsolete), `protection guide removes unsupported assurance: ${obsolete}`);
+  }
+}
+
 console.log(`\n${checks} output and cross-engine checks`);
 if (failures.length) {
   console.log(`\n${failures.length} FAILED:`);
