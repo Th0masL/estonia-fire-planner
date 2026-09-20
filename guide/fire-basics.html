@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>FIRE fundamentals — Estonian FIRE Simulator</title>
-<meta name="description" content="Partial review, 20 September 2026: withdrawal-rule mechanics and the cited author explanations below were checked. Historical results are not forecasts. Th">
+<meta name="description" content="Limited review, 20 September 2026: the arithmetic below is conditional and the cited rule/research explanations have limited scope. Historical results and ">
 <meta name="theme-color" content="#f6f8fb">
 <script>
 (function () {
@@ -79,7 +79,7 @@
     <section class="doc">
       <h1 class="doc-title">FIRE fundamentals</h1>
 <blockquote>
-<p><strong>Partial review, 20 September 2026:</strong> withdrawal-rule mechanics and the cited author explanations below were checked. Historical results are not forecasts. The earlier savings-rate, spending and FIRE-variant guidance still needs separate review.</p>
+<p><strong>Limited review, 20 September 2026:</strong> the arithmetic below is conditional and the cited rule/research explanations have limited scope. Historical results and constant-return examples are not forecasts; no withdrawal rate or FIRE label establishes personal readiness.</p>
 </blockquote>
 <h2 id="the-one-equation">The one equation</h2>
 <p>A simple starting-point target, before dated cash flows and other model adjustments, is:</p>
@@ -89,98 +89,135 @@
 <pre><code>FI_number = annual_spending / SWR
 </code></pre>
 <p>At a 4% SWR that's <strong>25× annual spending</strong>. At 3.5% it's <strong>28.6×</strong>. At 3.25% it's <strong>30.8×</strong>.</p>
-<h2 id="why-spending-is-the-dominant-variable">Why spending is the dominant variable</h2>
-<p>Spending appears on <em>both</em> sides of the problem, which is why it dwarfs every other lever:</p>
-<ol>
-<li>It lowers the target (25× multiplier)</li>
-<li>It raises the savings rate (which sets the timeline)</li>
-</ol>
-<p>Cutting <strong>€500/month</strong> of recurring spend removes <strong>€150,000</strong> from your FI number at 4% — <em>and</em> adds €6,000/year to savings. A €500/month raise, after 22% tax and typical lifestyle creep, does maybe a third as much.</p>
-<h2 id="time-to-fi-is-a-function-of-savings-rate-not-income">Time to FI is a function of savings rate, not income</h2>
-<p>Starting from zero, 5% real return, 4% withdrawal:</p>
+<h2 id="how-spending-and-income-affect-the-target">How spending and income affect the target</h2>
+<p>A permanent spending reduction can both lower the baseline target and increase
+saving, if income stays unchanged. At an assumed 4% withdrawal rate, cutting
+€500 per month reduces annual spending by <strong>€6,000</strong>, lowers the simple target
+by <strong>€150,000</strong>, and frees €6,000 per year to save. Temporary cuts do not justify
+reducing lifelong spending by the same amount.</p>
+<p>An extra €500 per month of <strong>net</strong> income also adds €6,000 to annual saving if
+none is spent, but does not by itself lower the target. A gross pay rise needs
+a separate payroll calculation. There is no universal “one-third as effective”
+comparison: tax, spending choices and starting assets matter.</p>
+<h2 id="savings-rate-in-a-simplified-model">Savings rate in a simplified model</h2>
+<p>Assume zero starting investments, constant real take-home income and spending,
+a <strong>5% annual real return</strong>, <strong>4% withdrawal assumption</strong>, and saving invested
+at each <strong>year-end</strong>. Returns are assumed net of investment costs, with no
+additional tax drag. There are no pensions, debts, income gaps or dated expenses.</p>
+<p>With savings fraction <code>s</code>, return <code>r</code> and withdrawal rate <code>w</code>:</p>
+<pre><code>target / annual_saving = (1 - s) / (w × s)
+n = ln(1 + r × (1 - s) / (w × s)) / ln(1 + r)
+</code></pre>
 <div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th style="text-align: right;">Savings rate</th>
-<th style="text-align: right;">Years to FI</th>
+<th style="text-align: right;">Formula years</th>
+<th style="text-align: right;">First completed saving year reaching target</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: right;">10%</td>
-<td style="text-align: right;">~51</td>
+<td style="text-align: right;">51.4</td>
+<td style="text-align: right;">52</td>
 </tr>
 <tr>
 <td style="text-align: right;">20%</td>
-<td style="text-align: right;">~37</td>
+<td style="text-align: right;">36.7</td>
+<td style="text-align: right;">37</td>
 </tr>
 <tr>
 <td style="text-align: right;">30%</td>
-<td style="text-align: right;">~28</td>
+<td style="text-align: right;">28.0</td>
+<td style="text-align: right;">28</td>
 </tr>
 <tr>
 <td style="text-align: right;">40%</td>
-<td style="text-align: right;">~22</td>
+<td style="text-align: right;">21.6</td>
+<td style="text-align: right;">22</td>
 </tr>
 <tr>
 <td style="text-align: right;">50%</td>
-<td style="text-align: right;">~17</td>
+<td style="text-align: right;">16.6</td>
+<td style="text-align: right;">17</td>
 </tr>
 <tr>
 <td style="text-align: right;">60%</td>
-<td style="text-align: right;">~12.5</td>
+<td style="text-align: right;">12.4</td>
+<td style="text-align: right;">13</td>
 </tr>
 <tr>
 <td style="text-align: right;">70%</td>
-<td style="text-align: right;">~8.5</td>
+<td style="text-align: right;">8.8</td>
+<td style="text-align: right;">9</td>
 </tr>
 <tr>
 <td style="text-align: right;">80%</td>
-<td style="text-align: right;">~5.5</td>
+<td style="text-align: right;">5.6</td>
+<td style="text-align: right;">6</td>
 </tr>
 </tbody>
 </table></div>
-<p>Income only matters through its effect on this ratio. Two people earning €3k and €10k net with the same 50% savings rate reach FI in the same number of years — they just live very different lives afterwards.</p>
-<p><strong>The Estonian nuance:</strong> the 22% flat income tax means marginal income can be unusually well-preserved compared with many progressive systems. High earners in Estonia may therefore be able to sustain comparatively high savings rates. This is a structural advantage worth quantifying — see <a href="levers.html">strategy-levers.md</a>.</p>
+<p>Fractional formula years interpolate the annual model; they are not an exact
+monthly FI date. For zero return the limit is <code>(1 - s) / (w × s)</code>; the displayed
+log formula assumes a positive return and 0 &lt; s &lt; 1.</p>
+<p>Income cancels only under these proportional assumptions. For example, two
+people with different incomes but the same savings fraction have the same
+formula result <strong>in this model</strong>. Existing assets, pension timing, minimum
+living costs, taxes, contribution timing and changing spending can break that
+equivalence. Use the simulator for the household's specified cash flows; the
+table is not a forecast of its FI date.</p>
 <h2 id="fire-variants">FIRE variants</h2>
+<p>These are informal planning labels, not standardized eligibility tests or
+verified Estonian budget bands.</p>
 <div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
 <th>Variant</th>
-<th>Definition</th>
-<th>Fits when</th>
+<th>Planning meaning</th>
+<th>Check before relying on it</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>LeanFIRE</strong></td>
-<td>Cover a minimal budget (~€1,200–1,800/mo in EE)</td>
-<td>Low spend, high flexibility, no kids or grown kids</td>
+<td>Fund a deliberately modest budget</td>
+<td>Essential costs, dependants and room for shocks</td>
 </tr>
 <tr>
 <td><strong>RegularFIRE</strong></td>
-<td>Cover current lifestyle</td>
-<td>The default target</td>
+<td>Fund the intended ongoing lifestyle</td>
+<td>Whether today's spending represents retirement</td>
 </tr>
 <tr>
 <td><strong>FatFIRE</strong></td>
-<td>Cover an expanded lifestyle (travel, property, no compromise)</td>
-<td>High income, long runway</td>
+<td>Fund a higher discretionary budget</td>
+<td>Separate essential spending from optional goals</td>
 </tr>
 <tr>
 <td><strong>CoastFIRE</strong></td>
-<td>Portfolio is big enough that compounding alone reaches FI by traditional retirement age — you stop <em>saving</em>, keep working to cover current spend</td>
-<td>Front-loaded savings; frees you to take a lower-paid, better job</td>
+<td>Stop adding retirement savings while existing assets grow toward a future target</td>
+<td>Current spending still needs funding; growth and target are assumptions</td>
 </tr>
 <tr>
 <td><strong>BaristaFIRE</strong></td>
-<td>Portfolio covers most spend; part-time work covers the rest</td>
-<td><strong>Especially strong in Estonia</strong> — a small salary also keeps health insurance alive</td>
+<td>Combine portfolio withdrawals with continuing work</td>
+<td>Net earnings, reliability, hours and actual insurance eligibility</td>
 </tr>
 </tbody>
 </table></div>
-<p><strong>CoastFIRE deserves attention.</strong> As an illustration, €200k invested at 35 and compounding at 5% real becomes about €860k at 65 with zero further contributions. The point at which no further retirement saving is required can arrive <em>decades</em> before full FI.</p>
-<p><strong>BaristaFIRE deserves more attention in Estonia specifically</strong>, because the health insurance rules make "zero earned income" expensive. See the <a href="health-insurance.html">health-insurance guide</a>.</p>
+<p><strong>Coast illustration:</strong> €200,000 growing at a constant 5% real for 30 years,
+with no additions or withdrawals, becomes approximately <strong>€864,388</strong> in today's
+purchasing power. This assumes no further costs or taxes outside the return.
+It is compound arithmetic, not a guarantee or evidence that this amount meets
+a particular retirement target.</p>
+<p><strong>Work and health coverage:</strong> a small salary alone does not establish coverage.
+<a href="https://tervisekassa.ee/en/employee-employment-contract">Tervisekassa's employee guidance</a>,
+checked 20 September 2026, describes qualifying employment contracts and social-tax
+conditions, including commencement rules. Confirm your actual status and contract
+type; see <a href="health-insurance.html">health insurance</a>. BaristaFIRE is not an automatic
+insurance solution.</p>
 <h2 id="safe-withdrawal-rate--what-the-research-can-tell-us">Safe withdrawal rate — what the research can tell us</h2>
 <h3 id="initial-withdrawal-rate-is-not-a-percentage-of-every-years-balance">Initial withdrawal rate is not a percentage of every year's balance</h3>
 <p><a href="https://www.bengenfs.com/the-4-percent-rule/">William Bengen's own explanation</a>

@@ -8,14 +8,17 @@ Ordered by expected effect per unit of effort. The top three are worth more than
 
 ### 1. Savings rate
 
-Everything in [fire-basics.md](fire-basics.md#time-to-fi-is-a-function-of-savings-rate-not-income) reduces to this. Going from 30% to 50% cuts ~11 years off the timeline. No portfolio optimisation, tax trick, or property deal comes close.
+The [simplified savings-rate example](fire-basics.md#savings-rate-in-a-simplified-model)
+shows how saving affects a target under fixed assumptions. It is not a universal
+ranking of strategies or a forecast of the simulator's FI date.
 
-Two sub-levers, and they are not equally valued:
+Compare both income and spending:
 
-- **Cut recurring spend** — worth 25–30× its annual value, because it moves the target *and* the rate. Housing, cars, and subscriptions are where the money is. One-off purchases barely matter; recurring ones matter enormously.
-- **Raise income** — worth ~78% of gross at Estonia's flat 22%, *if* you don't spend it. The flat tax makes marginal income unusually valuable here compared to progressive systems.
+- **Cut recurring spend:** a sustainable reduction can lower the target and free cash for saving. One-off costs still need funding; do not treat temporary cuts as lifelong savings.
+- **Raise income:** compare the actual net increase after payroll deductions and any associated costs. Gross pay multiplied by 78% is not a universal take-home calculation.
 
-**Measure it before optimising it.** Most people are wrong about their own savings rate by 10+ percentage points. Three months of actual categorised data beats any amount of estimating.
+Use actual records and include irregular annual costs when estimating the saving
+available. This section does not establish which lever is largest for every household.
 
 ### 2. Consider an OÜ for genuine business income
 

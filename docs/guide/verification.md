@@ -19,6 +19,21 @@ neither the website nor an offline copy automatically updates legislation.
 
 ## Checked rules
 
+### Savings-rate examples and FIRE labels
+
+**Checked:** 20 September 2026. The FIRE-basics savings table is a zero-start,
+constant-real-income model with year-end contributions, 5% real return and a 4%
+withdrawal assumption. Formula years and first completed saving years are distinct.
+Spending and Coast examples are arithmetic, not forecasts. Tests independently
+accumulate annual savings and check the crossing years.
+[Tervisekassa employee guidance](https://tervisekassa.ee/en/employee-employment-contract)
+supports qualifying-contract/social-tax requirements, not automatic coverage from
+any small salary. FIRE labels are informal; no Estonia-wide budget band is certified.
+
+**Affected:** opening FIRE-basics sections and the duplicated savings discussion
+in strategy levers. No engine/default changes. Other strategy rankings and the
+broader health/household guides still need review; actual cover remains individual.
+
 ### Withdrawal-research scope and mechanics
 
 **Checked:** 20 September 2026. [Bengen's author retrospective](https://www.bengenfs.com/the-4-percent-rule/)

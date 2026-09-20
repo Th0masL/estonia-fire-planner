@@ -568,11 +568,29 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
   for (const phrase of ['nearly harmless', 'first ~10 years determine', 'roughly in order of effectiveness', '~100% equities', 'most rigorous work']) {
     ok(!basics.includes(phrase), `withdrawal guide removes unsupported claim: ${phrase}`);
   }
-  for (const phrase of ['Partial review', 'Still unverified', 'not a calibrated probability', 'not fixed ages of 60 or 65', 'initial portfolio']) {
+  for (const phrase of ['Limited review', 'Still unverified', 'not a calibrated probability', 'not fixed ages of 60 or 65', 'initial portfolio']) {
     ok(basics.includes(phrase), `withdrawal guide retains qualification: ${phrase}`);
   }
   const first = 500000 * .04, second = first * 1.02;
   for (const amount of [first, second]) ok(basics.includes(`€${amount.toLocaleString('en-IE')}`), 'inflation-adjusted withdrawal example reconciles');
+}
+
+{
+  const source = read('docs/guide/fire-basics.md');
+  for (const percent of [10, 20, 30, 40, 50, 60, 70, 80]) {
+    const s = percent / 100, target = (1 - s) / .04;
+    let pot = 0, years = 0;
+    while (pot < target) { pot = pot * 1.05 + s; years++; }
+    const formula = Math.log1p(.05 * target / s) / Math.log1p(.05);
+    ok(source.includes(`| ${percent}% | ${formula.toFixed(1)} | ${years} |`), `savings table reconciles formula and annual crossing: ${percent}%`);
+  }
+  let coast = 200000;
+  for (let year = 0; year < 30; year++) coast *= 1.05;
+  ok(source.includes(`€${Math.round(coast).toLocaleString('en-IE')}`), 'Coast example reconciles independent annual compounding');
+  for (const phrase of ['{{pillar3.maxAnnual|money}}', 'does maybe a third', 'Especially strong in Estonia', '~€1,200–1,800/mo']) {
+    ok(!source.includes(phrase), `basics removes unsupported or unrelated assumption: ${phrase}`);
+  }
+  ok(read('guide/levers.html').includes('fire-basics.html#savings-rate-in-a-simplified-model'), 'savings cross-reference uses current heading');
 }
 
 console.log(`\n${checks} output and cross-engine checks`);

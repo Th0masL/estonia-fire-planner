@@ -1,6 +1,6 @@
 # FIRE fundamentals
 
-> **Partial review, 20 September 2026:** withdrawal-rule mechanics and the cited author explanations below were checked. Historical results are not forecasts. The earlier savings-rate, spending and FIRE-variant guidance still needs separate review.
+> **Limited review, 20 September 2026:** the arithmetic below is conditional and the cited rule/research explanations have limited scope. Historical results and constant-return examples are not forecasts; no withdrawal rate or FIRE label establishes personal readiness.
 
 ## The one equation
 
@@ -18,47 +18,80 @@ FI_number = annual_spending / SWR
 
 At a 4% SWR that's **25× annual spending**. At 3.5% it's **28.6×**. At 3.25% it's **30.8×**.
 
-## Why spending is the dominant variable
+## How spending and income affect the target
 
-Spending appears on *both* sides of the problem, which is why it dwarfs every other lever:
+A permanent spending reduction can both lower the baseline target and increase
+saving, if income stays unchanged. At an assumed 4% withdrawal rate, cutting
+€500 per month reduces annual spending by **€6,000**, lowers the simple target
+by **€150,000**, and frees €6,000 per year to save. Temporary cuts do not justify
+reducing lifelong spending by the same amount.
 
-1. It lowers the target (25× multiplier)
-2. It raises the savings rate (which sets the timeline)
+An extra €500 per month of **net** income also adds €6,000 to annual saving if
+none is spent, but does not by itself lower the target. A gross pay rise needs
+a separate payroll calculation. There is no universal “one-third as effective”
+comparison: tax, spending choices and starting assets matter.
 
-Cutting **€500/month** of recurring spend removes **€150,000** from your FI number at 4% — *and* adds {{pillar3.maxAnnual|money}}/year to savings. A €500/month raise, after 22% tax and typical lifestyle creep, does maybe a third as much.
+## Savings rate in a simplified model
 
-## Time to FI is a function of savings rate, not income
+Assume zero starting investments, constant real take-home income and spending,
+a **5% annual real return**, **4% withdrawal assumption**, and saving invested
+at each **year-end**. Returns are assumed net of investment costs, with no
+additional tax drag. There are no pensions, debts, income gaps or dated expenses.
 
-Starting from zero, 5% real return, 4% withdrawal:
+With savings fraction `s`, return `r` and withdrawal rate `w`:
 
-| Savings rate | Years to FI |
-|---:|---:|
-| 10% | ~51 |
-| 20% | ~37 |
-| 30% | ~28 |
-| 40% | ~22 |
-| 50% | ~17 |
-| 60% | ~12.5 |
-| 70% | ~8.5 |
-| 80% | ~5.5 |
+```
+target / annual_saving = (1 - s) / (w × s)
+n = ln(1 + r × (1 - s) / (w × s)) / ln(1 + r)
+```
 
-Income only matters through its effect on this ratio. Two people earning €3k and €10k net with the same 50% savings rate reach FI in the same number of years — they just live very different lives afterwards.
+| Savings rate | Formula years | First completed saving year reaching target |
+|---:|---:|---:|
+| 10% | 51.4 | 52 |
+| 20% | 36.7 | 37 |
+| 30% | 28.0 | 28 |
+| 40% | 21.6 | 22 |
+| 50% | 16.6 | 17 |
+| 60% | 12.4 | 13 |
+| 70% | 8.8 | 9 |
+| 80% | 5.6 | 6 |
 
-**The Estonian nuance:** the 22% flat income tax means marginal income can be unusually well-preserved compared with many progressive systems. High earners in Estonia may therefore be able to sustain comparatively high savings rates. This is a structural advantage worth quantifying — see [strategy-levers.md](strategy-levers.md).
+Fractional formula years interpolate the annual model; they are not an exact
+monthly FI date. For zero return the limit is `(1 - s) / (w × s)`; the displayed
+log formula assumes a positive return and 0 < s < 1.
+
+Income cancels only under these proportional assumptions. For example, two
+people with different incomes but the same savings fraction have the same
+formula result **in this model**. Existing assets, pension timing, minimum
+living costs, taxes, contribution timing and changing spending can break that
+equivalence. Use the simulator for the household's specified cash flows; the
+table is not a forecast of its FI date.
 
 ## FIRE variants
 
-| Variant | Definition | Fits when |
+These are informal planning labels, not standardized eligibility tests or
+verified Estonian budget bands.
+
+| Variant | Planning meaning | Check before relying on it |
 |---|---|---|
-| **LeanFIRE** | Cover a minimal budget (~€1,200–1,800/mo in EE) | Low spend, high flexibility, no kids or grown kids |
-| **RegularFIRE** | Cover current lifestyle | The default target |
-| **FatFIRE** | Cover an expanded lifestyle (travel, property, no compromise) | High income, long runway |
-| **CoastFIRE** | Portfolio is big enough that compounding alone reaches FI by traditional retirement age — you stop *saving*, keep working to cover current spend | Front-loaded savings; frees you to take a lower-paid, better job |
-| **BaristaFIRE** | Portfolio covers most spend; part-time work covers the rest | **Especially strong in Estonia** — a small salary also keeps health insurance alive |
+| **LeanFIRE** | Fund a deliberately modest budget | Essential costs, dependants and room for shocks |
+| **RegularFIRE** | Fund the intended ongoing lifestyle | Whether today's spending represents retirement |
+| **FatFIRE** | Fund a higher discretionary budget | Separate essential spending from optional goals |
+| **CoastFIRE** | Stop adding retirement savings while existing assets grow toward a future target | Current spending still needs funding; growth and target are assumptions |
+| **BaristaFIRE** | Combine portfolio withdrawals with continuing work | Net earnings, reliability, hours and actual insurance eligibility |
 
-**CoastFIRE deserves attention.** As an illustration, €200k invested at 35 and compounding at 5% real becomes about €860k at 65 with zero further contributions. The point at which no further retirement saving is required can arrive *decades* before full FI.
+**Coast illustration:** €200,000 growing at a constant 5% real for 30 years,
+with no additions or withdrawals, becomes approximately **€864,388** in today's
+purchasing power. This assumes no further costs or taxes outside the return.
+It is compound arithmetic, not a guarantee or evidence that this amount meets
+a particular retirement target.
 
-**BaristaFIRE deserves more attention in Estonia specifically**, because the health insurance rules make "zero earned income" expensive. See the [health-insurance guide](health-insurance.md).
+**Work and health coverage:** a small salary alone does not establish coverage.
+[Tervisekassa's employee guidance](https://tervisekassa.ee/en/employee-employment-contract),
+checked 20 September 2026, describes qualifying employment contracts and social-tax
+conditions, including commencement rules. Confirm your actual status and contract
+type; see [health insurance](health-insurance.md). BaristaFIRE is not an automatic
+insurance solution.
 
 ## Safe withdrawal rate — what the research can tell us
 
