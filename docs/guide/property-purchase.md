@@ -14,18 +14,27 @@ So the ETF plan from [portfolio.md](portfolio.md) applies to **surplus beyond th
 
 ## Where the down payment should sit
 
-Ranked, best first:
+Choose by the payment deadline, loss tolerance and access requirements—not a
+universal product ranking.
 
-| Option | Return | Notes |
-|---|---|---|
-| **EUR money market UCITS ETF, inside the LHV IK** | ~ECB rate minus ~0.1% | **Best option** — see the tax point below |
-| **Term deposit** (LHV/Swedbank/SEB/Coop) | Competitive, fixed | Interest taxed at 22% immediately if held outside an IK. Match the maturity to the purchase date |
-| **Savings account** | Lower | Fully liquid, simplest |
-| Equities | — | **No** |
+| Option | Key condition |
+|---|---|
+| Eligible instant-access deposit | Confirm guarantee coverage, withdrawal limits and transfer timing |
+| Term deposit | Match maturity to the purchase; check early-exit restrictions |
+| Money market fund or overnight-rate ETF | Accept investment risk and confirm redemption/trading, settlement and onward transfer |
+| Equity fund | Do not rely on selling at a favourable price to meet a fixed near-term payment |
 
-**The tax point, and it's a good one:** interest earned *outside* an investment account is taxed at 22% in the year you receive it. Interest earned *inside* an IK is deferred — and since you'll be withdrawing less than you contributed, that withdrawal is **tax-free**. Parking the down payment in a EUR money market fund inside the LHV investment account therefore earns money-market interest with **no tax at all** on the way out.
+**Tax deferral is not tax-free interest.** A house payment can use up the remaining
+investment-account contribution allowance; excess withdrawals can be taxable.
+The [sourced cash example](brokers.md#tax-deferral-is-not-a-tax-exemption) shows why
+contributing €50,000 and withdrawing €51,000 does not make the €1,000 gain exempt.
+Qualifying deposits can also use investment-account treatment under the relevant
+conditions; funds do not have an exclusive tax advantage.
 
-Two practical caveats: allow **T+2 settlement** plus a bank transfer when timing the notary date, and understand a money market fund is not a deposit — it's very low risk, not zero risk.
+Confirm the actual payment timetable and keep the emergency reserve separate.
+A fund is not deposit-guaranteed, and settlement does not guarantee cash will
+reach the seller on a particular day. See
+[product risks and access](brokers.md#deposits-and-funds-do-different-jobs).
 
 ## Estonian mortgage mechanics
 
@@ -216,7 +225,7 @@ Check the household-specific DSTI in the simulator rather than inferring it from
 
 1. **Get a mortgage pre-approval now.** It tells you the real budget and therefore the real down payment, which is the input everything else depends on
 2. **Size the cash pile**: down payment + ~2% transaction costs + moving/furnishing + any crypto tax due + **an emergency fund kept separate** (3–6 months of expenses — with dependants and a mortgage, closer to 6)
-3. **Park that in a money market fund inside the LHV IK** (or a matched-maturity deposit)
+3. **Choose an appropriate home for the purchase reserve** using the risk, guarantee and access checks above; keep immediately needed emergency money separately accessible.
 4. **Only what's left over goes into the ETF.** It's fine if that is a small amount each month for now. Starting the habit matters more than the size
 5. **Buy the house**
 6. **Then** scale up ETF contributions properly, with the new housing cost known rather than estimated

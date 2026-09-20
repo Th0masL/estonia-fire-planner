@@ -448,6 +448,25 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
   ok(!read('guide/levers.html').includes('3,757'), 'strategy does not repeat undated holdings count');
 }
 
+{
+  const brokers = read('guide/brokers.html');
+  const property = read('guide/property.html');
+  const portfolio = read('guide/portfolio.html');
+  const contribution = 50000, fullWithdrawal = 51000;
+  const taxable = Math.max(0, fullWithdrawal - contribution);
+  ok(brokers.includes(`€${taxable.toLocaleString('en-IE')}`) && brokers.includes('not zero'), 'cash example retains the independently computed taxable excess');
+  for (const phrase of ['Settlement is not the same as spendable', 'not a tax exemption', 'authorized designation', 'counterparty failure']) {
+    ok(brokers.includes(phrase), `cash guide retains ${phrase}`);
+  }
+  for (const [label, html] of [['brokers', brokers], ['property', property], ['portfolio', portfolio]]) {
+    for (const stale of ['no tax at all', 'Any of them is fine', 'Worst realistic year', "isn't an investment in any meaningful sense"]) {
+      ok(!html.includes(stale), `${label} removes cash assurance ${stale}`);
+    }
+  }
+  ok(property.includes('Tax deferral is not tax-free interest'), 'purchase guide does not promise tax-free fund earnings');
+  ok(!read('guide/protection.html').includes('A few weeks is fine'), 'protection guide does not endorse short uninsured exposure as safe');
+}
+
 console.log(`\n${checks} output and cross-engine checks`);
 if (failures.length) {
   console.log(`\n${failures.length} FAILED:`);

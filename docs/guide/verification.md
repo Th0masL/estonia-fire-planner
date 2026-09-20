@@ -160,6 +160,24 @@ future fund changes and product-specific suitability remain unverified. Removed
 undated holdings/size comparisons and unsupported issuer rankings. The remaining
 portfolio cash, provider and tax-procedure sections are still pending review.
 
+### Cash products and purchase-reserve withdrawals
+
+**Status:** limited risk/tax clarification. **Checked:** 20 September 2026.
+[MMF Regulation, consolidated 24 December 2024](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02017R1131-20241224),
+Articles 6 and 36, distinguishes authorized MMFs from guaranteed investments.
+[Tagatisfond FAQ](https://www.tf.ee/en/protection-depositors/faq) supports the
+ordinary eligible-deposit limit per depositor and credit institution.
+[DWS factsheet, 31 August 2026](https://etf.dws.com/download/asset/42e11275-ddf0-45d2-8319-ad55635c3a08)
+identifies XEON's swap structure and counterparty/loss risk, not a guaranteed yield.
+[EMTA guidance](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account),
+taxable-gains and interest sections, supports the withdrawal example and deposit
+deferral conditions.
+
+**Affected:** cash, portfolio and purchase guidance; narrow cautions in account
+protection. No engine changes. **Limits:** exact redemption/settlement routes,
+broker-held cash, foreign schemes, investor compensation and crisis scenarios
+still require review. XEON's regulatory MMF status is not established here.
+
 ## Model assumptions and known limits
 
 - Investment-account tax is reserved immediately when money leaves the wrapper. This is a cash-planning convention, not the statutory tax-payment deadline.

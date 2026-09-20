@@ -96,39 +96,34 @@ See [the investment-account guide](investment-account.md) and
 
 ### Why not just put the house money in the ETF?
 
-Because they do completely different jobs:
+A fixed purchase date leaves little room to recover from investment losses.
+Keep the purchase budget separate from long-term equity investing.
 
-| | **Money market fund** | **Global equity ETF** |
-|---|---|---|
-| Holds | Short-term government bills, bank deposits, commercial paper | ~3,700 company shares worldwide |
-| Expected return | ≈ ECB rate (currently ~2%) | ~7% nominal long-run |
-| Worst realistic year | Roughly flat | **−30% to −50%** |
-| Right horizon | Days to ~2 years | 10 years+ |
-
-If a deposit is needed in under twelve months, a 25% drawdown in month ten can make the intended purchase impossible or force the loss to be crystallised. There is no expected return that compensates for that risk over a few months.
-
-The money market fund isn't an investment in any meaningful sense; it's a **parking space that earns the ECB rate instead of nothing**, while staying inside the investment account so the interest is tax-deferred and comes back out tax-free.
+Deposits, authorized money market funds, overnight-rate ETFs and short-duration
+bond funds have different risks and access conditions. **A fund is not a
+guaranteed deposit.** The [cash-product comparison](brokers.md#deposits-and-funds-do-different-jobs)
+sets out the distinctions, with dated EU, Tagatisfond and issuer sources.
+It does not rank a fund above an eligible deposit for every household.
 
 ### The vocabulary, since none of this is obvious
 
-| Term | What it actually is |
+| Term | What to check |
 |---|---|
-| **Xetra** | The main German stock exchange, run by Deutsche Börse. Most European ETFs are listed there, so it's simply *where you buy* — the same role as the Tallinn or New York exchange. LHV gives you access to it |
-| **Ticker** | The short code identifying a fund on an exchange — `VWCE`, `XEON`. Like a stock symbol |
-| **ISIN** | The fund's unique 12-character international ID, e.g. `IE00BK5BQT80`. More reliable than a ticker, since the same fund can trade under different tickers on different exchanges. **Search by ISIN** |
-| **Accumulating (Acc)** | The fund reinvests dividends internally instead of paying them out. No annual dividend to declare |
+| Exchange / trading venue | Where the order executes; availability depends on the broker |
+| Ticker | Venue-specific trading code; not enough to identify a share class |
+| ISIN | Identifier to match against issuer documents and the broker listing |
+| Accumulating | Income reinvested within the fund; not a personal tax exemption |
+| Settlement | Completion of the trade; not necessarily immediate withdrawal availability |
 
-**How buying actually works:** log into LHV, search the ISIN, choose the Xetra listing, enter an amount, buy. It looks and feels like buying a share. Settlement is T+2.
+XEON is covered in the [dated overnight-rate ETF example](brokers.md#which-fund-to-buy),
+including swap risk. Do not assume XEON, CSH2 and any short-dated bond fund are
+interchangeable MMFs. Check the actual product and access timetable before
+committing to a purchase date.
 
-**Money market funds to look at** (all EUR, all trading on Xetra) — ⚠️ confirm the current ISIN on the issuer's page before buying, as tickers change:
-
-- **XEON** — Xtrackers EUR Overnight Rate
-- **CSH2** — Amundi EUR Overnight Return
-- Or any short-dated EUR government bond fund
-
-Any of them is fine. You're buying safety and liquidity, not return.
-
-⚠️ A money market fund is very low risk, **not zero risk** — it is not a deposit and carries no guarantee. Allow **T+2 settlement** plus a transfer when timing the notary date.
+Tax deferral does not erase gains. See the
+[cash withdrawal example](brokers.md#tax-deferral-is-not-a-tax-exemption).
+A deposit can also qualify for investment-account treatment when the applicable
+conditions are met; a comparison should not reserve tax deferral for funds alone.
 
 ### Where you can buy these
 
@@ -156,17 +151,12 @@ Swedbank's {{brokers.swedbankMinCommission|money2}} minimum beats LHV's {{broker
 
 ### Example: a balance held at a foreign EEA bank
 
-For illustration, short-term cash held at a foreign EEA bank such as N26 may earn less than a money market fund. The table below uses a **1.5% example rate**; current rates must be checked. Interest from a foreign bank is generally **taxable in Estonia at 22%** as received ⚠️ unless the account and assets qualify for the investment-account regime.
-
-| | N26 at 1.5% | Money market fund inside the LHV IK |
-|---|---:|---:|
-| Gross return on an illustrative €50,000 | €750 | ~€1,000 |
-| Estonian tax | −€165 (22%) | €0 — deferred, then tax-free within your contribution base |
-| **Net** | **€585** | **€1,000** |
-
-About **€415/year** in this illustration — small, though consolidating a purchase fund can also simplify IK accounting.
-
-**One point against:** N26 is a German bank, so a balance there sits under Germany's deposit guarantee — a genuinely separate {{protection.depositGuarantee|money}} bucket from Estonian deposits. That's real diversification. But a money market fund isn't a deposit at all, so it sidesteps the {{protection.depositGuarantee|money}} question entirely rather than just relocating it (see [account-protection.md](account-protection.md)).
+Compare an actual deposit quote and a fund scenario on the same tax and access
+basis. The previous N26-versus-fund table mixed an after-tax deposit return with
+a tax-deferred fund return and is not a reliable net-return comparison.
+See [the cash withdrawal example](brokers.md#tax-deferral-is-not-a-tax-exemption)
+and confirm the applicable guarantee with the legal deposit-taking institution.
+The country of an app or brand alone does not establish protection.
 
 ### Can you invest *through* N26?
 

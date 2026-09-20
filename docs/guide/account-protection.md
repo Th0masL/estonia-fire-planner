@@ -2,6 +2,11 @@
 
 Three questions: how IBKR interacts with the investment account, whether the {{protection.depositGuarantee|money}} guarantee means splitting across banks, and what actually protects you in a Greece- or Cyprus-shaped crisis.
 
+**Pending review:** the account procedures, custody conclusions and crisis
+examples below are not verified recommendations. For the narrower checked
+deposit-versus-fund distinction, see [the cash guide](brokers.md#deposits-and-funds-do-different-jobs).
+Securities segregation is not a guarantee of value or immediate access.
+
 ## 1. Multiple investment accounts — how it actually works
 
 **You may hold as many declared investment accounts as you like, at as many institutions as you like.** There is no statutory cap, and they can sit at different banks and in different countries.
@@ -60,9 +65,9 @@ Suppose a property sale temporarily leaves **€175,000 at one bank**. Everythin
 
 Possible controls include:
 
-1. **Move it into a EUR money market fund inside the LHV IK** — which is what [property-purchase.md](property-purchase.md#where-the-down-payment-should-sit) already recommends for the interest. A fund is a **security**, not a deposit, so the €100k ceiling doesn't apply to it at all. It carries small market risk instead of bank credit risk, which is the better trade at this size.
+1. **Compare eligible deposits with investment alternatives.** Moving money into a fund replaces deposit exposure with the fund's risks; it does not establish a better trade. Use the [purchase-reserve checklist](property-purchase.md#where-the-down-payment-should-sit) before putting a dated payment at investment risk.
 2. **Split the money across banks.** Keep less than {{protection.depositGuarantee|money}} at each of LHV, Swedbank and SEB. Note Swedbank and SEB Estonia are subsidiaries of *Swedish* parents while LHV is purely domestic, so this diversifies the parent risk too. But it's three sets of admin, and if you want each to stay inside the IK regime, three declared accounts.
-3. **Accept the risk, but only for a short time.** A few weeks is fine. A year is not.
+3. **Assess any uncovered balance explicitly.** A short holding period does not make an uninsured deposit safe; determine whether a loss or access delay would jeopardize the payment.
 
 **Temporary high-balance protection may apply.** Estonia applies an **additional {{protection.temporaryHighBalance|money}}** on top of the standard limit, for **{{protection.temporaryHighBalanceMonths}} months**, to qualifying money received from a residential property transaction. Tagatisfond's current guidance is the source used here.
 

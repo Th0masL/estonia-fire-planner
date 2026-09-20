@@ -1,8 +1,9 @@
 # Where to hold it — brokers, and parking cash
 
-**Partial review:** the broker fee snapshot, Lightyear reporting flow and cash-rate
-snapshot were checked on 20 September 2026. Other cash-product, protection and
-fund claims below remain unverified. This is not a complete provider comparison.
+**Partial review:** the broker fee snapshot, Lightyear reporting flow, cash-rate
+snapshot and limited deposit/fund distinctions were checked on 20 September 2026.
+Foreign-account, product-specific protection and availability claims remain open.
+This is not a complete provider comparison.
 
 ## Choosing a broker
 
@@ -89,46 +90,53 @@ them. Fund comparisons elsewhere in the guide also need their own dated review.
 
 ## Parking cash: a money market fund inside the investment account
 
-Some money has a job to do soon. A deposit on a house, an emergency fund, a tax
-bill due next October. Shares are the wrong place for it, and a normal savings
-account pays almost nothing. The usual answer is to buy a **EUR money market fund
-inside your investment account**, though a fixed-term deposit is a real
-alternative and sometimes the better one.
+**Review scope, 20 September 2026:** compare product risk, access and tax treatment
+before yield. A fund is not automatically better than a deposit.
 
-### Why this beats a savings account
+### Deposits and funds do different jobs
 
-| | Savings account at a bank | Money market fund in an investment account |
-|---|---|---|
-| What you earn | nothing much on a current account, more on a fixed term | roughly the ECB rate, minus about 0.1% |
-| Tax | you pay {{incomeTax|pct}} on the interest **in the year you receive it** | **you pay nothing** until you take out more than you put in |
-| If the bank fails | the deposit guarantee pays up to {{protection.depositGuarantee|money}} | this is not a deposit, so it is not covered — see below |
-| Getting your money | straight away | you sell, wait two days for settlement, then transfer |
+| Product | What to check before using it for a near-term payment |
+|---|---|
+| Instant-access bank deposit | Eligible institution and depositor, guarantee limit, withdrawal and transfer conditions, current net rate |
+| Term deposit | Maturity before the payment date, early-exit restrictions, guarantee eligibility and tax arrangement |
+| Authorized money market fund | Capital can fluctuate; inspect portfolio, fees, redemption terms and liquidity risks |
+| Overnight-rate ETF | Inspect the exact index and replication method; selling also involves spread, settlement and broker access |
+| Short-duration bond fund | Do not assume short duration means no price losses or equivalence to an MMF |
 
-The tax difference is the one that grows over time. Interest on a savings account
-is taxed the year you earn it. Money earned inside an investment account is not
-taxed until you take more out of the account than you put in. So the money that
-would have gone to the Tax Board each spring stays invested and keeps earning.
+For eligible Estonian deposits, the ordinary guarantee is
+{{protection.depositGuarantee|money}} per depositor per credit institution,
+including accrued interest—not per account or brand. Check the legal institution
+and scheme, particularly for branches or broker-held cash.
+[Tagatisfond's FAQ](https://www.tf.ee/en/protection-depositors/faq),
+“To what value are deposits guaranteed?”, is the source for this limited claim.
 
-### How to do it
+Under [the EU Money Market Funds Regulation](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02017R1131-20241224),
+Articles 6 and 36, MMF is an authorized designation and funds must disclose that
+capital is not guaranteed. An overnight-rate ETF or bond fund should not be
+labelled an authorized MMF merely because it is used to park cash.
 
-1. **Get an investment account.** Tell the Tax Board in e-MTA that one of your
-   bank accounts is an *investeerimiskonto*. Estonian providers usually make this
-   a checkbox when you open a securities account. [The investment account
-   guide](investment-account.md) explains the rules you have to follow.
-2. **Move the cash into that account.** Every euro you put in counts as a
-   contribution, and you can take that same amount back out later without paying
-   tax on it.
-3. **Buy a EUR money market fund** in that account. Pick an **accumulating**
-   version. It pays nothing out to you, so there is nothing to declare and no
-   money leaves the account.
-4. **Leave it alone.** Sell it when you need the money. Allow two days for the
-   sale to settle and another day to transfer the money, and work that out before
-   you book the notary rather than on the day.
+### Tax deferral is not a tax exemption
 
-For a managed money-market savings product, check the underlying fund, current
-fee and redemption terms directly. The previous Lightyear fee and same/next-day
-access claims are not retained as verified terms. Do not promise a notary payment
-date without confirming settlement and transfer timing for the actual product.
+[EMTA's investment-account guidance](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account),
+“How are taxable gains calculated”, uses dated payments and contributions across
+the taxpayer's investment accounts. A house payment can consume the remaining
+contribution allowance. Accumulation inside a fund does not make its gains tax-free.
+
+**Illustration:** with no other account movements, contribute €50,000, earn
+€1,000 and withdraw all €51,000. The taxable excess is **€1,000**, not zero.
+Withdrawing only €50,000 uses that allowance; it does not exempt the remaining
+gain from a later taxable withdrawal. This example ignores fees and other relief.
+
+Deferral is not exclusive to funds: EMTA's “Financial assets, interest and dividend”
+section also covers qualifying deposits and the notification/receipt conditions
+for deferring interest. Compare products using the same tax assumptions.
+
+### Plan the payment, not just the sale
+
+Confirm trade or redemption cut-offs, settlement, holidays, withdrawal limits and
+the bank transfer to the recipient. **Settlement is not the same as spendable
+cash.** Do not promise a fixed two-day route to a notary payment. Keep immediately
+needed emergency money accessible without requiring a market sale.
 
 ### Cash-rate snapshot and quote checklist
 
@@ -201,48 +209,27 @@ reporting standard, so the balance is visible either way.
 
 ### Which fund to buy
 
-You want a fund that follows **€STR**, which is the euro short-term rate. When
-people say "the ECB rate", this is roughly what they mean. Look for one that
-costs less than about 0.15% a year, that is accumulating, and that trades on
-Xetra so your Estonian provider can buy it.
+There is no universal cash-fund recommendation here. Compare the exact share
+class, costs, risks and redemption route with an eligible deposit.
 
-The biggest one by far is the **Xtrackers II EUR Overnight Rate Swap UCITS ETF
-1C**. Its ticker on Xetra is XEON and its ISIN is LU0290358497. It costs 0.10% a
-year, it is accumulating, it is based in Luxembourg, and it holds about €22
-billion. **Amundi Smart Overnight Return** (LU1190417599) costs the same and does
-a similar job, though it is actively managed rather than following an index.
+One example is **XEON**, Xtrackers II EUR Overnight Rate Swap UCITS ETF 1C,
+ISIN **LU0290358497**. The
+[DWS factsheet dated 31 August 2026](https://etf.dws.com/download/asset/42e11275-ddf0-45d2-8319-ad55635c3a08)
+describes accumulating EUR shares, indirect swap replication, a 0.10% annual
+fund fee and a benchmark based on €STR plus 8.5 basis points. Checked
+20 September 2026; not a live yield quote or broker-availability confirmation.
+The fund fee is not the investor's all-in cost.
 
-⚠️ **Check that you can actually buy it before you plan around it.** Neither LHV
-nor Swedbank publishes a list of what you can buy. You search for the ticker or
-the ISIN once you are logged in. Both banks give you broad access to Xetra and
-XEON is one of the most traded things on that exchange, so it should be there,
-but search for it in your own account first.
-
-**Three things the fee doesn't tell you:**
-
-**XEON doesn't hold what it tracks.** Instead of holding short-term loans, it has
-swap agreements with several banks that pay it the rate. This is normal, and it
-is why the fund is cheap, but it means you depend on those banks in a way you
-wouldn't with a fund that holds the real thing. If this money absolutely has to
-be there, that is worth more thought than a small difference in fees.
-
-**It follows €STR plus 0.085%, not €STR itself.** The fee comes out of that. The
-difference is small, but it explains why the rate you read about and the return
-you get are not the same number.
-
-**It is not a savings account, and it can lose money.** A money market fund is
-not covered by the {{protection.depositGuarantee|money}} deposit guarantee at
-all. Your money is held separately from the provider's own, which actually
-protects you better in the case that matters — if the broker fails, your holding
-is still yours — but it is a different kind of protection, not a bigger version
-of the same one. And the value can fall. XEON lost 0.03% in 2022, when the
-underlying rate was still around zero. That is a small loss, but it is a loss, so
-don't treat this as a savings account.
+DWS warns about counterparty failure and investment losses. The benchmark is not
+a guaranteed payout and is not the ECB deposit facility rate. This review does
+not establish authorization of XEON as an MMF under the MMF Regulation; it is
+described here as an overnight-rate swap ETF. CSH2 and other alternatives have
+not been reverified, so no interchangeable-product shortlist is offered.
 
 ### When a savings account is still the better choice
 
-If the amount is small, or you might need the money within a week, or you don't
-want to worry about a two-day wait before a notary appointment, use a savings
-account and accept the slightly worse rate. On €20,000 over six months the
-difference is about €100 before tax. That is not worth the extra complication if
-you would rather not deal with it.
+When immediate access and capital certainty matter more than a possible yield
+difference, compare eligible deposits first. Confirm notice periods and transfer
+limits even on products advertised as savings accounts. A term deposit must
+mature in time; an investment fund needs a workable sale/redemption route.
+Neither a higher return nor faster access should be assumed without current terms.
