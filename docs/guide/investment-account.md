@@ -1,53 +1,84 @@
 # The investment account
 
-**This is the single most important Estonian FIRE tool.** Learn it properly.
+An investment account can help with FIRE planning, but tax deferral is not a
+promise of tax-free investing.
+
+> **Limited review, 20 September 2026:** general rules checked against primary sources. Individual eligibility, fund-level treaty treatment and cross-border circumstances need separate verification.
 
 ## How it works
 
-You designate an ordinary bank account as an investment account and declare it to the tax authority. Then:
+For Estonian residents, qualifying investment accounts defer personal income tax
+on reinvested financial-asset income. Taxable payments arise when withdrawals
+exceed the remaining contribution allowance. Calculate in date order across
+one taxpayer's investment accounts, not by annual netting or combining spouses.
+Eligible purchases and sales within the system are not themselves declared as
+contributions or withdrawals. This does not eliminate foreign withholding.
 
-- Money **in** = contributions (`sissemaksed`)
-- Money **out** = disbursements (`väljamaksed`)
-- **Tax is due only when cumulative disbursements exceed cumulative contributions**, and only on the excess, at 22%
+[EMTA's investment-account guidance](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account),
+sections on taxable gains, contributions and payments, is the source for these
+rules. See [Sources & verification](verification.md) for dated tax-rate assumptions.
 
-That's it. Inside the account, you can buy, sell, rebalance, and realise gains **with no tax event at all**. Deferral is indefinite and there is no cap.
+## Why this is useful for FIRE
 
-## Why this is enormous for FIRE
+Deferral separates the timing of investment sales from the timing of taxable
+spending withdrawals. It does not guarantee that the portfolio lasts.
 
-**During accumulation:** you can rebalance annually, switch funds when a cheaper one appears, or take profits — none of it triggers tax. The compounding drag that dominates taxable-account investing in most countries is simply absent.
+**Illustration, not a forecast:** assume €400,000 of *remaining recorded
+contribution allowance*, a €900,000 portfolio, no further contributions or other
+reportable payments, continued eligibility and unchanged rules. Ten annual
+€40,000 withdrawals use €400,000 of allowance. The next withdrawal would exceed
+it. This is not ten years free of all taxes, fees or market risk. Neither the
+portfolio's value nor lifetime deposits alone establishes the allowance.
 
-**During decumulation:** this is the part people miss. Because tax is only due once withdrawals *exceed contributions*, an early retiree can withdraw **their entire contribution base tax-free first**. If you contributed €400k over 15 years and it grew to €900k, your first €400k of withdrawals is **0% tax**. At €40k/year that is **ten years of completely tax-free retirement income** — precisely covering the sequence-risk-critical early window and the bridge to pension age.
-
-Effectively, Estonia hands you a Roth conversion ladder for free, with no paperwork and no five-year rule.
+For planning, enter the remaining allowance from reconciled records. Model house
+purchases and other large withdrawals too; do not reserve the same allowance for
+both a home and retirement spending.
 
 ## Constraints (read carefully)
 
-Eligible assets under TuMS §17¹(2) ✅:
+- Check both the account and asset: a platform licence alone is insufficient.
+- Qualifying crowdfunding holdings can be eligible from 2024; the old blanket exclusion of private-company equity was too broad. Qualifying crypto applies from **1 January 2025**; see [Crypto](crypto.md).
+- Funding and receipt conditions apply, with specific exceptions; an outside purchase is not automatically eligible.
+- Declare the account and contributions/payments annually in **table 6.5**. Review imported reports, including taxed interest/dividends.
+- Losing Estonian tax residence ends this deferral and requires closure reporting; obtain advice before moving.
 
-- **Publicly traded securities** on a regulated market or MTF in an EEA or OECD state
-- **Fund units** — UCITS ETFs qualify cleanly
-- **Bank deposits**, including fixed-term deposits
-- **Investment-risk life insurance contracts**
-- **Loans and equity via EEA-licensed crowdfunding platforms** (EU Crowdfunding Regulation 2020/1503) — added 2023–24. Unlicensed platforms stay outside
-- **Qualifying crypto-assets acquired through a MiCA-authorised provider or issuer** — from **1 January 2025**, not 2026. Check authorisation at acquisition and the separate account-funding rules; see [Crypto](crypto.md).
-
-Constraints:
-
-- Follow the account-funding and receipt rules; do not assume an outside purchase can simply be relabelled as an investment-account asset. Statutory exceptions require separate evidence. See [EMTA's investment-account guidance](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account), “How are taxable gains calculated”.
-- The **cash account itself** must sit at a bank, payment institution, e-money institution or investment firm. An account held **at** a crowdfunding or crypto platform cannot be the investment account, even though assets bought through such platforms can qualify.
-- **Direct real estate is not eligible.** Neither is private company equity or physical gold.
-- Bookkeeping is on you (declared annually in Form A, table 6.5/7.2). Banks like LHV automate most of it if you use their account.
-- Moving money out for a house deposit resets progress against your contribution base — plan large withdrawals deliberately.
+These are selected checks, not an exhaustive eligibility list. Use
+[EMTA's detailed guidance](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account)
+and the [account/provider checklist](portfolio.md#foreign-accounts-eligibility-is-not-a-brand-attribute)
+for the actual arrangement. Historic transfers and return corrections remain
+individual review questions.
 
 ## Practical setup
 
-The canonical Estonian FIRE portfolio is boring and correct:
+A diversified accumulating UCITS ETF is an option to investigate, not a universally
+correct portfolio. Choose risk exposure and time horizon first; see the
+[fund comparison](portfolio.md#vwce-vs-webn).
 
-> **Accumulating, Irish-domiciled UCITS ETF (global equity), held inside an investment account.**
+### Accumulating does not mean tax-exempt
 
-- **Accumulating** — no dividend distributions, so no annual taxable events at all even outside IK edge cases, and no reinvestment friction
-- **Irish-domiciled** (ISIN starts `IE00…`) — Ireland's US tax treaty means **15%** withholding on US dividends inside the fund instead of 30% for e.g. Luxembourg funds. On a US-heavy global index that's roughly 0.15–0.25%/yr of pure, permanent return
-- **Never US-domiciled** (`US…` tickers like VTI, VOO) — US estate tax hits non-resident aliens above **$60,000** with no Estonia–US estate tax treaty to protect you, and PRIIPs rules make them hard to buy from EU brokers anyway
+Accumulation shares reinvest income within the fund instead of paying a cash
+dividend to the investor. [Vanguard explains this share-class distinction](https://www.vanguardinvestor.co.uk/need-help/answer/see-dividend-with-accumulation-share-class).
+That describes income handling, not an Estonian tax exemption. Do not use the
+label as proof of account eligibility, zero fund-level tax or tax-free sales.
+Vanguard's UK tax instructions are not Estonian filing instructions.
+
+### Domicile is not a guaranteed return advantage
+
+**Still unverified:** this guide has not established fund-specific treaty
+entitlement, actual withholding or recoverable tax for an Ireland/Luxembourg
+comparison. The former blanket 15% versus 30% comparison and promised annual
+return advantage have been removed. Request the exact fund's prospectus, tax
+disclosures and annual report before making such a comparison. An ISIN prefix
+alone is not that evidence.
+
+### US estate-tax exposure needs a separate check
+
+The [IRS nonresident estate-tax FAQ](https://www.irs.gov/businesses/small-businesses-self-employed/frequently-asked-questions-on-estate-taxes-for-nonresidents-not-citizens-of-the-united-states)
+describes a **$60,000 filing threshold**, generally considering US-situated assets
+and adjusted taxable gifts for a decedent who was neither US-domiciled nor a US
+citizen. This is not a calculation of the tax owed above $60,000. Citizenship,
+domicile, asset situs and applicable treaty provisions need individual review.
+No personal treaty entitlement or broker purchase availability is certified here.
 
 Compare the [dated broker fee snapshot](brokers.md#broker-fee-snapshot) and
 [account/provider checklist](portfolio.md#lhv-or-ibkr-for-the-etf-itself).

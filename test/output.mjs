@@ -493,6 +493,18 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
   ok(!brokers.includes('funded by\nthat state'), 'foreign guarantee section removes blanket state-funding claim');
 }
 
+{
+  const account = read('guide/investment-account.html');
+  for (const obsolete of ['no paperwork', 'Roth conversion ladder', 'no tax event at all', '6.5/7.2', 'pure, permanent return', 'Never US-domiciled', 'Neither is private company equity']) {
+    ok(!account.includes(obsolete), `account guide removes unsupported claim: ${obsolete}`);
+  }
+  for (const required of ['in date order', 'table 6.5', 'Accumulating does not mean tax-exempt', '$60,000 filing threshold', 'Still unverified', 'Losing Estonian tax residence', 'not by annual netting']) {
+    ok(account.includes(required), `account guide preserves qualification: ${required}`);
+  }
+  const allowance = 400000, annualWithdrawal = 40000;
+  ok(allowance / annualWithdrawal === 10 && account.includes('Ten annual'), 'conditional allowance example arithmetic');
+}
+
 console.log(`\n${checks} output and cross-engine checks`);
 if (failures.length) {
   console.log(`\n${failures.length} FAILED:`);

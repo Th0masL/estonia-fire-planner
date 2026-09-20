@@ -19,6 +19,24 @@ neither the website nor an offline copy automatically updates legislation.
 
 ## Checked rules
 
+### Investment-account guide qualifications
+
+**Checked:** 20 September 2026. **Scope:** limited rule review, not personal advice.
+
+[EMTA](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account)
+supports the guide's chronological allowance, reporting, residency and eligibility
+qualifications. The withdrawal example is conditional arithmetic, not a forecast.
+[Vanguard](https://www.vanguardinvestor.co.uk/need-help/answer/see-dividend-with-accumulation-share-class)
+supports only the explanation of accumulation shares, not Estonian tax treatment.
+[IRS estate-tax FAQ](https://www.irs.gov/businesses/small-businesses-self-employed/frequently-asked-questions-on-estate-taxes-for-nonresidents-not-citizens-of-the-united-states)
+distinguishes the nonresident filing threshold from an individual's tax liability.
+
+**Affected:** investment-account guide; no engine changes.
+**Open:** fund-specific withholding/treaty comparisons, individual estate-tax
+exposure, residence transitions and historic filing corrections. Removed the
+unsupported domicile return premium and universal tax-free/administration-free
+claims rather than replacing them with another blanket assurance.
+
 ### Investment-account withdrawals
 
 **Status:** checked rule. **Checked:** 20 September 2026.
