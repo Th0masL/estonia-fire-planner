@@ -92,6 +92,26 @@ MiCA and non-MiCA transaction sections; [EMTA investment accounts](https://www.e
 income types are not individually verified. The simulator's aggregate crypto
 reserve is not a legal eligibility or transaction-tax calculation.
 
+### Pension access and fund payouts
+
+**Status:** checked distinctions, not individual entitlement. **Checked:**
+20 September 2026. **Applicable period:** current guidance; pre-2021 versus
+2021-onward Pillar III entry cohorts. Original commencement dates for every
+provision were not established. Current rates are not future guarantees.
+
+**Sources:** [EMTA pension taxation](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/pension-and-insurance-indemnities),
+table and notes; [Pensionikeskus III payments](https://www.pensionikeskus.ee/en/iii-pillar/payments/),
+age/history; [fund pension](https://www.pensionikeskus.ee/en/iii-pillar/payments/supplementary-funded-pension/),
+duration/frequency; [contribution choices](https://www.pensionikeskus.ee/en/suurempension-en/increase-the-ii-pillar-contribution/);
+[EMTA deductions](https://www.emta.ee/en/private-client/taxes-and-payment/tax-incentives/contributions-supplementary-funded-pension).
+
+**Affected:** pension and strategy guides; no engine change. Fixed-age and
+insurer-dependence claims removed. **Limits:** EMTA's English pre-2020 wording
+differs from Pensionikeskus's explicit inclusion of 2020; contribution guidance
+retains a dated start-year sentence. Both are flagged in the guide.
+Individual access dates, special exceptions, spousal transfers and future reforms
+remain open.
+
 ## Model assumptions and known limits
 
 - Investment-account tax is reserved immediately when money leaves the wrapper. This is a cash-planning convention, not the statutory tax-payment deadline.
@@ -114,7 +134,7 @@ remain useful leads, but their presence is not a completed cross-guide audit.
 
 | Topic | What still needs checking | Affected guidance or calculation |
 |---|---|---|
-| Pension contributions and payouts | Deduction scope, access dates, duration requirements, withholding and exceptions; reconcile every guide statement | Pension guides, `src/rates.js`, pension projections |
+| Pension contributions and payouts | Individual entitlement, special exceptions, spousal transfers and reforms; core access/payout distinctions checked above | Pension guides, `src/rates.js`, pension projections |
 | State pension and healthcare | Service evidence, future cohort ages, minimum-contribution exceptions and actual coverage routes | Pension eligibility and healthcare costs |
 | OÜ investing | Rental-specific taxation, historic filing corrections and actual capital repayment procedures; core principal/profit example checked above | Company-versus-personal comparison |
 | Crypto and foreign accounts | Actual provider licences, historic lots, migrations and foreign-account arrangements; general crypto distinctions checked above | Tax and account guidance; crypto approximation |

@@ -12,14 +12,14 @@ Estonian allowances are **per person**, but most of them only have value against
 
 | Wrapper | Per person | Household of two | Useful with one earner? |
 |---|---|---|---|
-| Pillar III contribution with 22% refund | {{pillar3.maxAnnual|money}}/yr | €12,000/yr | ❌ **No** — see below |
+| Pillar III deduction ceiling | Up to {{pillar3.maxAnnual|money}}/yr, subject to income and tax | Assess each taxpayer separately | Depends on each person's taxable income, not employment alone |
 | Basic exemption | {{basicExemptionMonthly|money}}/month | €1,400/month | ❌ Only against actual income |
 | Investment accounts | Unlimited | Each adult may have one | ✅ Yes |
 | Pillar II | Individual | Two accounts accruing | Only on earned income |
 
-> **Pillar III capacity is per earner, not per person.** The refund is a deduction against your own income tax, so a partner with no earnings who contributes €6,000 gets **nothing back**. In a single-earner household the usable figure is **€6,000 and €1,320**.
+> **Pillar III deductions depend on each taxpayer's eligible income and available tax.** Non-salary income may matter. A contribution alone does not guarantee a refund.
 >
-> Unused room cannot be passed to the other spouse: TuMS §28²(1¹) allows spousal transfer only for §25 and §26 deductions (housing interest, training costs, donations), never §28. See [Pension pillars II and III](pensions.md#the-spousal-transfer-caveat-for-single-earner-households).
+> The simulator does not transfer unused allowance between partners. Spousal-transfer legal details remain open in the current review; see [Pension pillars II and III](pensions.md#the-spousal-transfer-caveat-for-single-earner-households).
 
 **Separate investment accounts can be useful for both adults**, since the wrapper capacity is unlimited and unconditional.
 

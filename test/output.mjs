@@ -357,6 +357,18 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
 
 // Public evidence must distinguish checked claims from incomplete research.
 {
+  const pensions = read('guide/pensions.html');
+  for (const required of ['before\n1 January 2021', 'at least five years', 'after fund payments end', 'No insurer annuity is modeled', 'confirmed coverage date', 'wording\ndiscrepancy']) {
+    ok(pensions.replace(/\s+/g, ' ').includes(required.replace(/\s+/g, ' ')), `pension guidance retains ${required}`);
+  }
+  for (const obsolete of ['until 63–65', 'only one insurer', 'unconditionally', 'no scenario short of expropriation']) {
+    ok(!pensions.includes(obsolete), `pension guidance removes ${obsolete}`);
+  }
+  ok(!read('guide/levers.html').includes('guaranteed 22% back'), 'strategy does not guarantee a pension refund');
+  ok(!read('guide/risks.html').includes('unlock at 63–65 and 60'), 'risk guide does not use universal pension access ages');
+}
+
+{
   const crypto = read('guide/crypto.html');
   const account = read('guide/investment-account.html');
   for (const [label, html] of [['crypto', crypto], ['investment account', account]]) {

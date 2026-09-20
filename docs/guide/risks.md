@@ -28,7 +28,11 @@ Related and specific to the region: **custody location**. Assets held at an Esto
 Estonia ran ~19–20% inflation in 2022 against a eurozone average of ~8–9%. Small catching-up economies inside a currency union diverge. Planning at ECB's 2% understates your real withdrawal needs — use 2.5–3%.
 
 ## Under-modelling the bridge
-Pillar II and III unlock at 63–65 and 60. Everything before that comes from the IK. The bridge is often the binding constraint, and it's easy to look "on track" in aggregate while the bridge is short.
+Use each person's actual pension access conditions and chosen payment dates,
+not universal ages. Pillar III's favourable-tax age also depends on acquisition
+history; earlier withdrawals are a separate choice. The accessible portfolio
+must cover the bridge and any gap after finite pension payments end. See
+[pension access and payouts](pensions.md#access-ages-and-payout-conditions).
 
 ## Longevity, care, and the boring stuff
 Long-term care costs, disability, and one partner outliving the other by 15 years are all more likely than a market scenario that breaks a 3.5% SWR. Insurance and legal structure (wills, matrimonial regime) do more here than portfolio design.

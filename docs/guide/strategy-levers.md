@@ -29,15 +29,15 @@ Requires: real business substance, a defensible salary, an accountant. Not a DIY
 
 Free, indefinite tax deferral plus tax-free withdrawal of principal first. There is no downside and no cap. If liquid assets are sitting outside an IK, that's an unforced error — fix it before optimising anything else.
 
-### 4. Fill Pillar III to the limit
+### 4. Check usable Pillar III deduction capacity
 
-**A guaranteed 22% back on up to {{pillar3.maxAnnual|money}}/year** — €1,320, for the effort of setting up a standing order. Nothing else on this list offers a certain return of that size.
+The annual deduction cap is {{pillar3.maxAnnual|money}}, also limited by eligible income and available tax. It is not a guaranteed refund or a contribution ceiling.
 
-⚠️ **Per earner, not per person.** The refund is a deduction against your own income tax, so a partner with no taxable income gets nothing back from their own €6,000. A single-earner household has €6,000 of usable capacity, not €12,000.
+Assess each person's taxable income and deductions, including relevant non-salary income. Do not infer household capacity solely from the number of people employed.
 
-The "it's locked until 60" objection is weakened by the arithmetic: because the refund lets pre-tax euros compound, Pillar III can **beat an ETF in an investment account even after an early withdrawal taxed at 22%**. See the worked examples in [Pension pillars II and III](pensions.md#why-it-beats-the-investment-account--even-if-you-withdraw-early).
+Pillar III permits earlier withdrawals; favourable-tax conditions depend on acquisition history, age and duration. Compare net outlay, fees, refund timing and withdrawal tax. See [Pension pillars II and III](pensions.md#comparing-wrappers).
 
-Two conditions: use a **low-cost index** Pillar III fund (Tuleva, LHV index), and **reinvest the refund** instead of spending it.
+Keep enough accessible capital for the bridge; a deduction alone does not establish the best allocation.
 
 ---
 
