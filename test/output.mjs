@@ -699,6 +699,12 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
   }
 }
 
+{
+  const sources = read('guide/sources.html');
+  ok(sources.includes('not a fresh legal or provider check'), 'register reconciliation does not silently refresh evidence dates');
+  ok(sources.includes('do not erase the limited checks'), 'open questions do not contradict scoped checked entries');
+}
+
 console.log(`\n${checks} output and cross-engine checks`);
 if (failures.length) {
   console.log(`\n${failures.length} FAILED:`);

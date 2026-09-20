@@ -441,19 +441,25 @@ cannot validate future outcomes or fill in missing personal evidence.
 
 ## Open review
 
-These topics are not reverified by this register. Existing page-level citations
-remain useful leads, but their presence is not a completed cross-guide audit.
+The questions below remain unresolved; they do not erase the limited checks
+recorded above. A checked general rule does not establish an individual's
+eligibility or a provider's current terms. Existing page-level citations remain
+useful leads, but their presence is not a completed cross-guide audit.
+
+**Register reconciliation, 21 September 2026:** the topic descriptions below
+were aligned with the existing checked entries. This was a documentation review,
+not a fresh legal or provider check; the original check dates still apply.
 
 | Topic | What still needs checking | Affected guidance or calculation |
 |---|---|---|
 | Pension contributions and payouts | Individual entitlement, special exceptions, spousal transfers and reforms; core access/payout distinctions checked above | Pension guides, `src/rates.js`, pension projections |
-| State pension and healthcare | Service evidence, future cohort ages, minimum-contribution exceptions and actual coverage routes | Pension eligibility and healthcare costs |
+| State pension and healthcare | Personal service evidence, future cohort ages, payroll exceptions and confirmed individual coverage; selected agency routes checked above | Pension eligibility and healthcare costs |
 | OÜ investing | Rental-specific taxation, historic filing corrections and actual capital repayment procedures; core principal/profit example checked above | Company-versus-personal comparison |
 | Crypto and foreign accounts | Actual provider licences, historic lots, migrations and foreign-account arrangements; general crypto distinctions checked above | Tax and account guidance; crypto approximation |
-| Housing and family benefits | Lending constraints, guarantees, repayment terms, property taxes and benefit eligibility | Housing guidance and household inputs |
+| Housing and family benefits | Individual lender offers/guarantees, repayment contracts, property taxes and benefit awards; selected general lending limits and benefit rules checked above | Housing guidance and household inputs |
 | Cross-border and ownership | Residency changes, treaties, gifts, marital property and inheritance | Account ownership and relocation guidance |
 | Protection schemes | Core distinctions checked above; actual eligibility, foreign schemes, custody chains and recovery outcomes remain open | Cash and custody guidance |
-| Provider and fund comparisons | Fees, availability, fund characteristics and broker reporting, each with a quote date | Commercial snapshots in investment guides |
+| Provider and fund comparisons | Current executable costs, availability, account-specific reporting and later product changes; selected dated tariffs and issuer documents checked above | Commercial snapshots in investment guides |
 
 Before acting on one of these topics, check the relevant authority or provider
 and obtain advice where personal circumstances matter. Do not interpret an open
