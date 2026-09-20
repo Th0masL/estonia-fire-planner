@@ -7,7 +7,7 @@
 // Severity ordering: critical > important > opportunity > info.
 
 import { RATES, DEFAULTS } from './rates.js';
-import { eur, pct, escapeHtml } from './format.js';
+import { eur, pct, pct1, escapeHtml } from './format.js';
 
 const SEVERITY_ORDER = { critical: 0, important: 1, opportunity: 2, info: 3 };
 
@@ -391,18 +391,25 @@ export function actionPlan(sim, input) {
   // -------------------------------------------------------------- opportunity
 
   const idleCash = people.reduce((s, p) => s + (p.assets?.cash || 0), 0);
-  const excessCash = Math.max(0, idleCash - (sim.house?.totalReserve || 0));
-  if (excessCash > 25_000) {
-    const spread = Math.max(0,
-      RATES.marketRates.moneyMarketFundNet - (a.cashRealReturn || 0));
+  const protectedCash = Math.max(sim.house?.totalReserve || 0, a.retirementCashReserve || 0);
+  const excessCash = Math.max(0, idleCash - protectedCash);
+  // Compare real purchasing-power returns, not a nominal yield with a real input.
+  // This legacy scenario is not a live quote or a modeled after-tax product return.
+  const scenarioReal = (1 + RATES.marketRates.moneyMarketFundNet) / (1 + a.inflation) - 1;
+  const spread = scenarioReal - (a.cashRealReturn || 0);
+  if (excessCash > 25_000 && spread > 1e-12) {
     const forgone = excessCash * spread;
     add({
       id: 'idle-cash', severity: 'opportunity', link: 'portfolio',
-      title: 'Cash earning less than it could',
-      value: '~' + eur(forgone) + '/year forgone',
+      title: 'Compare returns on unreserved cash',
+      value: '~' + eur(forgone) + '/yr real difference',
       detail:
-        `This compares the cash return entered in the plan with the dated EUR money-market ` +
-        `assumption. Check the actual product yield, fees, risk and investment-account eligibility ` +
+        `Illustration using the unverified ${RATES.marketRates.asOf} nominal money-market ` +
+        `assumption of ${pct1(RATES.marketRates.moneyMarketFundNet)}: at ${pct1(a.inflation)} inflation, ` +
+        `that is ${pct1(scenarioReal)} real, compared with your ${pct1(a.cashRealReturn || 0)} real cash return. ` +
+        `The difference is before personal tax and is not guaranteed savings or a current offer. ` +
+        `Purchase reserves and the protected emergency reserve are excluded without double counting. ` +
+        `Check actual yield, fees, risk and investment-account eligibility ` +
         `before moving money needed for a known near-term purpose.`,
     });
   }

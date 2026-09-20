@@ -124,7 +124,10 @@ calculation step 2, uses USD-equivalent NAV and balance-dependent interest.
 the broker guide. **Limits:** no current retail yield or product ranking is
 certified. Broker fees and funds still need review. The simulator's separate
 legacy money-market assumption is not refreshed or verified by this entry;
-its cash-opportunity comparison also needs nominal/real-unit correction.
+its cash-opportunity message converts that nominal assumption into real terms
+using entered inflation. A positive scenario difference is before personal tax,
+not a guaranteed saving. Purchase/protected reserves are excluded using the
+larger reserve amount to avoid double counting.
 
 ## Model assumptions and known limits
 
