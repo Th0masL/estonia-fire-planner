@@ -435,6 +435,19 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
   }
 }
 
+{
+  const portfolio = read('guide/portfolio.html');
+  for (const required of ['IE00BK5BQT80', 'IE0003XJA0J9', '0.07 percentage points', 'not an all-in cost comparison', 'trading in EUR does not remove underlying currency risk', 'remaining sections are pending review']) {
+    ok(portfolio.includes(required), `fund comparison retains ${required}`);
+  }
+  const feeDifference = 500000 * (0.0014 - 0.0007);
+  ok(portfolio.includes(`€${feeDifference} per year`), 'fund charge illustration reconciles independently');
+  for (const obsolete of ['all-cap-ish', 'Recommendation: VWCE', 'splitting halves it', '3,757', '~25×']) {
+    ok(!portfolio.includes(obsolete), `fund comparison removes unsupported ${obsolete}`);
+  }
+  ok(!read('guide/levers.html').includes('3,757'), 'strategy does not repeat undated holdings count');
+}
+
 console.log(`\n${checks} output and cross-engine checks`);
 if (failures.length) {
   console.log(`\n${failures.length} FAILED:`);

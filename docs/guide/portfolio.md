@@ -2,68 +2,97 @@
 
 How diversified ETFs can fit into an Estonia-based FIRE portfolio, including fund and broker choices.
 
-> ⚠️ This page's fund data, provider comparisons and reporting descriptions remain an open review, not verified current recommendations. For the narrower fee and reporting checks dated 20 September 2026, see [the broker guide](brokers.md). Confirm fund facts with the issuer and account-specific terms with the provider before buying.
+> **Partial review, 20 September 2026:** the VWCE/WEBN comparison below has been checked against the cited issuer documents. The later cash-product, custody, provider and tax-procedure sections remain an open review, not verified current recommendations. See [the broker guide](brokers.md) for the separately checked fee snapshot.
 
 ## When a global equity ETF fills a diversification gap
 
-For many people starting out, adding public-market exposure is less about chasing returns than about fixing a concentration problem.
+A household with local property and employment income may want investment
+exposure spread across countries and industries. A global equity fund can serve
+that role, but diversification does not prevent market losses or guarantee FIRE.
 
-A very common Estonian starting position is **property plus an Estonian salary** — two holdings that depend on the same small economy, and that would come under pressure together in exactly the crisis where you would need them not to, with no broad ownership of global productive assets anywhere in the mix. A global equity ETF is the single cleanest fix: one instrument, ~3,500 companies, ~50 countries, ~0.1% a year to run.
-
-Anything else concentrated in one place — crypto, a single employer's shares, a second property — sharpens the same problem rather than solving it.
-
-Three reasons it fits that position particularly well:
-
-1. **Diversification away from Estonia.** For most people here the salary, the property and the bank are all in one country of 1.3 million on a sensitive border. Global equity is the counterweight.
-2. **The investment account makes it tax-efficient to a degree crypto and property can't match.** An accumulating ETF inside an IK defers tax until withdrawals exceed recorded contributions. See [The investment account](investment-account.md).
-3. **It requires no skill and no attention.** Unlike property and crypto, which demand both.
-
-**The caveat that matters more than the fund choice:** money earmarked for a home purchase within roughly three years generally should *not* go into equities. See [property-purchase.md](property-purchase.md).
+Choose the allocation and time horizon before choosing the ticker. Money needed
+for an emergency or a dated purchase should not depend on selling shares at a
+favourable price. A simple fund portfolio still requires reviewing costs, risk,
+account records and changes to the fund. See [buying a home](property-purchase.md)
+and [the investment-account rules](investment-account.md).
 
 ---
 
 ## VWCE vs WEBN
 
-Both are the right *kind* of thing: accumulating, Irish-domiciled, global, all-cap-ish, cheap.
+**Both target large and mid-cap companies in developed and emerging markets.**
+Neither is an all-cap fund or a dedicated small-cap allocation. The old
+“small-cap tail” distinction was misleading.
 
-| | **VWCE** | **WEBN** |
+| Characteristic | VWCE | WEBN |
 |---|---|---|
-| Full name | Vanguard FTSE All-World UCITS ETF (Acc) | Amundi Prime All Country World UCITS ETF (Acc) |
+| Fund | Vanguard FTSE All-World UCITS ETF, USD Accumulating | Amundi Prime All Country World UCITS ETF Acc |
 | ISIN | IE00BK5BQT80 | IE0003XJA0J9 |
-| Domicile | Ireland ✅ | Ireland ✅ |
-| Distribution | Accumulating ✅ | Accumulating ✅ |
-| TER | **0.14%** ✅ | **0.07%** ✅ |
-| Index | FTSE All-World | Solactive GBS Global Markets **Large & Mid Cap** |
-| Holdings | **3,757** | ~2,400–3,400 (sources vary) |
-| Small-cap tail | Broader | Large & mid only |
-| Replication | Optimised sampling | Full physical |
-| Emerging markets | Yes | Yes |
-| Launched | July 2019 | **June 2024** |
-| Fund size | **~€48.7bn** | ~€0.4–2.2bn (sources vary) |
-| Issuer track record | Vanguard — excellent | Amundi — active pattern of merging funds |
+| Domicile / income | Ireland / accumulating | Ireland / accumulating |
+| Benchmark | FTSE All-World Index | Solactive GBS Global Markets Large & Mid Cap Index |
+| Method described by issuer | Physical, representative sampling | Direct replication; derivatives and securities lending permitted |
+| Published ongoing charge component | 0.14% OCF on current product page | 0.07% management and administrative/operating costs in cited KID |
 
-**The cost gap is 0.07%/year, which is not enough to decide it.** On a €500k portfolio that's €350/year — real, but small against a fund that is ~25× larger, four years older, and holds a broader slice of the market.
+Sources checked 20 September 2026:
+[Vanguard product page](https://www.vanguard.co.uk/uk-fund-directory/product/etf/equity/9679/ftse-all-world-ucits-etf-usd-accumulating),
+fund objectives, facts and listings;
+[Amundi KID dated 28 April 2026](https://www.amundietf.com/pdfDocuments/kid-priips/IE0003XJA0J9/ENG/LUX/20260428),
+pages 1–3, objectives, income policy and costs. These are identified share classes,
+not a guarantee of availability through any particular broker.
 
-**On Amundi's track record:** WEBN itself has not had its index changed or been merged since launch — but Amundi merged its *Prime Global* siblings in November 2024, absorbed a €3.8bn Lyxor EM fund, and rebranded ~38 Lyxor ETFs across 2023–24. The pattern is real, even though WEBN hasn't been caught by it yet. Inside an Estonian IK a merger isn't a taxable event, so the *tax* consequence is neutralised — but you'd still be moved into a fund you didn't choose.
+### Fee evidence and its limits
 
-**Recommendation: VWCE.** With the gap at 0.07%, the deeper liquidity, longer record, broader index and vastly larger asset base are worth more than the remaining fee saving — particularly for a position you intend to hold for decades and never think about again. WEBN remains perfectly reasonable if you'd rather have the lowest possible TER; this is a close call, not a clear error either way.
+Vanguard's current page lists 0.14%. Its
+[fee announcement dated 2 August 2026](https://www.ch.vanguard/en/private-investor/insights/lowering-fees-on-another-six-etfs)
+describes a reduction from 0.19%, expected to take effect on 28 July 2026.
+The [issuer-hosted KIID](https://fund-docs.vanguard.com/ie00bk5bqt80-en.pdf),
+dated 28 July 2026, also lists 0.14%. Search results still surfaced an older
+0.19% figure; the opened document agrees with the current product page.
+Confirm the latest applicable document before buying.
 
-**Within a single broker, hold one of them, not both** — they own nearly identical companies, so a second world index adds admin without adding diversification. If you later want to add something, add bonds or small caps, not another global fund.
+The two displayed ongoing-charge components differ by **0.07 percentage points**:
+on a constant €500,000 balance, that is **€350 per year** before other differences.
+This is arithmetic, not a prediction of better net performance. Amundi's cited
+KID separately estimates underlying transaction costs at 0.05%; broker fees,
+spreads and personal taxes are separate considerations. The displayed charge
+components are not an all-in cost comparison.
 
-**Across two brokers, holding one in each is reasonable** — see [VWCE at LHV, WEBN at IBKR](#vwce-at-lhv-webn-at-ibkr) below.
+### Choosing without an unsupported ranking
 
-Practical checks before you buy:
-- Confirm **LHV actually lists WEBN** and on which exchange (it trades on Xetra and others — availability varies by broker)
-- Compare the **spread** at your trade size, not just the TER — on a smaller fund it can eat part of the savings on small, frequent buys
-- Buy in **EUR on a European exchange** (Xetra) to avoid FX conversion
+The evidence above does not establish a universal winner. Compare current
+tracking results, total costs, trading spreads at your order size, fund documents
+and availability. Holdings counts and asset sizes change, and fund-wide assets
+are not the same as share-class assets; the previous undated size ratios and
+issuer-quality rankings have been removed.
+
+Their stated mandates suggest substantial exposure overlap; that is an inference,
+not a measured current holdings-overlap percentage. Two tickers do not necessarily
+add meaningful market diversification. Using different managers or brokers also
+does not establish that any particular risk is halved.
+
+A EUR trading line can avoid a conversion of EUR cash for that trade, but
+**trading in EUR does not remove underlying currency risk**. Check the exact
+ISIN, exchange and currency, not just the ticker. Do not confuse an accumulating
+share class with a tax exemption: income is reinvested within the fund, while
+your account and tax treatment still need to be correct.
+
+**Still unverified:** current executable spreads, broker-specific availability,
+a like-for-like total-cost or performance ranking, and the consequences of any
+future merger or closure. This comparison does not promise that either fund will
+remain unchanged or meet a particular retirement return assumption.
 
 ---
 
 ## What "UCITS" means, and why the house money doesn't go into the ETF
 
-**UCITS** stands for *Undertakings for Collective Investment in Transferable Securities* — the EU regulatory framework that virtually every European retail fund is authorised under. It imposes rules on diversification, liquidity, leverage limits, independent custody of assets, and disclosure. It is a **quality and safety standard, not a type of investment**.
+**The remaining sections are pending review.** The fund comparison above does not
+verify the cash-product, tax-procedure or provider recommendations below.
 
-So "UCITS ETF" just means an ETF built to EU retail rules. VWCE is one. A "EUR money market UCITS fund" is one too. It matters here for three reasons: UCITS funds are explicitly eligible for the investment account, they hold assets in independent custody (see [account-protection.md](account-protection.md)), and non-UCITS funds are largely unavailable to EU retail investors anyway.
+**UCITS** stands for *Undertakings for Collective Investment in Transferable Securities*.
+It describes a regulatory framework, not a guarantee against investment losses.
+Account eligibility and protection still depend on the applicable rules and product.
+See [the investment-account guide](investment-account.md) and
+[account protection](account-protection.md).
 
 ### Why not just put the house money in the ETF?
 
@@ -187,7 +216,9 @@ This works, and it's better suited to Estonia than to most countries.
 
 - **The lower TER on new money.** WEBN at 0.07% versus VWCE at 0.14%. On the IBKR half growing to €500,000, that's ~€350/year.
 - **A working position at each broker.** If one became unavailable, the other is fully functional — which is the actual point of the two-broker setup.
-- **A little provider-level diversification.** Different managers, different depositaries, different securities-lending counterparties. UCITS assets are segregated so manager failure shouldn't cost you anything, but the risk isn't precisely zero, and splitting halves it.
+- **Different provider arrangements.** Using different funds can change manager,
+  depositary and counterparty exposure. It does not establish that risk is halved;
+  the actual arrangements and shared exposures need checking.
 
 **What it does *not* get you:** any diversification of market exposure. Both funds hold nearly the same companies in nearly the same weights. Don't mistake two tickers for two bets.
 

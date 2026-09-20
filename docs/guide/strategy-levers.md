@@ -45,16 +45,15 @@ Keep enough accessible capital for the bridge; a deduction alone does not establ
 
 ### 5. Portfolio: one fund, then stop
 
-Global equity, accumulating, Irish-domiciled, inside the IK. See [portfolio.md](portfolio.md#vwce-vs-webn) for the VWCE/WEBN decision. Other reasonable candidates:
+Choose a suitable allocation before selecting a fund. The
+[dated VWCE/WEBN comparison](portfolio.md#vwce-vs-webn) identifies both as
+large/mid-cap global equity funds, not small-cap allocations. It distinguishes
+published ongoing charges from total costs and does not name a universal winner.
+Other funds and combinations need a separate issuer-document review; the former
+undated comparison table is not retained as a verified shortlist.
 
-| Fund | TER | Coverage |
-|---|---|---|
-| **VWCE** (Vanguard FTSE All-World Acc) | **0.14%** | Developed + emerging, 3,757 holdings — **recommended** |
-| **WEBN** (Amundi Prime All Country World Acc) | **0.07%** | Large & mid cap only, ~2,400–3,400 holdings |
-| **SPYI** (SPDR ACWI IMI) | ~0.17% | Broadest — includes small caps |
-| **IWDA + EIMI** (iShares) | ~0.20% blended | Manual EM weighting |
-
-Any of these is fine. The decision to *stop optimising* is worth more than the gap between them. Pick one, automate the buy, never touch it.
+A simple portfolio can reduce administration, but still needs periodic review of
+its suitability, costs and fund changes. Automation is not a reason to ignore it.
 
 **Bonds:** near-zero allocation during accumulation is defensible when you have decades and stable income. They matter at the retirement date, for the bond tent — not before. If held, prefer **EUR-hedged** global aggregate, because unhedged foreign bonds are mostly currency risk wearing a bond costume.
 

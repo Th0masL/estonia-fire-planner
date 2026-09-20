@@ -143,6 +143,23 @@ not total costs or a whole-market ranking. Other providers' tariffs and reportin
 exact security availability, protection and fund comparisons remain open.
 The portfolio guide is explicitly marked as pending review.
 
+### VWCE and WEBN fund comparison
+
+**Status:** limited issuer-document snapshot. **Checked:** 20 September 2026.
+[Vanguard's product page](https://www.vanguard.co.uk/uk-fund-directory/product/etf/equity/9679/ftse-all-world-ucits-etf-usd-accumulating)
+and [KIID dated 28 July 2026](https://fund-docs.vanguard.com/ie00bk5bqt80-en.pdf)
+support the accumulating share class, large/mid-cap mandate and 0.14% ongoing
+charge. The opened KIID supersedes the older 0.19% search excerpt.
+[Amundi's KID dated 28 April 2026](https://www.amundietf.com/pdfDocuments/kid-priips/IE0003XJA0J9/ENG/LUX/20260428)
+supports its accumulating share class, large/mid-cap mandate and 0.07% management/
+operating component, with underlying transaction costs separately estimated.
+
+**Affected:** portfolio comparison and strategy shortlist; no engine changes.
+**Limits:** not a total-cost, liquidity or performance ranking. Availability,
+future fund changes and product-specific suitability remain unverified. Removed
+undated holdings/size comparisons and unsupported issuer rankings. The remaining
+portfolio cash, provider and tax-procedure sections are still pending review.
+
 ## Model assumptions and known limits
 
 - Investment-account tax is reserved immediately when money leaves the wrapper. This is a cash-planning convention, not the statutory tax-payment deadline.
