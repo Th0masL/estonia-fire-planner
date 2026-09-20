@@ -29,11 +29,11 @@ Eligible assets under TuMS §17¹(2) ✅:
 - **Bank deposits**, including fixed-term deposits
 - **Investment-risk life insurance contracts**
 - **Loans and equity via EEA-licensed crowdfunding platforms** (EU Crowdfunding Regulation 2020/1503) — added 2023–24. Unlicensed platforms stay outside
-- **Crypto-assets bought via a MiCA-licensed provider** — new in 2026
+- **Qualifying crypto-assets acquired through a MiCA-authorised provider or issuer** — from **1 January 2025**, not 2026. Check authorisation at acquisition and the separate account-funding rules; see [Crypto](crypto.md).
 
 Constraints:
 
-- **All** transactions must flow through the declared account. Buy an asset with outside money and it's outside the regime, permanently, for that asset.
+- Follow the account-funding and receipt rules; do not assume an outside purchase can simply be relabelled as an investment-account asset. Statutory exceptions require separate evidence. See [EMTA's investment-account guidance](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account), “How are taxable gains calculated”.
 - The **cash account itself** must sit at a bank, payment institution, e-money institution or investment firm. An account held **at** a crowdfunding or crypto platform cannot be the investment account, even though assets bought through such platforms can qualify.
 - **Direct real estate is not eligible.** Neither is private company equity or physical gold.
 - Bookkeeping is on you (declared annually in Form A, table 6.5/7.2). Banks like LHV automate most of it if you use their account.

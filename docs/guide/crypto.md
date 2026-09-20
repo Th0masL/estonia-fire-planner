@@ -1,31 +1,55 @@
 # Crypto
 
-Worth knowing precisely, because the rules are unusually unforgiving and easy to get wrong.
+Tax treatment depends on acquisition history and the account arrangement, not
+just the coin or where it is held today. Do not use a blanket no-loss-offset rule
+for every holding.
 
-> 🟢 **Changed from 1 January 2025:** qualifying crypto acquired through a MiCA-authorised service provider can be treated as a financial asset. If bought with funds from a declared investment account, it can use normal investment-account deferral. Provider authorisation and the acquisition route must be checked for the actual transaction.
+## Acquisition and reporting
 
-| | Treatment |
+From **1 January 2025**, qualifying crypto acquired through a MiCA-authorised
+provider or issuer can receive financial-asset treatment. Check authorisation
+at acquisition, not just today.
+
+| Outside the investment-account system | Ordinary reporting |
 |---|---|
-| Investment account eligible? | **Yes, conditionally** — must be acquired via a **MiCA-licensed** provider with IK funds |
-| Tax on disposal (outside an IK) | **22%** on the gain |
-| What counts as a disposal | Selling to EUR, **swapping one coin for another**, and spending it |
-| **Loss offset** | **Conditional.** Allowed for qualifying crypto transactions through a MiCA-authorised provider; not allowed under the older "other property" treatment |
-| Gain on a swap | Market value received **minus acquisition cost** of what you gave up |
-| Mining | **Business income**, Form E |
-| Staking | Ordinary income at market value on the date received |
-| Reporting | Table 6.3 (Estonian) / 8.3 (foreign platforms), or **6.5 if inside an IK** |
-| Long-term holding relief | None |
-| Provider constraint | Verify that the provider was MiCA-authorised on the acquisition date. The simulator does not infer this from the custodian name |
+| Qualifying MiCA acquisitions | Tables 6.1 / 8.2; eligible losses can offset gains, including other financial-asset gains, subject to the rules |
+| Non-qualifying acquisitions | Tables 6.3 / 8.3; profitable disposals are taxed without offsetting losing disposals |
 
-**The no-loss-offset rule still applies to non-qualifying holdings.** For crypto remaining under the older “other property” treatment, a losing disposal cannot reduce a gain. Qualifying MiCA-provider transactions receive financial-asset treatment instead. Keep the provider authorisation and acquisition evidence: the distinction is transaction-specific.
+Sales, swaps and spending can realise gains. Transfers between your own wallets
+do not themselves generate income. Retain dates, EUR acquisition costs, fees and
+provider evidence. A later licence does not establish authorisation at purchase.
 
-**The catch for coins bought before the change.** The new eligibility applies to crypto *acquired* through a licensed provider using investment-account money. **Self-custodied coins bought outside that route stay under the old regime** — 22% on every disposal, no loss offset. Coins in a hardware wallet cannot be moved into an investment account without being sold first, and that sale is itself the taxable event the account is meant to defer. So the change improves the tax treatment of future purchases only. It does nothing for coins bought earlier.
+Source checked **20 September 2026**: [EMTA — Crypto-assets](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/crypto-assets),
+sections on transactions with and without MiCA authorisation. This is a summary,
+not a completed tax return. Mining, staking, gifts and unusual acquisition routes
+need separate review; this guide does not establish their individual treatment.
 
-**Consequences for planning:**
+## Investment-account eligibility is a separate question
 
-- Self-custodied crypto bought outside the regime stays the **least tax-efficient** holding available, and the hardest to restructure
-- **Every swap is a taxable event.** Rebalancing between coins costs real money in a way that rebalancing inside an IK does not
-- There's **no tax reason to delay diversifying out.** No holding-period relief exists, so the decision is purely about your market view, not tax timing
-- Reconstruct your **cost basis now**, while records are still retrievable. Doing it years later, after exchanges have shut down or purged history, is genuinely painful
-- If you buy more crypto in future, **route it through the IK via a MiCA-licensed provider** — same asset, materially better tax treatment
-- If crypto is funding the house deposit, see [property-purchase.md](property-purchase.md#funding-the-down-payment-from-crypto)
+An eligible asset is not automatically inside an investment account. The
+funding and receipt rules must also be satisfied. A crypto platform account
+cannot itself be declared as the investment account, even when assets acquired
+through that provider qualify. See [the investment-account guide](investment-account.md).
+
+Source: [EMTA — Securities and investment account](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account),
+“How to check” and “How are taxable gains calculated”, checked 20 September 2026.
+
+Do not assume moving existing coins to a new wallet or platform establishes
+eligibility. The treatment of a particular migration, self-custody arrangement
+or historic lot remains **unverified here**. Obtain transaction-specific advice
+before selling solely to restructure ownership. The previous categorical claim
+that all hardware-wallet holdings must first be sold was not sufficiently scoped.
+
+## What the simulator does—and does not do
+
+The separate Crypto input uses aggregate value and cost basis with an approximate
+opening gains-tax reserve when included in the plan. It does not classify lots,
+check licences, prepare tax forms or track eligible losses. Its estimate may
+therefore differ from the actual tax on a sale. Do not enter the same assets in
+both Crypto and Investment account.
+
+When crypto will fund a purchase, reconcile the actual net proceeds and reserve
+the tax before committing to spending. See
+[funding a down payment](property-purchase.md#funding-the-down-payment-from-crypto).
+Timing, liquidity, costs and market exposure all matter; these rules alone do
+not establish that buying, holding or selling crypto is the right decision.

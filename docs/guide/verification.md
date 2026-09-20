@@ -77,6 +77,21 @@ company reporting and personal table 6.4 (updated 20 February 2025).
 built pages; no engine changes. **Limits:** rental comparisons, filing corrections,
 specific capital procedures, shareholder loans and cross-border cases remain open.
 
+### Crypto eligibility and reporting
+
+**Status:** checked, limited scope. **Checked:** 20 September 2026.
+**Effective date:** 1 January 2025 for the qualifying financial-asset change.
+The [crypto guide](crypto.md) distinguishes qualifying acquisitions from other
+property, and asset eligibility from investment-account compliance.
+
+**Primary sources:** [EMTA Crypto-assets](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/crypto-assets),
+MiCA and non-MiCA transaction sections; [EMTA investment accounts](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account),
+“How to check” and “How are taxable gains calculated”.
+**Affected:** crypto, investment-account and house-purchase guides; no engine changes.
+**Limits:** actual licences, historic lots, self-custody migrations and specialist
+income types are not individually verified. The simulator's aggregate crypto
+reserve is not a legal eligibility or transaction-tax calculation.
+
 ## Model assumptions and known limits
 
 - Investment-account tax is reserved immediately when money leaves the wrapper. This is a cash-planning convention, not the statutory tax-payment deadline.
@@ -102,7 +117,7 @@ remain useful leads, but their presence is not a completed cross-guide audit.
 | Pension contributions and payouts | Deduction scope, access dates, duration requirements, withholding and exceptions; reconcile every guide statement | Pension guides, `src/rates.js`, pension projections |
 | State pension and healthcare | Service evidence, future cohort ages, minimum-contribution exceptions and actual coverage routes | Pension eligibility and healthcare costs |
 | OÜ investing | Rental-specific taxation, historic filing corrections and actual capital repayment procedures; core principal/profit example checked above | Company-versus-personal comparison |
-| Crypto and foreign accounts | Acquisition dates, provider licences, eligible assets versus eligible accounts, losses and reporting | Tax and account guidance; crypto approximation |
+| Crypto and foreign accounts | Actual provider licences, historic lots, migrations and foreign-account arrangements; general crypto distinctions checked above | Tax and account guidance; crypto approximation |
 | Housing and family benefits | Lending constraints, guarantees, repayment terms, property taxes and benefit eligibility | Housing guidance and household inputs |
 | Cross-border and ownership | Residency changes, treaties, gifts, marital property and inheritance | Account ownership and relocation guidance |
 | Protection schemes | Eligible institutions, deposits, investment claims, temporary balances and exclusions | Cash and custody guidance |

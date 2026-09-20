@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Crypto — Estonian FIRE Simulator</title>
-<meta name="description" content="Worth knowing precisely, because the rules are unusually unforgiving and easy to get wrong.">
+<meta name="description" content="Tax treatment depends on acquisition history and the account arrangement, not just the coin or where it is held today. Do not use a blanket no-loss-offset ">
 <meta name="theme-color" content="#f6f8fb">
 <script>
 (function () {
@@ -78,71 +78,61 @@
   <div class="wrap">
     <section class="doc">
       <h1 class="doc-title">Crypto</h1>
-<p>Worth knowing precisely, because the rules are unusually unforgiving and easy to get wrong.</p>
-<blockquote>
-<p>🟢 <strong>Changed from 1 January 2025:</strong> qualifying crypto acquired through a MiCA-authorised service provider can be treated as a financial asset. If bought with funds from a declared investment account, it can use normal investment-account deferral. Provider authorisation and the acquisition route must be checked for the actual transaction.</p>
-</blockquote>
+<p>Tax treatment depends on acquisition history and the account arrangement, not
+just the coin or where it is held today. Do not use a blanket no-loss-offset rule
+for every holding.</p>
+<h2 id="acquisition-and-reporting">Acquisition and reporting</h2>
+<p>From <strong>1 January 2025</strong>, qualifying crypto acquired through a MiCA-authorised
+provider or issuer can receive financial-asset treatment. Check authorisation
+at acquisition, not just today.</p>
 <div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
-<th></th>
-<th>Treatment</th>
+<th>Outside the investment-account system</th>
+<th>Ordinary reporting</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Investment account eligible?</td>
-<td><strong>Yes, conditionally</strong> — must be acquired via a <strong>MiCA-licensed</strong> provider with IK funds</td>
+<td>Qualifying MiCA acquisitions</td>
+<td>Tables 6.1 / 8.2; eligible losses can offset gains, including other financial-asset gains, subject to the rules</td>
 </tr>
 <tr>
-<td>Tax on disposal (outside an IK)</td>
-<td><strong>22%</strong> on the gain</td>
-</tr>
-<tr>
-<td>What counts as a disposal</td>
-<td>Selling to EUR, <strong>swapping one coin for another</strong>, and spending it</td>
-</tr>
-<tr>
-<td><strong>Loss offset</strong></td>
-<td><strong>Conditional.</strong> Allowed for qualifying crypto transactions through a MiCA-authorised provider; not allowed under the older "other property" treatment</td>
-</tr>
-<tr>
-<td>Gain on a swap</td>
-<td>Market value received <strong>minus acquisition cost</strong> of what you gave up</td>
-</tr>
-<tr>
-<td>Mining</td>
-<td><strong>Business income</strong>, Form E</td>
-</tr>
-<tr>
-<td>Staking</td>
-<td>Ordinary income at market value on the date received</td>
-</tr>
-<tr>
-<td>Reporting</td>
-<td>Table 6.3 (Estonian) / 8.3 (foreign platforms), or <strong>6.5 if inside an IK</strong></td>
-</tr>
-<tr>
-<td>Long-term holding relief</td>
-<td>None</td>
-</tr>
-<tr>
-<td>Provider constraint</td>
-<td>Verify that the provider was MiCA-authorised on the acquisition date. The simulator does not infer this from the custodian name</td>
+<td>Non-qualifying acquisitions</td>
+<td>Tables 6.3 / 8.3; profitable disposals are taxed without offsetting losing disposals</td>
 </tr>
 </tbody>
 </table></div>
-<p><strong>The no-loss-offset rule still applies to non-qualifying holdings.</strong> For crypto remaining under the older “other property” treatment, a losing disposal cannot reduce a gain. Qualifying MiCA-provider transactions receive financial-asset treatment instead. Keep the provider authorisation and acquisition evidence: the distinction is transaction-specific.</p>
-<p><strong>The catch for coins bought before the change.</strong> The new eligibility applies to crypto <em>acquired</em> through a licensed provider using investment-account money. <strong>Self-custodied coins bought outside that route stay under the old regime</strong> — 22% on every disposal, no loss offset. Coins in a hardware wallet cannot be moved into an investment account without being sold first, and that sale is itself the taxable event the account is meant to defer. So the change improves the tax treatment of future purchases only. It does nothing for coins bought earlier.</p>
-<p><strong>Consequences for planning:</strong></p>
-<ul>
-<li>Self-custodied crypto bought outside the regime stays the <strong>least tax-efficient</strong> holding available, and the hardest to restructure</li>
-<li><strong>Every swap is a taxable event.</strong> Rebalancing between coins costs real money in a way that rebalancing inside an IK does not</li>
-<li>There's <strong>no tax reason to delay diversifying out.</strong> No holding-period relief exists, so the decision is purely about your market view, not tax timing</li>
-<li>Reconstruct your <strong>cost basis now</strong>, while records are still retrievable. Doing it years later, after exchanges have shut down or purged history, is genuinely painful</li>
-<li>If you buy more crypto in future, <strong>route it through the IK via a MiCA-licensed provider</strong> — same asset, materially better tax treatment</li>
-<li>If crypto is funding the house deposit, see <a href="property.html#funding-the-down-payment-from-crypto">property-purchase.md</a></li>
-</ul>
+<p>Sales, swaps and spending can realise gains. Transfers between your own wallets
+do not themselves generate income. Retain dates, EUR acquisition costs, fees and
+provider evidence. A later licence does not establish authorisation at purchase.</p>
+<p>Source checked <strong>20 September 2026</strong>: <a href="https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/crypto-assets">EMTA — Crypto-assets</a>,
+sections on transactions with and without MiCA authorisation. This is a summary,
+not a completed tax return. Mining, staking, gifts and unusual acquisition routes
+need separate review; this guide does not establish their individual treatment.</p>
+<h2 id="investment-account-eligibility-is-a-separate-question">Investment-account eligibility is a separate question</h2>
+<p>An eligible asset is not automatically inside an investment account. The
+funding and receipt rules must also be satisfied. A crypto platform account
+cannot itself be declared as the investment account, even when assets acquired
+through that provider qualify. See <a href="investment-account.html">the investment-account guide</a>.</p>
+<p>Source: <a href="https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account">EMTA — Securities and investment account</a>,
+“How to check” and “How are taxable gains calculated”, checked 20 September 2026.</p>
+<p>Do not assume moving existing coins to a new wallet or platform establishes
+eligibility. The treatment of a particular migration, self-custody arrangement
+or historic lot remains <strong>unverified here</strong>. Obtain transaction-specific advice
+before selling solely to restructure ownership. The previous categorical claim
+that all hardware-wallet holdings must first be sold was not sufficiently scoped.</p>
+<h2 id="what-the-simulator-doesand-does-not-do">What the simulator does—and does not do</h2>
+<p>The separate Crypto input uses aggregate value and cost basis with an approximate
+opening gains-tax reserve when included in the plan. It does not classify lots,
+check licences, prepare tax forms or track eligible losses. Its estimate may
+therefore differ from the actual tax on a sale. Do not enter the same assets in
+both Crypto and Investment account.</p>
+<p>When crypto will fund a purchase, reconcile the actual net proceeds and reserve
+the tax before committing to spending. See
+<a href="property.html#funding-the-down-payment-from-crypto">funding a down payment</a>.
+Timing, liquidity, costs and market exposure all matter; these rules alone do
+not establish that buying, holding or selling crypto is the right decision.</p>
       <nav class="pager"><a class="prev" href="health-insurance.html">← Health insurance</a><a class="next" href="real-estate.html">Property & rental income →</a></nav>
     </section>
   </div>

@@ -124,18 +124,16 @@ Estonian banks price the margin mainly on LTV, income stability, DSTI and negoti
 
 ## Funding the down payment from crypto
 
-If any of it comes from crypto, plan this deliberately — Estonia treats crypto harshly:
-
-- Every disposal is taxable at **22% on the gain**
-- **Losses cannot offset gains.** Sell one coin at a profit and another at a loss in the same year, and you pay full tax on the gain with no relief for the loss
-- You need per-transaction cost basis in EUR
+If any of it comes from crypto, establish the treatment of the actual holdings
+before budgeting. Qualifying MiCA acquisitions and investment-account holdings
+are not interchangeable with non-qualifying crypto. See the sourced
+[crypto guidance](crypto.md) for the loss-offset and reporting distinctions.
 
 **Practical implications:**
 
-1. **Compute the tax before committing to a purchase price.** As an illustration, €60k of crypto with a €20k cost basis can create about €8,800 of tax on sale — leaving roughly €51k rather than €60k for the purchase.
-2. **The tax bill lands the following year.** Sell in 2026, **declare by 30 April 2027** and **pay by 1 October 2027** ✅. Note the payment date is the later one — and anyone declaring capital gains or foreign income settles on that October track rather than the March refund wave. Don't spend that money on the house.
-3. **Splitting the sale across two calendar years defers half the bill** but doesn't reduce it — Estonia has no progressive brackets on this, so there's no rate arbitrage, only timing.
-4. **There's no tax reason to hold crypto longer.** No long-term holding relief exists in Estonia. If you'd diversify out of crypto anyway, the house purchase is a natural, honest occasion to do it.
+1. **Compute net proceeds before committing.** For a single taxable sale outside an investment account, €60,000 proceeds minus €20,000 basis gives €40,000 gain. At an assumed 22% rate, with no fees, deductible losses or other relief, reserve €8,800 and budget €51,200. This is a conditional illustration, not the tax on every crypto sale.
+2. **Keep the tax reserve separate.** Check the applicable declaration and payment deadlines with EMTA; this example does not establish them. The simulator reserves estimated tax immediately, not on the statutory payment date.
+3. **Check transaction history and timing.** Do not assume splitting sales has no effect on the final bill, or that wallet location determines eligibility. The simulator's aggregate crypto estimate is not a transaction-level calculation.
 
 ## What this does to the FIRE plan
 

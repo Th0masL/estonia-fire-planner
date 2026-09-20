@@ -357,6 +357,27 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
 
 // Public evidence must distinguish checked claims from incomplete research.
 {
+  const crypto = read('guide/crypto.html');
+  const account = read('guide/investment-account.html');
+  for (const [label, html] of [['crypto', crypto], ['investment account', account]]) {
+    ok(html.includes('1 January 2025'), `${label} uses the crypto eligibility effective date`);
+  }
+  for (const table of ['6.1 / 8.2', '6.3 / 8.3']) {
+    ok(crypto.includes(table), `crypto distinguishes reporting tables ${table}`);
+  }
+  ok(crypto.includes('not a completed tax return'), 'crypto guidance limits its scope');
+  ok(crypto.includes('does not classify lots'), 'crypto guidance discloses model limits');
+  ok(!read('guide/property.html').includes('Losses cannot offset gains'), 'house guide does not assert universal no-loss-offset');
+  const property = read('guide/property.html');
+  const proceeds = 60000, basis = 20000, assumedRate = 0.22;
+  const reserve = (proceeds - basis) * assumedRate;
+  for (const amount of [reserve, proceeds - reserve]) {
+    ok(property.includes(`€${amount.toLocaleString('en-IE')}`), 'house crypto illustration reconciles tax and net proceeds');
+  }
+  ok(property.includes('no fees, deductible losses or other relief'), 'house crypto example keeps its tax assumptions explicit');
+}
+
+{
   const company = read('guide/company.html');
   const principal = 50000, assets = 100000, rate = 0.22;
   const netProfit = (assets - principal) * (1 - rate);
