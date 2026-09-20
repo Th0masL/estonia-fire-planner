@@ -184,8 +184,8 @@ export const RATES = {
     //   - RaKS §5(4)(4), for a dependent spouse or registered partner within
     //     five years of pension age, is still in force (RT I, 06.07.2023, 6).
     // The second needs no children, but does need the supporting spouse to be
-    // an insured person - so it lapses the moment they stop working too, which
-    // is exactly when a FIRE household would want it.
+    // an insured person. Stopping work is not itself the coverage end date;
+    // confirm the supporting person's status and the dependant's eligibility.
     dependentSpouseChildrenRouteAbolished: '2026-01-31',
     dependentSpouseNearPensionYears: 5,
     ownRightRoutes: ['parental benefit', 'raising a child under 3', 'large family allowance'],

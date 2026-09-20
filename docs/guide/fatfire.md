@@ -59,7 +59,7 @@ Common levers, whose ranking depends on the household:
 In an illustrative single-earner household, if the second adult begins earning **€2,000/month net**, four things may happen simultaneously:
 
 - Household saving capacity rises by **€24,000 a year** before any associated costs
-- **Health insurance is covered.** That removes {{healthInsurance.voluntaryMonthly|money12}} a year of cost, and about €93,000 from the target
+- **Check health coverage separately.** Qualifying work may provide coverage, but the saving depends on actual eligibility and the uncovered period, not a universal €93,000 target reduction. See the [health-insurance guide](health-insurance.md).
 - Another Pillar III deduction may become usable, subject to that person's taxable income ([Pillar III](pensions.md))
 - **Pillar II starts accruing** for them again
 

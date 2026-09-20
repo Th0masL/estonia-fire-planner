@@ -19,6 +19,31 @@ neither the website nor an offline copy automatically updates legislation.
 
 ## Checked rules
 
+### Healthcare routes and finite coverage gaps
+
+**Checked:** 20 September 2026. Limited route review, not individual entitlement.
+
+- [Tervisekassa employment guidance](https://tervisekassa.ee/en/employee-employment-contract), updated 17 April 2026: contract conditions, waiting period and post-employment coverage; [board/service-contract guidance](https://tervisekassa.ee/en/employee-contract-under-law-obligations-member-management-or-controlling-body-legal-person), updated 18 February 2026: monthly social-tax threshold and declaration timing.
+- [SKA child-related coverage](https://sotsiaalkindlustusamet.ee/ravikindlustus), updated 14 April 2026: domestic child-related dependent-spouse route ended January 2026; qualifying parent routes remain. [Children's route](https://tervisekassa.ee/en/children-age-19) requires residence eligibility and registration.
+- [Near-pension-age dependants](https://tervisekassa.ee/kindlustatud-isiku-ulalpeetav-abikaasa-voi-registreeritud-elukaaslane-kellel-vanaduspensionieani), updated 20 April 2026, and [cross-border family coverage](https://tervisekassa.ee/en/worker-and-family-members-living-different-countries) are separate routes, not abolished wholesale.
+- [Ministry unemployment guidance](https://www.mkm.ee/too-ja-vordsed-voimalused/toohoive/huvitised-ja-toetused), updated 6 January 2026: registered unemployed people can be insured without unemployment benefit. Removed the incorrect claim that registration confers nothing.
+- [Voluntary contract overview](https://tervisekassa.ee/en/people/health-insurance/voluntary-health-insurance), updated 1 July 2026: dated premium and contract conditions. The linked full standard terms were not reviewed.
+- [State-pension beneficiaries](https://tervisekassa.ee/en/beneficiaries-estonian-national-pension): SKA submits coverage data; pension-pot access alone is not this route.
+
+**Affected:** healthcare guide, duplicate household/strategy/FatFIRE wording and
+a misleading source-code comment. Action advice now treats partner coverage as
+unconfirmed and retains the gap warning; it no longer denies coverage without
+unemployment benefit. No rate or projection changes. Removed fixed
+early-pension multipliers and unsupported optimal-claiming advice, and the
+perpetual-capital shortcut for temporary healthcare gaps.
+
+**Open:** exact unemployment waiting periods/exclusions, near-pension boundary
+wording and supporting-status eligibility, actual family/S1 entitlement, contract
+exceptions and future premiums. Current consolidated legislation could not be
+read through the text browser; the review relies on the named official agency
+guidance, not a completed statutory audit. Family-benefit formulas, education
+costs and other household recommendations remain the next review slice.
+
 ### Strategy checklist reconciliation
 
 **Checked:** 20 September 2026. The strategy guide now presents conditional

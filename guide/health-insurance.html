@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Health insurance — the Estonian FIRE trap — Estonian FIRE Simulator</title>
-<meta name="description" content="This is the thing that breaks naive Estonian FIRE plans.">
+<title>Health insurance when leaving work — Estonian FIRE Simulator</title>
+<meta name="description" content="Leaving work can change health coverage, but living from investments does not by itself prove that someone is uninsured. Check each person's actual coverag">
 <meta name="theme-color" content="#f6f8fb">
 <script>
 (function () {
@@ -77,239 +77,125 @@
 <main id="main" class="main">
   <div class="wrap">
     <section class="doc">
-      <h1 class="doc-title">Health insurance — the Estonian FIRE trap</h1>
-<p><strong>This is the thing that breaks naive Estonian FIRE plans.</strong></p>
-<p>Estonian health insurance (<code>ravikindlustus</code>) is not a residency right. It's tied to <strong>social tax being paid on your behalf</strong>. Employees are covered; people living off a portfolio are <strong>not</strong>.</p>
-<p><strong>Dividends do not carry social tax</strong> — which is tax-efficient and exactly why they leave you uninsured. The efficiency and the coverage are in direct conflict.</p>
+      <h1 class="doc-title">Health insurance when leaving work</h1>
+<p>Leaving work can change health coverage, but living from investments does not
+by itself prove that someone is uninsured. Check each person's actual coverage
+basis and dates in the Health Portal or with Tervisekassa before changing the plan.</p>
 <blockquote>
-<p><strong>The dependent-spouse route was abolished on 1 January 2026.</strong> The state no longer guarantees coverage for dependent spouses raising children; all such coverage ended by <strong>31 January 2026</strong>. Anyone who was relying on it <strong>has already lost cover</strong> — see <a href="household.html#health-insurance--the-family-exit-closed-in-2026">household.md</a>.</p>
+<p><strong>Limited review — 20 September 2026:</strong> the sources below support specific
+coverage routes, not personal entitlement. Future premiums, cross-border cases
+and individual coverage decisions remain unverified. The calculator does not
+determine legal eligibility.</p>
 </blockquote>
-<p>Options, with verified 2026 costs:</p>
+<h2 id="work-based-coverage-is-conditional">Work-based coverage is conditional</h2>
+<p><a href="https://tervisekassa.ee/en/employee-employment-contract">Tervisekassa's employee guidance</a>
+requires an employment contract longer than one month or indefinite, with employer
+social tax. Previously uninsured employees have a 14-day waiting period; coverage
+normally ends two months after registered employment termination. “Any part-time
+job immediately provides cover” is not a safe assumption.</p>
+<p><a href="https://tervisekassa.ee/en/employee-contract-under-law-obligations-member-management-or-controlling-body-legal-person">Board remuneration and service contracts</a>
+have a different declaration-based route: monthly social tax from one or more
+payers must meet the minimum (€292.38 in 2026). Cover starts after the TSD
+submission deadline, not simply on the day a fee is paid. Confirm payroll
+obligations and registration; the simulator's salary input does not verify them.</p>
+<p>An OÜ's total payroll outlay is not the same as an insurance premium: some is
+remuneration received personally. The former comparison of the whole company
+outlay with a voluntary premium did not establish which route costs less overall.
+FIE and other work arrangements require their own eligibility and cost review.</p>
+<h2 id="family-routes-distinguish-the-different-bases">Family routes: distinguish the different bases</h2>
+<p><a href="https://sotsiaalkindlustusamet.ee/ravikindlustus">SKA's child-related coverage guidance</a>
+states that the domestic dependent-spouse route tied to raising children ended
+from January 2026, with existing cover ending by 31 January. That does not mean
+every affected person lost all possible coverage.</p>
+<p>Other child-related routes remain: maternity/shared-benefit recipients and
+qualifying parents of under-threes; non-working recipients of large-family
+allowance for 3–6 children with at least one under eight; and recipients for
+seven or more children. These routes insure one parent, not automatically both.
+Changing the benefit recipient or parental-leave arrangement can change who is
+covered. Ask SKA to confirm the recipient and dates.</p>
+<p><a href="https://tervisekassa.ee/en/children-age-19">Children under 19</a> have a separate
+route, subject to Estonian residence or residence-permit/right conditions and
+registration. Their parents need not be insured, but “unconditional worldwide
+coverage until 19” would be incorrect.</p>
+<h3 id="near-pension-age-dependants-and-cross-border-cases">Near-pension-age dependants and cross-border cases</h3>
+<p>The <a href="https://tervisekassa.ee/kindlustatud-isiku-ulalpeetav-abikaasa-voi-registreeritud-elukaaslane-kellel-vanaduspensionieani">near-pension-age dependant route</a>
+still exists for a qualifying dependent spouse/registered partner near state
+pension age. An application and an insured supporting partner are required.
+Do not equate the supporting partner's last workday with immediate loss of their
+insured status. The guidance uses both “up to five” and “less than five” years;
+confirm the exact boundary and applicable supporting status with Tervisekassa.</p>
+<p><a href="https://tervisekassa.ee/en/worker-and-family-members-living-different-countries">Cross-border family coverage</a>
+can involve an S1 certificate and the competent foreign institution. The domestic
+2026 change is not proof that every cross-border dependent-spouse route ended.
+No individual S1 entitlement is established here.</p>
+<h2 id="unemployment-registration-can-provide-coverage">Unemployment registration can provide coverage</h2>
+<p>The earlier statement that registration provides no insurance was wrong.
+The <a href="https://www.mkm.ee/too-ja-vordsed-voimalused/toohoive/huvitised-ja-toetused">Ministry's 2026 guidance</a>
+explicitly includes registered unemployed people who do not qualify for
+unemployment insurance benefit. Benefit entitlement and health coverage are
+different questions; the same source describes the replacement of the old
+unemployment allowance with a basic-rate insurance benefit in 2026.</p>
+<p>This is not a permanent retirement-coverage promise. Confirm registration
+eligibility, job-search obligations, availability for work and actual coverage
+dates with Töötukassa. This review does not establish the exact waiting period
+or every exclusion for a particular applicant; do not enter a lifelong coverage
+date based only on temporary registration.</p>
+<h2 id="voluntary-insurance-dated-price-and-contract-limits">Voluntary insurance: dated price and contract limits</h2>
+<p><a href="https://tervisekassa.ee/en/people/health-insurance/voluntary-health-insurance">Tervisekassa's voluntary-contract page</a>
+(updated 1 July 2026) lists <strong>€272/month</strong>
+and <strong>€3,264/year</strong>.</p>
 <div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
-<th>Route</th>
-<th>Mechanism</th>
-<th>Cost</th>
-<th>Notes</th>
+<th>Check</th>
+<th>Published conditions</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td><strong>Employment</strong></td>
-<td>Any job, incl. part-time</td>
-<td>€0 — employer pays</td>
-<td>BaristaFIRE. Simplest route by far</td>
-</tr>
-<tr>
-<td><strong>Voluntary Tervisekassa contract</strong></td>
-<td>Direct contract with the health fund</td>
-<td><strong>€272/mo · €3,264/yr</strong> (from 1 Jul 2026)</td>
-<td><strong>Now the default fallback</strong> — see below</td>
-</tr>
-<tr>
-<td><strong>Parent of a child under 3</strong></td>
-<td>Own right, not dependant</td>
-<td>€0</td>
-<td>Only <strong>one parent per family</strong>. Expires at the child's 3rd birthday</td>
-</tr>
-<tr>
-<td><strong>Receiving parental benefit</strong></td>
-<td>Own right</td>
-<td>€0</td>
-<td>Covers the benefit period</td>
-</tr>
-<tr>
-<td><strong>Large family</strong></td>
-<td>Non-working large-family allowance, 3–6 children under 19, ≥1 under 8</td>
-<td>€0</td>
-<td>One parent only</td>
-</tr>
-<tr>
-<td><strong>Board fee from your own OÜ</strong></td>
-<td>Fee ≥ <strong>€886/mo gross</strong> triggers the €292.38 minimum social tax</td>
-<td><strong>€1,178/mo total company cost</strong></td>
-<td>Also accrues Pillar I/II. Expensive purely as insurance</td>
-</tr>
-<tr>
-<td><strong>FIE</strong> (sole trader)</td>
-<td>Self-employed registration</td>
-<td>Similar minimum obligation</td>
-<td>More admin, rarely better than an OÜ</td>
-</tr>
-<tr>
-<td>~~Dependent spouse~~</td>
-<td>~~Via insured spouse~~</td>
-<td>—</td>
-<td><strong>Abolished 1 Jan 2026</strong></td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>The voluntary contract got much better in 2026, and that partly offsets the loss above.</strong> It used to require 12 months of prior insured status within the last 24. That requirement is <strong>gone</strong> — the only condition now is permanent residence in Estonia. Terms: 1-year fixed contract via Terviseportaal, coverage starts one month after signing, covers everything <strong>except sick-leave benefits</strong>, refunded pro-rata if you leave early.</p>
-<p><strong>Budget €3,264/year per uninsured adult.</strong> At a 3.5% SWR that's <strong>~€93,000 of extra FI number per person</strong> — €187,000 for a couple with no earned income. Most FIRE spreadsheets omit this entirely.</p>
-<p><strong>Children remain covered unconditionally</strong> from birth to 19, regardless of either parent's status. That part is unchanged and confirmed.</p>
-<p><strong>Practical conclusion:</strong> the voluntary contract at €3,264/yr is cheaper and far simpler than running an OÜ purely for coverage — a board fee big enough to trigger the minimum social tax costs the company €1,178/month. Keep the OÜ argument for cases where the company earns real income; don't build one just to stay insured.</p>
-<hr />
-<h2 id="the-five-year-gap-and-a-lever-that-might-close-it">The five-year gap, and a lever that might close it</h2>
-<p>Pillar access does not establish health coverage. Pension-based cover depends
-on receiving a <strong>state pension</strong>, not simply reaching an estimated age. The
-planner now budgets €272 a month per
-uncovered person until a user-confirmed ongoing coverage start. If no date is
-confirmed, premiums continue through the horizon and remain in the perpetual
-target. Selecting zero pension benefits does not cancel a confirmed health route.
-Older plans may therefore show higher targets; review coverage rather than
-assuming automatic entitlement. Temporary routes do not establish lifelong cover.
-See <a href="https://tervisekassa.ee/en/people/health-insurance/persons-equivalent-insured-persons">Tervisekassa's eligibility guidance</a>
-(checked 19 September 2026).</p>
-<p>There is a mechanism that may close it. <strong>RPKS §9¹</strong> allows the state pension
-itself to be taken up to five years early — the <em>paindlik vanaduspension</em>. Since
-cover follows receipt of a state pension rather than reaching a particular age,
-drawing it early should bring the free cover forward with it.</p>
-<p><strong>The catch is service.</strong> Each year of drawing early demands five more years of
-it — 20 years of service to draw one year early, 25 for two, and <strong>40 for the
-full five</strong>. That lands badly on exactly the people who would want it: a short
-career is the point of retiring early, and it is what disqualifies you here.
-Someone stopping at 45 with 20 years of service qualifies for one year, not five.</p>
-<p><strong>And the reduction is permanent.</strong> Sotsiaalkindlustusamet's forecast multipliers
-— they vary by birth date now, and are recalculated each January:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
-<thead>
-<tr>
-<th>Drawn</th>
-<th>Adjustment, for life</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>5 years early</td>
-<td>−22.98%</td>
-</tr>
-<tr>
-<td>3 years early</td>
-<td>−14.60%</td>
-</tr>
-<tr>
-<td>1 year early</td>
-<td>−5.14%</td>
-</tr>
-<tr>
-<td>1 year late</td>
-<td>+5.57%</td>
-</tr>
-<tr>
-<td>3 years late</td>
-<td>+18.35%</td>
-</tr>
-<tr>
-<td>5 years late</td>
-<td>+33.68%</td>
-</tr>
-</tbody>
-</table></div>
-<p>Note the asymmetry: <strong>deferring pays more than claiming early costs</strong>, at every
-matching year.</p>
-<p><strong>So the trade genuinely flips</strong>, and the simulator will tell you which side you
-are on. Modest spending makes it worth taking — the health saving is a large
-share of what you need, and one year early costs only 5%. Higher spending makes
-it worth skipping, because the reduction compounds against a bigger requirement
-while the €272 saving stays the same size. There is no general answer, which is
-why it is a setting rather than advice.</p>
-<p>One thing it does not require: <strong>you may keep working while drawing it.</strong> The
-2021 reform removed that restriction, and wages carry on adding to your accrual
-on top of the locked-in reduction.</p>
-<hr />
-<h2 id="the-routes-that-do-not-work-and-the-one-that-does">The routes that do not work, and the one that does</h2>
-<p>The obvious thought for an early retiree is to register as unemployed. It does
-not work, and the reason is worth knowing precisely so you do not plan around it.</p>
-<p><strong>Registration confers nothing.</strong> Ravikindlustuse seadus grants cover to a person
-<em>receiving</em> <code>töötuskindlustushüvitis</code> — not to a person registered as unemployed.
-There is no "registered jobseeker" category in RaKS §5 at all.</p>
-<p><strong>And the benefit is out of reach anyway.</strong> It requires <strong>12 months of
-unemployment-insurance contributions within the preceding 36</strong> — which someone
-who stopped working years ago does not have. The means-tested <code>töötutoetus</code>
-fails on a similar work-history test <em>and</em> is not a coverage trigger under RaKS
-regardless. Both run for months, not years: 180 to 360 days. Neither could bridge
-a decade even for someone who qualified.</p>
-<p>Registration itself has no wealth test and is realistically available. It simply
-buys nothing.</p>
-<p><strong>So the voluntary contract is the route</strong>, and its terms matter for planning:</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
-<thead>
-<tr>
-<th></th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Cost</td>
-<td>€272/month — RaKS §24(3): 0.13 × the last published average gross wage, reset annually</td>
-</tr>
-<tr>
-<td>Cover starts</td>
-<td><strong>one month after signing</strong> — a gap cannot be closed retroactively</td>
-</tr>
-<tr>
-<td>Minimum term</td>
-<td><strong>one year</strong> — it cannot be bought for a few weeks</td>
-</tr>
-<tr>
-<td>Ends automatically</td>
-<td>if employment resumes, or if you move abroad</td>
-</tr>
 <tr>
 <td>Eligibility</td>
-<td>permanent residency, since the 2026 liberalisation removed the insurance-history test</td>
+<td>Estonian residence in the population register and no other eligible coverage basis; portal application also opens near existing cover's expiry</td>
+</tr>
+<tr>
+<td>Start</td>
+<td>Normally one month after contracting; signing while existing insurance remains valid can preserve continuity</td>
+</tr>
+<tr>
+<td>Term</td>
+<td>One year; monthly instalments do not make it a monthly cancellable contract</td>
+</tr>
+<tr>
+<td>Scope</td>
+<td>Ordinary insured benefits, excluding temporary-incapacity-for-work benefits; additional fees and co-payments remain</td>
+</tr>
+<tr>
+<td>End/refund</td>
+<td>Specified termination grounds include other coverage, moving abroad, non-payment, expiry or death; unused advance premiums are refunded by day</td>
 </tr>
 </tbody>
 </table></div>
-<h3 id="one-exception-that-does-still-exist">One exception that does still exist</h3>
-<p>There are <strong>two</strong> provisions people call "the dependent spouse route", and
-conflating them is the source of a great deal of confusion — including in earlier
-drafts of this guide.</p>
-<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
-<thead>
-<tr>
-<th></th>
-<th>Children-based route</th>
-<th>RaKS §5(4)(4)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Who</td>
-<td>a spouse raising young children</td>
-<td>a spouse <strong>within five years of pension age</strong></td>
-</tr>
-<tr>
-<td>Children needed</td>
-<td>yes</td>
-<td><strong>no</strong></td>
-</tr>
-<tr>
-<td>Status</td>
-<td><strong>abolished</strong>, cover ended 31 January 2026</td>
-<td><strong>in force</strong></td>
-</tr>
-</tbody>
-</table></div>
-<p>Tervisekassa's announcement that dependent-spouse cover ended in January 2026
-describes the first. The second — no children required, keyed purely on being
-within five years of state pension age and married to or in a registered
-partnership with an insured person — was not repealed and remains good law.</p>
-<p><strong>Two conditions, and the second is the catch.</strong> The supporting partner must
-themselves be an <em>insured person</em>, which in practice means still working and
-paying social tax. So this closes the gap for a household where one person has
-stopped and the other has not — and stops the moment the second one stops too.
-For a couple retiring together it is worth nothing; for a couple retiring years
-apart, it can be worth €272 a month for up
-to five years.</p>
-<p><strong>It is not automatic.</strong> Unlike the children-based route, which was filed through
-Sotsiaalkindlustusamet, this one puts the obligation on the person themselves:
-they must submit the documents to Tervisekassa to have the entry made. Cover ends
-automatically if the conditions stop being met — the marriage ends, or the
-supporting partner's own insured status lapses.</p>
-<hr />
+<p>The published eligibility list no longer requires prior insurance history.
+Premiums change annually. Read the actual contract before signing; this review
+does not establish an unrestricted right to cancel or certify all standard terms.</p>
+<h2 id="pension-access-and-the-simulator">Pension access and the simulator</h2>
+<p><a href="https://tervisekassa.ee/en/beneficiaries-estonian-national-pension">State-pension beneficiaries</a>
+have a coverage route registered using SKA data. Accessing Pillar II/III funds,
+or reaching an estimated pension age, is not the same as receiving a state pension.
+Early state-pension entitlement and the permanent pension adjustment need a
+personal SKA assessment. The former fixed multiplier table and claims that low
+spending makes early claiming worthwhile were not a verified optimisation.</p>
+<p>The planner budgets the configured premium per uncovered person until a
+<strong>user-confirmed ongoing coverage start</strong>. Without that date, premiums continue
+through the horizon and remain in the perpetual target. Selecting zero pension
+benefits does not cancel confirmed healthcare coverage. Temporary family or
+unemployment routes must not be entered as lifelong coverage.</p>
+<p>A temporary gap is not a perpetual expense: dividing today's annual premium by
+a withdrawal rate does not establish the extra FI capital required. Use the
+actual uncovered period, allow separately for co-payments, and test future
+premium changes. The engine does not model the contract waiting period,
+annual payment commitment or every temporary coverage interval.</p>
+<p>See <a href="pensions.html#healthcare-and-work-cessation-are-separate">pension access and healthcare</a>
+and the <a href="household.html#health-insurance--check-each-persons-route">household guide</a>.</p>
       <nav class="pager"><a class="prev" href="pensions.html">← Pension pillars</a><a class="next" href="crypto.html">Crypto →</a></nav>
     </section>
   </div>

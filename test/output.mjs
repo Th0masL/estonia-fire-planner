@@ -604,6 +604,21 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
   ok(levers.includes('id="9-geographic-arbitrage"'), 'strategy preserves existing geographic cross-reference');
 }
 
+{
+  const health = read('guide/health-insurance.html').replace(/\s+/g, ' ');
+  for (const phrase of ['Registration confers nothing', 'permanent residence in Estonia. Terms', '€187,000', '−22.98%', 'Simplest route by far', 'refunded pro-rata if you leave early']) {
+    ok(!health.includes(phrase), `health guide removes unsupported assurance: ${phrase}`);
+  }
+  for (const phrase of ['Unemployment registration can provide coverage', 'who do not qualify for unemployment insurance benefit', 'monthly cancellable contract', 'additional fees and co-payments remain', 'user-confirmed ongoing coverage start', 'exact waiting period', 'not a perpetual expense', 'S1 certificate']) {
+    ok(health.includes(phrase), `health guide retains distinction: ${phrase}`);
+  }
+  ok(health.includes(`€${(RATES.healthInsurance.voluntaryMonthly * 12).toLocaleString('en-IE')}/year`), 'health guide annual premium reconciles monthly rate');
+  const household = read('guide/household.html');
+  ok(household.includes('Partial review') && !household.includes('covered unconditionally'), 'household does not certify all benefits or unconditional coverage');
+  const anchor = 'health-insurance--check-each-persons-route';
+  ok(health.includes(`household.html#${anchor}`) && household.includes(`id="${anchor}"`), 'healthcare household cross-reference resolves');
+}
+
 console.log(`\n${checks} output and cross-engine checks`);
 if (failures.length) {
   console.log(`\n${failures.length} FAILED:`);

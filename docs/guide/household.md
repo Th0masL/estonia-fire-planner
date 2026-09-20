@@ -2,7 +2,10 @@
 
 Dependants and multiple adults change a FIRE plan in more ways than simply increasing spending. This chapter describes the rules and scenarios that households should model explicitly.
 
-> ✅ Figures in this document were verified against Sotsiaalkindlustusamet, Tervisekassa and EMTA in August 2026. Two things changed on 1 January 2026 and are reflected below: the **dependent-spouse health insurance route was abolished**, and the **parental benefit cap was cut** from 3× to 2× the average wage. The child-related income tax exemption was repealed earlier, in **2024**.
+> **Partial review — 20 September 2026:** healthcare cross-references have been
+> corrected. The remaining benefit amounts, formulas, education claims and
+> household recommendations below are still under review, not certified by this
+> notice. Confirm them before relying on them in a plan.
 
 ## The good news first
 
@@ -29,7 +32,7 @@ The Estonian state covers or subsidises several major child-related costs:
 
 - **Public school**: free, including school lunch
 - **Kindergarten** (`lasteaed`): heavily subsidised municipal fee plus food
-- **Healthcare**: children are **covered regardless of whether their parents are insured**, birth to 19 ✅
+- **Healthcare**: children have a separate residence-based eligibility route; see the healthcare section below.
 - **Higher education**: free in Estonian-language programmes
 - **Child allowance** (`lapsetoetus`) ✅: **€80/month** for the 1st and 2nd child, **€100** for the 3rd and each subsequent, until 19
 - **Large family allowance** ✅: **€450/month** for 3–6 children, €650 for 7+ — automatic, no application
@@ -37,27 +40,21 @@ The Estonian state covers or subsidises several major child-related costs:
 
 This matters for FIRE arithmetic: in many countries kids add €500–1,500/month of unavoidable cost. In Estonia the number is much smaller, and a big chunk of the remainder is discretionary.
 
-### Health insurance — the family exit closed in 2026
+### Health insurance — check each person's route
 
-**The dependent-spouse route was abolished on 1 January 2026**, with all remaining coverage ending by 31 January 2026. What applies now:
+The domestic child-related dependent-spouse route ended in January 2026, but
+other family routes remain. Confirm which parent is insured: changing benefit
+recipients or parental leave can change coverage. A child's third birthday does
+not prove that every other route has ended.
 
-1. **Children are covered unconditionally**, birth to 19, regardless of either parent's status ✅ — unchanged
-2. ~~A spouse raising a child under 8 insured as a dependant~~ — **abolished**
-3. A parent can still be covered **in their own right** — not as a dependant — if they are:
-   - **receiving parental benefit** (`vanemahüvitis`), or
-   - **raising a child under 3**, or
-   - receiving the non-working large-family allowance (3–6 children under 19, at least one under 8)
+Children have a separate residence-based route; near-pension-age dependants
+and cross-border S1 cases need distinct checks. See the
+[reviewed healthcare guide](health-insurance.md#family-routes-distinguish-the-different-bases)
+for the sources, conditions and unresolved personal questions.
 
-   Only **one parent per family** can use these.
-
-**What this means in practice:** once the youngest child turns 3 the own-right route closes, and the dependent-spouse route closed in January 2026. **A non-working adult in that position is most likely uninsured and may not know it** — worth checking rather than discovering it at a GP visit.
-
-**The fix is cheaper than it used to be.** The voluntary Tervisekassa contract was liberalised in 2026: the old requirement for 12 months of prior insured status is **gone**, and the only condition is permanent residence in Estonia. It costs **{{healthInsurance.voluntaryMonthly|money}}/month — {{healthInsurance.voluntaryMonthly|money12}}/year** (from 1 July 2026). One year, fixed term, covers everything except sick-leave benefits.
-
-**A new child may restore free coverage for one parent** — during parental benefit and then through the under-3 route. The exact period depends on dates and eligibility, after which the same gap can reopen.
-
-**Net effect on the plan:** budget **{{healthInsurance.voluntaryMonthly|money12}}/year per uninsured adult**. For a fully retired couple that's €6,528/year, or about **€187,000 of extra FI number** at a 3.5% SWR. It can be one of the larger FIRE line items and strengthens the case for at least one adult retaining qualifying earned income.
-
+Model the actual uncovered period and possible future premiums. Do not treat a
+temporary gap as a perpetual expense or assume that one working partner covers
+the other. Temporary coverage is not a confirmed lifelong healthcare start.
 ---
 
 ## What gets harder
@@ -68,7 +65,7 @@ One portfolio, one set of expenses, two people's preferences. Practical conseque
 
 - **Both partners have to actually want this.** A FIRE plan one partner is enthusiastic about and the other tolerates does not survive 15 years. This is the single most common failure mode, and no spreadsheet detects it
 - **Two incomes are a risk buffer**, not just more money — the probability of both incomes stopping at once is far lower than one
-- **"Retire early" rarely means both at once.** One partner stopping while the other keeps working is usually the first realistic milestone, and in Estonia it's also the health-insurance solution
+- **Compare different stopping dates.** One partner's continued employment does not automatically insure the other; confirm both people's coverage separately.
 
 ### Spending is not flat — model it in phases
 

@@ -252,23 +252,12 @@ for (const [i, input] of CASES.entries()) {
     ok(!plan.some((f) => f.id === 'health-insurance-gap'),
        `${tag}: no health-gap finding when everyone is covered or employed`);
   }
-  // ...and someone with neither a job nor a contract must always be told, unless
-  // RaKS 5(4)(4) covers them: within five years of pension age, through a
-  // partner who is still working.
-  const anyEmployed = input.persons.some((p) => p.income.grossMonthly > 0);
-  for (const [i, p] of input.persons.entries()) {
+  // A possible dependent-partner route must not suppress an unconfirmed-cover
+  // warning: these inputs do not establish legal eligibility or registration.
+  for (const p of input.persons) {
     if (p.healthInsurance || p.income.grossMonthly) continue;
-    const person = r.persons[i];
-    const toPension = person.pension.statePensionAge - person.ageNow;
-    const bySpouse = anyEmployed && toPension >= 0 &&
-      toPension <= RATES.healthInsurance.dependentSpouseNearPensionYears;
-    if (bySpouse) {
-      ok(!plan.some((f) => f.id === 'health-insurance-gap'),
-         `${tag}: ${p.name} not told to buy cover they already have`);
-    } else {
-      ok(plan.some((f) => f.id === 'health-insurance-gap'),
-         `${tag}: ${p.name} flagged as uninsured`);
-    }
+    ok(plan.some((f) => f.id === 'health-insurance-gap'),
+       `${tag}: ${p.name} has an unconfirmed-coverage warning`);
   }
 
   // 8. A refund can never exceed the tax actually paid.

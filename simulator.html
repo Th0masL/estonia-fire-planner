@@ -651,8 +651,8 @@ const RATES = {
     //   - RaKS §5(4)(4), for a dependent spouse or registered partner within
     //     five years of pension age, is still in force (RT I, 06.07.2023, 6).
     // The second needs no children, but does need the supporting spouse to be
-    // an insured person - so it lapses the moment they stop working too, which
-    // is exactly when a FIRE household would want it.
+    // an insured person. Stopping work is not itself the coverage end date;
+    // confirm the supporting person's status and the dependant's eligibility.
     dependentSpouseChildrenRouteAbolished: '2026-01-31',
     dependentSpouseNearPensionYears: 5,
     ownRightRoutes: ['parental benefit', 'raising a child under 3', 'large family allowance'],
@@ -2392,49 +2392,44 @@ function actionPlan(sim, input) {
 
   // ---------------------------------------------------------------- critical
 
-  // RaKS §5(4)(4): a dependent spouse within five years of pension age is
-  // covered through an insured partner, with no children required and nothing
-  // to buy. It needs the partner to still be working, so it helps before FI and
-  // never after it - but while it applies, telling someone to buy a contract
-  // would be telling them to pay for what they already have.
+  // Age and employment only identify a route to investigate. They do not prove
+  // marriage/registered partnership, dependency, insured status or approval.
   const someoneEmployed = people.some((p) => p.employed);
   for (const p of people) {
     const yearsToPension = p.pension.statePensionAge - p.ageNow;
-    const coveredBySpouse = someoneEmployed && !p.employed &&
+    const possibleSpouseRoute = someoneEmployed && !p.employed &&
       yearsToPension <= RATES.healthInsurance.dependentSpouseNearPensionYears &&
       yearsToPension >= 0;
-    if (coveredBySpouse && !p.healthInsurance) {
+    if (possibleSpouseRoute && !p.healthInsurance) {
       add({
         id: 'dependent-spouse-cover', severity: 'opportunity', link: 'health-insurance',
-        title: `${p.name || 'This person'} is covered through their partner`,
-        value: eur(RATES.healthInsurance.voluntaryMonthly) + '/month not needed',
+        title: `${p.name || 'This person'}: check dependent-partner coverage`,
+        value: 'Eligibility not confirmed',
         detail:
-          `Within five years of pension age, a dependent spouse or registered partner of an ` +
-          `insured person is covered by the state — RaKS §5(4)(4), still in force. No children ` +
-          `are required; the route that needed them was abolished in January 2026, which is a ` +
-          `different provision and the source of most confusion here. Nothing is deducted ` +
-          `automatically: the person has to file for it with Tervisekassa themselves.` +
-          `\n\nIt lasts only while the other partner is still working. Once both stop, ` +
-          `neither is insured and the voluntary contract is needed again — so this closes the ` +
-          `gap before FI, never after it.`,
+          `A near-pension-age dependent spouse or registered partner may qualify through an ` +
+          `insured supporting partner. These inputs do not establish legal partnership, ` +
+          `dependency, the applicable age boundary or the supporting person's insured status. ` +
+          `Apply to Tervisekassa and confirm the dates before removing any insurance budget. ` +
+          `Stopping work is not necessarily the date coverage ends. This possible route does ` +
+          `not suppress the unconfirmed-coverage warning or change the projection.`,
       });
     }
-    const insured = p.employed || p.healthInsurance || coveredBySpouse;
+    const insured = p.employed || p.healthInsurance;
     if (!insured) {
       add({
         id: 'health-insurance-gap', severity: 'critical', link: 'health-insurance',
         title: `${p.name || 'This person'} may have no health insurance`,
         value: eur(RATES.healthInsurance.voluntaryMonthly) + '/month',
         detail:
-          `Estonian health cover follows social tax, not residency. The route that ` +
-          `insured a non-working spouse raising a child was abolished on 1 January 2026. ` +
-          `Without employment, cover needs a voluntary Tervisekassa contract at ` +
-          `${eur(RATES.healthInsurance.voluntaryMonthly)}/month. Cover starts a month after ` +
-          `signing and the contract runs for at least a year, so a gap cannot be closed ` +
-          `retroactively or bridged for a few weeks.\n\nRegistration alone is not enough: the ` +
-          `health-insurance route follows receipt of an unemployment-insurance benefit. From ` +
-          `2026 the basic benefit generally needs 8 insured months in the preceding 36; the ` +
-          `income-based benefit needs 12. Eligibility must be checked with Töötukassa.`,
+          `The plan does not confirm current health coverage. Check employment, family, ` +
+          `state-pension and other eligible routes with Tervisekassa. Eligible registered ` +
+          `unemployed people can have insurance without receiving unemployment benefit; ` +
+          `confirm registration conditions and coverage dates with Töötukassa. ` +
+          `If no other route applies, the published voluntary premium is ` +
+          `${eur(RATES.healthInsurance.voluntaryMonthly)}/month. The contract lasts one year, ` +
+          `normally starts after one month and has specified termination conditions; signing ` +
+          `while existing cover is valid can preserve continuity. Co-payments remain. ` +
+          `Temporary coverage is not a confirmed lifelong coverage start.`,
       });
     }
   }

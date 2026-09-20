@@ -94,7 +94,7 @@ automatically supplies coverage. Use the actual premium and uncovered period in
 the plan, rather than capitalising a temporary premium as a permanent expense.
 
 The [health-insurance guide](health-insurance.md) and [household guide](household.md)
-provide research leads, but their remaining eligibility and date claims are still
+distinguish reviewed coverage routes from remaining household claims still
 under review. This checklist does not establish entitlement or a universal
 healthcare cost for a retired couple.
 

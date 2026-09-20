@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { simulate } from '../src/calc.js';
 import { exampleState, sanitise, encodeState, decodeState } from '../src/state.js';
 import { RATES } from '../src/rates.js';
+import { actionPlan } from '../src/rules.js';
 
 const plan = exampleState();
 plan.currentYear = 2026;
@@ -51,4 +52,21 @@ for (const invalid of ['', 'invalid', 0, 1800, 2300]) {
   plan.persons[0].healthCoverageFromYear = invalid;
   assert.equal(sanitise(plan).persons[0].healthCoverageFromYear, null);
 }
-console.log('Healthcare: unknown, confirmed, partial-year, legacy and pension-policy independence checks passed');
+const adviceInput = structuredClone(pair);
+Object.assign(adviceInput.persons[0], { birthYear: 1963, healthInsurance: false,
+  income: { grossMonthly: 0, netMonthly: null } });
+Object.assign(adviceInput.persons[1], { birthYear: 1970, healthInsurance: false,
+  income: { grossMonthly: 3000, netMonthly: null } });
+const advice = actionPlan(simulate(adviceInput), adviceInput);
+const possible = advice.find(f => f.id === 'dependent-spouse-cover');
+assert.ok(possible, 'near-pension-age partner route is offered for investigation');
+assert.equal(possible.value, 'Eligibility not confirmed');
+assert.ok(!possible.title.includes('is covered'));
+const gap = advice.find(f => f.id === 'health-insurance-gap');
+assert.ok(gap, 'possible partner route never hides unconfirmed coverage');
+assert.ok(gap.detail.includes('without receiving unemployment benefit'));
+assert.ok(!gap.detail.includes('Registration alone is not enough'));
+adviceInput.persons[0].healthInsurance = true;
+assert.ok(!actionPlan(simulate(adviceInput), adviceInput).some(f => f.id === 'health-insurance-gap'),
+  'confirmed current coverage suppresses the current-gap warning');
+console.log('Healthcare: coverage timing, policy independence and unconfirmed-partner advice checks passed');
