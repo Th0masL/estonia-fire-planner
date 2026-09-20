@@ -179,6 +179,17 @@ its cash-opportunity message converts that nominal assumption into real terms
 using entered inflation. A positive scenario difference is before personal tax,
 not a guaranteed saving. Purchase/protected reserves are excluded using the
 larger reserve amount to avoid double counting.</p>
+<h3 id="selected-broker-fees-and-reporting">Selected broker fees and reporting</h3>
+<p><strong>Status:</strong> limited commercial snapshot. <strong>Checked:</strong> 20 September 2026.
+The broker guide links the providers' own tariffs: Lightyear execution/custody/FX,
+LHV Securities, and Swedbank Securities account and transactions, including
+management/safekeeping conditions. Lightyear's investment-account help describes
+the user-reviewed 2025 tax-year reporting flow, not unattended filing.</p>
+<p><strong>Affected:</strong> broker guide and custody comments in <code>src/rates.js</code>; no numerical
+assumptions or calculations changed. <strong>Limits:</strong> these are selected services,
+not total costs or a whole-market ranking. Other providers' tariffs and reporting,
+exact security availability, protection and fund comparisons remain open.
+The portfolio guide is explicitly marked as pending review.</p>
 <h2 id="model-assumptions-and-known-limits">Model assumptions and known limits</h2>
 <ul>
 <li>Investment-account tax is reserved immediately when money leaves the wrapper. This is a cash-planning convention, not the statutory tax-payment deadline.</li>

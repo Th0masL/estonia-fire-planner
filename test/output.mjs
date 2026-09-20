@@ -425,6 +425,16 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
   ok(existsSync(join(ROOT, 'docs/contributing/research-questions.md')), 'contributor research questions retained');
 }
 
+{
+  const brokers = read('guide/brokers.html');
+  for (const phrase of ['Broker fee snapshot', 'not an all-in cost cap', 'not unattended filing', 'Still unverified']) {
+    ok(brokers.includes(phrase), `broker guide discloses ${phrase}`);
+  }
+  for (const obsolete of ["don't have to keep the records", 'You cannot buy Baltic shares', 'and it never', 'LHV does not publish whether']) {
+    ok(!brokers.includes(obsolete), `broker guide removes unsupported claim ${obsolete}`);
+  }
+}
+
 console.log(`\n${checks} output and cross-engine checks`);
 if (failures.length) {
   console.log(`\n${failures.length} FAILED:`);

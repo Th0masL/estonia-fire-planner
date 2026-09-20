@@ -129,6 +129,20 @@ using entered inflation. A positive scenario difference is before personal tax,
 not a guaranteed saving. Purchase/protected reserves are excluded using the
 larger reserve amount to avoid double counting.
 
+### Selected broker fees and reporting
+
+**Status:** limited commercial snapshot. **Checked:** 20 September 2026.
+The broker guide links the providers' own tariffs: Lightyear execution/custody/FX,
+LHV Securities, and Swedbank Securities account and transactions, including
+management/safekeeping conditions. Lightyear's investment-account help describes
+the user-reviewed 2025 tax-year reporting flow, not unattended filing.
+
+**Affected:** broker guide and custody comments in `src/rates.js`; no numerical
+assumptions or calculations changed. **Limits:** these are selected services,
+not total costs or a whole-market ranking. Other providers' tariffs and reporting,
+exact security availability, protection and fund comparisons remain open.
+The portfolio guide is explicitly marked as pending review.
+
 ## Model assumptions and known limits
 
 - Investment-account tax is reserved immediately when money leaves the wrapper. This is a cash-planning convention, not the statutory tax-payment deadline.

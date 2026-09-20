@@ -2,7 +2,7 @@
 
 How diversified ETFs can fit into an Estonia-based FIRE portfolio, including fund and broker choices.
 
-> ⚠️ Fund data (TER, ISIN, index) and broker fees change. Confirm on the issuer's factsheet and your broker's fee schedule before buying.
+> ⚠️ This page's fund data, provider comparisons and reporting descriptions remain an open review, not verified current recommendations. For the narrower fee and reporting checks dated 20 September 2026, see [the broker guide](brokers.md). Confirm fund facts with the issuer and account-specific terms with the provider before buying.
 
 ## When a global equity ETF fills a diversification gap
 

@@ -243,10 +243,9 @@ export const RATES = {
     lhvMinCommission: 5.00,
     lightyearFxFee: 0.0035,
     lightyearMoneyMarketFee: 0.0010,
-    // VAT is added to Swedbank's custody fee unless the account holds nothing
-    // but fund units. An all-ETF portfolio - which is what this guide builds -
-    // is exempt. Hold single shares or bonds alongside them and the whole fee
-    // gains 24%. LHV's treatment of the same fee is not published; assume VAT.
+    // Swedbank's exemption is limited to qualifying fund-only holdings in its
+    // tariff; it is not a blanket exemption for every ETF account.
+    // LHV's published standard custody tariff states plus VAT.
     custodyVatExemptForFundsOnly: true,
   },
 
