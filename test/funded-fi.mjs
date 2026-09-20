@@ -6,7 +6,9 @@ const plan = blankState();
 plan.currentYear = 2026;
 Object.assign(plan.persons[0], { name: 'Person1', birthYear: 1971,
   healthCoveredAfterFi: true,
-  assets: { investmentAccount: 100000, investmentAccountContributions: 100000 },
+  // Isolate the no-surplus solver check using an after-tax return bucket.
+  investmentDestination: 'brokerage',
+  assets: { brokerage: 100000, brokerageCostBasis: 100000 },
   income: { grossMonthly: 0, netMonthly: 1000 } });
 plan.household.spending.other = 1000;
 Object.assign(plan.assumptions, { realReturn: .05, cashRealReturn: 0,

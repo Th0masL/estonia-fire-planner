@@ -14,7 +14,7 @@ import { RATES, DEFAULTS } from './rates.js';
 export const MAX_PERSONS = 2;
 export const STORAGE_KEY = 'estonian-fire-simulator/v1';
 export const HASH_KEY = 'd=';
-export const VERSION = 2;
+export const VERSION = 3;
 
 export const blankPerson = (name) => ({
   name, birthYear: 1990,
@@ -24,7 +24,7 @@ export const blankPerson = (name) => ({
     brokerage: 0, brokerageCostBasis: 0,
     pillar2: 0, pillar3: 0, crypto: 0, cryptoCostBasis: 0,
   },
-  pillar3Annual: 0, allocationShare: 1,
+  pillar3Annual: 0, allocationShare: 1, investmentDestination: 'investmentAccount',
   pillar1Units: null,
   yearsWorkedEstonia: null,
   yearsWorkedEuEea: 0,
@@ -49,6 +49,7 @@ const baseState = (over = {}) => ({
   persons: [blankPerson('You')],
   assumptions: {
     realReturn: DEFAULTS.realReturn,
+    brokerageRealReturn: DEFAULTS.realReturn,
     cashRealReturn: DEFAULTS.cashRealReturn,
     retirementCashReserve: DEFAULTS.retirementCashReserve,
     swr: DEFAULTS.swr,
@@ -237,6 +238,7 @@ export function sanitise(s) {
     p.healthInsuranceMonthly = Math.max(0,
       num(p.healthInsuranceMonthly, RATES.healthInsurance.voluntaryMonthly));
     p.allocationShare = bounded(p.allocationShare, 0, 1, 1 / s.persons.length);
+    p.investmentDestination = p.investmentDestination === 'brokerage' ? 'brokerage' : 'investmentAccount';
   });
 
   // Shares must be a partition, or the per-person figures stop adding up to the
@@ -250,6 +252,7 @@ export function sanitise(s) {
 
   const a = isRecord(s.assumptions) ? s.assumptions : {};
   a.realReturn = bounded(a.realReturn, 0, 0.20, DEFAULTS.realReturn);
+  a.brokerageRealReturn = bounded(a.brokerageRealReturn, 0, 0.20, DEFAULTS.realReturn);
   a.cashRealReturn = bounded(a.cashRealReturn, -0.20, 0.20, DEFAULTS.cashRealReturn);
   a.retirementCashReserve = bounded(a.retirementCashReserve, 0, 1e9, DEFAULTS.retirementCashReserve);
   a.swr = bounded(a.swr, 0.005, 0.10, DEFAULTS.swr);

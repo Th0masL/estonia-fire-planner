@@ -16,7 +16,7 @@ nothing reaches the engine before `sanitise()` has repaired it. It is covered by
 
 ```jsonc
 {
-  "version": 2,
+  "version": 3,
   "currentYear": 2026,          // optional; defaults to RATES.year
   "excludeCrypto": true,        // crypto counts toward FI only when false
 
@@ -57,12 +57,13 @@ nothing reaches the engine before `sanitise()` has repaired it. It is covered by
       },
       "assets": {
         "cash": 24000,            // counted
-        "investmentAccount": 0,    // counted net of latent tax below
+        "investmentAccount": 0,    // gross value; withdrawals reserve tax explicitly
         "investmentAccountContributions": 0, // unused contribution allowance after prior withdrawals
         "pillar2": 21000,          // excluded — locked until unlock age
         "pillar3": 0,              // excluded
         "crypto": 4000           // excluded unless excludeCrypto is false
       },
+      "investmentDestination": "investmentAccount", // or brokerage; future savings/receipts
       "pillar2Rate": 0.02,      // optional; 2%, 4% or 6%
       "pillar3Annual": 0,       // contribution, not balance
       "pillar3FirstContributionYear": null,
@@ -82,7 +83,8 @@ nothing reaches the engine before `sanitise()` has repaired it. It is covered by
   ],
 
   "assumptions": {
-    "realReturn": 0.05,
+    "realReturn": 0.05,         // IA/pensions: after fees/inflation, before withdrawal tax
+    "brokerageRealReturn": 0.05, // ordinary investments: after expected tax drag
     "cashRealReturn": 0,
     "retirementCashReserve": 0, // protected household cash, today's euros, from FI onward
     "swr": 0.035,
@@ -107,7 +109,8 @@ whoever holds them. To change who owns existing money, move it between people in
 the inputs — the model will not redistribute it.
 
 **Accessible assets and pensions are separate streams.** Cash and the
-after-tax spendable value of `investmentAccount` accumulate toward the bridge;
+gross value of `investmentAccount` accumulate toward the bridge; withdrawals
+fund spending plus any tax reserve using each person's nominal allowance;
 crypto joins only when `excludeCrypto` is false. Pension pots remain locked and
 can reduce later portfolio withdrawals only when the policy counts them and the
 required access/payout evidence is supplied.
@@ -190,14 +193,15 @@ uniformly across those subperiods, an approximation rather than monthly cash-flo
 precision. Receipt cannot repair a prior shortfall. Schedule fields `lumpGross`,
 `lumpTax` and `lumpNet` are annual totals (the latter is counted after trust), not
 monthly income. Opening accessible assets exclude that year's receipts, so
-closing = opening + counted receipts − withdrawals + cash/investment growth.
+closing = opening + counted receipts − spending withdrawals − investment-account
+tax reserves + cash/investment growth.
 The FIRE target continues to mean required accessible assets before receipts.
 
 Rate source checked 20 September 2026: [EMTA pension taxation](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/pension-and-insurance-indemnities).
 Special exemptions, non-resident treaty treatment, possible tax-return refunds,
-and future law changes are not inferred. Subsequent investment returns retain the
-existing after-tax-return approximation; transaction-level reinvestment taxes are
-not implemented. Stress affects both accessible investments and pension capital
+and future law changes are not inferred. Reinvested proceeds follow the owner's
+`investmentDestination`; investment-account deposits increase nominal allowance.
+Ordinary brokerage retains the after-tax-return approximation. Stress affects both accessible investments and pension capital
 before receipt; an initial crash precedes that year's pension receipts. Once paid,
 proceeds follow their chosen cash/investment allocation without a second crash.
 
@@ -362,9 +366,9 @@ examples above, insufficient funds, fractional years, two-person ownership,
 house completion, pension income ending before the horizon, and cash-only
 stress scenarios. Verify the FI boundary with an independent withdrawal walk.
 
-Do not introduce transaction-level withdrawal tax in this slice. Retain existing
-latent-tax reserves and return semantics, with their known limitations. Explicit
-taxation requires a separate migration so tax is not charged twice.
+The subsequent investment-account tax integration replaces its opening reserve
+with dated withdrawal tax, including tax on transfers to external reserve cash.
+Brokerage/crypto retain their approximate opening reserves and separate return.
 The optional reserve field defaults to zero; existing cash amounts and returns
 remain unchanged on load, so no saved-data conversion is needed. The published
 model-change notice explains why old plans can produce different results.
@@ -475,18 +479,19 @@ Cost basis and unused contribution allowance are independent of market value;
 losses must not reduce either on load. `investmentAccountContributions` keeps
 its existing serialized key and numeric value, but its label now explicitly
 means the unused allowance after prior reportable withdrawals, not lifetime
-deposits. Older ambiguous inputs require user review, not guessed conversion.
-Previously truncated figures require re-entry from records. No schema change
-is made in this preservation fix. The current tax reserve is a snapshot
-approximation; future withdrawal taxation remains outside this fix.
+deposits. Investment-account withdrawals now use this allowance explicitly.
 
-The isolated [investment-account tax foundation](INVESTMENT-ACCOUNT-TAX.md)
-defines nominal contribution-first ledger arithmetic and the integration gates.
-It is not enabled in the simulator; existing tax reserves and return semantics
-remain unchanged until the full migration is implemented and verified.
+The [investment-account tax model](INVESTMENT-ACCOUNT-TAX.md) is enabled throughout
+accumulation, purchase, retirement, coast and stress paths. `realReturn` is after
+fees/inflation but before investment-account withdrawal tax (also used for pension
+funds). `brokerageRealReturn` is after expected tax drag for ordinary investments.
+`investmentDestination` selects future savings and invested pension receipts per
+owner. All external cash is outside the wrapper; wrapper value is modeled invested.
+Schema version 3 records the new inputs; no legacy model/upgrade mode is maintained
+by product decision. Existing numeric inputs are interpreted under current rules.
 
 Reference: [EMTA securities and investment-account guidance](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account),
 contributions and payments section, checked 19 September 2026.
 
-Bump `version` and handle the older shape on load. Share links and exported
-files from earlier versions are in the wild the moment anyone uses them.
+`version` identifies the current shape. Imports are sanitized under current model
+semantics; old calculation behavior is not preserved, by product decision.

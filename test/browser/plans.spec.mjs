@@ -29,6 +29,33 @@ function makePlan(name = hostileName) {
 const fragment = (plan) => '#d=' + encodeState(plan);
 const saved = (page) => page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY);
 
+test('investment-account withdrawal tax and destination are visible and persist', async ({ page }) => {
+  const plan = blankState();
+  Object.assign(plan.persons[0], { name: 'Person1', birthYear: 1960, healthCoveredAfterFi: true,
+    assets: { investmentAccount: 200000, investmentAccountContributions: 60000 },
+    income: { grossMonthly: 0, netMonthly: 0 } });
+  plan.household.spending.other = 1000;
+  Object.assign(plan.assumptions, { realReturn: 0, brokerageRealReturn: 0, cashRealReturn: 0,
+    inflation: 0, pensionPolicy: 'ignore', portfolioEnd: 'drawdown', planToAge: 75,
+    bufferYears: 0, spendingGrowth: 0 });
+  await page.clock.install({ time: new Date('2026-09-20T12:00:00Z') });
+  await page.goto('/simulator.html' + fragment(plan));
+  await expect(page.locator('#headline .stat b').first()).toContainText('121,538');
+  await expect(page.locator('.schedule')).toContainText('Investment-account tax reserve (annual)');
+  await expect(page.locator('.schedule tbody tr').nth(5)).toContainText('3,385');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  const destination = page.locator('[data-k="investmentDestination"]');
+  await destination.selectOption('brokerage');
+  await page.locator('#aBrokerageReturn').fill('3');
+  await page.reload();
+  await expect(destination).toHaveValue('brokerage');
+  await expect(page.locator('#aBrokerageReturn')).toHaveValue('3.0');
+  const state = JSON.parse(await saved(page));
+  expect(state.persons[0].assets.investmentAccount).toBe(200000);
+  expect(state.persons[0].investmentDestination).toBe('brokerage');
+  expect(state.assumptions.brokerageRealReturn).toBe(.03);
+});
+
 test('pension-funded retirement is found despite an unfunded late working path', async ({ page }) => {
   const plan = blankState();
   Object.assign(plan.persons[0], { name: 'Person1', birthYear: 1971,
@@ -113,7 +140,7 @@ test('lump-sum selection shows net capital and persists allocation', async ({ pa
   plan.household.property = null;
   plan.household.spending = { other: 1000 };
   Object.assign(plan.assumptions, { pensionPolicy: 'ownPots', portfolioEnd: 'drawdown',
-    planToAge: 75, realReturn: 0, cashRealReturn: 0, bufferYears: 0 });
+    planToAge: 75, realReturn: 0, cashRealReturn: 0, bufferYears: 0, inflation: 0 });
   await page.goto('/simulator.html' + fragment(plan));
   await page.locator('#aPillarPayout').selectOption('lumpSum');
   await page.locator('#aLumpInvestedShare').fill('60');
@@ -300,7 +327,7 @@ test('protected retirement reserve persists and is shown separately from spendab
   await page.goto('/simulator.html' + fragment(plan));
   await page.locator('#aRetirementReserve').fill('20000');
   await expect(page.locator('tr').filter({ hasText: 'Protected emergency cash after FIRE' })).toContainText('€20,000');
-  await expect(page.locator('tr').filter({ hasText: 'Spendable portion of the FIRE target' })).toContainText('€480,000');
+  await expect(page.locator('tr').filter({ hasText: 'Unprotected portion of the FIRE target' })).toContainText('€480,000');
   await page.reload();
   await expect(page.locator('#aRetirementReserve')).toHaveValue('20000');
   await page.locator('#share').click();

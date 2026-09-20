@@ -32,9 +32,9 @@ SRC = ROOT / "src"
 # Each standalone page and the modules it needs, in dependency order.
 BUNDLES = {
     "simulator.html": ("simulator.template.html",
-                       ["format.js", "explain.js", "rates.js", "calc.js", "rules.js", "state.js", "ui.js", "nav.js"]),
+                       ["format.js", "explain.js", "rates.js", "investment-account-tax.js", "calc.js", "rules.js", "state.js", "ui.js", "nav.js"]),
     "pension.html":   ("pension.template.html",
-                       ["format.js", "explain.js", "rates.js", "calc.js", "pension-ui.js", "nav.js"]),
+                       ["format.js", "explain.js", "rates.js", "investment-account-tax.js", "calc.js", "pension-ui.js", "nav.js"]),
 }
 
 # Reading order: (source relative to docs/, url slug, nav label).

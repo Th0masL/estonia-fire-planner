@@ -88,26 +88,27 @@ function renderPeople() {
 
       <p class="sub">Counted toward FI ${infoBtn('counted-in')}</p>
       ${infoNote('counted-in', `Money you could spend tomorrow, and the only money the FI target is
-        built from. <strong>Cash</strong> is every current and savings account — note that deposit
+        built from. <strong>Cash</strong> means accounts outside the investment-account wrapper — note that deposit
         protection is ${eur(RATES.protection.depositGuarantee)} per person per bank, so a large
         balance in one place is uninsured above that. <strong>Investment account</strong> means an
         Estonian declared <em>investeerimiskonto</em>. Tax is deferred until withdrawals exceed
-        the unused contribution allowance; the simulator estimates a tax reserve on value above
-        that allowance, not transaction-by-transaction tax. Enter the remaining allowance after
+        the unused contribution allowance; the simulator tracks that allowance and reserves tax
+        on taxable withdrawals. Include all wrapper value here, not again under Cash; this model
+        treats wrapper holdings as invested at the entered return. Enter the remaining allowance after
         prior reportable withdrawals, not lifetime deposits. It can exceed current value after losses.
         Enter what each person holds in their own name — it decides who owns what at FI.`)}
       <div class="grid">
         <label>Cash <span class="u">€</span><input type="number" min="0" step="1000" data-i="${i}" data-k="assets.cash" value="${p.assets.cash}"></label>
         <label>Investment account <span class="u">€</span><input type="number" min="0" step="1000" data-i="${i}" data-k="assets.investmentAccount" value="${p.assets.investmentAccount}"></label>
         <label>Investment-account unused contribution allowance <span class="u">€ remaining after prior withdrawals</span><input type="number" min="0" step="1000" data-i="${i}" data-k="assets.investmentAccountContributions" value="${p.assets.investmentAccountContributions ?? 0}"></label>
+        <label>Future investments go to<select data-i="${i}" data-k="investmentDestination"><option value="investmentAccount" ${p.investmentDestination !== 'brokerage' ? 'selected' : ''}>Investment account</option><option value="brokerage" ${p.investmentDestination === 'brokerage' ? 'selected' : ''}>Ordinary brokerage</option></select></label>
         <label>Ordinary brokerage account <span class="u">€</span><input type="number" min="0" step="1000" data-i="${i}" data-k="assets.brokerage" value="${p.assets.brokerage ?? 0}"></label>
         <label>Brokerage cost basis <span class="u">€</span><input type="number" min="0" step="1000" data-i="${i}" data-k="assets.brokerageCostBasis" value="${p.assets.brokerageCostBasis ?? 0}"></label>
       </div>
 
-      <p class="hint">Review older plans: the contribution field previously said “cumulative tax basis”.
-        Existing values are retained, but lifetime deposits may need correcting for prior withdrawals.
-        Older saves may also have reduced cost basis or allowance to market value; re-enter the
-        original figures from your records if affected. Lost values cannot be recovered automatically.</p>
+      <p class="hint">Use the remaining contribution allowance from your records, not lifetime
+        deposits. New investment-account savings increase that allowance; market gains do not.
+        Future-investment destination does not move existing holdings.</p>
 
       <p class="sub">Not counted toward FI ${infoBtn('counted-out')}</p>
       ${infoNote('counted-out', `Shown so the total is visible, never added to the target. The
@@ -190,7 +191,7 @@ function renderPeople() {
         <label><input type="checkbox" data-i="${i}" data-k="lifeInsurance" ${p.lifeInsurance ? 'checked' : ''}> Pays for term life cover</label>
         <label><input type="checkbox" data-i="${i}" data-k="healthInsurance" ${p.healthInsurance ? 'checked' : ''}> Pays for a voluntary health contract</label>
         <label><input type="checkbox" data-i="${i}" data-k="healthCoveredAfterFi" ${p.healthCoveredAfterFi ? 'checked' : ''}> Confirmed health cover throughout retirement, with no extra premium (for example S1)</label>
-        <label ${p.healthCoveredAfterFi ? 'hidden' : ''}>Confirmed health-cover start year <span class="u">optional; no extra premium from this date</span><input type="number" min="1900" max="2200" step="1" data-i="${i}" data-k="healthCoverageFromYear" value="${p.healthCoverageFromYear ?? ''}"></label>
+        <label class="coverage-date" ${p.healthCoveredAfterFi ? 'hidden' : ''}>Confirmed health-cover start year <span class="u">optional; no extra premium from this date</span><input type="number" min="1900" max="2200" step="1" data-i="${i}" data-k="healthCoverageFromYear" value="${p.healthCoverageFromYear ?? ''}"></label>
         <p class="hint">Leave the year blank unless an ongoing coverage route is confirmed.
           Pension age alone is not confirmation. Without a route, premiums continue through
           the planning horizon and remain in the perpetual-income target. Older plans now
@@ -265,6 +266,7 @@ function formToState() {
     return Number.isFinite(n) ? n : fallback;
   };
   state.assumptions.realReturn = field('aReturn', DEFAULTS.realReturn * 100) / 100;
+  state.assumptions.brokerageRealReturn = field('aBrokerageReturn', DEFAULTS.realReturn * 100) / 100;
   state.assumptions.cashRealReturn = field('aCashReturn', DEFAULTS.cashRealReturn * 100) / 100;
   state.assumptions.retirementCashReserve = Math.max(0, Math.min(1e9, field('aRetirementReserve', 0)));
   state.assumptions.swr = field('aSwr', DEFAULTS.swr * 100) / 100;
@@ -321,6 +323,7 @@ function stateToForm() {
   $('hasDependents').checked = !!h.hasDependents;
   $('excludeCrypto').checked = state.excludeCrypto !== false;
   $('aReturn').value = (state.assumptions.realReturn * 100).toFixed(1);
+  $('aBrokerageReturn').value = ((state.assumptions.brokerageRealReturn ?? DEFAULTS.realReturn) * 100).toFixed(1);
   $('aCashReturn').value = +((state.assumptions.cashRealReturn ?? DEFAULTS.cashRealReturn) * 100).toFixed(2);
   $('aRetirementReserve').value = state.assumptions.retirementCashReserve ?? 0;
   $('aSwr').value = (state.assumptions.swr * 100).toFixed(2);
@@ -453,6 +456,7 @@ function chart(sim) {
           ${sim.fi.countsPots && sim.fi.pillarPayout === 'lumpSum' ? '<th>Counted net lump sum (annual)</th><th>Withdrawal tax (annual)</th>' : ''}
           ${sim.fi.policy === 'all' ? '<th>State pension</th>' : ''}
           <th>Spending</th>${spare ? '<th>Spare</th>' : ''}<th>Cash left</th><th>Investments left</th><th>Portfolio left</th>
+          <th>Investment-account tax reserve (annual)</th>
         </tr>
       </thead>
       <tbody>
@@ -472,6 +476,7 @@ function chart(sim) {
           <td>${eur(row.need / 12)}</td>
           ${spare ? `<td class="${row.unusedPension > 0.5 ? 'spare' : ''}">${mo(row.unusedPension)}</td>` : ''}
           <td>${eur(row.cash)}</td><td>${eur(row.investments)}</td><td>${eur(row.closing)}</td>
+          <td>${eur(row.investmentTax)}</td>
         </tr>`;
       }).join('')}
       </tbody>
@@ -577,8 +582,15 @@ function render() {
          <strong>Inflation is therefore already handled</strong>, and every figure on this page is
          in today's money: €1,000 of spending in 2050 means what €1,000 buys now, not the larger
          number you would actually hand over. <strong>Enter this after ongoing fund/broker fees and
-         expected future tax drag.</strong> The simulator reserves latent tax on gains already in the
-         entered accounts, but it cannot infer the tax path of future trades and withdrawals.`;
+         <em>before</em> investment-account withdrawal tax.</strong> This return also applies to pension funds.
+         Investment-account withdrawals use each person's remaining nominal contribution allowance;
+         excess withdrawals fund a ${pct(RATES.incomeTax)} tax reserve immediately. This is a planning
+         reserve, not the statutory payment date; personal exemptions and credits are not modeled.
+         Brokerage/crypto use the separate <strong>after-tax real return</strong> and an opening gains-tax
+         reserve, not transaction-level taxation. Cash means money outside the investment account.
+         New savings and reinvested pension lump sums follow each person's selected destination.
+         Withdrawals use external cash first, then each owner's ordinary investments before their
+         investment account. Tax allowances are never pooled between people.`;
     }
   }
 
@@ -719,7 +731,7 @@ function render() {
     <table class="mini">
       <tr class="thead"><th>Every year, once you stop</th><td></td></tr>
       <tr><th>Protected emergency cash after FIRE <span class="muted">included in the total target, unavailable for ordinary spending</span></th><td>${eur(sim.fi.retirementCashReserve)}</td></tr>
-      <tr><th>Spendable portion of the FIRE target <span class="muted">total target minus protected cash</span></th><td>${eur(Math.max(0, sim.fi.number - sim.fi.retirementCashReserve))}</td></tr>
+      <tr><th>Unprotected portion of the FIRE target <span class="muted">total target minus protected cash; also funds withdrawal tax</span></th><td>${eur(Math.max(0, sim.fi.number - sim.fi.retirementCashReserve))}</td></tr>
       <tr><th>Spending the plan must cover, permanently ${infoBtn('perp-spend')}${sim.fi.spendingGrowth ? ` <span class="muted">rising ${pct1(sim.fi.spendingGrowth)}/yr in real terms</span>` : ''}</th><td>${eur(sim.fi.perpetualSpending)}/yr</td></tr>
       ${infoRow('perp-spend', `The recurring baseline after dated liabilities have ended: the
         mortgage paid off and dependent costs ended. Health premiums remain in this baseline
@@ -761,9 +773,12 @@ function render() {
       <tr class="thead"><th>What you hold now</th><td></td></tr>
       <tr><th>Portfolio counted today ${infoBtn('counted')}</th><td>${eur(sim.portfolio.start)}</td></tr>
       ${infoRow('counted', `Cash, declared investment accounts and ordinary brokerage accounts${state.excludeCrypto ? '' : ' plus crypto'} —
-        the modeled amount available after reserving tax on investment-account gains.${sim.house ? ` House cash is not removed today; it leaves on the entered completion date.` : ''} Pension balances are
+        investment accounts are shown before future withdrawal tax; brokerage/crypto are net of their
+        approximate opening tax reserves. The FI target preserves the projected asset mix and recorded
+        contribution allowance when testing a smaller portfolio.${sim.house ? ` House cash is not removed today; it leaves on the entered completion date.` : ''} Pension balances are
         inaccessible today and appear separately at their legal draw dates.`)}
       ${sim.portfolio.investmentTaxReserve > 0 ? `<tr><th>Latent investment-account tax reserved</th><td>−${eur(sim.portfolio.investmentTaxReserve)}</td></tr>` : ''}
+      ${sim.portfolio.investmentTaxBeforeFi > 0 ? `<tr><th>Investment-account tax reserved before FI (includes home funding)</th><td>${eur(sim.portfolio.investmentTaxBeforeFi)}</td></tr>` : ''}
       ${sim.portfolio.brokerageTaxReserve > 0 ? `<tr><th>Latent brokerage gains tax reserved</th><td>−${eur(sim.portfolio.brokerageTaxReserve)}</td></tr>` : ''}
       ${sim.portfolio.cryptoTaxReserve > 0 ? `<tr><th>Latent crypto gains tax reserved</th><td>−${eur(sim.portfolio.cryptoTaxReserve)}</td></tr>` : ''}
       ${sim.portfolio.cryptoExcluded > 0 ? `

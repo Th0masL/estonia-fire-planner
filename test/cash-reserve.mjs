@@ -98,7 +98,7 @@ for (const cashReturn of [-.02, 0, .01]) {
   for (const row of result.schedule) {
     assert.ok(row.cash >= 50000 - 1e-6);
     near(row.shortfall, 0);
-    near(row.closing, row.opening - row.fromPortfolio + row.cashGrowth + row.investmentGrowth);
+    near(row.closing, row.opening - row.fromPortfolio - row.investmentTax + row.cashGrowth + row.investmentGrowth);
   }
 }
 const expired = structuredClone(plan);

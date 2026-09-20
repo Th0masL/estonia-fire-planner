@@ -1,4 +1,4 @@
-// Preparatory nominal-euro ledger; deliberately NOT wired into simulate().
+// Nominal-euro ledger shared by the live simulator's dated cash-flow paths.
 // One ledger aggregates one taxpayer's investment accounts, never a household.
 // See INVESTMENT-ACCOUNT-TAX.md for sources, approximations and integration gates.
 const nonnegative = (value, name) => {

@@ -9,7 +9,7 @@ Object.assign(plan.persons[0], { name: 'Person1', birthYear: 1960, healthCovered
 plan.household.spending.other = 1000;
 Object.assign(plan.assumptions, { pensionPolicy: 'ownPots', pillarPayout: 'lumpSum',
   portfolioEnd: 'drawdown', planToAge: 75, realReturn: 0, cashRealReturn: 0,
-  spendingGrowth: 0, bufferYears: 0, potsCountedShare: 1 });
+  spendingGrowth: 0, bufferYears: 0, potsCountedShare: 1, inflation: 0 });
 let r = simulate(plan);
 near(r.timeline.yearsToFi, 0);
 near(r.fi.number, 18000); // Nine years × 12k expenses, minus 90k after-tax capital.
@@ -20,7 +20,7 @@ near(r.schedule[0].closing, 578000);
 near(r.schedule.reduce((s, y) => s + y.lumpNet, 0), 90000);
 assert.ok(r.schedule.every((y) => y.fromPots === 0));
 for (const row of r.schedule) near(row.closing,
-  row.opening + row.lumpNet - row.fromPortfolio + row.cashGrowth + row.investmentGrowth);
+  row.opening + row.lumpNet - row.fromPortfolio - row.investmentTax + row.cashGrowth + row.investmentGrowth);
 plan.assumptions.pensionLumpSumInvestedShare = .6;
 r = simulate(plan);
 near(r.schedule[0].investments, 54000);

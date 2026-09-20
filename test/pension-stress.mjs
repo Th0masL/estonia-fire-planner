@@ -17,7 +17,7 @@ Object.assign(plan.persons[0], { name: 'Person1', birthYear: 1960,
 plan.household.spending.other = 1000;
 Object.assign(plan.assumptions, { realReturn: 0, cashRealReturn: 0,
   pensionPolicy: 'ownPots', portfolioEnd: 'drawdown', planToAge: 75,
-  bufferYears: 0, spendingGrowth: 0, potsCountedShare: 1 });
+  bufferYears: 0, spendingGrowth: 0, potsCountedShare: 1, inflation: 0 });
 let result = simulate(plan);
 near(result.timeline.yearsToFi, 0);
 // Nine years × (12k spending - 6k × (1-crash)) = 81k at a 50% crash.

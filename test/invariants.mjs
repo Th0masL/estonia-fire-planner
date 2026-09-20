@@ -417,10 +417,8 @@ for (const [i, input] of CASES.entries()) {
             `${tag}: ${row.year} the portfolio covers exactly the shortfall`);
       // And the balance must roll forward the way it claims to.
       close(row.opening, balance, 1, `${tag}: ${row.year} opening balance follows the previous close`);
-      close(row.closing, (row.openingCash - row.fromCash) *
-            (1 + (asm.cashRealReturn ?? 0)) ** row.investedFor +
-            (row.openingInvestments - row.fromInvestments) *
-            (1 + asm.realReturn) ** row.investedFor, 1,
+      close(row.closing, row.opening + row.lumpNet - row.fromPortfolio - row.investmentTax +
+            row.cashGrowth + row.investmentGrowth, 1,
             `${tag}: ${row.year} closing balance is the arithmetic it states`);
       ok(row.closing >= -1, `${tag}: ${row.year} the portfolio never goes negative`);
       balance = row.closing;

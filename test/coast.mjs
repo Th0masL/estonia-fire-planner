@@ -6,7 +6,8 @@ const plan = blankState();
 plan.currentYear = 2026;
 Object.assign(plan.persons[0], { name: 'Person1', birthYear: 1971,
   healthCoveredAfterFi: true,
-  assets: { investmentAccount: 120000, investmentAccountContributions: 120000 },
+  investmentDestination: 'brokerage',
+  assets: { brokerage: 120000, brokerageCostBasis: 120000 },
   income: { grossMonthly: 0, netMonthly: 1000 } });
 plan.household.spending.other = 1000;
 Object.assign(plan.assumptions, { realReturn: .05, cashRealReturn: 0,

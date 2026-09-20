@@ -89,8 +89,8 @@ ok(Math.abs(pensionAges(1962).statePensionAge - (65 + 1 / 12)) < 1e-12,
 // The investment-account gain is not all spendable.
 {
   const r = simulate(plan(12));
-  ok(Math.abs(r.portfolio.investmentTaxReserve - 8800) < 0.01,
-    '22% latent tax is reserved on investment-account gains');
+  ok(r.portfolio.investmentTaxReserve === 0,
+    'investment-account tax is no longer deducted before withdrawal');
 }
 
 // An unfunded purchase must block the result instead of creating money.

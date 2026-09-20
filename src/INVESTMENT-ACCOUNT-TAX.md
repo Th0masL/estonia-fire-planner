@@ -1,9 +1,10 @@
 # Investment-account tax integration specification
 
-Status: tested accounting foundation only. `investment-account-tax.js` is not
-imported by the simulator or bundled into the website. Existing results, saved
-plans and return assumptions are unchanged. Integration below is proposed, not
-an implemented or fully verified tax-return model.
+Status: enabled in the simulator and bundled for offline use. Investment accounts
+now retain gross opening value and pay modeled withdrawal tax instead of an
+opening latent-tax reserve. This is a planning model, not a tax-return calculator.
+No legacy calculation mode is maintained, by product decision. Schema version 3
+adds the separate ordinary-investment return and per-person investment destination.
 
 ## Verified rule and scope
 
@@ -50,7 +51,7 @@ Synthetic example at a supplied 22% rate: allowance €60,000 and desired spendi
 €11,000 reserved for tax. With only €100,000 available, net spending is €91,200
 and the shortfall is €7,800. These are arithmetic examples, not personal tax advice.
 
-## Migration gates before enabling
+## Real-euro integration
 
 ### Implemented real/nominal adapter
 
@@ -74,35 +75,37 @@ support is arithmetic capability, not a change to permitted UI assumptions.
 Callers remain responsible for applying investment returns between events and
 for choosing event dates; this adapter does not choose annual/monthly timing.
 
-### Remaining integration gates
+### Integration policy
 
-1. Preserve investment-account value separately from brokerage, crypto and cash
-   in every projection path. Remove only the investment-account opening tax
-   reserve when enabling explicit taxation. Do not tax a net-of-reserve balance
-   again or imply transaction accuracy for the other wrappers.
-2. Define where new investments go. Existing allocation shares select the owner,
-   not the wrapper. Require an explicit wrapper policy; do not silently treat all
-   historical brokerage/crypto holdings as investment-account assets.
-3. Introduce an explicit pre-withdrawal-tax return assumption (after fees and
-   inflation) for this wrapper. Legacy `realReturn` includes future tax drag;
-   no unique pre-tax rate can be inferred from it. Preserve legacy plans in their
-   existing model until the user reviews/accepts the new return semantics.
-   Separate pension/other-wrapper returns as necessary; do not reinterpret them.
-4. Keep tax allowance nominal. At time y with price factor `(1+inflation)^y`,
-   convert real spending/value to nominal for the event and convert results back.
-   Do not index unused allowance with inflation or consume real-euro spending
-   directly against a nominal allowance. Cover fractional dates and zero inflation.
-   The adapter above is tested; integration into dated household cash flows is
-   still required. Do not use a single year's factor for all future withdrawals.
-5. Apply the same withdrawal primitive to working deficits, home completion,
-   retirement, reserve replenishment, coast and stress paths. Pension lump-sum
-   reinvestment must follow the explicit wrapper allocation and correct owner.
-   Cash held inside versus outside the wrapper must be distinguished.
-6. Redesign minimum-capital scaling: changing hypothetical value must not
-   silently scale recorded contribution allowance. Document the target's funding
-   mix and hypothetical contribution history before changing the FI-number solver.
-7. Version model semantics and saved data, disclose the selected model in exports
-   and UI, and never silently upgrade an old share link to different tax behavior.
+1. Each owner's gross investment-account value and nominal allowance remain
+   separate from external cash and ordinary invested assets. Brokerage/crypto
+   retain their opening gains-tax reserves and after-tax return approximation.
+2. `investmentDestination` defaults to `investmentAccount`; the UI allows ordinary
+   `brokerage` instead. It routes new savings and invested pension lump sums,
+   without changing ownership shares or moving existing holdings.
+3. `realReturn` means after fees/inflation, before investment-account withdrawal
+   tax, and also applies to pension funds. `brokerageRealReturn` is separately
+   entered after expected tax drag. No old return is mathematically converted.
+4. Each bucket carries elapsed time. Working deposits/deficits are annual-end
+   events (with fractional final periods); retirement spending is at period start,
+   split at pension receipts. Nominal allowance uses each event's price level.
+   Partial-period positive savings retain the existing annuity growth convention;
+   allowance increases only by the actual principal contribution.
+5. Household spending uses external cash above the protected reserve first.
+   Remaining net needs are divided among owners proportional to net-liquidatable
+   invested assets. Within each owner, ordinary investments precede investment
+   accounts. Allowances never cross owners. Home funding honors the selected payer
+   first, with others covering any remaining net need. Cash top-ups are taxable
+   wrapper exits, not cost-free reclassification.
+6. FI-date checks use actual projected accounts. The minimum-capital target scales
+   projected cash and invested values proportionally but holds recorded allowance
+   fixed. It answers what capital suffices with that mix and contribution history,
+   not what a new saver with no history needs. Capital-floor checks use net
+   liquidation value after modeled investment-account tax. Schedule values are
+   gross remaining holdings; the tax column shows annual real-euro reserves.
+7. Stress changes exposed asset values and returns but never contribution
+   allowance. Pension reinvestments add allowance at receipt. No legacy mode or
+   upgrade prompt is retained; all plans use the current model.
 
 ## Integration acceptance
 
@@ -113,5 +116,18 @@ receipts, protected reserves, inflation, partial years and shocks. Reconcile the
 solver and displayed schedule independently. Browser tests must cover migration,
 explicit return review, import/export/share links and disclosure of limitations.
 
-The current unit suite checks ledger arithmetic only. It cannot establish that
-the eventual household model, tax timing or real/nominal integration is correct.
+The integration suite reconciles independent zero-return retirement targets,
+annual tax, home affordability, reserves, owner separation, dated deposits and
+deficits. Existing coast/pension/stress suites use the shared withdrawal path.
+Browser tests cover visible annual tax, destination changes and persisted returns.
+
+Remaining limitations: wrapper holdings are modeled entirely invested; separate
+idle wrapper cash is not supported. Asset eligibility, already-taxed receipts,
+personal exemptions/credits, foreign withholding, residency changes and actual
+tax-payment dates are not inferred. The immediate external reserve convention is
+conservative timing, not a filing/payment forecast. Ordinary brokerage/crypto
+remain approximations. Annualized spending is not a monthly liquidity forecast.
+Future tax law is unknown; the model holds the entered rule set constant.
+
+Rate reference: [EMTA tax rates](https://www.emta.ee/en/private-client/taxes-and-payment/declaration-income/tax-rates),
+2026 section checked 20 September 2026; the engine's current flat rate is 22%.

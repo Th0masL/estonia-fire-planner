@@ -18,6 +18,14 @@ The project is Estonia-specific because most FIRE material assumes US accounts a
 
 Start with [simulator.html](simulator.html), or open [index.html](index.html) for the complete guide.
 
+Investment accounts use per-person contribution-first withdrawal taxation, with
+tax reserved when money leaves the account. Their return input is after fees and
+inflation, before withdrawal tax. Ordinary brokerage/crypto retain a separate
+after-tax-return approximation. Future savings follow each person's selected
+investment destination; existing holdings are not moved. See the
+[tax model and limitations](src/INVESTMENT-ACCOUNT-TAX.md) for timing assumptions,
+nominal contribution allowances, and unmodeled tax exceptions.
+
 ## Documentation
 
 All Markdown source lives in [`docs/guide/`](docs/guide/). The numbered working-document names have been replaced with descriptive filenames; published HTML URLs remain stable.

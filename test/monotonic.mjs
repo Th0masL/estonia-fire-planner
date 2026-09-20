@@ -241,6 +241,13 @@ for (const [payout, expectHarm] of [['fundPension', false]]) {
   const high = BASE(); high.assumptions.portfolioEnd = 'drawdown';
   high.assumptions.pensionPolicy = 'ownPots';
   high.assumptions.pillarPayout = payout; high.assumptions.inflation = 0.06;
+  // Isolate pension units from nominal investment-account contribution basis.
+  for (const plan of [low, high]) for (const p of plan.persons) {
+    p.investmentDestination = 'brokerage';
+    p.assets.brokerage = p.assets.investmentAccount;
+    p.assets.brokerageCostBasis = p.assets.investmentAccountContributions;
+    p.assets.investmentAccount = 0;
+  }
   const a = simulate(low).timeline.yearsToFi;
   const b = simulate(high).timeline.yearsToFi;
   if (expectHarm && !(b > a)) {

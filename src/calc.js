@@ -12,6 +12,7 @@
 // not who needs what. What would happen on separation is out of scope.
 
 import { RATES, DEFAULTS } from './rates.js';
+import { withdrawRealInvestmentAccount, investmentAccountPriceLevel } from './investment-account-tax.js';
 
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 const annuityFactor = (r, n) => (r === 0 ? n : ((1 + r) ** n - 1) / r);
@@ -57,45 +58,84 @@ const takeBucket = (balances, key, amount) => {
   if (total > 0) for (const b of balances) b[key] -= taken * b[key] / total;
   return taken;
 };
-// Reclassify only the shortage, without changing ownership or total assets.
+const priceAt = (b) => investmentAccountPriceLevel(b.inflation || 0, b.elapsed || 0);
+const netInvestments = (b) => b.invested - Math.max(0,
+  (b.ia || 0) - (b.allowanceNominal || 0) / priceAt(b)) * RATES.incomeTax;
+const spendableTotal = (balances) => balances.reduce((s, b) => s + b.cash + netInvestments(b), 0);
+const withdrawInvestments = (balances, amount, toCash = false) => {
+  if (amount <= 0) return 0;
+  const available = balances.map(netInvestments);
+  const total = available.reduce((s, v) => s + v, 0);
+  const net = Math.min(Math.max(0, amount), Math.max(0, total));
+  if (total > 0) for (const [i, b] of balances.entries()) {
+    const requested = net * available[i] / total;
+    // Within each owner, use the already-tax-reserved brokerage/crypto bucket
+    // first, then the contribution-first investment account. No shared allowance.
+    const ordinary = Math.min(requested, Math.max(0, b.invested - (b.ia || 0)));
+    const result = withdrawRealInvestmentAccount({ balanceReal: b.ia || 0,
+      allowanceNominal: b.allowanceNominal || 0 }, Math.max(0, requested - ordinary),
+      RATES.incomeTax, priceAt(b));
+    b.invested -= ordinary + result.grossReal;
+    if (b.ia !== undefined) {
+      b.ia = result.account.balanceReal;
+      b.allowanceNominal = result.account.allowanceNominal;
+      b.taxPaid = (b.taxPaid || 0) + result.taxReal;
+    }
+    if (toCash) b.cash += ordinary + result.netReal;
+  }
+  return net;
+};
+const growBalances = (balances, duration, cashReturn, investmentReturn) => {
+  for (const b of balances) {
+    b.cash *= (1 + cashReturn) ** duration;
+    const ia = (b.ia || 0) * (1 + investmentReturn) ** duration;
+    // Stress overrides affect both exposed buckets; ordinary base returns retain
+    // their separate after-tax approximation.
+    const ordinaryReturn = b.stressReturn ?? b.brokerageReturn ?? investmentReturn;
+    b.invested = (b.invested - (b.ia || 0)) * (1 + ordinaryReturn) ** duration + ia;
+    if (b.ia !== undefined) { b.ia = ia; b.elapsed += duration; }
+  }
+};
+const depositInvestment = (b, value, contribution = value) => {
+  b.invested += value;
+  if (b.ia !== undefined && b.destination !== 'brokerage') {
+    b.ia += value;
+    b.allowanceNominal += contribution * priceAt(b);
+  }
+};
+// Reserve replenishment is an external withdrawal and may itself incur tax.
 const reserveCash = (balances, reserve) => {
   const missing = Math.max(0, reserve - bucketTotal(balances, 'cash'));
-  const invested = bucketTotal(balances, 'invested');
-  const transfer = Math.min(missing, Math.max(0, invested));
-  if (invested > 0) for (const b of balances) {
-    const share = transfer * b.invested / invested;
-    b.invested -= share;
-    b.cash += share;
-  }
+  const transfer = withdrawInvestments(balances, missing, true);
   return missing - transfer;
 };
 const spendPortfolio = (balances, amount, reserve = 0) => {
   const cash = Math.min(Math.max(0, amount), Math.max(0, bucketTotal(balances, 'cash') - reserve));
   takeBucket(balances, 'cash', cash);
-  const invested = takeBucket(balances, 'invested', amount - cash);
+  const invested = withdrawInvestments(balances, amount - cash);
   return { cash, invested, shortfall: Math.max(0, amount - cash - invested) };
 };
 
 /** One retirement period. Reserve is in real euros; negative cash returns
  * require replenishment from investments, never use of protected principal.
- * This remains an after-tax-reserve approximation, not transaction-level tax.
+ * Investment-account exits reserve tax immediately; ordinary assets retain
+ * their separately disclosed after-tax approximation.
  */
 export function retirementStep(opening, withdrawal, duration, cashReturn, investmentReturn, reserve = 0) {
   const balances = opening.map((b) => ({ ...b }));
+  const priorTax = opening.reduce((s, b) => s + (b.taxPaid || 0), 0);
   let shortfall = reserveCash(balances, reserve);
   const spent = spendPortfolio(balances, withdrawal, reserve);
   shortfall += spent.shortfall;
   const cashBeforeReturn = bucketTotal(balances, 'cash');
   const investedBeforeReturn = bucketTotal(balances, 'invested');
-  for (const b of balances) {
-    b.cash *= (1 + cashReturn) ** duration;
-    b.invested *= (1 + investmentReturn) ** duration;
-  }
+  growBalances(balances, duration, cashReturn, investmentReturn);
   const cashGrowth = bucketTotal(balances, 'cash') - cashBeforeReturn;
   const investmentGrowth = bucketTotal(balances, 'invested') - investedBeforeReturn;
   shortfall += reserveCash(balances, reserve);
   return { balances, shortfall, fromCash: spent.cash, fromInvestments: spent.invested,
-    cashGrowth, investmentGrowth };
+    cashGrowth, investmentGrowth,
+    investmentTax: balances.reduce((s, b) => s + (b.taxPaid || 0), 0) - priorTax };
 }
 
 // Accumulation deficits are funded at period end, cash first. Positive savings
@@ -105,18 +145,18 @@ export function accumulationStep(opening, surplus, years, cashReturn, investment
   const balances = opening.map((b) => ({ ...b }));
   let shortfall = opening.shortfall || 0;
   if (surplus >= 0 && !shortfall) {
-    for (const [i, b] of balances.entries()) {
-      b.cash *= (1 + cashReturn) ** years;
-      b.invested = b.invested * (1 + investmentReturn) ** years +
-        surplus * shares[i] * annuityFactor(investmentReturn, years);
+    for (let elapsed = 0; elapsed < years; elapsed += 1) {
+      const duration = Math.min(1, years - elapsed);
+      growBalances(balances, duration, cashReturn, investmentReturn);
+      for (const [i, b] of balances.entries()) {
+        const rate = b.destination === 'brokerage' ? (b.brokerageReturn ?? investmentReturn) : investmentReturn;
+        depositInvestment(b, surplus * shares[i] * annuityFactor(rate, duration), surplus * shares[i] * duration);
+      }
     }
   } else if (!shortfall) {
     for (let elapsed = 0; elapsed < years; elapsed += 1) {
       const duration = Math.min(1, years - elapsed);
-      for (const b of balances) {
-        b.cash *= (1 + cashReturn) ** duration;
-        b.invested *= (1 + investmentReturn) ** duration;
-      }
+      growBalances(balances, duration, cashReturn, investmentReturn);
       shortfall += spendPortfolio(balances, -surplus * duration).shortfall;
       if (shortfall > 1e-6) break;
     }
@@ -552,10 +592,7 @@ export function simulate(input) {
   const countCrypto = !(input.excludeCrypto ?? true);
   for (const p of people) {
     const as = p.assets || {};
-    const iaBasis = Math.min(as.investmentAccount || 0,
-      as.investmentAccountContributions || 0);
-    p.investmentTaxReserve = Math.max(0, (as.investmentAccount || 0) - iaBasis) *
-      RATES.incomeTax;
+    p.investmentTaxReserve = 0; // Tax is reserved on exits, never at opening.
     const brokerageBasis = Math.min(as.brokerage || 0, as.brokerageCostBasis || 0);
     p.brokerageTaxReserve = Math.max(0, (as.brokerage || 0) - brokerageBasis) *
       RATES.incomeTax;
@@ -611,11 +648,17 @@ export function simulate(input) {
     return cost;
   };
   const initialBalances = people.map((p) => ({ cash: p.assets?.cash || 0,
-    invested: p.startPortfolio - (p.assets?.cash || 0) }));
+    invested: p.startPortfolio - (p.assets?.cash || 0),
+    ia: p.assets?.investmentAccount || 0,
+    allowanceNominal: p.assets?.investmentAccountContributions || 0,
+    destination: p.investmentDestination || 'investmentAccount',
+    elapsed: 0, inflation, taxPaid: 0,
+    brokerageReturn: a.brokerageRealReturn ?? a.realReturn }));
   const advance = (balances, surplus, years) => accumulationStep(balances, surplus,
     years, a.cashRealReturn ?? 0, a.realReturn, people.map((p) => p.share));
   const beforeHouse = purchase ? advance(initialBalances, surplusNow, houseYears) : initialBalances;
-  const projectedAtHouse = beforeHouse.shortfall > 1e-6 ? -Infinity : portfolioTotal(beforeHouse);
+  const projectedAtHouse = beforeHouse.shortfall > 1e-6 ? -Infinity :
+    beforeHouse.reduce((s, b) => s + b.cash + netInvestments(b), 0);
   const houseFundingShortfall = purchase
     ? Math.max(0, cashForHouse + emergencyFund - projectedAtHouse) : 0;
   const balancesAt = (years) => {
@@ -626,13 +669,14 @@ export function simulate(input) {
     if (typeof payer === 'number' && people[payer]) {
       const order = [payer, ...people.map((_, i) => i).filter((i) => i !== payer)];
       for (const i of order) {
-        const take = Math.min(portfolioTotal([balances[i]]), remaining);
+        const take = Math.min(balances[i].cash + netInvestments(balances[i]), remaining);
         spendPortfolio([balances[i]], take);
         remaining -= take;
       }
     } else {
-      const sum = portfolioTotal(balances) || 1;
-      for (const b of balances) spendPortfolio([b], cashForHouse * portfolioTotal([b]) / sum);
+      const available = balances.map((b) => b.cash + netInvestments(b));
+      const sum = available.reduce((s, v) => s + v, 0) || 1;
+      for (const [i, b] of balances.entries()) spendPortfolio([b], cashForHouse * available[i] / sum);
     }
     reserveCash(balances, emergencyFund);
     const elapsed = years - houseYears;
@@ -660,10 +704,13 @@ export function simulate(input) {
     const projected = balancesAt(years);
     const total = portfolioTotal(projected);
     const balances = projected.map((b) => ({
+      ...b,
       cash: total > 0 ? b.cash * capital / total : 0,
       invested: total > 0 ? b.invested * capital / total : 0,
+      ia: total > 0 ? b.ia * capital / total : 0,
     }));
-    reserveCash(balances, retirementReserve);
+    // Keep recorded allowance fixed when valuing a smaller hypothetical pot.
+    // Reserve transfers occur in the shared retirement step and are taxed there.
     return balances;
   };
 
@@ -797,7 +844,7 @@ export function simulate(input) {
   };
   const creditLump = (balances, event) => {
     balances[event.owner].cash += event.credited * (1 - lumpInvestedShare);
-    balances[event.owner].invested += event.credited * lumpInvestedShare;
+    depositInvestment(balances[event.owner], event.credited * lumpInvestedShare);
   };
   const openingWithLumps = (balances, y, share = potsShare, stress = null) => {
     const result = balances.map((b) => ({ ...b }));
@@ -809,6 +856,8 @@ export function simulate(input) {
   // Split at actual receipt dates: future proceeds cannot fund earlier spending.
   // The annual net spending estimate is spread uniformly within that year.
   const retirementYear = (opening, withdrawal, year, y, rate = a.realReturn, share = potsShare, stress = null) => {
+    opening = opening.map((b) => ({ ...b, stressReturn:
+      stress && year < Math.floor(currentYear + y) + stress.badYears ? rate : undefined }));
     const from = Math.max(year, currentYear + y), to = year + 1;
     const events = lumpEvents(y, share, stress).filter((e) => e.date >= from && e.date < to)
       .sort((a, b) => a.date - b.date);
@@ -816,13 +865,13 @@ export function simulate(input) {
       a.cashRealReturn ?? 0, rate, retirementReserve), lumpGross: 0, lumpTax: 0, lumpNet: 0 };
     let balances = opening.map((b) => ({ ...b })), cursor = from;
     const totals = { shortfall: 0, fromCash: 0, fromInvestments: 0, cashGrowth: 0,
-      investmentGrowth: 0, lumpGross: 0, lumpTax: 0, lumpNet: 0 };
+      investmentGrowth: 0, investmentTax: 0, lumpGross: 0, lumpTax: 0, lumpNet: 0 };
     const advanceTo = (end) => {
       if (end <= cursor) return;
       const step = retirementStep(balances, withdrawal * (end - cursor) / (to - from),
         end - cursor, a.cashRealReturn ?? 0, rate, retirementReserve);
       balances = step.balances;
-      for (const key of ['shortfall', 'fromCash', 'fromInvestments', 'cashGrowth', 'investmentGrowth']) totals[key] += step[key];
+      for (const key of ['shortfall', 'fromCash', 'fromInvestments', 'cashGrowth', 'investmentGrowth', 'investmentTax']) totals[key] += step[key];
       cursor = end;
     };
     for (const event of events) {
@@ -907,13 +956,13 @@ export function simulate(input) {
     if (fiYear >= planEndYear || reserveCash(opening, retirementReserve) > 1e-6) return false;
     // Checked on day one as well as every year after: a portfolio that only
     // clears the floor once it has grown was never perpetual-safe to begin with.
-    if (portfolioTotal(opening) - retirementReserve < floorIn(perpetualFloor, Math.floor(fiYear), fiYear, y) - 1e-6) return false;
+    if (spendableTotal(opening) - retirementReserve < floorIn(perpetualFloor, Math.floor(fiYear), fiYear, y) - 1e-6) return false;
     for (let year = Math.floor(fiYear); year < planEndYear; year++) {
       const investedFor = year + 1 - Math.max(year, fiYear);
       const step = retirementYear(balances, Math.max(0, needIn(year, fiYear) - pensionIncomeIn(year, y)), year, y);
       if (step.shortfall > 1e-6) return false;
       balances = step.balances;
-      if (portfolioTotal(balances) - retirementReserve < floorIn(perpetualFloor, year + 1, fiYear, y) - 1e-6) return false;
+      if (spendableTotal(balances) - retirementReserve < floorIn(perpetualFloor, year + 1, fiYear, y) - 1e-6) return false;
     }
     return true;
   };
@@ -1096,9 +1145,9 @@ export function simulate(input) {
     const survives = (badYears, badReturn, crash = 0) => {
       const stress = { badYears, badReturn, crash };
       let balances = retirementBalances(fiTarget, yearsToFi);
-      for (const b of balances) b.invested *= 1 - crash;
+      for (const b of balances) { b.invested *= 1 - crash; b.ia *= 1 - crash; }
       const fiYear = currentYear + yearsToFi;
-      if (portfolioTotal(openingWithLumps(balances, yearsToFi, potsShare, stress)) - retirementReserve < floorIn(perpetualMode, Math.floor(fiYear), fiYear, yearsToFi) - 1e-6) {
+      if (spendableTotal(openingWithLumps(balances, yearsToFi, potsShare, stress)) - retirementReserve < floorIn(perpetualMode, Math.floor(fiYear), fiYear, yearsToFi) - 1e-6) {
         return false;
       }
       for (let i = 0; i < draws.length; i++) {
@@ -1109,7 +1158,7 @@ export function simulate(input) {
         if (step.shortfall > 1e-6) return false;
         balances = step.balances;
         const year = Math.floor(fiYear) + i + 1;
-        if (portfolioTotal(balances) - retirementReserve < floorIn(perpetualMode, year, fiYear, yearsToFi) - 1e-6) return false;
+        if (spendableTotal(balances) - retirementReserve < floorIn(perpetualMode, year, fiYear, yearsToFi) - 1e-6) return false;
       }
       return true;
     };
@@ -1207,6 +1256,11 @@ export function simulate(input) {
         openingCash, openingInvestments, cash: bucketTotal(balances, 'cash'),
         investments: bucketTotal(balances, 'invested'), protectedReserve: retirementReserve,
         fromCash: step.fromCash, fromInvestments: step.fromInvestments,
+        investmentTax: step.investmentTax,
+        investmentAccount: bucketTotal(balances, 'ia'),
+        contributionAllowanceNominal: bucketTotal(balances, 'allowanceNominal'),
+        accounts: balances.map((b) => ({ cash: b.cash, investmentAccount: b.ia,
+          ordinaryInvestments: b.invested - b.ia, allowanceNominal: b.allowanceNominal })),
         cashGrowth: step.cashGrowth, investmentGrowth: step.investmentGrowth,
         shortfall: step.shortfall,
       });
@@ -1355,6 +1409,8 @@ export function simulate(input) {
         (x, p) => x + (p.assets?.pillar2 || 0) + (p.assets?.pillar3 || 0), 0),
       cryptoExcluded: countCrypto ? 0 : people.reduce((x, p) => x + (p.assets?.crypto || 0), 0),
       investmentTaxReserve: people.reduce((x, p) => x + p.investmentTaxReserve, 0),
+      investmentTaxBeforeFi: Number.isFinite(yearsToFi)
+        ? balancesAt(yearsToFi).reduce((s, b) => s + b.taxPaid, 0) : null,
       brokerageTaxReserve: people.reduce((x, p) => x + p.brokerageTaxReserve, 0),
       cryptoTaxReserve: people.reduce((x, p) => x + p.cryptoTaxReserve, 0),
       // What the excluded pension money is likely to be worth once it unlocks.

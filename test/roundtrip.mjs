@@ -279,7 +279,7 @@ for (const value of [0, 80000, 120000]) {
     }
     const person = simulate(clean).persons[0];
     const expected = Math.max(0, value - 100000) * RATES.incomeTax;
-    ok(person.investmentTaxReserve === expected, 'investment reserve uses preserved allowance');
+    ok(person.investmentTaxReserve === 0, 'investment-account opening reserve is removed');
     ok(person.brokerageTaxReserve === expected, 'brokerage reserve uses preserved basis');
     ok(person.cryptoTaxReserve === expected, 'crypto reserve uses preserved basis');
   }
