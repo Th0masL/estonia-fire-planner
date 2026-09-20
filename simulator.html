@@ -721,15 +721,12 @@ const RATES = {
   // their own. Dated so a reader can see how stale they are, and kept here so
   // there is one place to refresh rather than several pages to hunt through.
   marketRates: {
-    asOf: 'August 2026',
-    ecbDepositFacility: 0.0225,       // ECB, effective 17 June 2026
+    asOf: 'August 2026',             // legacy scenario below, NOT all rates verified
+    ecbDepositFacility: 0.025,
+    ecbEffectiveDate: '2026-09-16',
+    ecbCheckedDate: '2026-09-20',
+    ecbSource: 'https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html',
     moneyMarketFundNet: 0.022,        // roughly EUR STR after a 0.10% fund fee
-    lightyearSavings: 0.0221,         // their published headline
-    ibkrEurCash: 0.01691,             // published full tier, checked August 2026
-    ibkrCashThreshold: 10_000,        // no interest at all below this
-    ibkrFullRateNav: 100_000,         // below this the rate is scaled down
-    termDepositBest: 0.030,           // smaller banks competing for funding
-    termDepositBigBanks: 0.023,       // LHV, SEB, Swedbank, top of their range
   },
 };
 

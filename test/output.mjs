@@ -357,6 +357,15 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
 
 // Public evidence must distinguish checked claims from incomplete research.
 {
+  const brokers = read('guide/brokers.html');
+  ok(brokers.includes('2.5%') && brokers.includes(RATES.marketRates.ecbEffectiveDate), 'cash guide renders benchmark and effective date');
+  ok(brokers.includes(RATES.marketRates.ecbCheckedDate), 'benchmark has an independent checked date');
+  ok(brokers.includes('USD equivalent'), 'IBKR NAV is not labelled EUR');
+  ok(!brokers.includes('Pays now'), 'cash table does not label stale retail estimates as current');
+  ok(!('ibkrFullRateNav' in RATES.marketRates), 'incorrect unqualified NAV constant removed');
+}
+
+{
   const pensions = read('guide/pensions.html');
   for (const required of ['before\n1 January 2021', 'at least five years', 'after fund payments end', 'No insurer annuity is modeled', 'confirmed coverage date', 'wording\ndiscrepancy']) {
     ok(pensions.replace(/\s+/g, ' ').includes(required.replace(/\s+/g, ' ')), `pension guidance retains ${required}`);

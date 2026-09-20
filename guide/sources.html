@@ -165,6 +165,17 @@ differs from Pensionikeskus's explicit inclusion of 2020; contribution guidance
 retains a dated start-year sentence. Both are flagged in the guide.
 Individual access dates, special exceptions, spousal transfers and future reforms
 remain open.</p>
+<h3 id="cash-market-snapshot">Cash-market snapshot</h3>
+<p><strong>Status:</strong> dated benchmark, not a retail quote. <strong>Checked:</strong> 20 September 2026.
+<strong>Effective:</strong> 16 September 2026. The
+<a href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html">ECB rate table</a>
+lists a 2.50% deposit facility rate. <a href="https://www.interactivebrokers.ie/en/accounts/fees/pricing-interest-rates.php">IBKR methodology</a>,
+calculation step 2, uses USD-equivalent NAV and balance-dependent interest.</p>
+<p><strong>Affected:</strong> <code>src/rates.js</code> benchmark metadata and the cash comparison in
+the broker guide. <strong>Limits:</strong> no current retail yield or product ranking is
+certified. Broker fees and funds still need review. The simulator's separate
+legacy money-market assumption is not refreshed or verified by this entry;
+its cash-opportunity comparison also needs nominal/real-unit correction.</p>
 <h2 id="model-assumptions-and-known-limits">Model assumptions and known limits</h2>
 <ul>
 <li>Investment-account tax is reserved immediately when money leaves the wrapper. This is a cash-planning convention, not the statutory tax-payment deadline.</li>

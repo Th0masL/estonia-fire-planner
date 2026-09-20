@@ -112,6 +112,20 @@ retains a dated start-year sentence. Both are flagged in the guide.
 Individual access dates, special exceptions, spousal transfers and future reforms
 remain open.
 
+### Cash-market snapshot
+
+**Status:** dated benchmark, not a retail quote. **Checked:** 20 September 2026.
+**Effective:** 16 September 2026. The
+[ECB rate table](https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html)
+lists a 2.50% deposit facility rate. [IBKR methodology](https://www.interactivebrokers.ie/en/accounts/fees/pricing-interest-rates.php),
+calculation step 2, uses USD-equivalent NAV and balance-dependent interest.
+
+**Affected:** `src/rates.js` benchmark metadata and the cash comparison in
+the broker guide. **Limits:** no current retail yield or product ranking is
+certified. Broker fees and funds still need review. The simulator's separate
+legacy money-market assumption is not refreshed or verified by this entry;
+its cash-opportunity comparison also needs nominal/real-unit correction.
+
 ## Model assumptions and known limits
 
 - Investment-account tax is reserved immediately when money leaves the wrapper. This is a cash-planning convention, not the statutory tax-payment deadline.

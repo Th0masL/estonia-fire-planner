@@ -1,5 +1,10 @@
 # Where to hold it — brokers, and parking cash
 
+**Partial review:** only the cash-rate snapshot below was refreshed on
+20 September 2026. Broker fees, protection descriptions, fund figures and
+provider recommendations elsewhere on this page are not reverified current
+offers. Confirm them directly before relying on them.
+
 This guide keeps running into two practical questions. Which provider should you
 buy through, and where should you put cash that you need soon and don't want to
 put in shares? Most people can answer both the same way, so both are on this
@@ -184,47 +189,48 @@ yourself. Your money goes into money market funds run by someone else, it costs
 the same day or the next day. It is a reasonable way to do the same thing with
 less effort, but you don't get to choose the fund.
 
-### Which providers actually pay the ECB rate on cash
+### Cash-rate snapshot and quote checklist
 
-The ECB deposit facility rate is {{marketRates.ecbDepositFacility|pct}}
-({{marketRates.asOf}}). Here is what the different routes pay against it, and
-what each one costs in tax and in flexibility.
+**Checked {{marketRates.ecbCheckedDate}}:** the ECB deposit facility rate is **{{marketRates.ecbDepositFacility|pct}}**,
+effective **{{marketRates.ecbEffectiveDate}}**, replacing 2.25%. This is a policy benchmark,
+not a retail savings offer or a guaranteed money-market-fund return.
+Source: [ECB key interest rates](https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html),
+effective-date table.
 
-| Route | Pays now | Tax on the return | Money is protected by | Getting it back |
-|---|---|---|---|---|
-| **Money market fund** at LHV, Swedbank or SEB | about {{marketRates.moneyMarketFundNet|pct}} | deferred inside an investment account | fund assets held separately, no deposit guarantee | sell, then two days |
-| **Lightyear Savings** | about {{marketRates.lightyearSavings|pct}} | deferred inside an investment account | same, held in third-party funds | same or next day |
-| **Term deposit** at Bigbank, Holm or Inbank | up to about {{marketRates.termDepositBest|pct}} | {{incomeTax|pct}}, in the year it is paid | deposit guarantee, {{protection.depositGuarantee|money}} | locked until the term ends |
-| **Term deposit** at LHV, SEB or Swedbank | up to about {{marketRates.termDepositBigBanks|pct}} | {{incomeTax|pct}}, in the year it is paid | deposit guarantee, {{protection.depositGuarantee|money}} | locked until the term ends |
-| **Interactive Brokers cash** | about {{marketRates.ibkrEurCash|pct}} | {{incomeTax|pct}}, declared by hand | investor protection, not the deposit guarantee | same day |
-| **Ordinary current account** | roughly nothing | nothing to tax | deposit guarantee, {{protection.depositGuarantee|money}} | instant |
+The former August provider estimates are not verified current quotes. They
+have been removed from this comparison rather than automatically increased with
+the ECB rate. This page is static, including when used offline.
 
-Three things stand out.
+| Route | Evidence needed before comparing |
+|---|---|
+| Bank savings or term deposit | Dated offer for the currency, amount and term; early-access conditions; institution and applicable protection |
+| Money-market fund | Exact share class, dated yield measure, fees, risk disclosures and settlement/redemption terms |
+| Lightyear Savings | Estonia-specific current offer, underlying fund, net fee treatment and withdrawal timing |
+| Interactive Brokers cash | Currency tier, interest-bearing balance, total account NAV, applicable entity and current rate |
 
-**The smaller Estonian banks pay more than the ECB rate, not less.** Bigbank,
-Holm Bank and Inbank compete for funding and price above the big banks. They are
-all licensed in Estonia and covered by the same
-{{protection.depositGuarantee|money}} guarantee. A term deposit there is a
-sensible home for money with a fixed date, and it beats what a money market fund
-can reach.
+IBKR's published methodology makes the effective return balance-dependent:
+a headline rate is not earned on the whole balance. Its full-rate NAV threshold
+is expressed in **USD equivalent**, not a universal EUR threshold. Use the
+[provider's cash-interest calculator](https://www.interactivebrokers.ie/en/accounts/fees/pricing-interest-rates.php)
+for the actual account. Methodology checked 20 September 2026; an individual
+account's current yield is **not verified here**.
 
-**The money market fund wins on tax and on flexibility, not on rate.** Its
-advantage is that the return is not taxed while it stays in the investment
-account, and that it can be sold on any day rather than at the end of a fixed
-term. But that tax advantage is smaller than it first looks for money that is
-going to be spent. Taking money out to buy a house is a withdrawal, and once
-withdrawals pass contributions, the gain is taxed. The deferral changes *when*
-the tax is paid, not whether it is paid at all.
+No ranking of the named banks or products has been established in this review.
+Compare like-for-like annual returns after costs, taxes and access restrictions.
+Do not assume a savings product pays nothing, that every money-market fund
+tracks the ECB rate exactly, or that every provider settles withdrawals on the
+same timetable.
 
-**Interactive Brokers is the worst of these for cash.** It pays a spread below
-the benchmark, it pays nothing at all on the first
-{{marketRates.ibkrCashThreshold|money}}, and below
-{{marketRates.ibkrFullRateNav|money}} of account value the rate is scaled down
-further. It is a place to hold investments, not cash.
+Tax treatment also depends on the account arrangement, not just the product
+name. Check the [investment-account rules](investment-account.md); a qualifying
+wrapper can defer tax, but money withdrawn for a house can consume contribution
+allowance and generate taxable withdrawals.
 
-⚠️ These rates move. They are a snapshot from {{marketRates.asOf}}, and unlike
-most numbers in this guide they are not law. Compare current deposit rates at
-minuraha.ee, which publishes a barometer of what Estonian banks are paying.
+**Simulator limit:** the cash-return input is a real-return assumption, not a
+live nominal bank quote. This documentation refresh does not change that input,
+the projection engine or provider eligibility. The broader broker-fee,
+protection and fund comparisons elsewhere on this page remain **open review**;
+the date above certifies only the stated benchmark and limited methodology check.
 
 ### Cash at a bank in another country
 

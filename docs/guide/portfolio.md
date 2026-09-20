@@ -281,5 +281,5 @@ On cost grounds alone, IBKR becomes more compelling around €200,000. Broader m
 
 - **Don't buy US-domiciled ETFs** (VT, VTI, VOO). US estate tax exposure above $60k for non-residents, no Estonia–US estate tax treaty, and PRIIPs blocks most EU retail access anyway.
 - **Don't buy distributing versions** if you have the choice — accumulating avoids the dividend handling entirely.
-- **Coins bought outside the regime cannot be moved into the IK.** Since 2026 crypto can be held there, but only if it is bought through a MiCA-licensed provider using money from the declared account. Coins bought any other way have to be sold first, and that sale is taxed. See [Crypto](crypto.md).
+- **Check crypto acquisition history and account eligibility separately.** The qualifying financial-asset change dates from 1 January 2025. A wallet transfer does not establish eligibility; historic migrations need individual review. See [Crypto](crypto.md).
 - **Don't start with a lump sum you need for the house.** Covered next.
