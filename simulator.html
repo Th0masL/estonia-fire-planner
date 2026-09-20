@@ -67,7 +67,8 @@
       <button type="button" data-theme-choice="system" aria-pressed="true">System</button>
       <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
     </div>
-    <p class="note">Not financial advice. Rates last verified August 2026.</p>
+    <p class="note">Not financial advice. Baseline review: August 2026.
+      <a href="guide/sources.html">Per-rule checks and limitations</a>.</p>
   </div>
 </nav>
 
@@ -366,8 +367,8 @@
 </main>
 
 <footer class="sim-foot">
-  <p>Not financial advice. Rates verified against emta.ee, pensionikeskus.ee and tf.ee —
-    see <a href="index.html">the guide</a> for sources. Estonian rules change most years.</p>
+  <p>Not financial advice. See the <a href="guide/sources.html">source register</a> for
+    checked rules, review dates and unresolved limitations. Future rules may change.</p>
 </footer>
 
 <script type="module">
@@ -772,9 +773,9 @@ const DEFAULTS = {
   // than it looks: health cover follows receipt of a state pension, so drawing
   // early ends the voluntary contract early too.
   statePensionEarlyYears: 0,
-  // Years of working past the earliest date the plan allows. The solver finds a
-  // boundary, not a target: by construction it leaves no margin at all, so this
-  // is how margin gets bought.
+  // Years of work added to the date found by the quarterly/event search.
+  // The later date is checked again; neither earliest-date accuracy nor a
+  // fixed gain in safety margin is guaranteed.
   bufferYears: 0,
   transactionCostRate: 0.02,          // notary, state fee, valuation, bank fee
 };
@@ -3813,6 +3814,11 @@ function render() {
       <div class="stat ${onTrack || marginal ? '' : 'stat-warn'}"><b>${eur(sim.savings.surplusAfterMove)}</b><span>${onTrack ? 'saved per year' : 'short each year'}</span></div>
     </div>
 
+    <p class="hint" id="fiEstimateHint">FI timing is an estimate under your assumptions, not a
+      market forecast. Displayed years and ages are rounded summaries, not instructions to retire
+      at the start of that year. The search checks quarterly dates and major events; narrow
+      feasible windows can be missed. A funded result is not proof of the earliest possible date.</p>
+
     ${onTrack ? '' : marginal
       ? `<p class="alert alert-soft">Income and spending are within ${pct(gapShare)} of each other —
          ${eur(-sim.savings.surplusAfterMove)} a year short. Essentially break-even, so nothing is
@@ -3953,27 +3959,26 @@ function render() {
       and Pillar II/III funds share the same shock: fund payments and future lump sums are recalculated.
       Cash retains its configured return. This assumes the same market exposure for all modeled
       investments, not each fund's actual allocation. The first stressed year may be partial.
-      <br><br><strong>Why the unbuffered plan absorbs nothing.</strong> The date above
-      is the <em>earliest</em> one that works, so by construction it leaves no margin — it is a
-      boundary, not a target. Margin has to be bought, and <em>Work on past the FI date</em> under
-      Assumptions is how. Selling assets to live on while they are down destroys units that cannot
-      take part in the recovery, which is why the opening years decide everything and why a few
-      extra months of work are worth far more than their face value.`)}
+      <br><br><strong>An estimate, not a guaranteed retirement date.</strong> The search checks
+      quarterly dates and major events, then refines a funded interval. It can miss narrow
+      windows; it does not prove the globally earliest date or a four-month error bound.
+      An unbuffered plan may have little margin, but that depends on its cash flows.
+      Try <em>Work on past the FI date</em> under Assumptions to compare a later plan;
+      that date is checked again for funding. Extra work can build margin when it adds savings,
+      but its benefit is not fixed. Opening losses matter, and later losses can matter too.`)}
     <table class="mini">
       <tr><th>Years of zero investment real return it survives <span class="muted">right at the start</span></th><td><strong>${sim.fi.resilience.flatAll ? 'the whole plan' : sim.fi.resilience.flatYears}</strong></td></tr>
       <tr><th>Years of −10% investment return it survives</th><td><strong>${sim.fi.resilience.bearAll ? 'the whole plan' : sim.fi.resilience.bearYears}</strong></td></tr>
       <tr><th>Single investment crash on day one it recovers from</th><td><strong>${pct(sim.fi.resilience.crash)}</strong></td></tr>
-      ${sim.fi.bufferYears ? `<tr><th>Bought by working on <span class="muted">past the earliest date of ${(sim.currentYear + sim.fi.yearsSolved).toFixed(0)}</span></th><td>${sim.fi.bufferYears} ${sim.fi.bufferYears === 1 ? 'year' : 'years'} · ${eur(sim.fi.atFiDate - (sim.fi.number))} above the bar</td></tr>` : ''}
+      ${sim.fi.bufferYears ? `<tr><th>With additional work <span class="muted">past the estimated FI year of ${(sim.currentYear + sim.fi.yearsSolved).toFixed(0)}</span></th><td>${sim.fi.bufferYears} ${sim.fi.bufferYears === 1 ? 'year' : 'years'} · ${eur(sim.fi.atFiDate - (sim.fi.number))} above the bar</td></tr>` : ''}
     </table>
     <p class="hint">${sim.fi.resilience.flatYears === 0 && !sim.fi.bufferYears
-      ? `<strong>This plan absorbs nothing.</strong> That is not a flaw in your figures — it is what
-         asking for the earliest possible date means. Set <em>Work on past the FI date</em> to a year
-         or two and watch these numbers move: the gain is far more than proportional, because the
-         portfolio compounds for longer, a year of withdrawals never happens, and contributions carry
-         on.`
-      : `The two rows move differently. Tolerance in <em>years</em> accelerates — each extra year of
-         work buys more of it than the last, because the surplus above the bar compounds. The
-         <em>crash</em> figure saturates, since it is a share of a portfolio that is itself growing.
+      ? `<strong>No full opening year of zero real investment return passed this test.</strong>
+         This does not mean every smaller shock would fail. Compare additional work, lower spending
+         or different return assumptions, then review the recalculated funding and stress results.
+         These are deterministic scenarios, not probabilities of success.`
+      : `The rows test different shocks: a period of reduced returns versus a one-off loss.
+         Their results need not improve proportionally when you change the retirement date.
          <br><br>These shocks apply to accessible investments and pension funds until withdrawal.
          Cash keeps its configured return; the modeled state pension is unchanged. The protected reserve is not
          available for ordinary withdrawals, even in these scenarios. Results are deterministic

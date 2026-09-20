@@ -116,6 +116,9 @@ const markupOf = (html) => html
 for (const page of PAGES) {
   const html = read(page);
   const markup = markupOf(html);
+  ok(!markup.includes('Rates last verified') && !markup.includes('Rates verified against'),
+    `${page} does not imply whole-site rate verification`);
+  ok(markup.includes('Per-rule checks and limitations'), `${page} links scoped evidence`);
 
   // A figure that failed to substitute, or a template hole that never filled.
   ok(!markup.includes('{{'), `${page} has no unsubstituted placeholder`);
@@ -152,6 +155,16 @@ for (const page of PAGES) {
       ? m[1].slice(3)
       : (base ? `${base}/${m[1]}` : m[1]);
     ok(existsSync(join(ROOT, target)), `${page} links to a real file`, m[1]);
+  }
+  // Check local fragments as well as files: a surviving page can still have a
+  // stale heading link after a documentation review.
+  for (const m of markup.matchAll(/href="([^"#]*)#([^"#]+)"/g)) {
+    if (/^[a-z]+:/i.test(m[1])) continue;
+    const target = m[1] ? join(ROOT, base, m[1]) : join(ROOT, page);
+    if (!existsSync(target) || !target.endsWith('.html')) continue;
+    const id = decodeURIComponent(m[2]);
+    ok(markupOf(readFileSync(target, 'utf8')).includes(`id="${id}"`),
+      `${page} local fragment resolves`, `${m[1]}#${id}`);
   }
 }
 
@@ -674,6 +687,16 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
   ok(tax.includes(`€${RATES.basicExemptionMonthly}`) && tax.includes(`€${RATES.basicExemptionPensionAge}`), 'tax overview renders both exemptions');
   ok(tax.includes(`${(RATES.incomeTax * .8 * 100).toFixed(1)}%`), 'rental percentage reconciles with qualifying deduction');
   ok(tax.includes(`€${(RATES.socialTaxMinimumBaseMonthly * RATES.socialTax).toFixed(2)}`), 'social minimum tax reconciles with base');
+}
+
+{
+  const ui = read('src/ui.js');
+  for (const phrase of ['FI timing is an estimate', 'quarterly dates and major events', 'that date is checked again for funding', 'No full opening year of zero real investment return']) {
+    ok(ui.includes(phrase) && read('simulator.html').includes(phrase), `FI scope survives build: ${phrase}`);
+  }
+  for (const phrase of ['This plan absorbs nothing', 'opening years decide everything', 'gain is far more than proportional', 'past the earliest date']) {
+    ok(!ui.includes(phrase), `unsupported resilience claim removed: ${phrase}`);
+  }
 }
 
 console.log(`\n${checks} output and cross-engine checks`);

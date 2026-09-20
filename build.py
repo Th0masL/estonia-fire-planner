@@ -89,7 +89,8 @@ SIDEBAR = """<button id="menu" class="menu" aria-label="Toggle navigation" aria-
       <button type="button" data-theme-choice="system" aria-pressed="true">System</button>
       <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
     </div>
-    <p class="note">Not financial advice. Rates last verified {verified}.</p>
+    <p class="note">Not financial advice. Baseline review: {verified}.
+      <a href="{root}guide/sources.html">Per-rule checks and limitations</a>.</p>
   </div>
 </nav>
 
@@ -184,6 +185,8 @@ def github_slugify(value: str, separator: str = "-") -> str:
 
 
 def render(md_text: str):
+    # Heading IDs must be unique within a page, not across unrelated pages.
+    _seen.clear()
     md = markdown.Markdown(
         extensions=["tables", "fenced_code", "attr_list", "sane_lists", "toc"],
         extension_configs={"toc": {"slugify": github_slugify, "toc_depth": "2-2"}},

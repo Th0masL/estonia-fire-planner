@@ -440,7 +440,8 @@ input:focus, select:focus {
 .checks label, .alloc { flex-wrap: nowrap; align-items: center; gap: 7px; font-size: 13px; }
 .checks .coverage-date { flex: 1 0 100%; flex-wrap: wrap; align-items: baseline; }
 input[type="range"] { flex: 1; accent-color: var(--color-primary); }
-.alloc output { font-size: 12.5px; color: var(--color-primary); font-weight: 600; white-space: nowrap; }
+.alloc output { font-size: 12.5px; color: var(--color-primary); font-weight: 600;
+  min-width: 0; overflow-wrap: anywhere; }
 .hint { font-size: 12px; color: var(--color-text-faint); margin: 6px 0 0; line-height: 1.5; }
 
 .person { border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 10px; background: var(--color-bg); }

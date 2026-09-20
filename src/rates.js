@@ -305,9 +305,9 @@ export const DEFAULTS = {
   // than it looks: health cover follows receipt of a state pension, so drawing
   // early ends the voluntary contract early too.
   statePensionEarlyYears: 0,
-  // Years of working past the earliest date the plan allows. The solver finds a
-  // boundary, not a target: by construction it leaves no margin at all, so this
-  // is how margin gets bought.
+  // Years of work added to the date found by the quarterly/event search.
+  // The later date is checked again; neither earliest-date accuracy nor a
+  // fixed gain in safety margin is guaranteed.
   bufferYears: 0,
   transactionCostRate: 0.02,          // notary, state fee, valuation, bank fee
 };

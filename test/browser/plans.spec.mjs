@@ -29,6 +29,25 @@ function makePlan(name = hostileName) {
 const fragment = (plan) => '#d=' + encodeState(plan);
 const saved = (page) => page.evaluate((key) => localStorage.getItem(key), STORAGE_KEY);
 
+test('FI estimates and stress explanations disclose search and forecast limits', async ({ page }, testInfo) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/simulator.html' + fragment(makePlan('Person1')));
+  await expect(page.locator('#fiEstimateHint')).toContainText('FI timing is an estimate');
+  await expect(page.locator('#fiEstimateHint')).toContainText('rounded summaries');
+  await page.locator('[data-info="resilience"]').click();
+  const explanation = page.locator('[data-info-body="resilience"]');
+  await expect(explanation).toBeVisible();
+  await expect(explanation).toContainText('quarterly dates and major events');
+  await expect(explanation).toContainText('that date is checked again for funding');
+  await explanation.evaluate(el => el.scrollIntoView({ block: 'start', behavior: 'instant' }));
+  await page.screenshot({ path: testInfo.outputPath('resilience-scope.png') });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+  const sourceLink = page.locator('.sim-foot').getByRole('link', { name: 'source register' });
+  await sourceLink.evaluate(el => el.scrollIntoView({ block: 'center', behavior: 'instant' }));
+  await sourceLink.click();
+  await expect(page).toHaveURL(/guide\/sources.html$/);
+});
+
 test('investment-account withdrawal tax and destination are visible and persist', async ({ page }) => {
   const plan = blankState();
   Object.assign(plan.persons[0], { name: 'Person1', birthYear: 1960, healthCoveredAfterFi: true,
