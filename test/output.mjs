@@ -249,6 +249,8 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
     'docs/guide/account-protection.md': 3,
     // A FatFIRE spending tier, nothing to do with deposit protection.
     'docs/guide/fatfire.md': 5,
+    // Synthetic company comparison amounts, not protection thresholds.
+    'docs/guide/company.md': 5,
   };
   const files = readdirSync(join(ROOT, 'docs')).filter((f) => f.endsWith('.md'))
     .map((f) => `docs/${f}`)
@@ -354,6 +356,22 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
 }
 
 // Public evidence must distinguish checked claims from incomplete research.
+{
+  const company = read('guide/company.html');
+  const principal = 50000, assets = 100000, rate = 0.22;
+  const netProfit = (assets - principal) * (1 - rate);
+  const tax = netProfit * rate / (1 - rate);
+  ok(Math.abs(principal + netProfit + tax - assets) < 1e-8, 'company extraction reconciles principal, owner profit and tax');
+  for (const amount of [principal + netProfit, tax, assets * (1 - rate)]) {
+    ok(company.includes(`€${amount.toLocaleString('en-IE', { maximumFractionDigits: 0 })}`), 'company guide includes independently reconciled net/tax amount');
+  }
+  ok(company.includes('personal basis'), 'company example distinguishes owner basis');
+  ok(company.includes('lawful') && company.includes('open review'), 'company comparison retains conditions and unresolved scope');
+  for (const obsolete of ['22% of everything', 'no version of this', 'wins decisively', '€163,493', '€149,590']) {
+    ok(!company.includes(obsolete), `company guide removes unsupported claim ${obsolete}`);
+  }
+}
+
 {
   const evidence = read('guide/sources.html');
   for (const heading of ['Checked rules', 'Model assumptions and known limits', 'Open review', 'Maintaining this register']) {

@@ -56,6 +56,27 @@ in the guides. **Limits:** this checks the published rates, not every deduction,
 payroll exception or person's final annual tax bill. It does not establish that
 the same rates will apply throughout a multi-decade retirement.
 
+### OÜ capital and profit comparison
+
+**Status:** checked rules with a conditional arithmetic illustration.
+**Checked:** 20 September 2026. **Applicable period:** standard distribution
+rate from 2025; current capital guidance, original commencement not established.
+
+Company contribution records and an owner's acquisition cost are different
+tax records. The [OÜ guide](company.md) now separates principal repayment from
+profit distribution and compares after-extraction amounts. Its illustration
+assumes matching documented bases and a lawful repayment; it is not a corporate
+tax calculator.
+
+**Primary sources:** [EMTA corporate income tax](https://www.emta.ee/en/business-client/taxes-and-payment/income-and-social-taxes/income-tax-and-basic-exemption),
+“Corporate income tax”; [equity payments](https://www.emta.ee/en/admin/content/handbook_article/771),
+TuMS §50(2); [capital-reduction example](https://www.emta.ee/node/330/chapter/34422/pdf),
+company reporting and personal table 6.4 (updated 20 February 2025).
+
+**Affected:** `docs/guide/company.md`, `docs/guide/strategy-levers.md`, and their
+built pages; no engine changes. **Limits:** rental comparisons, filing corrections,
+specific capital procedures, shareholder loans and cross-border cases remain open.
+
 ## Model assumptions and known limits
 
 - Investment-account tax is reserved immediately when money leaves the wrapper. This is a cash-planning convention, not the statutory tax-payment deadline.
@@ -80,7 +101,7 @@ remain useful leads, but their presence is not a completed cross-guide audit.
 |---|---|---|
 | Pension contributions and payouts | Deduction scope, access dates, duration requirements, withholding and exceptions; reconcile every guide statement | Pension guides, `src/rates.js`, pension projections |
 | State pension and healthcare | Service evidence, future cohort ages, minimum-contribution exceptions and actual coverage routes | Pension eligibility and healthcare costs |
-| OÜ investing | Reconcile contributed principal, retained profits and extraction tax in worked examples | Company-versus-personal comparison |
+| OÜ investing | Rental-specific taxation, historic filing corrections and actual capital repayment procedures; core principal/profit example checked above | Company-versus-personal comparison |
 | Crypto and foreign accounts | Acquisition dates, provider licences, eligible assets versus eligible accounts, losses and reporting | Tax and account guidance; crypto approximation |
 | Housing and family benefits | Lending constraints, guarantees, repayment terms, property taxes and benefit eligibility | Housing guidance and household inputs |
 | Cross-border and ownership | Residency changes, treaties, gifts, marital property and inheritance | Account ownership and relocation guidance |

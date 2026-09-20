@@ -19,9 +19,9 @@ Two sub-levers, and they are not equally valued:
 
 ### 2. Consider an OÜ for genuine business income
 
-For genuinely independent consulting or contract revenue, routing income through an OÜ and **retaining it** can mean investing pre-distribution-tax euros rather than post-tax personal income. Compounding €100k instead of €60k for 20 years is roughly €265k vs €159k.
+For genuinely independent business income, an OÜ can retain profit before distribution tax. Compare after-extraction personal wealth using the same company budget, including business costs and appropriate remuneration—not a pre-tax company balance against a post-tax personal balance.
 
-This can be a high-leverage *structural* move for genuine Estonian business income. See [Using an OÜ](company.md).
+Whether this helps depends on the actual cash flows and costs. See the reconciled examples in [Using an OÜ](company.md).
 
 Requires: real business substance, a defensible salary, an accountant. Not a DIY area.
 

@@ -1,75 +1,102 @@
 # Using an OÜ as an investment wrapper
 
-Because retained earnings are taxed at **0%**, an Estonian OÜ is a legal tax-deferred investment vehicle.
+An OÜ can retain business profits for investment before distribution tax. That
+does not make company money tax-free personal spending money. Compare what the
+owner can actually receive after costs and extraction taxes.
 
-## OÜ vs investment account
+## Separate capital from profit
 
-| | Investment account (IK) | OÜ |
-|---|---|---|
-| Deferral | Indefinite | Indefinite |
-| Tax on extraction | 22% on gains only | 22/78 on distributions (=22% of gross) |
-| **Tax-free withdrawal of principal** | **Yes** — contributions come out first | Yes ✅, up to the amount contributed — **but only if the contribution was declared on TSD Lisa 7, code 7030, in the period it was made**. Miss that and *every* later equity distribution becomes taxable |
-| Eligible assets | Financial assets only | **Anything** — real estate, crypto, private equity, P2P |
-| Expenses deductible | No | Yes (genuinely business-related) |
-| Running cost | ~€0 | **~€600–1,800/yr** accounting |
-| Complexity | Low | Meaningful — hidden dividend rules, board fee rules, annual reports |
-| Health insurance | No | **Yes, via minimal salary** |
+Under the standard regime, corporate distribution tax is 22/78 of the net
+dividend: €78 paid to the owner costs €100 including €22 tax. Retaining profit
+defers this tax; non-business expenses and other taxable payments have separate
+rules. Ordinary dividends taxed under this regime generally have no additional
+Estonian withholding for the recipient. Historical reduced-rate balances are an
+exception. [EMTA: income tax and basic exemption, corporate income tax](https://www.emta.ee/en/business-client/taxes-and-payment/income-and-social-taxes/income-tax-and-basic-exemption).
 
-**Rule of thumb:**
+A qualifying equity repayment is different from a dividend. Company-level tax
+applies to equity payments exceeding recorded contributions, not automatically
+to every euro paid out. [EMTA: equity contributions and payments, TuMS §50(2)](https://www.emta.ee/en/admin/content/handbook_article/771).
 
-- **Pure liquid portfolio, employed income → investment account.** Simpler, cheaper, and the tax-free-principal-first withdrawal rule is genuinely better than the OÜ's.
-- **Self-employed / consulting income → OÜ**, because the income has to land somewhere anyway, and retaining it pre-tax to invest is a huge advantage over drawing salary at 22% + 33% social tax first.
-- **Real estate, crypto, or anything IK can't hold → OÜ**, no contest.
-- **Many people should run both.**
+The owner's acquisition cost is a separate record. A payment exempt at company
+level can still create personal taxable income if it exceeds that owner's
+documented basis. See EMTA's
+[share-capital reduction example, including personal return table 6.4](https://www.emta.ee/node/330/chapter/34422/pdf).
 
-## The consulting-income case, concretely
+Keep contribution, acquisition-cost and declaration records. An ordinary dividend
+does not become a capital repayment just because the owner once funded the
+company. Capital reductions and liquidation require the appropriate legal
+procedure. Correction deadlines for missing historic declarations are **not
+verified here**; do not assume the exemption is permanently lost or automatically
+available.
 
-If you earn €100k of consulting revenue through an OÜ:
+## Same personal capital: a reconciled example
 
-- **Salary route:** ~33% social tax + 22% income tax → roughly €60k lands in your pocket, ~€60k available to invest
-- **Retain-and-invest route:** €100k stays in the company and is invested **in full**, compounding on the pre-tax amount. Tax is paid only decades later, on distributions
+**Illustration, not a forecast:** start with €50,000 of already-taxed personal
+cash and finish with €100,000 before extraction. Assume no fees, foreign taxes,
+prior withdrawals or other tax relief; an unchanged 22% rate; and an Estonian
+resident owner. For the OÜ, assume the same owner contributed the capital,
+both company contribution records and personal basis are €50,000, and a lawful
+capital repayment is possible. The remaining profit is distributed under the
+standard dividend regime.
 
-Compounding €100k instead of €60k for 20 years at 5% real is the difference between ~€265k and ~€159k. That's not a rounding error — it's the whole strategy. This is Estonia's genuinely world-class feature and the reason e-residency exists.
-
-⚠️ **Caveats:** a company that pays a working owner nothing but distributes dividends invites reclassification of dividends as salary. Keep a defensible salary. Expenses must be real. Get an accountant — this is not a DIY area.
-
-## Should *you* create an OÜ? Two specific cases
-
-### For holding securities — no, and it would actively hurt
-
-An OÜ only wins when income **arrives in the company pre-tax**. If the money is salary you've already been taxed on at 22%, routing it through a company means paying **22% again** on distribution — the same euro taxed twice, plus accounting fees.
-
-| | Salary → investment account | Salary → OÜ → invest |
-|---|---|---|
-| Income tax on the way in | 22% | 22% |
-| Tax while invested | 0% (deferred) | 0% (retained) |
-| Tax on the way out | 0% up to contributions, then 22% on gains | **22% of everything distributed** |
-| Running cost | €0 | €600–1,800/yr |
-
-The investment account already gives you the deferral an OÜ would provide, **and** it lets you withdraw your contribution base tax-free. For salaried income there is no version of this where the OÜ wins.
-
-### For a residential rental — no, unless it's leveraged
-
-This surprises people, because "0% on retained earnings" sounds unbeatable. It isn't, because **the 20% automatic deduction gives individuals a 17.6% effective rate, which is lower than the OÜ's 22% distribution tax** — and companies don't get that deduction, they deduct actual expenses instead.
-
-Worked on a flat with ~€7,300/yr gross rent, ~€600 of costs, ~€900/yr of accounting:
-
-| | Personal | OÜ |
+| Full extraction | Investment account | OÜ |
 |---|---:|---:|
-| Tax on rent | €1,285 (**17.6%**) | €0 while retained |
-| Net available each year | €5,415 | €5,800 retained |
-| After 20 years at 5% | €179,059 | €191,783 |
-| Tax on extraction | 22% on gains only | **22% of everything** |
-| **Net** | **€163,493** | **€149,590** |
+| Opening contribution / personal basis | €50,000 | €50,000 |
+| Assets before extraction | €100,000 | €100,000 |
+| Principal returned without tax under these assumptions | €50,000 | €50,000 |
+| Gain / profit before extraction tax | €50,000 | €50,000 |
+| Extraction tax | €11,000 | €11,000 |
+| Owner receives in total | **€89,000** | **€89,000** |
 
-**Personal ownership wins by about 9%** — and that's the *worst* case for the personal route, assuming every euro of gain eventually gets taxed. In practice much of it comes out inside the tax-free contribution base, widening the gap further.
+Arithmetic: `50,000 + 50,000 × (1 − 0.22) = 89,000`. For the company,
+`39,000 × 22/78 = 11,000` tax on the net profit distribution. Principal is
+returned separately. Already-taxed capital is not necessarily taxed again
+merely because it entered an OÜ.
 
-**Three things flip this:**
+The routes are not operationally identical: investment-account withdrawal
+ordering differs from corporate capital procedures. See the
+[investment-account guide](investment-account.md). Fees, eligibility,
+recordkeeping and flexibility can change the comparison. Obtain actual
+accounting and transaction quotes; no universal annual cost or winner is assumed.
 
-1. **Leverage.** Mortgage interest is deductible for a company but **not** for an individual (abolished 2024). On the same flat with a €150k mortgage at 4%, the personal route pays €1,285 of tax on an income stream that no longer exists, while the OÜ simply has no profit to tax. **With a mortgage, the OÜ wins decisively.**
-2. **Real costs above 20% of the rent.** A big renovation year, for example, or high management fees.
-3. **Commercial property**, which gets no automatic deduction at all.
+## Existing business profits are a different starting point
 
-**Also count the cost of moving an existing flat into an OÜ:** transferring it is a **sale**. It triggers 22% income tax on your gain personally (no primary-residence exemption — it's a rental), plus notary and state fees. On an appreciated Tallinn flat that can easily be a five-figure bill to enter a structure that then earns you less.
+If €100,000 is entirely retained business profit, with no returnable contributed
+capital, full distribution under the same simplified assumptions leaves
+€78,000 for the owner—not €100,000. Revenue is not profit: first allow for business
+costs, applicable taxes and remuneration for work.
 
----
+A salary-versus-retention comparison must use the same total company budget,
+include employer and employee charges, and compare after-extraction personal
+wealth on both paths. A comparison of pre-tax company capital with post-tax
+personal capital alone cannot establish the advantage.
+
+Working owners cannot safely substitute dividends for appropriate remuneration.
+EMTA warns that missing or unjustifiably low pay can lead to reclassification.
+[EMTA: payment of labour taxes](https://www.emta.ee/en/business-client/e-services-training-courses/advice/about-payment-labour-taxes).
+Company ownership alone is not evidence of healthcare coverage.
+
+## Rental property needs its own comparison
+
+There is no demonstrated universal winner for a rental, with or without a loan.
+Compare the same property, purchase funding, debt service, actual costs, annual
+taxes, reinvestment assumptions, eventual sale and extraction. Track contributed
+purchase capital separately from rental profits.
+
+The previous rental table and categorical leverage recommendation have been
+removed: they did not reconcile these flows sufficiently. Residential deduction
+eligibility, interest treatment, transfer/sale taxes, VAT and company financing
+terms remain **open review** here. This page does not establish a tax-free way to
+transfer an existing property or determine the best ownership structure.
+
+## Scope and evidence
+
+Primary guidance above was checked on **20 September 2026**. The standard
+distribution rate applies from 2025; EMTA's equity example was updated on
+20 February 2025. Original commencement dates for the capital rules were not
+established in this review. Cross-border cases, special exemptions, shareholder
+loans, historic filing corrections and specific corporate procedures remain
+unresolved here. See the [evidence register](verification.md).
+
+These are guide illustrations, not an OÜ simulation mode. The FIRE calculator
+does not model company accounts, corporate extraction or payroll strategy.
