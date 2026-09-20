@@ -19,6 +19,28 @@ neither the website nor an offline copy automatically updates legislation.
 
 ## Checked rules
 
+### Household benefits, costs and risk guidance
+
+**Checked:** 20 September 2026. Limited agency-guidance review; no benefit engine added.
+
+- [SKA benefit rates](https://sotsiaalkindlustusamet.ee/en/family-benefits-and-allowances/family-benefits-overview/child-and-family-benefits-rates) and [child allowance](https://www.sotsiaalkindlustusamet.ee/perehuvitised-ja-muud-toetused/peretoetused/lapsetoetus): current amounts, qualifying children, age/student distinction and offer process.
+- [Shared parental benefit](https://sotsiaalkindlustusamet.ee/en/family-benefits-and-allowances/family-benefits-overview/shared-parental-benefit): reference-period mechanics, taxable benefit and recipient/leave conditions. The July 2026 example is independently checked calendar arithmetic.
+- [Cap transition, 25 November 2025](https://www.sotsiaalkindlustusamet.ee/uudised/vanemahuvitise-ulempiir-ja-selle-muudatused-2026-aastal): 2026 amount and expected/actual-birth distinction. [Earnings change, 19 November 2025](https://www.sotsiaalkindlustusamet.ee/uudised/vanemahuvitise-saamise-ajal-tulu-teenimine): applicable benefit periods from January 2026.
+- [EMTA general exemption](https://www.emta.ee/en/private-client/taxes-and-payment/tax-incentives/calculation-basic-exemption), [pensionable-age exemption](https://www.emta.ee/en/private-client/taxes-and-payment/tax-incentives/basic-exemption-pensionable-age), and [investment accounts](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account): individual, conditional treatment rather than a universal doubled household allowance.
+- [SKA supplementary pension contributions](https://www.sotsiaalkindlustusamet.ee/perehuvitised-ja-muud-toetused/ravi-ja-pensionikindlustus/kogumispensioni-taiendavad-sissemaksed): child-related Pillar II route; not modeled automatically.
+- [Education ministry tuition conditions](https://www.hm.ee/korgharidus-ja-teadus/korgharidus/tasuta-korgharidus-ja-oppekulude-huvitamine): free study is conditional; language alone is insufficient.
+
+**Source caveat:** the English shared-benefit cap explanation contains conflicting
+×2/×3 lines. Do not copy that formula as verified. Personal transition cases,
+reference-period exceptions, cross-border coordination and future rates remain
+open. Municipal costs, insurance pricing/claim probabilities, personal legal
+arrangements and housing-guarantee eligibility are not verified here.
+
+**Affected:** household guide and life-cover action advice. Removed cost/risk
+rankings and universal insurance prescriptions. The life-cover checkbox does not
+establish disability cover or policy adequacy. Projections/rates are unchanged;
+temporary benefits and leave cash flows still require separate reconciliation.
+
 ### Healthcare routes and finite coverage gaps
 
 **Checked:** 20 September 2026. Limited route review, not individual entitlement.

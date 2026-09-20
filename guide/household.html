@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Household, not individual — Estonian FIRE Simulator</title>
-<meta name="description" content="Dependants and multiple adults change a FIRE plan in more ways than simply increasing spending. This chapter describes the rules and scenarios that househo">
+<meta name="description" content="Dependants and multiple adults change both cash flows and risks. Model the household budget while keeping ownership, tax and individual eligibility distinc">
 <meta name="theme-color" content="#f6f8fb">
 <script>
 (function () {
@@ -78,69 +78,98 @@
   <div class="wrap">
     <section class="doc">
       <h1 class="doc-title">Household, not individual</h1>
-<p>Dependants and multiple adults change a FIRE plan in more ways than simply increasing spending. This chapter describes the rules and scenarios that households should model explicitly.</p>
+<p>Dependants and multiple adults change both cash flows and risks. Model the
+household budget while keeping ownership, tax and individual eligibility distinct.</p>
 <blockquote>
-<p><strong>Partial review — 20 September 2026:</strong> healthcare cross-references have been
-corrected. The remaining benefit amounts, formulas, education claims and
-household recommendations below are still under review, not certified by this
-notice. Confirm them before relying on them in a plan.</p>
+<p><strong>Limited review — 20 September 2026:</strong> the linked sources support the specific
+current rules below, not a household's entitlement or future benefit amounts.
+Municipal fees, personal insurance quotes, cross-border cases and legal
+arrangements remain unverified. This is not a family-benefit calculator.</p>
 </blockquote>
-<h2 id="the-good-news-first">The good news first</h2>
-<h3 id="two-adults--where-the-allowances-do-and-dont-double">Two adults — where the allowances do and don't double</h3>
-<p>Estonian allowances are <strong>per person</strong>, but most of them only have value against actual income:</p>
+<h2 id="allowances-and-accounts-are-individual">Allowances and accounts are individual</h2>
 <div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
-<th>Wrapper</th>
-<th>Per person</th>
-<th>Household of two</th>
-<th>Useful with one earner?</th>
+<th>Item</th>
+<th>What to check for each person</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Pillar III deduction ceiling</td>
-<td>Up to €6,000/yr, subject to income and tax</td>
-<td>Assess each taxpayer separately</td>
-<td>Depends on each person's taxable income, not employment alone</td>
+<td>Pillar III deduction</td>
+<td>Up to €6,000 annually, limited by eligible income and available tax; not a guaranteed refund</td>
 </tr>
 <tr>
-<td>Basic exemption</td>
-<td>€700/month</td>
-<td>€1,400/month</td>
-<td>❌ Only against actual income</td>
+<td>General basic exemption</td>
+<td>€700 monthly in 2026; reduces taxable income, not a cash payment to each adult</td>
 </tr>
 <tr>
 <td>Investment accounts</td>
-<td>Unlimited</td>
-<td>Each adult may have one</td>
-<td>✅ Yes</td>
+<td>Several accounts are possible; the tax calculation combines the same taxpayer's accounts, not both partners' accounts</td>
 </tr>
 <tr>
 <td>Pillar II</td>
-<td>Individual</td>
-<td>Two accounts accruing</td>
-<td>Only on earned income</td>
+<td>Check membership, actual contributions and applicable state-paid contributions; an account does not imply ongoing accrual</td>
 </tr>
 </tbody>
 </table></div>
-<blockquote>
-<p><strong>Pillar III deductions depend on each taxpayer's eligible income and available tax.</strong> Non-salary income may matter. A contribution alone does not guarantee a refund.</p>
-<p>The simulator does not transfer unused allowance between partners. Spousal-transfer legal details remain open in the current review; see <a href="pensions.html#the-spousal-transfer-caveat-for-single-earner-households">Pension pillars II and III</a>.</p>
-</blockquote>
-<p><strong>Separate investment accounts can be useful for both adults</strong>, since the wrapper capacity is unlimited and unconditional.</p>
-<h3 id="children-are-genuinely-cheap-in-estonia">Children are genuinely cheap in Estonia</h3>
-<p>The Estonian state covers or subsidises several major child-related costs:</p>
-<ul>
-<li><strong>Public school</strong>: free, including school lunch</li>
-<li><strong>Kindergarten</strong> (<code>lasteaed</code>): heavily subsidised municipal fee plus food</li>
-<li><strong>Healthcare</strong>: children have a separate residence-based eligibility route; see the healthcare section below.</li>
-<li><strong>Higher education</strong>: free in Estonian-language programmes</li>
-<li><strong>Child allowance</strong> (<code>lapsetoetus</code>) ✅: <strong>€80/month</strong> for the 1st and 2nd child, <strong>€100</strong> for the 3rd and each subsequent, until 19</li>
-<li><strong>Large family allowance</strong> ✅: <strong>€450/month</strong> for 3–6 children, €650 for 7+ — automatic, no application</li>
-<li><strong>Parental benefit</strong> (<code>vanemahüvitis</code>) ✅: 100% of prior income, capped — see the 2026 changes below</li>
-</ul>
-<p>This matters for FIRE arithmetic: in many countries kids add €500–1,500/month of unavoidable cost. In Estonia the number is much smaller, and a big chunk of the remainder is discretionary.</p>
+<p><a href="https://www.emta.ee/en/private-client/taxes-and-payment/tax-incentives/calculation-basic-exemption">EMTA's general exemption guidance</a>
+and <a href="https://www.emta.ee/en/private-client/taxes-and-payment/tax-incentives/basic-exemption-pensionable-age">pensionable-age exemption guidance</a>
+distinguish the general exemption from the separate 2026 pensionable-age amount
+of €776/month. Do not add these two allowances together or assume a non-earner
+receives their unused exemption as cash.</p>
+<p>The <a href="https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account">investment-account rules</a>
+require qualifying residence, accounts, assets and reporting. They are not
+unconditional, and opening a second person's account does not resolve ownership
+or transfer questions. See the <a href="investment-account.html">investment-account guide</a>.</p>
+<p>Pillar III capacity depends on each taxpayer, including eligible non-salary
+income. The simulator does not transfer unused allowances between partners;
+<a href="pensions.html#the-spousal-transfer-caveat-for-single-earner-households">spousal-transfer details remain open</a>.</p>
+<p><a href="https://www.sotsiaalkindlustusamet.ee/perehuvitised-ja-muud-toetused/ravi-ja-pensionikindlustus/kogumispensioni-taiendavad-sissemaksed">SKA's supplementary Pillar II contributions</a>
+provide a child-related route for an eligible parent of an under-three. Therefore
+“Pillar II accrues only on earned income” is too broad. Recipient choice and
+pension consequences need checking; these additional contributions are not
+automatically modeled by the simulator.</p>
+<h2 id="child-costs-and-benefits-need-separate-estimates">Child costs and benefits need separate estimates</h2>
+<p>There is no verified universal “cheap child” budget. Estimate housing, food,
+childcare, transport, activities, equipment, care needs and lost earnings from
+your own circumstances. Check local school, meal and kindergarten charges,
+availability and subsidies; this guide does not verify a municipality's fees.</p>
+<p><a href="https://www.hm.ee/en/education-research-and-youth-affairs/general-education/higher-education">Higher-education guidance</a>
+describes free full-time Estonian-language study, but
+<a href="https://www.hm.ee/korgharidus-ja-teadus/korgharidus/tasuta-korgharidus-ja-oppekulude-huvitamine">tuition conditions and repeat-study restrictions</a>
+matter. Language alone does not guarantee tuition-free study. Budget living,
+travel and materials separately and confirm the institution's terms.</p>
+<h3 id="child-and-large-family-allowances">Child and large-family allowances</h3>
+<p><a href="https://sotsiaalkindlustusamet.ee/en/family-benefits-and-allowances/family-benefits-overview/child-and-family-benefits-rates">SKA's published rates</a>,
+checked 20 September 2026, list:</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
+<thead>
+<tr>
+<th>Benefit</th>
+<th>Monthly amount</th>
+<th>Qualification to check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Child allowance</td>
+<td>€80 for each of the first two; €100 for each additional child</td>
+<td>Eligible children and recipient arrangement</td>
+</tr>
+<tr>
+<td>Large-family allowance</td>
+<td>€450 for 3–6; €650 for 7 or more</td>
+<td>Qualifying children receiving child allowance; not just lifetime number of births</td>
+</tr>
+</tbody>
+</table></div>
+<p>The <a href="https://www.sotsiaalkindlustusamet.ee/perehuvitised-ja-muud-toetused/peretoetused/lapsetoetus">child-allowance guidance</a>
+normally ends entitlement at 19, with a school-year extension for qualifying
+students without secondary education. Birth registration can generate an
+e-service offer; confirm the award and recipient rather than assuming nothing
+needs doing. Moving from abroad or changing family circumstances may require
+contact with SKA. Cross-border coordination and personal eligibility remain open.</p>
 <h3 id="health-insurance--check-each-persons-route">Health insurance — check each person's route</h3>
 <p>The domestic child-related dependent-spouse route ended in January 2026, but
 other family routes remain. Confirm which parent is insured: changing benefit
@@ -153,66 +182,87 @@ for the sources, conditions and unresolved personal questions.</p>
 <p>Model the actual uncovered period and possible future premiums. Do not treat a
 temporary gap as a perpetual expense or assume that one working partner covers
 the other. Temporary coverage is not a confirmed lifelong healthcare start.</p>
-<hr />
-<h2 id="what-gets-harder">What gets harder</h2>
+<h2 id="plan-household-risks-without-ranking-them">Plan household risks without ranking them</h2>
 <h3 id="the-fi-number-is-a-household-number">The FI number is a household number</h3>
-<p>One portfolio, one set of expenses, two people's preferences. Practical consequences:</p>
-<ul>
-<li><strong>Both partners have to actually want this.</strong> A FIRE plan one partner is enthusiastic about and the other tolerates does not survive 15 years. This is the single most common failure mode, and no spreadsheet detects it</li>
-<li><strong>Two incomes are a risk buffer</strong>, not just more money — the probability of both incomes stopping at once is far lower than one</li>
-<li><strong>Compare different stopping dates.</strong> One partner's continued employment does not automatically insure the other; confirm both people's coverage separately.</li>
-</ul>
+<p>Agree on spending, work and risk preferences, and keep account ownership visible.
+Two incomes can help, but losses can be correlated through the same employer,
+sector, location or caregiving event. No probability of simultaneous income loss
+or ranking of relationship risks is established here.</p>
+<p>Compare different stopping dates and income-loss scenarios. One partner's
+continued employment does not automatically insure the other.</p>
 <h3 id="spending-is-not-flat--model-it-in-phases">Spending is not flat — model it in phases</h3>
-<p>Standard FIRE maths assumes constant real spending forever. With children that's simply wrong, and it makes the FI number too high:</p>
-<pre><code>Now ──────────► Kids at home (~20 yrs) ──────────► Kids independent ──────► 
-     elevated spending: food, childcare,              spending drops back
-     bigger home, activities, holidays ×4             toward two-adult level
-</code></pre>
-<p>Child costs are a <strong>finite liability</strong>, not a perpetual one. Multiplying today's with-kids spending by 28.6 assumes you'll be paying for children for the rest of your life.</p>
-<p><strong>Better approach:</strong> work out your <strong>two-adult baseline spending</strong>, base the FI number on that, and treat the child years as a separate, time-limited block to be funded from income and a dedicated sinking fund. It's more accurate and usually gives a noticeably lower target.</p>
-<p>The one exception: <strong>university and helping with a first home</strong> land <em>after</em> the kids leave. Budget those as discrete future liabilities rather than assuming spending simply drops.</p>
-<h3 id="insurance-stops-being-optional">Insurance stops being optional</h3>
-<p>This is where single-person FIRE advice actively misleads. With dependents and a mortgage, the risk that matters isn't a bad sequence of returns — it's one earner dying or becoming disabled while the children are young and the loan is outstanding.</p>
-<ul>
-<li><strong>Term life insurance</strong> on adults whose income or unpaid work the household relies on, covering at least the outstanding mortgage plus several years of spending until the portfolio is large enough to self-insure. Pricing depends on age and health</li>
-<li><strong>Disability / critical illness cover</strong> — statistically more likely than death during working years, and more financially damaging because expenses continue</li>
-<li>Buy <strong>standalone term life</strong> rather than the bank's loan-protection product where possible. Bank policies are convenient but typically more expensive, decline in value with the loan, and are tied to the lender</li>
-<li>The stay-at-home or lower-earning partner needs cover too — their unpaid work has a real replacement cost</li>
-</ul>
+<p>Separate an ongoing baseline from costs with a defensible end date. Do not assume
+all support ends when a child leaves home: education, disability, care needs or
+help with housing can continue. A smaller target is not automatically a more
+accurate one.</p>
+<p>The simulator's child-cost end year ends that entered spending component; leaving
+it blank keeps the cost ongoing. It does not infer when children become
+independent. Avoid counting the same cost in both the baseline and child-cost
+input. Assess future one-off support separately if the available inputs cannot
+represent its timing.</p>
+<h3 id="review-life-and-disability-risks">Review life and disability risks</h3>
+<p>Estimate the shortfall if either adult dies or cannot work, including the
+replacement cost of unpaid care. Compare debts, ongoing needs, accessible assets,
+survivor income and existing benefits before choosing a sum insured.</p>
+<p>Compare actual policy quotes, exclusions, definitions, waiting periods, duration,
+beneficiaries and portability. Standalone and lender-linked products can differ;
+neither is established as universally cheaper or better. Life, critical-illness
+and disability cover are different products. This guide establishes neither a
+relative probability of claims nor a universally necessary amount of insurance.</p>
+<p>The simulator's life-cover checkbox records a user declaration, not policy
+adequacy or separate disability coverage. Its warning is a prompt to review the
+risk, not an insurance recommendation.</p>
 <h3 id="legal-structure">Legal structure</h3>
-<p>Households combining dependants, debt and cross-border legal ties should treat this as load-bearing rather than routine paperwork:</p>
-<ul>
-<li><strong>Wills</strong> for both partners</li>
-<li><strong>Guardianship</strong> for the children — who, and under which country's law</li>
-<li><strong>Matrimonial property regime</strong> — the applicable national regime determines who owns the portfolio and what happens on death</li>
-<li><strong>Inheritance and estate taxation</strong> — Estonia has no inheritance tax, but another relevant jurisdiction may apply one</li>
-</ul>
-<p>For a cross-border couple this is a legal question as much as a financial one, and the two are best handled together rather than separately.</p>
-<hr />
+<p>Review wills, guardianship arrangements, property ownership, access on death or
+incapacity, and relevant jurisdictions. Shared budgeting is not evidence of equal
+legal ownership. Inheritance, later asset sales and foreign taxes are distinct
+questions. No personal succession or cross-border tax outcome is verified here;
+obtain jurisdiction-specific advice before relying on an arrangement.</p>
 <h2 id="modelling-changes-in-family-size">Modelling changes in family size</h2>
-<p>Financially, the main variables:</p>
-<p>Two rules changed on <strong>1 January 2026</strong>, and they pull in opposite directions ✅:</p>
-<ul>
-<li><strong>The cap was cut from 3× to 2× the average wage</strong> — from €5,265/month to <strong>€3,806/month</strong>, a 28% reduction. This applies to children born from 2026 onward; children born by 31 December 2025 keep the old cap. For a high earner this is a significant loss.</li>
-<li><strong>The earned-income reduction was abolished.</strong> Previously, earning above a threshold while receiving parental benefit cut the benefit. That limit is <strong>gone</strong> — a parent can now earn unlimited income and still receive the full benefit. For a household where the higher earner keeps working, this is a straightforward gain.</li>
-</ul>
-<p>Other considerations:</p>
-<ul>
-<li><strong>Parental benefit is based on the prior calendar year's income</strong>, so a parent with little or no qualifying income may receive an amount near the statutory floor regardless of household income. The benefit follows the individual, not the household</li>
-<li>The marginal cost of an additional child may be lower where equipment and other fixed costs are reused</li>
-<li><strong>A third child</strong> unlocks the €450/month large-family allowance plus much better KredEx terms (5% down payment, 2% fee)</li>
-<li><strong>Space requirements</strong> feed straight back into <a href="property.html">property-purchase.md</a>; expected household changes belong in the property scenario</li>
-<li>It may <strong>restore health insurance</strong> for one eligible parent during the benefit period and then through the under-3 route</li>
-</ul>
-<p><strong>This shouldn't be a financial decision.</strong> But it does shift the FIRE timeline by a few years, and it's better to know that going in than to discover it later.</p>
-<hr />
+<h3 id="shared-parental-benefit-uses-a-reference-period">Shared parental benefit uses a reference period</h3>
+<p><a href="https://sotsiaalkindlustusamet.ee/en/family-benefits-and-allowances/family-benefits-overview/shared-parental-benefit">SKA's shared-benefit guidance</a>
+uses the recipient's eligible income over the 12 calendar months preceding the
+nine full calendar months before the birth month, not simply the previous
+calendar year. For a July 2026 birth, that ordinary reference period is October
+2024–September 2025; October 2025–June 2026 is excluded.</p>
+<p>Eligible income, excluded days, floors and exceptions can affect the award.
+The benefit is taxable and paid for planned days: do not enter a gross monthly
+cap as guaranteed net household income. Maternity, paternity and shared benefit
+have different rules; use SKA's assessment for the actual recipient.</p>
+<h3 id="the-2026-cap-and-earnings-rule-are-different-changes">The 2026 cap and earnings rule are different changes</h3>
+<p><a href="https://www.sotsiaalkindlustusamet.ee/uudised/vanemahuvitise-ulempiir-ja-selle-muudatused-2026-aastal">SKA's cap-transition explanation</a>
+describes the 2026 maximum of <strong>€3,806.10 gross/month</strong> and explains why expected
+versus actual birth dates can produce different caps by benefit type. Its example
+of an expected January 2026 birth occurring in December 2025 gives a working
+mother's maternity cap of €3,806.10 but shared/paternity caps of €5,265.09.
+“All children born before 2026 keep the old cap” is not a complete rule.</p>
+<p><strong>Source caveat:</strong> the English shared-benefit page retains a conflicting ×3 line
+inside its ×2 cap explanation. The dated Estonian transition explanation and
+published amount are used here; no general cap formula or complete transition
+calculator is certified.</p>
+<p><a href="https://www.sotsiaalkindlustusamet.ee/uudised/vanemahuvitise-saamise-ajal-tulu-teenimine">SKA's earnings announcement</a>
+removes the earnings reduction for planned benefit periods starting from
+1 January 2026. This does not remove eligibility, recipient or leave conditions.
+In particular, shared-benefit entitlement generally follows the parent on
+parental leave when one parent takes that leave; do not assume the higher earner
+can always claim while the other parent stays on leave.</p>
+<h3 id="use-dated-cash-flows-not-a-promised-fire-date-shift">Use dated cash flows, not a promised FIRE-date shift</h3>
+<p>Compare additional costs, time away from work and confirmed net benefits, with
+their start and end dates. Do not assume a new child advances or delays FIRE by
+a fixed number of years. Housing guarantees also need separate eligibility and
+lender checks; having a third child does not establish approval or a quoted
+down payment. See <a href="property.html">buying a home</a>.</p>
+<p>The simulator does not calculate family-benefit entitlement or schedule parental
+leave and changing benefit receipts. Do not put a temporary benefit into an
+ongoing income field and assume it will stop automatically. Use separately
+reconciled cash-flow scenarios where the input structure cannot express the dates.</p>
 <h2 id="what-the-simulator-needs-at-household-level">What the simulator needs at household level</h2>
 <ul>
-<li>Combined net income</li>
-<li>Combined spending, including all child costs</li>
-<li><strong>Both</strong> partners' assets, pension pillars, and investment accounts</li>
-<li>A separate two-adult baseline spending figure for the FI calculation</li>
-<li>Existing life and disability cover, if any</li>
+<li>Each adult's income, assets, pensions and confirmed coverage.</li>
+<li>Shared spending with no duplicated household costs.</li>
+<li>Explicit child-cost end dates only where justified.</li>
+<li>Protected cash, debt and housing plans.</li>
+<li>Separately checked temporary benefits, leave-related income changes and future support.</li>
 </ul>
       <nav class="pager"><a class="prev" href="property.html">← Buying a home</a><a class="next" href="fatfire.html">FatFIRE →</a></nav>
     </section>

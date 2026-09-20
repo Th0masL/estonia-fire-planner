@@ -248,16 +248,17 @@ export function actionPlan(sim, input) {
     add({
       id: 'no-life-cover', severity: 'critical', link: 'household',
       title: people.length > 1 && uncovered.length === 1
-        ? `${uncovered[0].name} has no life cover`
-        : 'No life or disability cover',
+        ? `${uncovered[0].name}: review life-cover needs`
+        : 'Review household life-cover needs',
       value: takingMortgage ? eur(sim.house.loan) + ' of debt' : 'dependents',
       detail:
-        `With dependents${takingMortgage ? ' and a mortgage' : ''}, losing ` +
-        `${uncovered.length === people.length ? 'an earner' : escapeHtml(uncovered[0].name)} undoes the ` +
-        `whole plan. Term life is cheap at working age and should cover at least the outstanding ` +
-        `loan plus several years of household spending, on ` +
-        `${people.length > 1 ? 'both adults' : 'the earner'}. Disability cover matters more ` +
-        `still: it is likelier than death during working years and the expenses continue.`,
+        `Life cover is not recorded for ` +
+        `${uncovered.length === people.length ? 'the adults in this plan' : escapeHtml(uncovered[0].name)}. ` +
+        `Estimate the household shortfall after loss of income or unpaid care, allowing for ` +
+        `accessible assets, debts, survivor income and existing benefits. Compare actual policy ` +
+        `terms and quotes before choosing cover. The life-cover checkbox does not establish ` +
+        `adequacy and does not record separate disability or critical-illness cover; review ` +
+        `those risks separately. No relative claim probability or required sum is calculated.`,
     });
   }
 

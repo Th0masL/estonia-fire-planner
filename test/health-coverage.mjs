@@ -69,4 +69,14 @@ assert.ok(!gap.detail.includes('Registration alone is not enough'));
 adviceInput.persons[0].healthInsurance = true;
 assert.ok(!actionPlan(simulate(adviceInput), adviceInput).some(f => f.id === 'health-insurance-gap'),
   'confirmed current coverage suppresses the current-gap warning');
-console.log('Healthcare: coverage timing, policy independence and unconfirmed-partner advice checks passed');
+adviceInput.household.hasDependents = true;
+adviceInput.persons.forEach(p => { p.lifeInsurance = false; });
+const life = actionPlan(simulate(adviceInput), adviceInput).find(f => f.id === 'no-life-cover');
+assert.ok(life.title.includes('review') || life.title.includes('Review'));
+assert.ok(life.detail.includes('does not record separate disability'));
+for (const claim of ['likelier than death', 'Term life is cheap', 'should cover at least']) {
+  assert.ok(!life.detail.includes(claim), 'life-cover prompt avoids unsupported prescription');
+}
+adviceInput.persons.forEach(p => { p.lifeInsurance = true; });
+assert.ok(!actionPlan(simulate(adviceInput), adviceInput).some(f => f.id === 'no-life-cover'));
+console.log('Healthcare timing and conditional health/life-cover advice checks passed');

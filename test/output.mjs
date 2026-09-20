@@ -614,9 +614,28 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
   }
   ok(health.includes(`€${(RATES.healthInsurance.voluntaryMonthly * 12).toLocaleString('en-IE')}/year`), 'health guide annual premium reconciles monthly rate');
   const household = read('guide/household.html');
-  ok(household.includes('Partial review') && !household.includes('covered unconditionally'), 'household does not certify all benefits or unconditional coverage');
+  ok(household.includes('Limited review') && !household.includes('covered unconditionally'), 'household does not certify all benefits or unconditional coverage');
   const anchor = 'health-insurance--check-each-persons-route';
   ok(health.includes(`household.html#${anchor}`) && household.includes(`id="${anchor}"`), 'healthcare household cross-reference resolves');
+}
+
+{
+  const household = read('guide/household.html').replace(/\s+/g, ' ');
+  for (const phrase of ['Children are genuinely cheap', 'unlimited and unconditional', 'statistically more likely', 'much better KredEx terms', 'prior calendar year\'s income']) {
+    ok(!household.includes(phrase), `household removes unsupported claim: ${phrase}`);
+  }
+  for (const phrase of ['€3,806.10', '€5,265.09', 'Source caveat', 'not automatically modeled', 'does not infer when children become independent', 'does not calculate family-benefit entitlement']) {
+    ok(household.includes(phrase), `household retains scope: ${phrase}`);
+  }
+  // Enumerate backward from the birth month rather than repeat a date formula.
+  const excluded = [], reference = [];
+  const month = new Date(Date.UTC(2026, 6, 1));
+  for (let i = 0; i < 21; i++) {
+    month.setUTCMonth(month.getUTCMonth() - 1);
+    (i < 9 ? excluded : reference).unshift(month.toISOString().slice(0, 7));
+  }
+  ok(excluded.length === 9 && excluded[0] === '2025-10' && excluded.at(-1) === '2026-06' && household.includes('October 2025–June 2026'), 'shared-benefit example excludes nine full months');
+  ok(reference.length === 12 && reference[0] === '2024-10' && reference.at(-1) === '2025-09' && household.includes('October 2024–September 2025'), 'shared-benefit example uses preceding twelve months');
 }
 
 console.log(`\n${checks} output and cross-engine checks`);
