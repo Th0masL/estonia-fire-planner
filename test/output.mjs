@@ -249,8 +249,6 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
     'docs/guide/account-protection.md': 3,
     // A FatFIRE spending tier, nothing to do with deposit protection.
     'docs/guide/fatfire.md': 5,
-    // A verbatim record of a research answer.
-    'docs/guide/verification.md': 1,
   };
   const files = readdirSync(join(ROOT, 'docs')).filter((f) => f.endsWith('.md'))
     .map((f) => `docs/${f}`)
@@ -353,6 +351,18 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
   for (const [needle, what] of expected) {
     ok(guide.includes(needle), `the guide still states ${what}`, needle);
   }
+}
+
+// Public evidence must distinguish checked claims from incomplete research.
+{
+  const evidence = read('guide/sources.html');
+  for (const heading of ['Checked rules', 'Model assumptions and known limits', 'Open review', 'Maintaining this register']) {
+    ok(evidence.includes(heading), `evidence register includes ${heading}`);
+  }
+  ok(evidence.includes('https://www.emta.ee/en/private-client/taxes-and-payment/declaration-income/tax-rates'), 'evidence register links primary tax source');
+  ok(evidence.includes('not a certification of the entire planner'), 'evidence register limits its assurance');
+  ok(!/Round [234]|Copy-pasteable research prompts/.test(evidence), 'public evidence page has no research-round completion claims');
+  ok(existsSync(join(ROOT, 'docs/contributing/research-questions.md')), 'contributor research questions retained');
 }
 
 console.log(`\n${checks} output and cross-engine checks`);

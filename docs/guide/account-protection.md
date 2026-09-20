@@ -122,6 +122,11 @@ So the {{protection.depositGuarantee|money}} line isn't just a compensation ceil
 
 ## Sources
 
-The account mechanics, guarantee limits and broker comparisons in this document were verified in August 2026 — queries **20–23** in [verification.md](verification.md#round-3--accounts-brokers-and-protection), drawn from TuMS §17¹–§17², Tagatisfondi seadus, and the banks' own published pricelists.
+This page's previous research-round completion label is not sufficient evidence
+that every account rule, guarantee limit or broker comparison is current.
+Protection schemes and commercial comparisons remain open in the
+[evidence register](verification.md#open-review). Check the applicable Income Tax
+Act, Guarantee Fund Act, Tagatisfond guidance and provider terms before relying
+on the figures; this register update did not reverify them.
 
 The temporary-high-balance protection is narrow and time-limited. Confirm that the source of funds and dates qualify with Tagatisfond or the bank before relying on it.
