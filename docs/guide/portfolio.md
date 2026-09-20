@@ -2,7 +2,7 @@
 
 How diversified ETFs can fit into an Estonia-based FIRE portfolio, including fund and broker choices.
 
-> **Partial review, 20 September 2026:** the VWCE/WEBN comparison below has been checked against the cited issuer documents. The later cash-product, custody, provider and tax-procedure sections remain an open review, not verified current recommendations. See [the broker guide](brokers.md) for the separately checked fee snapshot.
+> **Limited review, 20 September 2026:** issuer facts and the cited general account rules have been checked. Provider comparisons are decision checklists, not personalized recommendations or certification of a particular account. Specific eligibility, quotes and unresolved topics are flagged below.
 
 ## When a global equity ETF fills a diversification gap
 
@@ -85,8 +85,9 @@ remain unchanged or meet a particular retirement return assumption.
 
 ## What "UCITS" means, and why the house money doesn't go into the ETF
 
-**The remaining sections are pending review.** The fund comparison above does not
-verify the cash-product, tax-procedure or provider recommendations below.
+The fund comparison above does not establish suitability for a near-term payment.
+The sections below link to the separately checked cash and protection guidance;
+account-specific questions remain open.
 
 **UCITS** stands for *Undertakings for Collective Investment in Transferable Securities*.
 It describes a regulatory framework, not a guarantee against investment losses.
@@ -127,180 +128,112 @@ conditions are met; a comparison should not reserve tax deferral for funds alone
 
 ### Where you can buy these
 
-Any Estonian provider with Xetra access and automatic reporting to the Tax Board
-will do: **LHV**, **Swedbank**, **SEB** or **Lightyear**. They differ on cost
-rather than capability, and the differences are set out in full — along with the
-custody fee structures, which are not the same shape — in
-[Brokers & parking cash](brokers.md).
+Check the exact ISIN and trading venue in the account you would use. Market access,
+fractional holdings, transfer support and reporting are not identical across
+providers. The [dated broker snapshot](brokers.md#broker-fee-snapshot) covers only
+selected fees, not a whole-market ranking or an all-in custody cap.
 
-Two numbers are worth repeating here, because they matter once the amounts get
-large.
-Swedbank never charges more than {{brokers.swedbankCustodyMonthlyCap|money}} a
-month to hold your shares, which is {{brokers.swedbankCustodyMonthlyCap|money12}}
-a year however much you own. LHV charges
-{{brokers.lhvCustodyAboveMonthly|pct3}} a month with no maximum, so its fee keeps
-growing as the balance does. Lightyear charges nothing. Swedbank's figure holds
-only while the account contains nothing but fund units; a single ordinary share
-in the same account adds {{vat|pct}} VAT to the whole fee.
+### Foreign accounts: eligibility is not a brand attribute
 
-Swedbank's {{brokers.swedbankMinCommission|money2}} minimum beats LHV's {{brokers.lhvMinCommission|money2}}, and it cut that from €9.90 in July 2025. On everything that matters here — Xetra access, 0.14%, free custody to {{brokers.custodyFreeThreshold|money}}, automated Table 6.5 reporting — **they are functionally the same broker.**
+[EMTA's investment-account guidance](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account),
+“What is an investment account”, recognizes qualifying accounts at EEA investment
+firms as well as other specified institutions. Check the contracting entity and
+actual account arrangement; the broker's brand or an app's country is not enough.
 
-**This makes a second Estonian account genuinely cheap:** {{brokers.custodyFreeThreshold|money}} at LHV plus the same again at Swedbank is **twice that in foreign securities with zero custody fees**, both reporting automatically, and e-MTA aggregating them for you.
-
-**The trade-off against IBKR is now clearer.** Swedbank is easier (automated reporting, Estonian support) but keeps everything inside the Estonian banking system. IBKR is more work (manual ledger) but is the only option that actually diversifies custody out of Estonia. Which you pick second depends on which goal you weight — see the phasing below.
-
-### Example: a balance held at a foreign EEA bank
-
-Compare an actual deposit quote and a fund scenario on the same tax and access
-basis. The previous N26-versus-fund table mixed an after-tax deposit return with
-a tax-deferred fund return and is not a reliable net-return comparison.
-See [the cash withdrawal example](brokers.md#tax-deferral-is-not-a-tax-exemption)
-and confirm the applicable guarantee with the legal deposit-taking institution.
-The country of an app or brand alone does not establish protection.
+**Still unverified:** this guide does not certify the particular account a reader
+holds with IBKR, N26/Upvest or another foreign provider. Obtain the agreement,
+account identifier, cash-flow records and applicable regulatory details, then
+confirm the tax treatment where unclear. An unresolved question here is not a
+finding that a product is legally ineligible.
 
 ### Can you invest *through* N26?
 
-**It's available, but don't — the tax status is genuinely unresolved.**
+[N26's EU support page](https://support.n26.com/en-eu/app-and-features/savings-and-invest/how-stocks-and-etfs-work-at-n26),
+checked 20 September 2026, identifies Upvest Securities GmbH as the service
+provider and lists Estonia among supported markets, subject to customer
+eligibility. It also makes customers in other supported markets responsible
+for their tax obligations rather than promising local withholding.
 
-N26 launched stocks and ETFs in Estonia in **October 2024**. The product itself is good: 4,000+ instruments, **€0.90 per trade**, fractional shares from €1, free recurring savings plans, and **10 free trades a month on Metal**.
-
-**The problem is structural.** N26's own documentation states that execution and custody are provided not by N26 Bank but by **Upvest Securities GmbH**, a separately incorporated German firm. Estonian law requires the investment account to be a cash account **at** a qualifying institution — so whether you would be declaring "an account at N26" or "an account at Upvest", and whether the latter satisfies §17²(3), is unsettled. **No EMTA guidance addresses this structure.**
-
-N26 also states plainly that it does **not** withhold or report tax for customers in Estonia.
-
-**The downside is asymmetric.** If the structure doesn't qualify, you lose the deferral entirely and owe back tax with interest. Against that, the upside is €0.90 trades — which IBKR roughly matches anyway, with confirmed eligibility.
-
-**So: N26 can be considered for cash, not investing.** Before attempting to use its investment product as an IK, obtain a written answer from EMTA.
-
-### Not wanting everything in Estonian banks — the right way to do it
-
-The goal is sound. Two things make it easier than it looks.
-
-**First, a global ETF's assets sit outside Estonia regardless of broker.** VWCE is **Irish-domiciled** (`IE00BK5BQT80`). Its underlying shares are held by an Irish depositary under Irish and EU law. LHV is a link in the custody chain, not the place your assets live. Buying through an Estonian broker does not make the portfolio "Estonian" in any meaningful sense.
-
-What a non-Estonian broker actually buys you is narrower but still real: **resilience of the access path** — a second, independent route to the holdings if Estonian institutions were disrupted or capital controls were imposed. That's the argument in [account-protection.md](account-protection.md), and it's about reachability, not ownership.
-
-**Second, IBKR Ireland is the tool for this, not N26.** It's confirmed eligible as an investment account, it's an Irish entity outside the Estonian banking system, it has no custody fee, and it gives full market access.
+Those facts do not establish which arrangement qualifies for Estonian tax
+deferral. The previous categorical rejection, launch-date comparison and
+provider ranking have been removed. Check current country/account terms,
+charges, documents and reporting; no claim is made that EMTA has never addressed
+this structure.
 
 ### Phasing, if custody diversification matters to you
 
-On cost alone, a second account only pays for itself above about €200,000. If holding assets outside the Estonian banking system matters in its own right, bring it forward:
+There is no universal balance at which a second provider becomes worthwhile.
+Separate the reasons for opening one:
 
-| Phase | Where | Why |
-|---|---|---|
-| **Now → ~{{brokers.custodyFreeThreshold|money}}** | All at LHV | Automated reporting while the mechanics are new; zero custody fee at this size |
-| **~{{brokers.custodyFreeThreshold|money}} onward** | Direct **new** contributions to **IBKR** | Starts the second jurisdiction, no custody fee, nothing needs selling |
-| **Optional third** | Swedbank, up to its own {{brokers.custodyFreeThreshold|money}} | If you'd rather defer the manual ledger — but it doesn't diversify out of Estonia |
+| Reason | Evidence to collect |
+|---|---|
+| Lower cost | Total annual cost for actual orders, holdings, FX and transfers, including applicable VAT |
+| Another access route | Contracting entities, shared service providers, recovery options and withdrawal routes |
+| Additional products | Exact securities needed and whether both providers can receive them |
+| Easier administration | Exportable records, reporting workflow and ability to reconcile transfers |
 
-Transfers between declared accounts are tax-neutral and e-MTA aggregates them, so **there is no tax cost to splitting** — the only cost is IBKR's manual ledger. That makes the sequencing purely a question of how much admin you'll tolerate versus how much you want custody outside Estonia.
-
-**Don't open everything at once.** One account until {{brokers.custodyFreeThreshold|money}}; the second buys you something real, a third rarely does.
+A second account may help operational resilience, but it does not guarantee
+access in a crisis or remove legal restrictions. See
+[account protection](account-protection.md). Keep records even where reports
+can be sent to EMTA.
 
 ### VWCE at LHV, WEBN at IBKR
 
-This works, and it's better suited to Estonia than to most countries.
-
-**Why the usual objection doesn't apply here.** Holding two funds normally means tracking two cost bases and matching lots at sale. **Inside an investment account there is no cost basis to track at all** — the declaration records only money in and money out of the *account*. Two funds create no extra tax admin whatsoever. That objection simply doesn't exist under the Estonian regime.
-
-**What it genuinely gets you:**
-
-- **The lower TER on new money.** WEBN at 0.07% versus VWCE at 0.14%. On the IBKR half growing to €500,000, that's ~€350/year.
-- **A working position at each broker.** If one became unavailable, the other is fully functional — which is the actual point of the two-broker setup.
-- **Different provider arrangements.** Using different funds can change manager,
-  depositary and counterparty exposure. It does not establish that risk is halved;
-  the actual arrangements and shared exposures need checking.
-
-**What it does *not* get you:** any diversification of market exposure. Both funds hold nearly the same companies in nearly the same weights. Don't mistake two tickers for two bets.
-
-**The one real risk is behavioural.** Two lines side by side invites comparing their performance and "fixing" the laggard. They will diverge slightly — different indices, different sampling — and that divergence means nothing. If you think you'd be tempted to act on it, hold the same fund at both brokers instead. Either choice is defensible; the tinkering is what costs money.
-
-**On the custody threshold:** capping LHV around {{brokers.custodyFreeThreshold|money}} is exactly the fee-optimal point, since custody is free up to there and {{brokers.lhvCustodyAboveAnnual|pct}}/yr above. Note it will drift past {{brokers.custodyFreeThreshold|money}} through market growth alone — that's fine and not worth acting on. At €150,000 the fee is about €60/year. Only revisit if the LHV side grows well beyond that.
+This is an illustration of holding two funds through two providers, not a
+recommended allocation or a confirmed availability claim. The
+[fund comparison](#vwce-vs-webn) describes their overlapping mandates and charge
+components. It does not prove that this pairing improves net returns or halves
+custody risk. Assess the allocation separately from the provider choice.
 
 ### Where short-term cash might sit
 
-One possible split is:
-
-| Purpose | Possible home | Why |
-|---|---|---|
-| **Emergency fund (typically 3–6 months of spending)** | Insured instant-access deposit | Liquidity and deposit protection matter more than maximising yield |
-| **Known near-term purchase fund** | Matched-maturity deposit or low-risk money market fund inside an IK | May improve yield, but settlement time and the distinction between a fund and a guaranteed deposit must be understood |
-
-The appropriate institutions and amounts depend on liquidity needs, deposit-guarantee exposure and the purchase date.
+Keep emergency access and dated purchase needs separate from long-term investment
+decisions. Compare eligible deposits, maturity dates and fund redemption risks
+using the [cash-product checklist](brokers.md#deposits-and-funds-do-different-jobs).
+A tax wrapper does not turn an investment into guaranteed or instantly available cash.
 
 ---
 
 ## LHV or IBKR for the ETF itself?
 
-### The two costs that matter
+The former “switch at €200,000” rule was not a verified break-even calculation.
+Use a current, account-specific quote instead. The checked
+[broker fees](brokers.md#broker-fee-snapshot) are a starting point;
+IBKR's current tariff and account-specific reporting remain an open review here.
 
-Both of these apply, and they pay for different things.
+Before moving, ask both providers about in-kind transfer support and costs.
+Selling and rebuying can incur spreads, commissions and time out of the market.
+Do not assume transfer costs consist only of a manual ledger.
 
-| | **LHV** | **IBKR** |
-|---|---|---|
-| **Eligible as an IK?** | Yes | **Yes** ✅ — IBKR Ireland is an EEA investment firm, explicitly covered by the widened §17² definition and listed on Finantsinspektsioon's cross-border register |
-| IK reporting | **Automatic** — one-click report matching Table 6.5 Part II, plus foreign dividend/interest data for Tables 8.1/8.8 | **Manual** — you track every in/out yourself |
-| Xetra commission | **0.14%, min €5** ✅ | Far lower |
-| **Custody fee** | Free to €100k, then **0.01%/month** on the excess (**0.12%/yr**) ✅ | Effectively none |
-| FX | Worse | Excellent |
-| Custody location | Estonia | Ireland |
-| Estonian support | Yes, in Estonian | No |
-
-**LHV is a reasonable default for a first declared investment account.** Its automated IK reporting reduces the risk of misreporting contributions and withdrawals over long periods. That convenience can justify the fee difference while balances are modest.
-
-**But LHV's custody fee sets a crossover point.** Above {{brokers.custodyFreeThreshold|money}} of foreign securities, LHV charges 0.01% per month — **{{brokers.lhvCustodyAboveAnnual|pct}}/year**, which is *more than the fund's own TER*. At €300k that's €240/year; at €600k, €600/year, growing forever. IBKR has no equivalent charge.
-
-**IBKR is cheaper, but the gap is almost entirely custody, not commission.** On a €5,000 monthly purchase, LHV charges ~€7 and IBKR ~€1–3. That's €50–70 a year: real, but trivial. The custody fee is what compounds:
-
-| Portfolio | LHV custody fee/yr | IBKR |
-|---:|---:|---:|
-| {{brokers.custodyFreeThreshold|money}} | €0 | €0 |
-| €300,000 | €240 | €0 |
-| €600,000 | €600 | €0 |
-| €1,500,000 | €1,680 | €0 |
-
-**Recommendation: start at LHV, move to IBKR at around €200,000.**
-
-Starting at LHV can be reasonable because automated IK reporting is valuable and custody below €100k is free. Reassess around €200,000, when the fee reaches about €120 a year and keeps rising and custody outside Estonia may start to matter for its own sake (see [account-protection.md](account-protection.md)).
-
-**Switching later is unusually painless here**, and this is worth knowing in advance: because the investment account defers tax, **selling at LHV and rebuying at IBKR is not a taxable event**. You'd pay spread and commission, nothing more. In most countries changing broker means either an in-kind transfer or a tax bill; in Estonia neither applies, as long as both accounts are declared investment accounts and the cash moves directly between them.
-
-**Don't split across both.** Two accounts means two ledgers, two reports, and two chances to get the contribution base wrong — for a fee saving measured in tens of euros.
-
-### When does IBKR add enough value?
-
-For a small one-fund global ETF portfolio, LHV provides Xetra access, investment-account integration and automated tax reporting. Below {{brokers.custodyFreeThreshold|money}} its custody fee is zero.
-
-**IBKR currently charges no inactivity fee**, so an unused account need not create an ongoing cost. Confirm the current schedule before relying on this.
-
-**What IBKR would add later:**
-
-| | Worth adding? |
-|---|---|
-| No custody fee above the free threshold | ✅ **The actual reason** — revisit at ~€200,000 |
-| Custody outside Estonia | ✅ Meaningful as the portfolio grows ([account-protection.md](account-protection.md)) |
-| Far wider market access, fractional shares | ➖ Irrelevant to a one-fund plan |
-| US-listed ETFs and stocks | ❌ You should be avoiding US-domiciled funds anyway |
-| Options, futures, margin | ❌ Explicitly not part of this plan |
-
-On cost grounds alone, IBKR becomes more compelling around €200,000. Broader market access is not itself a benefit to a deliberately simple one-fund plan.
-
-✅ **IBKR Ireland can be declared as an investment account.** The widened §17² definition explicitly covers accounts at an EEA investment firm ("lepinguriigi investeerimisühing"), and IBKR Ireland appears on Finantsinspektsioon's register of cross-border providers. The only real cost is that you do the contribution/withdrawal bookkeeping by hand.
-
-**Do declare it before trading in it.** An undeclared account means every sale is immediately taxable at 22% and the whole deferral benefit is lost.
-
----
+[EMTA](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account),
+“Financial assets, interest and dividend”, excludes transfers between the
+taxpayer's own investment accounts from new contributions/payments. That
+conditional treatment is not blanket tax clearance for every account migration,
+in-kind transfer or historic holding. Keep evidence of both sides.
 
 ## Mechanics — the actual steps
 
-1. **Declare the LHV account as an investment account.** In practice this means telling EMTA in the annual declaration which account it is (`Form A`, the investment-account tables). LHV's interface flags the account; the declaration happens at tax time. ⚠️ Confirm the current procedure — do this *before* the first trade so the contribution base starts clean.
-2. **Fund it from your own bank account.** Every euro in is a contribution; keep the trail clean and don't mix in money that came from somewhere untracked.
-3. **Buy one fund, in EUR, on Xetra.**
-4. **Automate a standing order** on payday — before you see the money.
-5. **Record contributions and withdrawals** even though LHV tracks them. A one-line spreadsheet per transfer is cheap insurance over 20 years.
+1. Establish the account arrangement and intended tax treatment before investing;
+   resolve uncertain eligibility rather than relying on the brand.
+2. Retain funding, trade, fee and transfer records from the start. Do not count
+   proceeds or own-investment-account transfers as fresh contributions.
+3. Match the ISIN, share class, currency and venue against the issuer documents.
+4. Check the costs and whether the investment fits the allocation and time horizon.
+5. Report the account and relevant movements in the annual return. EMTA's
+   declaration section describes table 6.5; preparing records before trading is
+   not a requirement to file the annual return before the first trade.
 
-## What not to do
+## What not to assume
 
-- **Don't buy US-domiciled ETFs** (VT, VTI, VOO). US estate tax exposure above $60k for non-residents, no Estonia–US estate tax treaty, and PRIIPs blocks most EU retail access anyway.
-- **Don't buy distributing versions** if you have the choice — accumulating avoids the dividend handling entirely.
-- **Check crypto acquisition history and account eligibility separately.** The qualifying financial-asset change dates from 1 January 2025. A wallet transfer does not establish eligibility; historic migrations need individual review. See [Crypto](crypto.md).
-- **Don't start with a lump sum you need for the house.** Covered next.
+- Accumulating does not mean tax-exempt; distributing does not automatically
+  mean unsuitable. Compare the cash-flow and reporting implications.
+- Fund domicile, US tax exposure, treaty relief and retail availability need a
+  separate jurisdiction-specific review. This page does not establish a universal
+  estate-tax threshold or prohibit every US-domiciled fund.
+- Crypto acquisition history and account eligibility need separate checks.
+  See [Crypto](crypto.md), including the 1 January 2025 distinction.
+- Money required for the house or emergencies is not surplus investment capital.
+
+**Scope:** the provider reconciliation above was reviewed on 20 September 2026.
+Actual foreign-account eligibility, tariffs, transfer outcomes, withholding and
+historic filing corrections remain unresolved without account-specific evidence.

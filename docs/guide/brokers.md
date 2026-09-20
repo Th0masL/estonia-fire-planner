@@ -183,29 +183,26 @@ the date above certifies only the stated benchmark and limited methodology check
 
 ### Cash at a bank in another country
 
-Plenty of people living in Estonia still have a bank account somewhere else,
-often in the country they moved from. Two things decide whether it is a good
-place to keep cash, and neither of them is the advertised rate.
+**Checked 20 September 2026:** foreign tax treatment does not by itself determine
+the Estonian result. [EMTA's foreign-income guidance](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/income-derived-foreign-state)
+requires Estonian residents to declare relevant foreign income, with treatment
+depending on the income and circumstances. Check treaty relief, foreign tax
+credits and any qualifying investment-account arrangement rather than assuming
+every foreign receipt incurs the full Estonian rate again.
 
-**A tax exemption in another country does not survive Estonian residency.** Many
-national savings products pay a modest rate and make it tax-free, and the tax
-break is the entire point of the product. An Estonian tax resident is taxed by
-Estonia on worldwide income at {{incomeTax|pct}}, and under the usual tax treaty
-wording interest is taxed where the saver lives. So a tax-free account abroad is
-not tax-free here, and a rate that looked competitive can end up below what an
-ordinary Estonian term deposit pays. Always compare these after Estonian tax,
-never on the headline.
+[EMTA's foreign-account reporting guidance](https://www.emta.ee/en/private-client/declaration-income-received-foreign-bank-account)
+describes international information exchange alongside the taxpayer's declaration
+obligation. Information exchange is not a completed tax return and does not
+establish that a particular transaction has been classified correctly.
 
-**A second country's deposit guarantee is genuinely separate.** Every EU country
-runs its own scheme covering {{protection.depositGuarantee|money}}, funded by
-that state. Cash split between an Estonian bank and a bank in another EU country
-is covered twice over, not once. For a balance well above the limit, that is a
-real reason to keep the foreign account open even when its rate is poor.
+For deposit protection, identify the legal institution and applicable scheme,
+not just the country of the app or brand. The
+[protection guide](account-protection.md) distinguishes eligible deposits from
+broker cash and fund holdings. Do not infer another guarantee allowance simply
+because an account is offered in another country.
 
-Two pieces of admin come with it. The interest has to be declared in Estonia and
-taxed here, even where the other country taxed none of it. And the foreign bank
-reports the account to the Estonian tax authority automatically under the common
-reporting standard, so the balance is visible either way.
+**Still unverified:** individual foreign-product exemptions, treaty outcomes,
+cash-sweep arrangements and account-specific guarantee coverage.
 
 ### Which fund to buy
 

@@ -437,7 +437,7 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
 
 {
   const portfolio = read('guide/portfolio.html');
-  for (const required of ['IE00BK5BQT80', 'IE0003XJA0J9', '0.07 percentage points', 'not an all-in cost comparison', 'trading in EUR does not remove underlying currency risk', 'remaining sections are pending review']) {
+  for (const required of ['IE00BK5BQT80', 'IE0003XJA0J9', '0.07 percentage points', 'not an all-in cost comparison', 'trading in EUR does not remove underlying currency risk', 'account-specific questions remain open']) {
     ok(portfolio.includes(required), `fund comparison retains ${required}`);
   }
   const feeDifference = 500000 * (0.0014 - 0.0007);
@@ -477,6 +477,20 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
   for (const obsolete of ['Every sale immediately taxable', 'natural hedge', 'lowest public debt', '47.5%', 'Transfers are free']) {
     ok(!protection.includes(obsolete), `protection guide removes unsupported assurance: ${obsolete}`);
   }
+}
+
+{
+  const portfolio = read('guide/portfolio.html');
+  for (const obsolete of ['functionally the same broker', 'confirmed IK-eligible', 'Do declare it before trading', 'Recommendation: start at LHV', 'no extra tax admin whatsoever']) {
+    ok(!portfolio.includes(obsolete), `provider guidance removes ${obsolete}`);
+  }
+  for (const required of ['eligibility is not a brand attribute', 'not a verified break-even calculation', 'Upvest Securities GmbH', 'historic filing corrections']) {
+    ok(portfolio.includes(required), `provider guidance retains ${required}`);
+  }
+  ok(!read('guide/investment-account.html').includes('cheapest at scale'), 'account guide no longer repeats broker ranking');
+  const brokers = read('guide/brokers.html');
+  ok(brokers.includes('Information exchange is not a completed tax return'), 'foreign reporting is not confused with filing');
+  ok(!brokers.includes('funded by\nthat state'), 'foreign guarantee section removes blanket state-funding claim');
 }
 
 console.log(`\n${checks} output and cross-engine checks`);

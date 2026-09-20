@@ -196,6 +196,23 @@ engine change. **Limits:** individual eligibility, custody chains, foreign schem
 actual recovery and crisis restrictions remain open. Removed unsupported crisis
 predictions and automatic-access assurances rather than certifying them.
 
+### Foreign accounts and provider reconciliation
+
+**Status:** general rules and limited provider facts. **Checked:** 20 September 2026.
+[EMTA investment-account guidance](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account)
+supports institution categories, annual declaration and own-account transfer
+distinctions. [Foreign-income guidance](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/income-derived-foreign-state)
+and [foreign-account reporting guidance](https://www.emta.ee/en/private-client/declaration-income-received-foreign-bank-account)
+distinguish declaration duties from foreign tax treatment and information exchange.
+[N26's EU support page](https://support.n26.com/en-eu/app-and-features/savings-and-invest/how-stocks-and-etfs-work-at-n26)
+identifies Upvest and Estonia among supported markets, subject to eligibility.
+It does not establish Estonian investment-account tax qualification.
+
+**Affected:** portfolio, broker and investment-account cross-references.
+Removed blanket provider rankings, fixed switching thresholds and contradictory
+account-count advice. **Limits:** individual foreign accounts, current tariffs,
+transfers, treaty outcomes and historic corrections remain open. No engine changes.
+
 ## Model assumptions and known limits
 
 - Investment-account tax is reserved immediately when money leaves the wrapper. This is a cash-planning convention, not the statutory tax-payment deadline.

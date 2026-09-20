@@ -49,6 +49,9 @@ The canonical Estonian FIRE portfolio is boring and correct:
 - **Irish-domiciled** (ISIN starts `IE00…`) — Ireland's US tax treaty means **15%** withholding on US dividends inside the fund instead of 30% for e.g. Luxembourg funds. On a US-heavy global index that's roughly 0.15–0.25%/yr of pure, permanent return
 - **Never US-domiciled** (`US…` tickers like VTI, VOO) — US estate tax hits non-resident aliens above **$60,000** with no Estonia–US estate tax treaty to protect you, and PRIIPs rules make them hard to buy from EU brokers anyway
 
-Brokers: **LHV** (best IK integration, Xetra 0.14% min €5, custody free to €100k then 0.12%/yr), **Lightyear** (Estonian-founded, cheap, IK-aware), **Interactive Brokers** (cheapest at scale, custody outside Estonia, **confirmed IK-eligible** as an EEA investment firm — but IK reporting is manual). Detail in [portfolio.md](portfolio.md#lhv-or-ibkr-for-the-etf-itself).
+Compare the [dated broker fee snapshot](brokers.md#broker-fee-snapshot) and
+[account/provider checklist](portfolio.md#lhv-or-ibkr-for-the-etf-itself).
+A brand name does not establish every account's eligibility, total cost or
+reporting treatment; keep and review your own records.
 
 ---
