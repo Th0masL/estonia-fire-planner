@@ -19,6 +19,30 @@ neither the website nor an offline copy automatically updates legislation.
 
 ## Checked rules
 
+### Home-purchase and mortgage guidance
+
+**Checked:** 20 September 2026. **Scope:** general limits and dated provider/tax
+statements, not loan approval or a repayment quotation.
+
+[Eesti Pank requirements](https://www.eestipank.ee/en/financial-stability/requirements-housing-loans)
+support the LTV, DSTI, term and exception-volume figures;
+[its 2024 amendment](https://www.eestipank.ee/en/press/eesti-pank-amending-requirements-banks-regulating-issuing-new-housing-loans-26012024)
+establishes the change to the variable-rate affordability calculation.
+[EMTA interest guidance](https://www.emta.ee/en/private-client/housing-loan-interest)
+confirms the deduction ended from 2024; older examples on that page are historical.
+[EMTA residence-sale guidance](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/transfer-immovable-property/transfer-place-residence)
+qualifies the exemption by use and frequency.
+[LHV FAQ](https://www.lhv.ee/en/faq/home-loan) and
+[Swedbank fees](https://www.swedbank.ee/private/credit/loans/home?language=ENG)
+are provider snapshots, not universal early-repayment rules.
+
+**Affected:** buying-a-home guide. Payment tables use constant-rate monthly
+annuity arithmetic with no fees; they do not forecast FI dates or market rates.
+Removed universal longest-term/deposit recommendations and investment thresholds.
+**Open:** statutory repayment compensation, fixed-rate break costs, notice and
+schedule amendments, guarantee eligibility/charges, local taxes, insurance and
+personal offers. No model or numerical rate-data changes.
+
 ### Investment-account guide qualifications
 
 **Checked:** 20 September 2026. **Scope:** limited rule review, not personal advice.

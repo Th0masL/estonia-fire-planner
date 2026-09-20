@@ -505,6 +505,28 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
   ok(allowance / annualWithdrawal === 10 && account.includes('Ten annual'), 'conditional allowance example arithmetic');
 }
 
+{
+  const property = read('guide/property.html');
+  for (const obsolete of ['unchanged since 1 March 2015', 'Invest everything', 'investing wins clearly', 'take the longest term available', 'VÕS §403', 'available at every major Estonian bank', 'never taxed at all']) {
+    ok(!property.includes(obsolete), `home guide removes unsupported claim: ${obsolete}`);
+  }
+  for (const required of ['1 April 2024', 'Higher of the contract rate and 6%', '15% of quarterly', 'Residence-sale relief is conditional', 'one-month-interest', 'Still unverified', 'not actual first-year amortising interest']) {
+    ok(property.includes(required), `home guide preserves qualification: ${required}`);
+  }
+  // Independently sum discounted monthly payments to recover the payment, then
+  // reconcile the displayed rounded totals without using the mortgage engine.
+  for (const [years, rate] of [[15, .04], [20, .04], [25, .04], [30, .04], [30, .05], [30, .06], [30, .07]]) {
+    let factor = 0;
+    for (let month = 1; month <= years * 12; month++) factor += (1 + rate / 12) ** -month;
+    const payment = 300000 / factor;
+    for (const value of [payment, payment * years * 12 - 300000]) {
+      ok(property.includes(`€${Math.round(value).toLocaleString('en-IE')}`), `home guide annuity example: ${years} years at ${rate}`);
+    }
+  }
+  ok(property.includes(`€${Math.round(400 * 12 / .035).toLocaleString('en-IE')}`), 'home running-cost illustration reconciles');
+  ok((306000 * .04 - 270000 * .037) / 36000 === .0625 && property.includes('6.25%'), 'hypothetical starting-balance comparison reconciles');
+}
+
 console.log(`\n${checks} output and cross-engine checks`);
 if (failures.length) {
   console.log(`\n${failures.length} FAILED:`);
