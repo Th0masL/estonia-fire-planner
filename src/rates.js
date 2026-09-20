@@ -212,7 +212,6 @@ export const RATES = {
   mortgage: {
     maxLtv: 0.85, maxLtvWithKredEx: 0.90,
     maxDsti: 0.50, maxTermYears: 30, stressRate: 0.06,
-    earlyRepaymentCapMonthsInterest: 3,
     interestDeductible: false,          // abolished 2024
   },
 

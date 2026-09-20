@@ -24,6 +24,13 @@ const ok = (cond, label, detail = '') => {
 
 const read = (rel) => readFileSync(join(ROOT, rel), 'utf8');
 
+// Repayment compensation needs contract-specific verification; do not ship the
+// former unused universal cap as if it were a supported calculation parameter.
+ok(!Object.hasOwn(RATES.mortgage, 'earlyRepaymentCapMonthsInterest'), 'rates expose no universal early-repayment cap');
+for (const page of ['simulator.html', 'pension.html']) {
+  ok(!read(page).includes('earlyRepaymentCapMonthsInterest'), `${page} omits the unused repayment cap`);
+}
+
 // --- the two calculators must agree ------------------------------------------
 //
 // pension.html projects Pillar II through pillarProjection(); simulator.html
