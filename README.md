@@ -65,6 +65,10 @@ npm run test:browser
 To use an existing Chrome installation, set `CHROME_PATH` to its executable
 when running the browser tests. Tests use isolated browser contexts and synthetic
 plans, including HTML-like names, and cover desktop/mobile in light/dark themes.
+Theme regressions exercise OS preference changes, Light/System/Dark keyboard
+selection, saved overrides, reloads, cross-page persistence and mobile Escape
+closing on the landing page, both calculators and the source register. These
+checks do not constitute a complete accessibility or cross-browser audit.
 Pushes to `main` and pull requests run both suites without deploying. Releases
 also run both suites before deployment.
 
