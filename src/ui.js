@@ -4,7 +4,7 @@
 
 import { simulate } from './calc.js';
 import { actionPlan } from './rules.js';
-import { RATES, DEFAULTS } from './rates.js';
+import { RATES, DEFAULTS, ruleYearStatus } from './rates.js';
 import {
   MAX_PERSONS, STORAGE_KEY, HASH_KEY, blankPerson, blankState, exampleState,
   encodeState, decodeState, sanitise,
@@ -525,6 +525,9 @@ function chart(sim) {
 // ------------------------------------------------------------------ rendering
 
 function render() {
+  const ruleStatus = ruleYearStatus(new Date().getFullYear());
+  $('ruleYearStatus').textContent = ruleStatus.message;
+  $('ruleYearStatus').className = ruleStatus.mismatch ? 'alert' : 'hint';
   let sim, noPensionSim, plan;
   try {
     const currentYear = new Date().getFullYear();

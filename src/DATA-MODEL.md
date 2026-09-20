@@ -161,6 +161,15 @@ onward, and it turns the perpetual target from `spending / swr` into
 `spending / (swr - growth)` — infinite when growth reaches the withdrawal rate,
 which is the honest answer rather than a large finite number.
 
+**Projection year is not the rule year.** The browser starts projections in its
+current calendar year. `RATES.year` identifies the loaded rule set and
+`RATES.lastVerified` records its baseline review metadata; neither is changed by
+the clock. Both calculators disclose all three and warn when projection/rule years
+differ, including a historical mismatch. Individual rules may have separate source
+checks; the baseline date is not a claim that every rule was freshly reverified.
+The notice refreshes during normal rendering and on reload. It does not forecast
+law changes or certify that the loaded rules apply to every future projection year.
+
 Fund-pension income follows the modeled fund return until its entered duration ends.
 
 **Fund withdrawals by default.** Insurer annuities are not modeled. Old annuity selections

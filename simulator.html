@@ -77,6 +77,7 @@
   <div class="sim-head-inner">
 
     <h1>Estonian FIRE Simulator</h1>
+    <p id="ruleYearStatus" class="hint" role="status">Rules do not update automatically.</p>
     <p class="lede">Financial independence maths for Estonian tax residents — the investment
       account, the pension pillars, and the health insurance gap that most calculators miss.</p>
     <p class="privacy">🔒 Everything stays in your browser. No account, no upload, no server.
@@ -470,6 +471,17 @@ function bindExplain(rerender) {
 // date it took effect. Estonia has moved income tax, VAT and the basic exemption
 // three times in three years, so the annual update should be a five-minute edit
 // of this file and nothing else.
+
+// Calendar time must never silently re-label a fixed rule set as newly checked.
+function ruleYearStatus(projectionYear) {
+  if (!Number.isInteger(projectionYear)) throw new RangeError('Projection year must be an integer');
+  const mismatch = projectionYear !== RATES.year;
+  return { mismatch, projectionYear, ruleYear: RATES.year, baselineReview: RATES.lastVerified,
+    message: `Projection starts in ${projectionYear}. Loaded rule set: ${RATES.year}. ` +
+      `Recorded baseline review: ${RATES.lastVerified}; individual rules may have separate check dates. ` +
+      (mismatch ? `The loaded rules have not been established here as applicable to ${projectionYear}. ` : '') +
+      'Rules do not update automatically. Future tax and pension rules may change.' };
+}
 
 const RATES = {
   year: 2026,
@@ -3620,6 +3632,9 @@ function chart(sim) {
 // ------------------------------------------------------------------ rendering
 
 function render() {
+  const ruleStatus = ruleYearStatus(new Date().getFullYear());
+  $('ruleYearStatus').textContent = ruleStatus.message;
+  $('ruleYearStatus').className = ruleStatus.mismatch ? 'alert' : 'hint';
   let sim, noPensionSim, plan;
   try {
     const currentYear = new Date().getFullYear();

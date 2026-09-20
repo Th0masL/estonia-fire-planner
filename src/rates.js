@@ -5,6 +5,17 @@
 // three times in three years, so the annual update should be a five-minute edit
 // of this file and nothing else.
 
+// Calendar time must never silently re-label a fixed rule set as newly checked.
+export function ruleYearStatus(projectionYear) {
+  if (!Number.isInteger(projectionYear)) throw new RangeError('Projection year must be an integer');
+  const mismatch = projectionYear !== RATES.year;
+  return { mismatch, projectionYear, ruleYear: RATES.year, baselineReview: RATES.lastVerified,
+    message: `Projection starts in ${projectionYear}. Loaded rule set: ${RATES.year}. ` +
+      `Recorded baseline review: ${RATES.lastVerified}; individual rules may have separate check dates. ` +
+      (mismatch ? `The loaded rules have not been established here as applicable to ${projectionYear}. ` : '') +
+      'Rules do not update automatically. Future tax and pension rules may change.' };
+}
+
 export const RATES = {
   year: 2026,
   lastVerified: '2026-08',

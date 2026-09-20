@@ -2,7 +2,7 @@
 // pension?" without needing a full household plan.
 
 import { pillarProjection, netFromGross, pillar1Monthly } from './calc.js';
-import { RATES } from './rates.js';
+import { RATES, ruleYearStatus } from './rates.js';
 import { eur, pct, pct1 } from './format.js';
 import { infoBtn, infoRow, infoNote, bindExplain } from './explain.js';
 
@@ -21,6 +21,9 @@ const read = () => ({
 });
 
 function render() {
+  const ruleStatus = ruleYearStatus(new Date().getFullYear());
+  $('ruleYearStatus').textContent = ruleStatus.message;
+  $('ruleYearStatus').className = ruleStatus.mismatch ? 'alert' : 'hint';
   // Never substitute a hidden assumption while a field is empty or invalid.
   // Steps on monetary/return fields are spinner increments, not restrictions
   // on entered precision. Calendar years and ages must be whole numbers.

@@ -14,6 +14,7 @@
 # output.mjs reads the built HTML, so build first.
 set -e
 cd "$(dirname "$0")/.."
+node test/rule-year.mjs
 python3 build.py > /dev/null
 for suite in verify crosscheck audit-fixes pillar3 pension-service health-coverage cash-reserve mortgage-spending pension-lump-sum pension-stress funded-fi coast solver-window investment-account-tax tax-integration monotonic invariants roundtrip output; do
   node "test/$suite.mjs"
