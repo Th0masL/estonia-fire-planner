@@ -593,6 +593,17 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
   ok(read('guide/levers.html').includes('fire-basics.html#savings-rate-in-a-simplified-model'), 'savings cross-reference uses current heading');
 }
 
+{
+  const levers = read('guide/levers.html').replace(/\s+/g, ' ');
+  for (const phrase of ['ranked by impact', 'There is no downside', 'top three are worth more', 'abolished on 1 January 2026', 'negative expected value', 'Pillar III maxed']) {
+    ok(!levers.includes(phrase), `strategy removes unsupported prescription: ${phrase}`);
+  }
+  for (const phrase of ['not priority or expected return', 'remaining contribution allowance', 'not automatically permitted or tax-neutral', 'still under review', 'Finite fund payouts can run out', 'transaction-specific review']) {
+    ok(levers.includes(phrase), `strategy retains qualification: ${phrase}`);
+  }
+  ok(levers.includes('id="9-geographic-arbitrage"'), 'strategy preserves existing geographic cross-reference');
+}
+
 console.log(`\n${checks} output and cross-engine checks`);
 if (failures.length) {
   console.log(`\n${failures.length} FAILED:`);

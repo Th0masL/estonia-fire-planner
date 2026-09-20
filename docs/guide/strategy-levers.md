@@ -1,10 +1,17 @@
-# Strategy levers, ranked by impact
+# Strategy levers: a decision checklist
 
-Ordered by expected effect per unit of effort. The top three are worth more than everything below them combined.
+There is no verified universal ranking of these choices. Their effect depends on
+income, spending, existing assets, access dates and personal constraints. The
+numbers below identify topics, not priority or expected return.
+
+> **Limited review — 20 September 2026:** unsupported rankings and blanket
+> recommendations have been removed. Sources support the limited account and
+> allocation distinctions below, not an optimal strategy for a particular person.
+> Personal tax, healthcare and pension eligibility still require confirmation.
 
 ---
 
-## Tier 1 — the levers that actually decide the outcome
+## Cash flows and account choices
 
 ### 1. Savings rate
 
@@ -28,9 +35,19 @@ Whether this helps depends on the actual cash flows and costs. See the reconcile
 
 Requires: real business substance, a defensible salary, an accountant. Not a DIY area.
 
-### 3. Use the investment account for everything liquid
+### 3. Check investment-account suitability
 
-Free, indefinite tax deferral plus tax-free withdrawal of principal first. There is no downside and no cap. If liquid assets are sitting outside an IK, that's an unforced error — fix it before optimising anything else.
+An investment account can defer Estonian income tax on qualifying investments;
+it is not a tax exemption for everything liquid. Check residence, institution and
+asset eligibility, funding and receipt rules, and annual reporting. Taxable
+payments are determined chronologically against remaining contribution allowance
+across the same taxpayer's investment accounts, not separately per account.
+
+Losing Estonian tax residence ends this deferral and requires the relevant
+closure declaration. Moving existing holdings into the system is not automatically
+permitted or tax-neutral. See [EMTA's rules](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account)
+and the [investment-account guide](investment-account.md). Compare actual fees,
+administration and access needs; do not move emergency cash solely to obtain a wrapper.
 
 ### 4. Check usable Pillar III deduction capacity
 
@@ -44,9 +61,9 @@ Keep enough accessible capital for the bridge; a deduction alone does not establ
 
 ---
 
-## Tier 2 — real money, moderate effort
+## Allocation, coverage and pension access
 
-### 5. Portfolio: one fund, then stop
+### 5. Choose an allocation, then review it
 
 Choose a suitable allocation before selecting a fund. The
 [dated VWCE/WEBN comparison](portfolio.md#vwce-vs-webn) identifies both as
@@ -58,63 +75,94 @@ undated comparison table is not retained as a verified shortlist.
 A simple portfolio can reduce administration, but still needs periodic review of
 its suitability, costs and fund changes. Automation is not a reason to ignore it.
 
-**Bonds:** near-zero allocation during accumulation is defensible when you have decades and stable income. They matter at the retirement date, for the bond tent — not before. If held, prefer **EUR-hedged** global aggregate, because unhedged foreign bonds are mostly currency risk wearing a bond costume.
+**Allocation:** [Investor.gov](https://www.investor.gov/introduction-investing/getting-started/asset-allocation)
+relates asset allocation to time horizon and risk tolerance. This does not
+establish a universal zero-bond accumulation phase or a particular bond fund.
+Assess when money is needed and how much loss you can bear; review credit,
+interest-rate and currency exposure before choosing a bond allocation.
 
-**Home bias:** for an Estonia-resident household, salary, housing, banking and pensions may already be concentrated locally. An Estonian-heavy or Europe-heavy portfolio can amplify that exposure.
+**Concentration:** review underlying holdings alongside salary and property
+exposure. An Estonian pension provider can hold global assets; provider location
+alone does not establish investment concentration. Diversification reduces some
+risks but does not guarantee against losses.
 
 ### 6. Solve health insurance deliberately
 
-**{{healthInsurance.voluntaryMonthly|money12}}/year per uninsured adult** — €6,528 for a retired couple, about **€187k of FI number**. The family routes that used to make this free were **abolished on 1 January 2026**; the voluntary Tervisekassa contract replaced them and no longer requires prior insurance history. See [household.md](household.md#health-insurance--the-family-exit-closed-in-2026) and the [health-insurance guide](health-insurance.md).
+Confirm each person's actual coverage route, start and end dates, and any gap
+before stopping work. Do not assume a spouse, part-time job or pension access
+automatically supplies coverage. Use the actual premium and uncovered period in
+the plan, rather than capitalising a temporary premium as a permanent expense.
 
-### 7. Keep Pillar II, then choose the contribution rate by liquidity needs
+The [health-insurance guide](health-insurance.md) and [household guide](household.md)
+provide research leads, but their remaining eligibility and date claims are still
+under review. This checklist does not establish entitlement or a universal
+healthcare cost for a retired couple.
 
-The 4% social-tax match is hard to beat, so don't exit for FIRE reasons. Be in a low-cost index fund (Tuleva, LHV index) and size the bridge portfolio to cover the years before it unlocks.
+### 7. Compare pension contributions with accessible saving
 
-**Think twice before raising 2% → 6%.** The state's 4% does not increase, so there is no extra match to capture — only more salary locked away until the unlock age. Where the bridge to that age is the binding constraint, or near-term borrowing capacity matters, Pillar II may be the last wrapper to increase rather than the first. See [Pension pillars II and III](pensions.md#2-4-or-6--should-you-raise-your-rate).
+Compare contribution choices using their effect on take-home pay, pension assets
+and accessible bridge capital. A larger pension balance does not itself fund
+expenses before access. Neither staying, leaving nor increasing contributions
+is established as best for everyone by this checklist.
+
+Check the contribution and access conditions in [Pension pillars II and III](pensions.md#2-4-or-6--should-you-raise-your-rate).
+Compare fees and underlying investments, and test both pension-inclusive and
+zero-pension-benefit scenarios in the simulator. Finite fund payouts can run out;
+accessible investments must then cover any remaining shortfall.
 
 ---
 
-## Tier 3 — situational, and easy to overrate
+## Property, location and work choices
 
 ### 8. Real estate
 
-Estonia's 17.6% effective rate on residential rent is genuinely good.
+Model net cash flow after vacancy, maintenance, management, tax and financing;
+use property-specific estimates rather than a universal maintenance percentage.
+Account for sale costs, liquidity and concentration. The [rental-property guide](real-estate.md)
+distinguishes qualifying residential rent from other activity and tax from actual
+expenses. Its worked tax example is not a universal effective rate or net yield.
 
-But be honest about what it is: **a leveraged, illiquid, undiversified, management-intensive bet on one city.** It works when you have an edge — better data than the average buyer, or a trade you can do yourself — and most buyers are working from listing-page impressions. Model actual net yield after vacancy, maintenance (budget 1%+ of value/yr), management, and land tax. Gross yield is a marketing number.
-
-**Buy vs rent for a primary home** requires household-specific figures — the answer in Tallinn has swung hard with rates and is not obvious in either direction.
+For a primary home, compare household-specific buying and renting scenarios in
+the [home-purchase guide](property-purchase.md), including reserves and moving plans.
 
 ### 9. Geographic arbitrage
 
-Earning at higher international rates while spending at Estonian levels can be a large lever, whether through remote employment or genuine business activity.
+Compare actual net income and living costs for each location, including housing,
+travel, healthcare and currency exposure. A foreign employer or customer does
+not by itself establish higher disposable income.
 
-Watch the tax residency rules if it ever becomes "live abroad, keep the Estonian company" — permanent establishment and residency tests are where these plans fail.
+Cross-border residence, employer obligations, company taxation and healthcare
+need a separate review before relocation. No particular arrangement or treaty
+outcome is verified here.
 
 ### 10. Coast FIRE as a real target
 
-Full FIRE may be 15+ years out. **CoastFIRE might be 5.** Hitting the point where you never need to save again — and can therefore take a lower-paid, more interesting job — is often the outcome people actually want. It's worth calculating explicitly rather than treating FI as binary.
+Compare reduced-saving or lower-income scenarios, not just full retirement.
+CoastFIRE depends on assumed future growth and continued funding of current
+expenses; it is not a promise that saving will never be needed again. There is
+no general five-year CoastFIRE timeline. See the [worked example and definitions](fire-basics.md#fire-variants)
+and rerun the plan when income, spending or assumptions change.
 
 ---
 
-## Explicitly not levers
+## Extra complexity needs a reason
 
-Worth naming, because they consume attention disproportionate to their effect:
+These are due-diligence questions, not a verified ranking of returns:
 
-- **Stock picking / market timing** — negative expected value after effort and tax
-- **Crypto beyond a small speculative slice** — no loss offset in Estonia, and self-custodied coins can't be moved into an IK without triggering the tax the account is meant to defer
-- **Chasing 0.05% TER differences** — real, but rounding error next to savings rate
-- **Complex option strategies** — the covered-call-income genre in particular converts an equity return into a taxed, capped return
-- **P2P lending** — Estonia has a large local industry (Bondora, Mintos) with a history of platform failures. Yields are credit risk, priced as if it were interest
+- **Stock selection and market timing:** what evidence supports the strategy after costs, tax and concentration risk? No expected outperformance is established here.
+- **Crypto:** check the asset, licensed provider, acquisition date and reporting route. A blanket “no loss offset” rule is incorrect; see the [crypto guide](crypto.md) and [EMTA's distinctions](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account). Historic holdings and self-custody transfers need transaction-specific review.
+- **Small fee differences:** compare their euro cost over the intended holding period alongside trading, transfer and tax costs; neither ignore them nor treat a lower headline fee as the whole decision.
+- **Options and lending platforms:** assess the actual contract, loss exposure, liquidity, counterparty and tax treatment. No provider safety, loss probability or strategy return is verified here.
 
 ---
 
-## A rough sequence
+## A practical review sequence
 
-1. **Measure** — 3 months of real spending data, and current net worth by account
-2. **Fix the wrappers** — IK declared, Pillar III maxed, Pillar II in an index fund
-3. **Decide the OÜ question** — income structure and health insurance in one decision
-4. **Automate** — standing order into one global ETF on payday, before you see the money
-5. **Model** — FI number, bridge size and CoastFIRE date in the [simulator](../simulator.html)
-6. **Then** consider real estate or anything more exotic
+1. **Measure** — current assets, debts and cash flows, including irregular annual costs.
+2. **Protect access** — emergency reserves, near-term expenses and confirmed healthcare coverage.
+3. **Compare** — suitable accounts and pension contributions using net cash flows and access dates, not automatic maximum contributions.
+4. **Model** — FI targets, bridge funding and CoastFIRE in the [simulator](../simulator.html); stress assumptions and eventual pension-fund exhaustion.
+5. **Implement and review** — automate only the chosen affordable saving, retain reporting records, and revisit material life or rule changes.
 
-Steps 1–4 capture most of the available value and can be done in a few weekends. Everything after is refinement.
+This is an organisational aid, not a quantified claim that the first steps capture
+most of the value. The best next action and the time required remain household-specific.

@@ -19,6 +19,24 @@ neither the website nor an offline copy automatically updates legislation.
 
 ## Checked rules
 
+### Strategy checklist reconciliation
+
+**Checked:** 20 September 2026. The strategy guide now presents conditional
+decisions, not ranked returns or an optimal household strategy.
+[EMTA's investment-account guidance](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account),
+sections “How are taxable gains calculated”, funding conditions and securities
+losses, supports chronological taxpayer-level accounting, residence limitations
+and conditional crypto loss treatment (qualifying-provider crypto rules from 2025).
+[Investor.gov's allocation guidance](https://www.investor.gov/introduction-investing/getting-started/asset-allocation)
+supports horizon/risk-dependent allocation, not a universal zero-bond phase.
+
+**Affected:** strategy guide and links to previously reviewed detailed guides.
+Removed universal wrapper, pension, healthcare-cost and CoastFIRE assurances,
+unsupported market/provider claims and rankings. **Limits:** personal eligibility,
+existing-asset transfers, cross-border arrangements, healthcare routes and actual
+strategy returns are not certified. Household/healthcare guides remain separate
+review items. No calculation or rate changes.
+
 ### Savings-rate examples and FIRE labels
 
 **Checked:** 20 September 2026. The FIRE-basics savings table is a zero-start,
