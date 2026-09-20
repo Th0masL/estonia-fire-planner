@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>FIRE fundamentals — Estonian FIRE Simulator</title>
-<meta name="description" content="You are financially independent when:">
+<meta name="description" content="Partial review, 20 September 2026: withdrawal-rule mechanics and the cited author explanations below were checked. Historical results are not forecasts. Th">
 <meta name="theme-color" content="#f6f8fb">
 <script>
 (function () {
@@ -78,11 +78,14 @@
   <div class="wrap">
     <section class="doc">
       <h1 class="doc-title">FIRE fundamentals</h1>
+<blockquote>
+<p><strong>Partial review, 20 September 2026:</strong> withdrawal-rule mechanics and the cited author explanations below were checked. Historical results are not forecasts. The earlier savings-rate, spending and FIRE-variant guidance still needs separate review.</p>
+</blockquote>
 <h2 id="the-one-equation">The one equation</h2>
-<p>You are financially independent when:</p>
+<p>A simple starting-point target, before dated cash flows and other model adjustments, is:</p>
 <pre><code>portfolio_value × safe_withdrawal_rate ≥ annual_spending
 </code></pre>
-<p>Rearranged, the <strong>FI number</strong>:</p>
+<p>Rearranged, the <strong>baseline FI number</strong> (not a guarantee of sustainability):</p>
 <pre><code>FI_number = annual_spending / SWR
 </code></pre>
 <p>At a 4% SWR that's <strong>25× annual spending</strong>. At 3.5% it's <strong>28.6×</strong>. At 3.25% it's <strong>30.8×</strong>.</p>
@@ -178,80 +181,107 @@
 </table></div>
 <p><strong>CoastFIRE deserves attention.</strong> As an illustration, €200k invested at 35 and compounding at 5% real becomes about €860k at 65 with zero further contributions. The point at which no further retirement saving is required can arrive <em>decades</em> before full FI.</p>
 <p><strong>BaristaFIRE deserves more attention in Estonia specifically</strong>, because the health insurance rules make "zero earned income" expensive. See the <a href="health-insurance.html">health-insurance guide</a>.</p>
-<h2 id="safe-withdrawal-rate--where-the-4-rule-breaks">Safe withdrawal rate — where the 4% rule breaks</h2>
-<p>The "4% rule" comes from the Trinity study and Bengen's 1994 work. Its assumptions:</p>
-<ul>
-<li><strong>US</strong> stocks and bonds, <strong>1926–1995</strong></li>
-<li><strong>30-year</strong> horizon</li>
-<li>Fixed real withdrawals, no flexibility</li>
-<li>No fees, no taxes</li>
-</ul>
-<p>Every one of these is wrong for a 40-year-old European.</p>
-<p><strong>Horizon.</strong> Retire at 45, plan to 100 → 55 years, not 30. Failure rates rise sharply past 30 years. Karsten Jeske's (Early Retirement Now) SWR series puts a 50–60 year horizon closer to <strong>3.25–3.5%</strong> for a high success probability.</p>
-<p><strong>Country.</strong> The 4% figure is survivorship bias on the single best-performing large market of the 20th century. Wade Pfau's international work found SWRs below 4% for most developed markets, and well below for some. A globally diversified portfolio is the honest hedge, but it also means you shouldn't expect US-history returns.</p>
+<h2 id="safe-withdrawal-rate--what-the-research-can-tell-us">Safe withdrawal rate — what the research can tell us</h2>
+<h3 id="initial-withdrawal-rate-is-not-a-percentage-of-every-years-balance">Initial withdrawal rate is not a percentage of every year's balance</h3>
+<p><a href="https://www.bengenfs.com/the-4-percent-rule/">William Bengen's own explanation</a>
+links the rule to his October 1994 historical-return research. The method takes
+a percentage of the initial portfolio, then adjusts that <strong>cash amount</strong> for
+inflation. It does not recalculate the same percentage of the current balance
+each year. Bengen also cautions that the original finding was not a recommendation
+that every retiree use one number.</p>
+<p><strong>Illustration:</strong> 4% of €500,000 is €20,000 in year one. With an assumed 2%
+inflation adjustment, year two's withdrawal is €20,400 regardless of the
+portfolio's intervening market value. Withdrawing 4% of the then-current balance
+is a different rule, with variable spending.</p>
+<h3 id="historical-survival-is-not-a-personal-success-probability">Historical survival is not a personal success probability</h3>
+<p>Bengen's retrospective describes historical returns and inflation, not a
+probabilistic forecast for an Estonian household. The previous guide incorrectly
+combined Bengen and Trinity under one dataset and assumption list.</p>
+<p><a href="https://earlyretirementnow.com/safe-withdrawal-rate-series/">Karsten Jeske's research overview</a>
+discusses longer horizons, valuations, fees, additional cash flows and bequests.
+His cited 3.25–3.50% results refer to historical scenarios, not a verified future
+success probability for this planner. He also warns against transferring
+historical cohort success rates directly to a particular household.</p>
+<p><strong>Still unverified:</strong> this review has not reproduced the original Trinity tables,
+Pfau's international results or an Estonia-specific withdrawal backtest.
+The former claims about the best-performing market, exact failure rates and a
+universally suitable 3.25–3.5% range are not retained as established facts.</p>
+<p>For any study, check the return series, currency, inflation measure, asset mix,
+rebalancing, fees, taxes, withdrawal timing, horizon and definition of success.
+Finishing a finite test with a positive balance is not the same as preserving
+purchasing power indefinitely or funding a longer retirement.</p>
 <p><strong>Inflation basket.</strong> A household's spending need not track an aggregate price
 index. The <a href="https://www.ecb.europa.eu/mopo/strategy/pricestab/html/index.en.html">ECB's 2% target</a>
 concerns the euro area over the medium term, not a household forecast. Test
 several assumptions; this guide has not established 2.5–3% as a sufficient range
 for every Estonian plan. See <a href="risks.html#estonian-inflation--eurozone-inflation">inflation risk</a>.</p>
-<p><strong>Practical stance:</strong> plan at <strong>3.25–3.5%</strong>, treat 4% as the optimistic case, and build in flexibility rather than trying to find the one true number. Flexibility is worth more than precision here.</p>
+<p><strong>Planning stance:</strong> compare several withdrawal assumptions alongside the actual
+spending schedule, taxes and pension cash flows. This simulator's selected rate
+is an input, not a calibrated probability of success. Retirement at 45 through
+95 means a 50-year horizon; change the dates to match your plan rather than
+assuming a 30-year study covers it.</p>
 <h2 id="sequence-of-returns-risk">Sequence-of-returns risk</h2>
-<p>The single biggest threat, and the most misunderstood.</p>
-<p>Two retirees with <em>identical</em> average returns over 30 years can have wildly different outcomes purely from the <strong>order</strong> those returns arrive in. A crash in years 1–5, while you're withdrawing, permanently destroys capital that never gets to participate in the recovery. The same crash in year 25 is nearly harmless.</p>
-<p>Roughly: <strong>the first ~10 years determine the outcome.</strong> After that, you've usually pulled far enough ahead that failure is unlikely.</p>
-<p>Mitigations, roughly in order of effectiveness:</p>
-<ol>
-<li><strong>Flexible spending</strong> — cutting withdrawals 10–20% in bad years does more than any asset allocation trick. This is the big one.</li>
-<li><strong>Earned income in early retirement</strong> — even €500/month of part-time work in a bad stretch changes everything (and see: health insurance).</li>
-<li><strong>Cash / short-bond buffer</strong> — 2–3 years of spending, so you never sell equities into a crash.</li>
-<li><strong>Bond tent / rising equity glidepath</strong> — hold <em>more</em> bonds at the retirement date, then spend them down and let equity share drift back up. Counterintuitive but well-supported.</li>
-<li><strong>Dynamic withdrawal rules</strong> — Guyton-Klinger guardrails, VPW, or CAPE-based rates instead of a fixed real amount.</li>
-</ol>
+<p>The order of returns matters when money is withdrawn; see the
+<a href="risks.html#sequence-of-returns-risk">worked example</a>. Early losses can be damaging,
+but a late crash is not automatically harmless. Jeske's
+<a href="https://earlyretirementnow.com/safe-withdrawal-rate-series/">research overview</a>
+explicitly warns that sequence risk can persist beyond the often-quoted first
+five to ten years.</p>
+<p>Possible responses include spending flexibility, realistic earned income,
+accessible reserves and an allocation suited to the horizon and loss tolerance.
+Each has limits: essential spending may not be reducible, work may be unavailable
+and cash can be exhausted. A two- or three-year buffer does not guarantee that
+equities never need to be sold after a loss.</p>
+<p>Guardrails and changing allocations are strategies to evaluate under explicit
+rules, not universally ranked improvements. This page does not establish their
+relative effectiveness or say the simulator implements them.</p>
 <h2 id="accumulation-vs-decumulation-are-different-problems">Accumulation vs decumulation are different problems</h2>
-<p>Worth separating explicitly, because good accumulation advice is often bad decumulation advice:</p>
 <div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
 <tr>
-<th></th>
+<th>Planning question</th>
 <th>Accumulation</th>
 <th>Decumulation</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Enemy</td>
-<td>Fees, taxes, behaviour</td>
-<td>Sequence risk, inflation, longevity</td>
+<td>Cash flow</td>
+<td>How much can be saved after costs?</td>
+<td>What spending must the portfolio fund?</td>
 </tr>
 <tr>
-<td>Volatility is</td>
-<td>Your friend (buying cheap)</td>
-<td>Your enemy (selling cheap)</td>
+<td>Market losses</td>
+<td>Can saving continue through a downturn?</td>
+<td>Can withdrawals be supported during losses?</td>
 </tr>
 <tr>
-<td>Right allocation</td>
-<td>~100% equities, simple</td>
-<td>Glidepath, buffer, flexibility</td>
+<td>Allocation</td>
+<td>Match horizon, liquidity and loss tolerance</td>
+<td>Reassess those needs as withdrawals start</td>
 </tr>
 <tr>
-<td>Key metric</td>
-<td>Savings rate</td>
-<td>Withdrawal rate + flexibility</td>
+<td>Review</td>
+<td>Savings, costs and progress</td>
+<td>Spending, remaining assets and remaining horizon</td>
 </tr>
 </tbody>
 </table></div>
-<p>In Estonia there's a third phase people forget — <strong>the bridge</strong>: from early retirement age to 60/65 when pension pillars unlock. That bridge has to be funded entirely from taxable/investment-account assets. Sizing it is a core planning step.</p>
+<p>Neither phase has a universally correct equity allocation. A low purchase price
+does not make volatility harmless, especially if income or liquidity also falls.</p>
+<p>For Estonia, model the <strong>bridge</strong> using each person's actual pension access and
+payment conditions, not fixed ages of 60 or 65. Accessible assets and other
+available income must fund any shortfall before pensions start, and the portfolio
+may need to cover spending again after finite pension payments end. See
+<a href="pensions.html#access-ages-and-payout-conditions">pension access and payouts</a>.</p>
 <h2 id="reading-list">Reading list</h2>
 <ul>
-<li><strong>Early Retirement Now</strong> — <a href="https://earlyretirementnow.com/safe-withdrawal-rate-series/">SWR series</a>. The most rigorous work on withdrawal rates. Long, worth it.</li>
-<li><strong>Big ERN's Google Sheet toolbox</strong> — historical backtesting with configurable glidepaths</li>
-<li><strong>Bogleheads wiki</strong> — <a href="https://www.bogleheads.org/wiki/Outline_of_non-US_domiciles">Non-US investor pages</a> specifically</li>
-<li><strong>Wade Pfau</strong>, <em>Retirement Planning Guidebook</em> — on glidepaths and annuities</li>
-<li><strong>Kogumispension / Rahandusministeerium</strong> materials for the Estonian pension side</li>
-<li>r/EuropeFIRE, r/Eesti — for local reality checks, with the usual forum caveats</li>
+<li><a href="https://www.bengenfs.com/the-4-percent-rule/">Bengen's explanation of the rule</a> — the author's retrospective, not a reproduction of the original paper.</li>
+<li><a href="https://earlyretirementnow.com/safe-withdrawal-rate-series/">Early Retirement Now's SWR series</a> — author research with scenario-specific assumptions; no universal rate endorsed here.</li>
+<li><a href="sources.html">Sources &amp; verification</a> — scope of this project's checks and unresolved questions.</li>
 </ul>
 <h2 id="next">Next</h2>
-<p>The math above is universal. What makes it <em>actionable</em> is the tax wrapper — and Estonia's is unusually useful. See the <a href="investment-account.html">investment-account guide</a>.</p>
+<p>Tax and account treatment affect the cash available to spend; do not treat the simplified target as a complete plan. See the <a href="investment-account.html">investment-account guide</a>.</p>
       <nav class="pager"><a class="prev" href="../index.html">← Start here</a><a class="next" href="tax-overview.html">Estonian tax overview →</a></nav>
     </section>
   </div>

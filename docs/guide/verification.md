@@ -19,6 +19,22 @@ neither the website nor an offline copy automatically updates legislation.
 
 ## Checked rules
 
+### Withdrawal-research scope and mechanics
+
+**Checked:** 20 September 2026. [Bengen's author retrospective](https://www.bengenfs.com/the-4-percent-rule/)
+supports the initial-percentage/subsequent-inflation-adjustment distinction.
+[Jeske's research overview](https://earlyretirementnow.com/safe-withdrawal-rate-series/)
+supports scenario-specific interpretation and the warning that sequence risk
+can extend beyond ten years. Neither establishes a future success probability
+for this calculator. The €20,000/€20,400 illustration is arithmetic.
+
+**Affected:** withdrawal, sequence, allocation and bridge sections of FIRE basics.
+**Open:** original Trinity tables and Pfau results were not reproduced; the
+publisher's Bengen page required sign-in, so the accessible author retrospective
+was used rather than claiming inspection of the original article. No historical
+dataset was rerun. Earlier savings/spending/variant claims remain a separate
+review. No model or default-withdrawal-rate changes.
+
 ### Risk-checklist qualifications
 
 **Checked:** 20 September 2026. [ECB target](https://www.ecb.europa.eu/mopo/strategy/pricestab/html/index.en.html)

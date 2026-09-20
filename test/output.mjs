@@ -563,6 +563,18 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
   ok(risks.includes(`id="${anchor}"`) && read('guide/fire-basics.html').includes(`risks.html#${anchor}`), 'inflation cross-reference resolves');
 }
 
+{
+  const basics = read('guide/fire-basics.html').replace(/\s+/g, ' ');
+  for (const phrase of ['nearly harmless', 'first ~10 years determine', 'roughly in order of effectiveness', '~100% equities', 'most rigorous work']) {
+    ok(!basics.includes(phrase), `withdrawal guide removes unsupported claim: ${phrase}`);
+  }
+  for (const phrase of ['Partial review', 'Still unverified', 'not a calibrated probability', 'not fixed ages of 60 or 65', 'initial portfolio']) {
+    ok(basics.includes(phrase), `withdrawal guide retains qualification: ${phrase}`);
+  }
+  const first = 500000 * .04, second = first * 1.02;
+  for (const amount of [first, second]) ok(basics.includes(`€${amount.toLocaleString('en-IE')}`), 'inflation-adjusted withdrawal example reconciles');
+}
+
 console.log(`\n${checks} output and cross-engine checks`);
 if (failures.length) {
   console.log(`\n${failures.length} FAILED:`);
