@@ -19,6 +19,21 @@ neither the website nor an offline copy automatically updates legislation.
 
 ## Checked rules
 
+### Rental-property guide qualifications
+
+**Checked:** 20 September 2026. [EMTA rental guidance](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/income-lease-and-rent-licence-fees)
+supports the limited residential deduction and receipt classifications, not a
+universal effective tax rate. Its older 20% tax examples are not used as current
+rate evidence. The guide's 22% example is conditional arithmetic, using the
+separate tax-rate entry below.
+[Residence-sale guidance](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/transfer-immovable-property/transfer-place-residence)
+and [taxable-gains guidance](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/transfer-immovable-property/calculation-taxable-gains)
+support the sale qualifications. The simulator accepts supplied net income;
+it does not calculate a property-level rental return or tax bill.
+
+**Affected:** property/rental guide; no engine changes. **Open:** business/VAT,
+company and foreign-property treatment, local tax and personal exemptions.
+
 ### Home-purchase and mortgage guidance
 
 **Checked:** 20 September 2026. **Scope:** general limits and dated provider/tax

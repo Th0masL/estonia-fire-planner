@@ -534,6 +534,20 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
   ok((306000 * .04 - 270000 * .037) / 36000 === .0625 && property.includes('6.25%'), 'hypothetical starting-balance comparison reconciles');
 }
 
+{
+  const rental = read('guide/real-estate.html');
+  for (const phrase of ['accommodation services and subletting', 'taxable gains are not the entire sale price', 'Source caveat', 'Still unverified', 'provider location alone does not measure correlation']) {
+    ok(rental.includes(phrase), `rental guide preserves qualification: ${phrase}`);
+  }
+  for (const phrase of ['fully taxable at 22%', 'one bet, repeated four times', 'Very favourable']) {
+    ok(!rental.includes(phrase), `rental guide removes blanket claim: ${phrase}`);
+  }
+  const gross = 12000, taxable = gross * .8, tax = taxable * .22;
+  for (const amount of [taxable, tax, gross - tax]) {
+    ok(rental.includes(`€${amount.toLocaleString('en-IE')}`), 'rental example reconciles taxable income, tax and cash');
+  }
+}
+
 console.log(`\n${checks} output and cross-engine checks`);
 if (failures.length) {
   console.log(`\n${failures.length} FAILED:`);
