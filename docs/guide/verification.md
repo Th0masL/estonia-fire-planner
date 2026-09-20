@@ -19,6 +19,25 @@ neither the website nor an offline copy automatically updates legislation.
 
 ## Checked rules
 
+### Tax overview
+
+**Checked:** 20 September 2026. Selected resident-individual rules, with company
+rules distinguished; not a complete review of Estonian taxation.
+
+- [EMTA rates](https://www.emta.ee/en/private-client/taxes-and-payment/declaration-income/tax-rates), 2026 section: 22% income tax, €700 general / €776 pensionable-age monthly exemption, 33% social tax and €886 minimum base. The pensionable-age allowance is not added to the general allowance; see [basic exemption](https://www.emta.ee/en/private-client/taxes-and-payment/tax-incentives/calculation-basic-exemption).
+- [Company dividends](https://www.emta.ee/en/business-client/taxes-and-payment/income-and-social-taxes/taxation-dividends): standard 22/78 from 2025, with historic 14/86 redistribution / 7% withholding caveat. Retention is not an exemption for every company payment; see the reviewed company guide and [fringe benefits](https://www.emta.ee/en/business-client/taxes-and-payment/income-and-social-taxes/fringe-benefits).
+- [Foreign income](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/income-derived-foreign-state), dividends/declaration sections: taxed-profit or taxed-dividend exemption, table 8.8 versus ordinary taxable table 8.1, evidence and declaration duties. Investment-account exceptions remain in the detailed guide.
+- [Residential rent](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/income-lease-and-rent-licence-fees): qualifying 20% deduction, not all rental activity; 17.6% is arithmetic before personal reliefs, not after-cost profit.
+- [Estates](https://www.emta.ee/en/private-client/taxes-and-payment/other-taxes/estate): receipt versus taxable later disposal and inherited obligations. Removed the unconditional inheritance/gift-tax assurance; company gifts and foreign cases are not established by the overview.
+- [Standard VAT](https://www.emta.ee/en/admin/content/handbook_article/39): 24% from 1 July 2025, not a rate for every supply.
+- [Refund/payment timetable](https://www.emta.ee/en/private-client/taxes-and-payment/declaration-income/refund-and-additional-payment-income-tax): 2025-income settlement by 1 October 2026; electronic refunds from 5 March when no further verification is needed. Foreign-income guidance gives the following-year 30 April filing deadline. These dates are not 2026-income filing guidance.
+
+Removed the misleading security-tax history, unsupported motor-tax “replacement”
+claim and “ideal jurisdiction / only healthcare friction” conclusion. Asset-specific
+taxes are not replaced by a blanket no-wealth-tax assurance. Individual residency,
+treaties, evidentiary requirements, payroll exceptions and final liability remain
+open. No rates or projection logic changed; repeated direct rates use build tokens.
+
 ### FatFIRE illustrations and comparisons
 
 **Checked:** 20 September 2026. Baseline targets, fixed-saving accumulation,

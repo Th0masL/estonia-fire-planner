@@ -662,6 +662,20 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
   }
 }
 
+{
+  const tax = read('guide/tax-overview.html').replace(/\s+/g, ' ');
+  for (const phrase of ['2025 income declared in 2026', '30 April 2026', '1 October 2026', '5 March 2026', '7% withholding', 'table 8.8', 'table 8.1', 'before personal reliefs', 'not a tax-filing engine', 'not an additional allowance']) {
+    ok(tax.includes(phrase), `tax overview retains qualification: ${phrase}`);
+  }
+  for (const phrase of ['ideal jurisdiction', 'later track', 'security tax', '~€100/yr']) {
+    ok(!tax.includes(phrase), `tax overview removes unsupported claim: ${phrase}`);
+  }
+  ok(tax.includes(`${RATES.incomeTax * 100}%`) && tax.includes(`${RATES.vat * 100}%`), 'tax overview renders current standard rates');
+  ok(tax.includes(`€${RATES.basicExemptionMonthly}`) && tax.includes(`€${RATES.basicExemptionPensionAge}`), 'tax overview renders both exemptions');
+  ok(tax.includes(`${(RATES.incomeTax * .8 * 100).toFixed(1)}%`), 'rental percentage reconciles with qualifying deduction');
+  ok(tax.includes(`€${(RATES.socialTaxMinimumBaseMonthly * RATES.socialTax).toFixed(2)}`), 'social minimum tax reconciles with base');
+}
+
 console.log(`\n${checks} output and cross-engine checks`);
 if (failures.length) {
   console.log(`\n${failures.length} FAILED:`);
