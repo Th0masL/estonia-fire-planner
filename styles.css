@@ -68,7 +68,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   font-size: 14.5px; font-weight: 650; letter-spacing: -.01em; line-height: 1.25;
 }
 .brand-text small {
-  font-size: 11.5px; font-weight: 450; color: var(--color-text-faint);
+  font-size: 11.5px; font-weight: 450; color: var(--color-text-muted);
   letter-spacing: .01em; margin-top: 2px;
 }
 
@@ -108,7 +108,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   display: block;
   padding: 4px 12px;
   border-left: 2px solid var(--color-border);
-  color: var(--color-text-faint);
+  color: var(--color-text-muted);
   text-decoration: none;
   font-size: 12.75px;
   line-height: 1.45;
@@ -134,7 +134,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   border: 0;
   border-radius: calc(var(--radius-sm) - 3px);
   background: transparent;
-  color: var(--color-text-muted);
+  color: var(--color-text);
   font: inherit; font-size: 11.5px; font-weight: 600;
   cursor: pointer;
 }
@@ -148,7 +148,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   margin: 10px 2px 0;
   font-size: 11.5px;
   line-height: 1.5;
-  color: var(--color-text-faint);
+  color: var(--color-text-muted);
 }
 .note code { font-size: 10.5px; background: none; padding: 0; }
 
@@ -272,7 +272,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   font-size: 12px;
   letter-spacing: .045em;
   text-transform: uppercase;
-  color: var(--color-text-muted);
+  color: var(--color-text);
   background: var(--color-surface-subtle);
   padding: 10px 14px;
   border-bottom: 1px solid var(--color-border-strong);
@@ -347,7 +347,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
     display: block;
     width: max-content;
     margin: 0 0 var(--space-2) auto;
-    color: var(--color-text-faint);
+    color: var(--color-text-muted);
     font-size: 11.5px;
     font-weight: 600;
   }
@@ -411,9 +411,12 @@ label {
   display: flex; flex-wrap: wrap; align-items: baseline;
   gap: 4px 6px; font-size: 12.5px; color: var(--color-text-muted);
 }
-label .u { color: var(--color-text-faint); font-size: 11px; }
+label .u { color: var(--color-text-muted); font-size: 11px; }
 label > input:not([type="checkbox"]):not([type="range"]),
 label > select { flex: 1 0 100%; min-width: 0; }
+/* WebKit otherwise includes long native option text in the page's scroll area.
+   Keep the native picker and its focus outline; contain its internal painting. */
+select { contain: paint; }
 
 /* Keep the controls on one line across the whole row. A label whose unit wraps
    onto a second line is taller than its neighbour, so without this its input
@@ -443,7 +446,7 @@ input:focus, select:focus {
 input[type="range"] { flex: 1; accent-color: var(--color-primary); }
 .alloc output { font-size: 12.5px; color: var(--color-primary); font-weight: 600;
   min-width: 0; overflow-wrap: anywhere; }
-.hint { font-size: 12px; color: var(--color-text-faint); margin: 6px 0 0; line-height: 1.5; }
+.hint { font-size: 12px; color: var(--color-text-muted); margin: 6px 0 0; line-height: 1.5; }
 
 .person { border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 10px; background: var(--color-bg); }
 .person-head { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
@@ -460,7 +463,7 @@ input[type="range"] { flex: 1; accent-color: var(--color-primary); }
 .btn:active { transform: translateY(1px); }
 .btn:disabled {
   cursor: not-allowed;
-  color: var(--color-text-faint);
+  color: var(--color-text-muted);
   background: var(--color-surface-subtle);
   border-color: var(--color-border);
   opacity: .65;
@@ -479,7 +482,7 @@ input[type="range"] { flex: 1; accent-color: var(--color-primary); }
 .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 18px; }
 .stat { background: var(--color-surface-subtle); border-radius: var(--radius-sm); padding: 12px; }
 .stat b { display: block; font-size: 22px; letter-spacing: -.02em; }
-.stat span { font-size: 11.5px; color: var(--color-text-muted); }
+.stat span { font-size: 11.5px; color: var(--color-text); }
 
 /* Two calculations from the same inputs: a zero-benefit stress case and the
    selected pension policy. Keep them visually paired so changing a trust
@@ -505,7 +508,7 @@ input[type="range"] { flex: 1; accent-color: var(--color-primary); }
   display: block; font-size: 11.5px; line-height: 1.4; color: var(--color-text-muted);
 }
 .scenario-card p { margin: 10px 0 4px; font-size: 12.5px; font-weight: 640; }
-.scenario-card small { color: var(--color-text-faint); }
+.scenario-card small { color: var(--color-text-muted); }
 @media (max-width: 480px) { .scenario-compare { grid-template-columns: 1fr; } }
 
 table.mini { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-bottom: 16px; }
@@ -517,10 +520,10 @@ table.mini tr + tr th, table.mini tr + tr td { border-top: 1px solid var(--color
 .finding { border-left: 3px solid var(--color-border-strong); background: var(--color-surface-subtle); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 11px 14px; margin-bottom: 9px; }
 .finding header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
 .finding h4 { font-size: 14px; margin: 0 0 5px; }
-.finding p { font-size: 13px; margin: 0; color: var(--color-text-muted); line-height: 1.55; }
+.finding p { font-size: 13px; margin: 0; color: var(--color-text); line-height: 1.55; }
 .finding .val { font-size: 12.5px; font-weight: 650; white-space: nowrap; }
 .finding.critical { border-left-color: var(--color-danger); } .finding.critical .val { color: var(--color-danger); }
-.finding.important { border-left-color: var(--color-warning); } .finding.important .val { color: var(--color-warning); }
+.finding.important { border-left-color: var(--color-warning); } .finding.important .val { color: var(--color-text); }
 .finding.opportunity { border-left-color: var(--color-success); } .finding.opportunity .val { color: var(--color-success); }
 .finding.info { border-left-color: var(--color-border-strong); } .finding.info .val { color: var(--color-text-muted); }
 .empty { color: var(--color-text-muted); font-size: 14px; }
@@ -538,12 +541,12 @@ table.mini tr + tr th, table.mini tr + tr td { border-top: 1px solid var(--color
 .results:has(> .empty:only-child) .empty { margin: 0; }
 
 .sim-foot { max-width: 1180px; margin: 0 auto; padding: 8px 24px 48px; }
-.sim-foot p { font-size: 12px; color: var(--color-text-faint); }
+.sim-foot p { font-size: 12px; color: var(--color-text-muted); }
 
 /* ---------- chart ---------- */
 .chart { width: 100%; height: auto; margin-bottom: 6px; overflow: visible; }
 .chart .grid { stroke: var(--color-border); stroke-width: 1; }
-.chart .lbl { fill: var(--color-text-faint); font-size: 10px; font-family: inherit; }
+.chart .lbl { fill: var(--color-text-muted); font-size: 10px; font-family: inherit; }
 .chart .band { stroke: none; }
 .chart .band.b0 { fill: color-mix(in srgb, var(--color-accent) 32%, transparent); }
 .chart .band.b1 { fill: color-mix(in srgb, var(--color-accent) 14%, transparent); }
@@ -587,7 +590,7 @@ body.guide .doc { padding-top: 40px; }
 .person .sub { font-size: 11px; text-transform: uppercase; letter-spacing: .04em;
   color: var(--color-text-muted); margin: 12px 0 6px; font-weight: 640; }
 
-table.mini .muted { color: var(--color-text-faint); font-weight: 400; }
+table.mini .muted { color: var(--color-text-muted); font-weight: 400; }
 select { font: inherit; font-size: 14px; padding: 7px 9px; color: var(--color-text);
   background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-sm); width: 100%; }
 table.thresholds th { font-weight: 500; }
@@ -596,7 +599,7 @@ table.thresholds th { font-weight: 500; }
    comparison table needed the same treatment. */
 table.mini tr.here th, table.mini tr.here td { font-weight: 700; color: var(--color-accent); }
 table.mini tr.thead th, table.mini tr.thead td { font-size: 11px; text-transform: uppercase;
-  letter-spacing: .04em; color: var(--color-text-faint); font-weight: 640; padding-bottom: 2px; }
+  letter-spacing: .04em; color: var(--color-text-muted); font-weight: 640; padding-bottom: 2px; }
 
 /* ---------- top navigation on the standalone tools ---------- */
 .topnav { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
@@ -641,14 +644,14 @@ body.sim .sim-head, body.sim .sim-main, body.sim .sim-foot { margin-left: var(--
 .panel fieldset > .sub:first-of-type { margin-top: 8px; }
 .results h4 { font-size: 13.5px; font-weight: 640; margin: 16px 0 8px; color: var(--color-text); }
 .alert.alert-soft { background: var(--color-surface-subtle); border-color: var(--color-border);
-  color: var(--color-text-muted); }
+  color: var(--color-text); }
 .sharebox { position: relative; }
 .sharebox-close {
   position: absolute; top: 6px; right: 6px;
   width: 24px; height: 24px; line-height: 1;
   display: grid; place-items: center;
   border: 0; border-radius: var(--radius-sm); cursor: pointer;
-  background: transparent; color: var(--color-text-faint);
+  background: transparent; color: var(--color-text-muted);
   font-size: 18px; font-family: inherit;
 }
 .sharebox-close:hover { background: var(--color-surface-raised); color: var(--color-text); }
@@ -774,7 +777,7 @@ table.mini tr.breakdown th {
   position: relative;
 }
 table.mini tr.breakdown th::before {
-  content: "+"; position: absolute; left: 8px; color: var(--color-text-faint);
+  content: "+"; position: absolute; left: 8px; color: var(--color-text-muted);
 }
 table.mini tr.breakdown td { color: var(--color-text-muted); }
 table.mini tr.breakdown th, table.mini tr.breakdown td {

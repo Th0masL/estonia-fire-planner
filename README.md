@@ -58,7 +58,7 @@ the website itself still runs without JavaScript packages or network access:
 
 ```sh
 npm ci
-npx playwright install chromium
+npx playwright install chromium firefox webkit
 npm run test:browser
 ```
 
@@ -70,6 +70,14 @@ selection, saved overrides, reloads, cross-page persistence, exclusion of closed
 mobile navigation from keyboard focus, and Escape closing with focus restoration
 on the landing page, both calculators and the source register. These
 checks do not constitute a complete accessibility or cross-browser audit.
+Focused Firefox and WebKit smoke projects cover both calculators, persistence,
+validation, themes and navigation at 1440px/390px in light/dark. These are engine
+tests, not certification of real Safari/iOS or Android devices. `CHROME_PATH`
+only overrides Chromium; Firefox/WebKit use Playwright's installed browsers.
+Automated [axe accessibility checks](https://playwright.dev/docs/accessibility-testing)
+cover the landing page, both calculators and source register in both themes,
+alongside 320px reflow and keyboard checks. This is not a complete WCAG or manual
+screen-reader audit; automated checks cannot identify every accessibility issue.
 Browser fallback tests simulate blocked/full storage and missing/denied clipboard
 access, check manual export/share recovery, and verify that cancelling Reset or
 Example preserves the current plan. These simulations do not replace testing in

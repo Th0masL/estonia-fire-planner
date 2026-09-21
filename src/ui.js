@@ -446,7 +446,7 @@ function chart(sim) {
       // the surplus gets a column of its own rather than vanishing.
       const spare = sim.schedule.some((r) => r.unusedPension > 0.5);
       return `
-    <div class="schedule-wrap">
+    <div class="schedule-wrap" tabindex="0" role="region" aria-label="Retirement cash-flow schedule">
     <table class="mini schedule">
       <thead>
         <tr>
