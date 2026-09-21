@@ -143,7 +143,7 @@ and losses while extending the portfolio-funded interval.
 
 The planner estimates future pension service and units from gross salary, not
 actual social-tax records. In 2026 the employer minimum social-tax base is
-€886/month (€292.38 tax); this is distinct from the current minimum wage.
+{{socialTaxMinimumBaseMonthly|money}}/month (€292.38 tax); this is distinct from the current minimum wage.
 Applicability depends on circumstances and exceptions. The calculator does not
 infer minimum top-ups, state-paid contributions or special qualifying periods.
 Low- and zero-salary state-pension projections therefore carry a warning.

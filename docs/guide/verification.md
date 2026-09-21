@@ -1,9 +1,9 @@
 # Sources & verification
 
 This is an initial evidence register, not a certification of the entire planner.
-Only the rules listed as checked below were reverified for this register on
-20 September 2026. Other guide pages may contain older figures or claims that
-still need review. A passing calculation test does not establish legal correctness.
+Only the limited claims in the checked entries have recorded source reviews;
+their individual dates apply. Later documentation reconciliation does not refresh
+all those checks. A passing calculation test does not establish legal correctness.
 
 ## How to read the status
 
@@ -18,6 +18,37 @@ rule was checked then. Dates below apply only to their individual entries;
 neither the website nor an offline copy automatically updates legislation.
 
 ## Checked rules
+
+### Closing consistency review
+
+**Reviewed:** 21 September 2026. This pass reconciled cross-guide status wording,
+source dates and model disclosures; it is not an exhaustive statutory audit.
+Obsolete “pending review” notes now point to the later limited reviews instead of
+contradicting them. Historical evidence amounts remain dated snapshots; selected
+live guide figures use the build's rate values rather than independent copies.
+
+Three narrow primary-source spot checks were repeated:
+
+- [EMTA rates, 2026 section](https://www.emta.ee/en/private-client/taxes-and-payment/declaration-income/tax-rates): 22% standard income tax, €700 general / €776 pensionable-age monthly exemptions, 33% social tax and €886 minimum-obligation base (€292.38 tax).
+- [Tervisekassa voluntary contract, term and cost](https://tervisekassa.ee/en/people/health-insurance/voluntary-health-insurance): €272/month and €3,264/year; instalments do not shorten the one-year contract.
+- [Pensionikeskus supplementary fund pension, duration and application sections](https://www.pensionikeskus.ee/en/iii-pillar/payments/supplementary-funded-pension/): finite unit-based payouts and a recommended duration based on remaining life expectancy, not guaranteed lifelong income. The page's trailing 20% tax reference is not used as current-rate evidence; tax distinctions use the separate EMTA evidence below.
+
+No numerical rate or calculation change resulted. These spot checks do not
+refresh broker quotes, settle source conflicts or establish personal eligibility.
+
+### What remains uncertain, and why
+
+| Category | Examples | How to use the planner |
+|---|---|---|
+| Deliberate model simplifications | Quarterly/event date search; annualized cash flows; aggregate ordinary-account tax; shared pension-market shocks | Treat results as scenarios, not a precise retirement date, tax return or monthly liquidity forecast |
+| Personal evidence required | Accrued pension service, eligible payout duration, healthcare dates, account allowances, benefit awards | Enter confirmed records; the calculator cannot certify entitlement from salary or age alone |
+| External verification still open | Conflicting source wording, full insurance terms, mortgage compensation law, individual custody/treaty treatment | Consult the specific authority, contract or adviser; unresolved does not mean tax-free, covered or ineligible |
+| Future or changing inputs | Returns, inflation, later pension ages/rules, fees and executable yields | Revisit assumptions; a dated source check is not a forecast |
+
+Special payroll periods and minimum top-ups, monthly mortgage repricing, company
+accounts and family-benefit entitlement are not silently supplied by this model.
+Insurer annuities and historical-model replay are intentionally outside product
+scope. Completing this documentation pass does not implement those capabilities.
 
 ### Tax overview
 
@@ -104,8 +135,8 @@ perpetual-capital shortcut for temporary healthcare gaps.
 wording and supporting-status eligibility, actual family/S1 entitlement, contract
 exceptions and future premiums. Current consolidated legislation could not be
 read through the text browser; the review relies on the named official agency
-guidance, not a completed statutory audit. Family-benefit formulas, education
-costs and other household recommendations remain the next review slice.
+guidance, not a completed statutory audit. Family benefits and education now have
+a separate limited entry under [household guidance](#household-benefits-costs-and-risk-guidance).
 
 ### Strategy checklist reconciliation
 
@@ -122,8 +153,8 @@ supports horizon/risk-dependent allocation, not a universal zero-bond phase.
 Removed universal wrapper, pension, healthcare-cost and CoastFIRE assurances,
 unsupported market/provider claims and rankings. **Limits:** personal eligibility,
 existing-asset transfers, cross-border arrangements, healthcare routes and actual
-strategy returns are not certified. Household/healthcare guides remain separate
-review items. No calculation or rate changes.
+strategy returns are not certified. See the separate [healthcare](#healthcare-routes-and-finite-coverage-gaps)
+and [household](#household-benefits-costs-and-risk-guidance) entries for their checked scope. No calculation or rate changes.
 
 ### Savings-rate examples and FIRE labels
 
@@ -137,8 +168,8 @@ supports qualifying-contract/social-tax requirements, not automatic coverage fro
 any small salary. FIRE labels are informal; no Estonia-wide budget band is certified.
 
 **Affected:** opening FIRE-basics sections and the duplicated savings discussion
-in strategy levers. No engine/default changes. Other strategy rankings and the
-broader health/household guides still need review; actual cover remains individual.
+in strategy levers. No engine/default changes. Strategy, healthcare and household
+checks are recorded separately above; actual cover remains individual.
 
 ### Withdrawal-research scope and mechanics
 
@@ -153,8 +184,8 @@ for this calculator. The €20,000/€20,400 illustration is arithmetic.
 **Open:** original Trinity tables and Pfau results were not reproduced; the
 publisher's Bengen page required sign-in, so the accessible author retrospective
 was used rather than claiming inspection of the original article. No historical
-dataset was rerun. Earlier savings/spending/variant claims remain a separate
-review. No model or default-withdrawal-rate changes.
+dataset was rerun. See [savings-rate examples](#savings-rate-examples-and-fire-labels)
+for the separate arithmetic review. No model or default-withdrawal-rate changes.
 
 ### Risk-checklist qualifications
 
@@ -170,8 +201,8 @@ inflation/custody assurances. No engine changes.
 
 **Affected:** risk checklist and only the repeated inflation paragraph in FIRE
 basics. **Open:** future inflation/returns, personal risk probabilities, crisis
-outcomes and destination-country tax. Other FIRE-basics research claims still
-need separate review; this entry does not certify that whole guide.
+outcomes and destination-country tax. See [withdrawal research](#withdrawal-research-scope-and-mechanics)
+for the separately checked scope and unreproduced studies; this entry does not certify that whole guide.
 
 ### Rental-property guide qualifications
 
@@ -333,7 +364,7 @@ calculation step 2, uses USD-equivalent NAV and balance-dependent interest.
 
 **Affected:** `src/rates.js` benchmark metadata and the cash comparison in
 the broker guide. **Limits:** no current retail yield or product ranking is
-certified. Broker fees and funds still need review. The simulator's separate
+certified. Selected broker fees and fund documents have separate dated entries below. The simulator's separate
 legacy money-market assumption is not refreshed or verified by this entry;
 its cash-opportunity message converts that nominal assumption into real terms
 using entered inflation. A positive scenario difference is before personal tax,
@@ -352,7 +383,8 @@ the user-reviewed 2025 tax-year reporting flow, not unattended filing.
 assumptions or calculations changed. **Limits:** these are selected services,
 not total costs or a whole-market ranking. Other providers' tariffs and reporting,
 exact security availability, protection and fund comparisons remain open.
-The portfolio guide is explicitly marked as pending review.
+See the separate [fund comparison](#vwce-and-webn-fund-comparison) and
+[foreign-account reconciliation](#foreign-accounts-and-provider-reconciliation) entries; their checks do not certify every provider.
 
 ### VWCE and WEBN fund comparison
 
@@ -368,8 +400,10 @@ operating component, with underlying transaction costs separately estimated.
 **Affected:** portfolio comparison and strategy shortlist; no engine changes.
 **Limits:** not a total-cost, liquidity or performance ranking. Availability,
 future fund changes and product-specific suitability remain unverified. Removed
-undated holdings/size comparisons and unsupported issuer rankings. The remaining
-portfolio cash, provider and tax-procedure sections are still pending review.
+undated holdings/size comparisons and unsupported issuer rankings. See the
+separate [cash-product](#cash-products-and-purchase-reserve-withdrawals),
+[protection](#account-protection-and-disrupted-access) and
+[foreign-account](#foreign-accounts-and-provider-reconciliation) entries for later scoped checks.
 
 ### Cash products and purchase-reserve withdrawals
 
@@ -434,6 +468,9 @@ transfers, treaty outcomes and historic corrections remain open. No engine chang
 - Protected emergency cash is maintained in real euros and excluded from ordinary spending. This is a chosen planning policy.
 - Retirement-date searches use quarterly and event checkpoints with local refinement. They can miss narrow feasible windows; the result is not proof of the globally earliest possible retirement date.
 - Annualized cash flows are not a monthly liquidity forecast. Mortgage repricing and future legal changes are not predicted.
+- Pension service is a salary-based estimate, not a reconstruction of minimum top-ups, state-paid contributions or special qualifying periods.
+- Healthcare dates are user confirmations; waiting periods, annual contract commitments and every temporary coverage interval are not simulated.
+- The separate pension calculator's monthly figure is a simple 20-year division of its projected pot, not the FIRE simulator's supplied-duration fund-withdrawal schedule or a provider quote.
 
 For implementation details, contributors should read `src/DATA-MODEL.md` and
 `src/INVESTMENT-ACCOUNT-TAX.md`. Tests check the implemented conventions; they

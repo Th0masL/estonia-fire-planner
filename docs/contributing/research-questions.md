@@ -1,6 +1,10 @@
 # Research questions for contributors
 
-These are unresolved review prompts, not verified claims or product recommendations.
+These are a research checklist, not verified claims or product recommendations.
+Some general rules now have scoped checks in the source register; the questions
+also include personal cases and exceptions that remain unresolved. Consult those
+entries before repeating research, and do not label a whole topic unreviewed
+merely because this checklist retains a broader question.
 They preserve the topics from the former public research-prompt collection without
 carrying forward its unsupported research-round completion labels.
 

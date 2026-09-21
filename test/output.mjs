@@ -705,6 +705,18 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
   ok(sources.includes('do not erase the limited checks'), 'open questions do not contradict scoped checked entries');
 }
 
+{
+  const register = read('guide/sources.html');
+  for (const phrase of ['What remains uncertain, and why', 'Personal evidence required', 'External verification still open', 'simple 20-year division', 'not an exhaustive statutory audit']) {
+    ok(register.includes(phrase), `closing review retains scope: ${phrase}`);
+  }
+  for (const phrase of ['remain the next review slice', 'portfolio guide is explicitly marked as pending review', 'sections are still pending review', 'Broker fees and funds still need review']) {
+    ok(!register.includes(phrase), `register does not retain superseded status: ${phrase}`);
+  }
+  ok(read('docs/guide/household.md').includes('{{basicExemptionPensionAge|money}}'), 'household uses live pension-age exemption token');
+  ok(read('docs/guide/pensions.md').includes('{{socialTaxMinimumBaseMonthly|money}}'), 'pension guide uses live social-tax base token');
+}
+
 console.log(`\n${checks} output and cross-engine checks`);
 if (failures.length) {
   console.log(`\n${failures.length} FAILED:`);

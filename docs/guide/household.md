@@ -20,7 +20,7 @@ household budget while keeping ownership, tax and individual eligibility distinc
 [EMTA's general exemption guidance](https://www.emta.ee/en/private-client/taxes-and-payment/tax-incentives/calculation-basic-exemption)
 and [pensionable-age exemption guidance](https://www.emta.ee/en/private-client/taxes-and-payment/tax-incentives/basic-exemption-pensionable-age)
 distinguish the general exemption from the separate 2026 pensionable-age amount
-of €776/month. Do not add these two allowances together or assume a non-earner
+of {{basicExemptionPensionAge|money}}/month. Do not add these two allowances together or assume a non-earner
 receives their unused exemption as cash.
 
 The [investment-account rules](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account)
