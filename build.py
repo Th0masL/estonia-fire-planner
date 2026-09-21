@@ -60,7 +60,7 @@ PAGES = [
 
 VERIFIED = "August 2026"
 
-SIDEBAR = """<button id="menu" class="menu" aria-label="Toggle navigation" aria-expanded="false">
+SIDEBAR = """<button id="menu" class="menu" aria-label="Toggle navigation" aria-controls="sidebar" aria-expanded="false">
   <span></span><span></span><span></span>
 </button>
 <a class="mobile-brand" href="{root}index.html" aria-label="Estonian FIRE home">

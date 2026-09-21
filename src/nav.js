@@ -29,7 +29,14 @@
   applyTheme(choice, false);
 
   var menu = document.getElementById('menu'), scrim = document.getElementById('scrim');
-  function setOpen(o) { document.body.classList.toggle('nav-open', o); menu.setAttribute('aria-expanded', String(o)); }
+  function setOpen(o) {
+    var wasOpen = document.body.classList.contains('nav-open');
+    document.body.classList.toggle('nav-open', o);
+    if (menu) {
+      menu.setAttribute('aria-expanded', String(o));
+      if (wasOpen && !o) menu.focus();
+    }
+  }
   if (menu) menu.addEventListener('click', function () { setOpen(!document.body.classList.contains('nav-open')); });
   if (scrim) scrim.addEventListener('click', function () { setOpen(false); });
   addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });

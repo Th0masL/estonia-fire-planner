@@ -22,6 +22,15 @@ for (const path of paths) {
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     await page.goto(path);
+    if (isMobile) {
+      // A transformed-offscreen drawer must not retain keyboard focus targets.
+      await expect(page.locator('#sidebar')).toBeHidden();
+      await page.locator('.mobile-brand').focus();
+      await page.keyboard.press('Tab');
+      expect(await page.locator('#sidebar').evaluate(nav => nav.contains(document.activeElement))).toBe(false);
+    } else {
+      await expect(page.locator('#sidebar')).toBeVisible();
+    }
     await expectScheme(page, initial);
     await expect(page.locator('[data-theme-choice="system"]')).toHaveAttribute('aria-pressed', 'true');
     expect(await page.evaluate(() => localStorage.getItem('fa-theme'))).toBeNull();
@@ -65,6 +74,8 @@ for (const path of paths) {
     if (isMobile) {
       await page.keyboard.press('Escape');
       await expect(page.locator('#menu')).toHaveAttribute('aria-expanded', 'false');
+      await expect(page.locator('#menu')).toBeFocused();
+      await expect(page.locator('#sidebar')).toBeHidden();
     }
     // The same preference must apply on another route, not just after reload.
     await page.goto(path === '/index.html' ? '/guide/sources.html' : '/index.html');

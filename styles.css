@@ -291,11 +291,12 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 @media (max-width: 900px) {
   .sidebar {
+    visibility: hidden;
     transform: translateX(-100%);
     transition: transform .24s ease;
     box-shadow: var(--shadow-md);
   }
-  body.nav-open .sidebar { transform: none; }
+  body.nav-open .sidebar { visibility: visible; transform: none; }
   body.nav-open .scrim { opacity: 1; pointer-events: auto; }
   body.nav-open { overflow: hidden; }
 
