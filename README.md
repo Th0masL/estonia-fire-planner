@@ -74,9 +74,21 @@ also run both suites before deployment.
 
 ## GitHub Pages
 
+Browser regressions also serve the published pages under
+`/estonia-fire-planner/` to check relative navigation and asset URLs. This is a
+local deployment simulation, not evidence that the live GitHub workflow ran.
+
 The workflow in [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) builds, tests and deploys only browser-facing files. It runs when a GitHub release is published and can also be started manually from the Actions tab.
 
 In the repository settings, configure Pages to use **GitHub Actions**. A failed build or test prevents deployment.
+
+## Offline use
+
+For offline use, keep the built site together: the three top-level HTML files,
+`guide/`, `tokens.css`, `styles.css` and `src/nav.js`. Open `index.html` locally.
+Tests load every published page with browser networking disabled and exercise
+both calculators. A single downloaded HTML file does not include the shared
+styles/navigation assets, and offline use does not refresh rules or source pages.
 
 ## Privacy
 
