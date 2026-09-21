@@ -70,6 +70,10 @@ selection, saved overrides, reloads, cross-page persistence, exclusion of closed
 mobile navigation from keyboard focus, and Escape closing with focus restoration
 on the landing page, both calculators and the source register. These
 checks do not constitute a complete accessibility or cross-browser audit.
+Browser fallback tests simulate blocked/full storage and missing/denied clipboard
+access, check manual export/share recovery, and verify that cancelling Reset or
+Example preserves the current plan. These simulations do not replace testing in
+every browser's privacy mode.
 Pushes to `main` and pull requests run both suites without deploying. Releases
 also run both suites before deployment.
 
