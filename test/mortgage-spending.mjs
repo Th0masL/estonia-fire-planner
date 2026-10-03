@@ -48,8 +48,13 @@ for (const monthsAway of [0, 6]) {
       const result = simulate(plan);
       const before = monthsAway / 12;
       near(result.timeline.yearsToFi, before + buffer);
-      const grow = (capital, saving, years) => capital * (1 + rate) ** years + saving *
-        (rate === 0 ? years : ((1 + rate) ** years - 1) / rate);
+      // Whole years pay in at each year end; a final part-year pays in at its
+      // end, so it has not grown yet.
+      const grow = (capital, saving, years) => {
+        const whole = Math.floor(years + 1e-9), part = years - whole;
+        return capital * (1 + rate) ** years + saving * (part +
+          (rate === 0 ? whole : ((1 + rate) ** whole - 1) / rate) * (1 + rate) ** part);
+      };
       const atPurchase = grow(0, result.savings.surplusNow, before);
       const atLoanEnd = grow(atPurchase, result.savings.surplusAfterMove, Math.min(buffer, 10));
       const expected = 1000000 + grow(atLoanEnd, result.savings.surplusAfterMove + 12000,

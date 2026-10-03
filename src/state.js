@@ -13,8 +13,48 @@ import { RATES, DEFAULTS } from './rates.js';
 
 export const MAX_PERSONS = 2;
 export const STORAGE_KEY = 'estonian-fire-simulator/v1';
+// The plan that was in place before the last Import, Example, Clear, Remove or
+// share link replaced it. One level only: enough to undo a mistaken click.
+export const BACKUP_KEY = 'estonian-fire-simulator/v1-previous';
 export const HASH_KEY = 'd=';
 export const VERSION = 3;
+export const MAX_NAME_LENGTH = 60;
+// A saved plan is a few kilobytes. Anything this large is not one.
+export const MAX_IMPORT_BYTES = 1_000_000;
+
+/**
+ * Allowed ranges, in the units the plan stores (0.05 is 5%). The one table:
+ * `sanitise` clamps to it on every load, and the form takes its min/max
+ * attributes from it, so the page can never accept a value that a reload
+ * would silently change.
+ */
+export const BOUNDS = {
+  realReturn: [0, 0.20],
+  brokerageRealReturn: [0, 0.20],
+  cashRealReturn: [-0.20, 0.20],
+  retirementCashReserve: [0, 1e9],
+  swr: [0.005, 0.10],
+  spendingGrowth: [0, 0.05],
+  inflation: [0, 0.15],
+  potsCountedShare: [0, 1],
+  stateCountedShare: [0, 1],
+  statePensionEarlyYears: [0, 5],
+  bufferYears: [0, 10],
+  pensionLumpSumInvestedShare: [0, 1],
+  planToAge: [75, 110],
+  emergencyFundMonths: [0, 36],
+  transactionCostRate: [0, 0.20],
+  childCostsEndYear: [RATES.year, 2200],
+  termYears: [1, RATES.mortgage.maxTermYears],
+  mortgageRate: [0, 1],
+  monthsAway: [0, 600],
+  birthYear: [1900, RATES.year],
+  pillar1Units: [0, 200],
+  serviceYears: [0, 80],
+  pillar3FirstContributionYear: [1998, RATES.year],
+  fundPensionYears: [1, 60],
+  healthCoverageFromYear: [1900, 2200],
+};
 
 export const blankPerson = (name) => ({
   name, birthYear: 1990,
@@ -135,6 +175,16 @@ const bool = (v, fallback = false) => {
   return fallback;
 };
 const bounded = (v, lo, hi, fallback) => Math.min(hi, Math.max(lo, num(v, fallback)));
+const inBounds = (v, key, fallback) => bounded(v, BOUNDS[key][0], BOUNDS[key][1], fallback);
+
+/** A copy holding only `keys`, in that order. Rebuilding rather than deleting
+ *  means a hand-edited file cannot smuggle extra fields into storage, and the
+ *  saved shape stays the one this file describes. */
+const pickKeys = (o, keys) => {
+  const out = {};
+  for (const k of keys) if (o[k] !== undefined) out[k] = o[k];
+  return out;
+};
 
 const NUMERIC_ASSETS = [
   'cash', 'investmentAccount', 'investmentAccountContributions',
@@ -146,13 +196,24 @@ const SPEND_KEYS = ['housing', 'childCosts', 'other', 'buffer'];
 const POLICIES = ['ignore', 'ownPots', 'all'];
 const PORTFOLIO_ENDS = ['perpetual', 'drawdown'];
 const DRAW_AGES = ['unlock', 'statePension'];
+const INCOME_KEYS = ['grossMonthly', 'netMonthly', 'otherNetMonthly'];
+const PURCHASE_KEYS = [
+  'price', 'deposit', 'termYears', 'rate', 'runningCostsMonthly', 'movingCosts',
+  'monthsAway', 'otherDebtMonthly', 'collateralValue', 'paidBy',
+];
+const PERSON_KEYS = [...Object.keys(blankPerson('')), 'pillar2Rate'];
+const ASSUMPTION_KEYS = [
+  ...Object.keys(baseState().assumptions), 'emergencyFundMonths', 'transactionCostRate',
+];
 const isRecord = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);
 
 /**
  * Accept only a shape the engine can actually handle.
  *
  * Returns null for anything unrecoverable, and a repaired object otherwise.
- * Mutates and returns the input, so callers should not keep the original.
+ * The result is rebuilt from the known keys only, so anything this file does
+ * not describe is dropped. It also mutates the input on the way, so callers
+ * should keep the return value and not the original.
  */
 export function sanitise(s) {
   if (!isRecord(s)) return null;
@@ -172,7 +233,8 @@ export function sanitise(s) {
   h.spending = isRecord(h.spending) ? h.spending : {};
   for (const k of SPEND_KEYS) h.spending[k] = Math.max(0, num(h.spending[k]));
   h.spending.childCostsEndYear = h.spending.childCostsEndYear == null ? null
-    : bounded(h.spending.childCostsEndYear, RATES.year, 2200, RATES.year + 18);
+    : inBounds(h.spending.childCostsEndYear, 'childCostsEndYear', RATES.year + 18);
+  h.spending = pickKeys(h.spending, [...SPEND_KEYS, 'childCostsEndYear']);
   h.rentalIncomeNetMonthly = num(h.rentalIncomeNetMonthly);
 
   const buy = h.property?.purchase;
@@ -180,33 +242,37 @@ export function sanitise(s) {
     buy.price = Math.max(0, num(buy.price));
     buy.deposit = Math.max(0, num(buy.deposit));
     buy.deposit = Math.min(buy.deposit, buy.price);
-    buy.termYears = bounded(buy.termYears, 1, RATES.mortgage.maxTermYears, RATES.mortgage.maxTermYears);
-    buy.rate = bounded(buy.rate, 0, 1, 0.04);
+    buy.termYears = inBounds(buy.termYears, 'termYears', RATES.mortgage.maxTermYears);
+    buy.rate = inBounds(buy.rate, 'mortgageRate', 0.04);
     buy.runningCostsMonthly = Math.max(0, num(buy.runningCostsMonthly));
     buy.movingCosts = Math.max(0, num(buy.movingCosts));
-    buy.monthsAway = Math.max(0, num(buy.monthsAway));
+    buy.monthsAway = inBounds(buy.monthsAway, 'monthsAway', 0);
     buy.otherDebtMonthly = Math.max(0, num(buy.otherDebtMonthly));
     buy.collateralValue = Math.max(0, num(buy.collateralValue, buy.price));
     // Anything that is not a valid person index means "split it between them".
     if (typeof buy.paidBy !== 'number' || !s.persons[buy.paidBy]) buy.paidBy = 'proportional';
-    h.property = { purchase: buy };
+    h.property = { purchase: pickKeys(buy, PURCHASE_KEYS) };
   } else {
     h.property = null;
   }
 
   s.persons.forEach((p, i) => {
-    p.name = typeof p.name === 'string' && p.name.trim() ? p.name : (i ? 'Partner' : 'You');
-    p.birthYear = bounded(p.birthYear, 1900, RATES.year, 1990);
+    // Capped by characters, not UTF-16 units, so an emoji is never cut in half.
+    p.name = typeof p.name === 'string' && p.name.trim()
+      ? Array.from(p.name).slice(0, MAX_NAME_LENGTH).join('') : (i ? 'Partner' : 'You');
+    p.birthYear = inBounds(p.birthYear, 'birthYear', 1990);
     p.income = isRecord(p.income) ? p.income : {};
     p.income.grossMonthly = Math.max(0, num(p.income.grossMonthly));
     p.income.netMonthly = p.income.netMonthly == null ? null
       : Math.max(0, num(p.income.netMonthly));
     p.income.otherNetMonthly = num(p.income.otherNetMonthly);
+    p.income = pickKeys(p.income, INCOME_KEYS);
     p.assets = isRecord(p.assets) ? p.assets : {};
     for (const k of NUMERIC_ASSETS) p.assets[k] = Math.max(0, num(p.assets[k]));
     // Losses do not reduce recorded acquisition costs or unused investment-
     // account contribution allowance. Preserve these independently of value.
     p.assets.cryptoMicaEligible = bool(p.assets.cryptoMicaEligible);
+    p.assets = pickKeys(p.assets, [...NUMERIC_ASSETS, 'cryptoMicaEligible']);
     // Only the three statutory rates exist; anything else would be rejected by
     // the pension registry, so it cannot be modelled honestly.
     p.pillar2Rate = RATES.pillar2.employeeRates.includes(p.pillar2Rate)
@@ -217,23 +283,24 @@ export function sanitise(s) {
     delete p.careerStartAge;
     // Accrued coefficient units, from the SKA portal. null means "not known".
     p.pillar1Units = p.pillar1Units == null ? null
-      : Math.max(0, num(p.pillar1Units, 0));
+      : inBounds(p.pillar1Units, 'pillar1Units', 0);
     p.yearsWorkedEstonia = p.yearsWorkedEstonia == null ? null
-      : bounded(p.yearsWorkedEstonia, 0, 80, 0);
-    p.yearsWorkedEuEea = bounded(p.yearsWorkedEuEea, 0, 80, 0);
+      : inBounds(p.yearsWorkedEstonia, 'serviceYears', 0);
+    p.yearsWorkedEuEea = inBounds(p.yearsWorkedEuEea, 'serviceYears', 0);
     p.nationalPensionEligible = bool(p.nationalPensionEligible);
     p.pillar3FirstContributionYear = p.pillar3FirstContributionYear == null ? null
-      : bounded(p.pillar3FirstContributionYear, 1998, RATES.year, RATES.year);
+      : inBounds(p.pillar3FirstContributionYear, 'pillar3FirstContributionYear', RATES.year);
     delete p.annuityMonthlyQuote; // Removed insurer quotes never become fund income.
     p.fundPensionYears = p.fundPensionYears == null ? null
-      : bounded(p.fundPensionYears, 1, 60, 20);
+      : inBounds(p.fundPensionYears, 'fundPensionYears', 20);
     p.lifeInsurance = bool(p.lifeInsurance);
     p.lifeInsuranceMonthly = Math.max(0, num(p.lifeInsuranceMonthly));
     p.healthInsurance = bool(p.healthInsurance);
     p.healthCoveredAfterFi = bool(p.healthCoveredAfterFi);
     p.healthCoverageFromYear = p.healthCoverageFromYear == null || p.healthCoverageFromYear === ''
       ? null : (Number.isFinite(Number(p.healthCoverageFromYear)) &&
-          Number(p.healthCoverageFromYear) >= 1900 && Number(p.healthCoverageFromYear) <= 2200
+          Number(p.healthCoverageFromYear) >= BOUNDS.healthCoverageFromYear[0] &&
+          Number(p.healthCoverageFromYear) <= BOUNDS.healthCoverageFromYear[1]
         ? Number(p.healthCoverageFromYear) : null);
     p.healthInsuranceMonthly = Math.max(0,
       num(p.healthInsuranceMonthly, RATES.healthInsurance.voluntaryMonthly));
@@ -251,27 +318,29 @@ export function sanitise(s) {
   }
 
   const a = isRecord(s.assumptions) ? s.assumptions : {};
-  a.realReturn = bounded(a.realReturn, 0, 0.20, DEFAULTS.realReturn);
-  a.brokerageRealReturn = bounded(a.brokerageRealReturn, 0, 0.20, DEFAULTS.realReturn);
-  a.cashRealReturn = bounded(a.cashRealReturn, -0.20, 0.20, DEFAULTS.cashRealReturn);
-  a.retirementCashReserve = bounded(a.retirementCashReserve, 0, 1e9, DEFAULTS.retirementCashReserve);
-  a.swr = bounded(a.swr, 0.005, 0.10, DEFAULTS.swr);
-  a.spendingGrowth = bounded(a.spendingGrowth, 0, 0.05, DEFAULTS.spendingGrowth);
-  a.inflation = bounded(a.inflation, 0, 0.15, DEFAULTS.inflation);
-  a.potsCountedShare = bounded(a.potsCountedShare, 0, 1, DEFAULTS.potsCountedShare);
-  a.stateCountedShare = bounded(a.stateCountedShare, 0, 1, DEFAULTS.stateCountedShare);
+  a.realReturn = inBounds(a.realReturn, 'realReturn', DEFAULTS.realReturn);
+  a.brokerageRealReturn = inBounds(a.brokerageRealReturn, 'brokerageRealReturn', DEFAULTS.realReturn);
+  a.cashRealReturn = inBounds(a.cashRealReturn, 'cashRealReturn', DEFAULTS.cashRealReturn);
+  a.retirementCashReserve = inBounds(a.retirementCashReserve, 'retirementCashReserve', DEFAULTS.retirementCashReserve);
+  a.swr = inBounds(a.swr, 'swr', DEFAULTS.swr);
+  a.spendingGrowth = inBounds(a.spendingGrowth, 'spendingGrowth', DEFAULTS.spendingGrowth);
+  a.inflation = inBounds(a.inflation, 'inflation', DEFAULTS.inflation);
+  a.potsCountedShare = inBounds(a.potsCountedShare, 'potsCountedShare', DEFAULTS.potsCountedShare);
+  a.stateCountedShare = inBounds(a.stateCountedShare, 'stateCountedShare', DEFAULTS.stateCountedShare);
   a.statePensionEarlyYears = Math.round(
-    bounded(a.statePensionEarlyYears, 0, 5, DEFAULTS.statePensionEarlyYears));
-  a.bufferYears = bounded(a.bufferYears, 0, 10, DEFAULTS.bufferYears);
+    inBounds(a.statePensionEarlyYears, 'statePensionEarlyYears', DEFAULTS.statePensionEarlyYears));
+  a.bufferYears = inBounds(a.bufferYears, 'bufferYears', DEFAULTS.bufferYears);
   a.pensionPolicy = POLICIES.includes(a.pensionPolicy) ? a.pensionPolicy : DEFAULTS.pensionPolicy;
   a.portfolioEnd = PORTFOLIO_ENDS.includes(a.portfolioEnd) ? a.portfolioEnd : DEFAULTS.portfolioEnd;
   a.pillarDrawAge = DRAW_AGES.includes(a.pillarDrawAge) ? a.pillarDrawAge : DEFAULTS.pillarDrawAge;
   a.pillarPayout = a.pillarPayout === 'lumpSum' ? 'lumpSum' : 'fundPension';
-  a.pensionLumpSumInvestedShare = bounded(a.pensionLumpSumInvestedShare, 0, 1, 0);
-  a.planToAge = bounded(a.planToAge, 75, 110, DEFAULTS.planToAge);
-  a.emergencyFundMonths = bounded(a.emergencyFundMonths, 0, 36, DEFAULTS.emergencyFundMonths);
-  a.transactionCostRate = bounded(a.transactionCostRate, 0, 0.20, DEFAULTS.transactionCostRate);
-  s.assumptions = a;
+  a.pensionLumpSumInvestedShare = inBounds(a.pensionLumpSumInvestedShare, 'pensionLumpSumInvestedShare', 0);
+  a.planToAge = inBounds(a.planToAge, 'planToAge', DEFAULTS.planToAge);
+  a.emergencyFundMonths = inBounds(a.emergencyFundMonths, 'emergencyFundMonths', DEFAULTS.emergencyFundMonths);
+  a.transactionCostRate = inBounds(a.transactionCostRate, 'transactionCostRate', DEFAULTS.transactionCostRate);
+  s.assumptions = pickKeys(a, ASSUMPTION_KEYS);
+  s.persons = s.persons.map((p) => pickKeys(p, PERSON_KEYS));
+  s.household = pickKeys(h, ['hasDependents', 'lifeInsurance', 'spending', 'rentalIncomeNetMonthly', 'property']);
 
-  return s;
+  return pickKeys(s, ['version', 'excludeCrypto', 'currentYear', 'household', 'persons', 'assumptions']);
 }

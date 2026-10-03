@@ -175,8 +175,8 @@ for (const page of PAGES) {
   const css = read('styles.css');
   ok(!/#[0-9a-f]{3,8}\b|rgba?\s*\(/i.test(css),
     'component CSS contains no raw palette colors');
-  const workflow = read('.github/workflows/deploy.yml');
-  ok(workflow.includes('tokens.css'), 'Pages artifact includes local design tokens');
+  const siteFiles = read('build.py').match(/^SITE_FILES = \[([\s\S]*?)^\]/m)?.[1] ?? '';
+  ok(siteFiles.includes('"tokens.css"'), 'Pages artifact includes local design tokens');
   const nav = read('src/nav.js');
   ok(nav.includes("removeAttribute('data-theme')"),
     'System theme leaves preference resolution to the operating system');

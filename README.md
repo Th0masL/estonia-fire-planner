@@ -43,15 +43,28 @@ Useful starting points:
 
 ## Build and test
 
-Requirements: Python 3.12+, Node.js 20+ and the Python `Markdown` package.
+Requirements: Python 3.12+, Node.js 22 (see `.nvmrc`; `nvm use` picks it up)
+and the Python packages in `requirements.txt` (only a pinned `Markdown`).
 
 ```sh
-python3 -m pip install Markdown==3.5.2
+python3 -m pip install -r requirements.txt
 python3 build.py
 bash test/run.sh
 ```
 
-`build.py` generates `index.html`, the calculator bundles and `guide/*.html`. Edit Markdown or files under `src/`, then rebuild rather than editing generated HTML directly. Interface styles consume the local semantic tokens in `tokens.css`.
+`build.py` generates `index.html`, the calculator bundles and `guide/*.html`,
+and removes guide pages whose source is gone. Edit Markdown or files under
+`src/`, then rebuild rather than editing generated HTML directly; CI fails if
+the committed HTML differs from a fresh build. Figures in the guide come from
+`src/rates.js` through `{{key|filter}}` placeholders, so do not type rates by
+hand. Every page gets a Content-Security-Policy whose inline-script hashes are
+computed at build time. Interface styles consume the local semantic tokens in
+`tokens.css`.
+
+`bash test/run.sh` takes about 1.5 minutes, almost all of it in
+`test/invariants.mjs`. `bash test/mutate.sh` checks that the suites still catch
+deliberate bugs in the engine; it reruns the suites once per mutation, so it
+takes several minutes.
 
 Browser security and sharing tests use Playwright as a development dependency;
 the website itself still runs without JavaScript packages or network access:
@@ -91,7 +104,7 @@ Browser regressions also serve the published pages under
 `/estonia-fire-planner/` to check relative navigation and asset URLs. This is a
 local deployment simulation, not evidence that the live GitHub workflow ran.
 
-The workflow in [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) builds, tests and deploys only browser-facing files. It runs when a GitHub release is published and can also be started manually from the Actions tab.
+The workflow in [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) builds, tests and deploys only browser-facing files. The list of published files lives in `SITE_FILES` in `build.py`; `python3 build.py --site _site` copies exactly those files to `_site/`, which is both the Pages artifact and what the browser tests serve. The deploy job that holds the Pages permissions runs no project code. Actions are pinned by commit SHA and Dependabot proposes updates weekly. It runs when a GitHub release is published and can also be started manually from the Actions tab.
 
 In the repository settings, configure Pages to use **GitHub Actions**. A failed build or test prevents deployment.
 

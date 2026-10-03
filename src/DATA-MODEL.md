@@ -175,7 +175,9 @@ Fund-pension income follows the modeled fund return until its entered duration e
 **Fund withdrawals by default.** Insurer annuities are not modeled. Old annuity selections
 normalize to fundPension; obsolete monthly quotes are discarded on load and never
 used by the engine. Existing official fund durations are retained. Missing durations
-remain unknown (income is excluded), rather than assuming a 20-year payout. The
+remain unknown (income is excluded), rather than assuming a 20-year payout. (The
+standalone pension page's `pillarProjection` still divides its pot by 20 years,
+labelled there as a scale illustration, not a payout; the simulator never uses it.) The
 remaining portfolio must cover expenses after fund payments stop. No income is
 created from an empty fund.
 
@@ -409,13 +411,19 @@ stages. This changes projections for households working beyond mortgage payoff.
 Accumulation deficits are withdrawn from pooled cash first, then investments,
 proportionally to ownership within each bucket. They are not negative investment
 contributions. Returns accrue before each annual withdrawal; a final partial year
-uses fractional compounding and a prorated deficit. Positive savings retain the
-existing annuity convention and allocation shares. These are annualized timing
+uses fractional compounding and a prorated deficit. Positive savings are paid
+in at the end of each year, split by allocation share; a partial year pays in
+its prorated amount at the end of that part, so it is worth exactly its
+principal (never less, as the continuous formula made it). The same convention
+applies to pension contributions. These are annualized timing
 approximations, not monthly liquidity forecasts. The retirement-only reserve is
 not protected during accumulation. An unfunded expense makes later stop dates
 infeasible even if subsequent savings could replenish assets; no borrowing is
-assumed. The depleting flag includes the surplus after mortgage
-payoff; it no longer gates FI calculations. The UI likewise displays
+assumed. The working-year surplus is dated like retirement spending: rent
+until completion, then running costs and the mortgage payment until payoff,
+and child costs until `childCostsEndYear`. An earlier end date can therefore
+only bring FI forward. The depleting flag includes the surplus after mortgage
+payoff and after child costs end; it no longer gates FI calculations. The UI likewise displays
 funded plans without requiring positive income or savings. The date search
 always probes chronologically at quarterly dates and exact purchase, loan-payoff,
 pension and healthcare boundaries, then bisects the first sampled failing/passing
@@ -429,7 +437,9 @@ equally precise real-world retirement timing.
 An added buffer is rechecked; later retirement is not automatically safer.
 CoastFIRE stops positive accessible-portfolio saving but continues to fund any
 working-year deficits cash-first. Configured income and pension contributions
-continue until the target retirement age. Calendar-year mortgage deflation and
+continue until the target date. The target is a calendar year: the last
+person's pension unlock, or the first person's 60th birthday for `coastTo60`;
+the reported `age` is the first person's, like every headline age. Calendar-year mortgage deflation and
 the exact payoff boundary remain active. Unfunded accumulation, an unfunded
 house purchase, or a target at/beyond the planning horizon excludes the milestone.
 Zero surplus alone does not exclude it. Coast dates use a three-month grid;

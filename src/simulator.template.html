@@ -82,7 +82,7 @@
         directly.</p>
       <div class="grid">
         <label>Rental &amp; other net income <span class="u">€/mo</span>
-          <input type="number" id="otherIncome" min="0" step="50"></label>
+          <input type="number" id="otherIncome" step="50"></label>
       </div>
 
       <p class="sub">Monthly spending <button type="button" class="explain" data-info="spending" aria-expanded="false" aria-label="What this means">i</button></p>
@@ -98,7 +98,7 @@
       <div class="grid">
         <label>Housing now <span class="u">€/mo</span><input type="number" id="sHousing" min="0" step="50"></label>
         <label>Child costs <span class="u">€/mo, after any allowances</span><input type="number" id="sChild" min="0" step="50"></label>
-        <label>Child costs end <span class="u">calendar year; blank means no assumed end</span><input type="number" id="sChildEnd" min="2026" max="2200" step="1"></label>
+        <label>Child costs end <span class="u">calendar year; blank means no assumed end</span><input type="number" id="sChildEnd" step="1"></label>
         <label>Everything else <span class="u">€/mo</span><input type="number" id="sOther" min="0" step="50"></label>
         <label>Buffer for irregular costs <span class="u">€/mo</span><input type="number" id="sBuffer" min="0" step="50"></label>
       </div>
@@ -132,11 +132,11 @@
       <div id="houseFields" class="grid" hidden>
         <label>Price <span class="u">€</span><input type="number" id="hPrice" min="0" step="5000"></label>
         <label>Deposit <span class="u">€</span><input type="number" id="hDeposit" min="0" step="5000"></label>
-        <label>Term <span class="u">years</span><input type="number" id="hTerm" min="5" max="30" step="1"></label>
-        <label>Interest rate <span class="u">%</span><input type="number" id="hRate" min="0" max="15" step="0.1"></label>
+        <label>Term <span class="u">years</span><input type="number" id="hTerm" step="1"></label>
+        <label>Interest rate <span class="u">%</span><input type="number" id="hRate" step="0.1"></label>
         <label>Running costs <span class="u">€/mo</span><input type="number" id="hRunning" min="0" step="50"></label>
         <label>Moving &amp; furnishing <span class="u">€ one-off</span><input type="number" id="hMoving" min="0" step="1000"></label>
-        <label>Months away <input type="number" id="hMonths" min="0" max="120" step="1"></label>
+        <label>Months away <input type="number" id="hMonths" step="1"></label>
         <label>Collateral valuation <span class="u">€; defaults to price</span><input type="number" id="hCollateral" min="0" step="5000"></label>
         <label>Other loan &amp; lease payments <span class="u">€/mo</span><input type="number" id="hOtherDebt" min="0" step="50"></label>
         <label id="paidByWrap" hidden>Deposit paid from
@@ -149,23 +149,23 @@
       <legend>Assumptions</legend>
       <p class="sub">Markets</p>
       <div class="grid">
-        <label>Investment-account / pension real return <span class="u">%, after fees, before withdrawal tax</span><input type="number" id="aReturn" min="0" max="12" step="0.1"></label>
-        <label>Brokerage / crypto real return <span class="u">%, after fees and expected tax drag</span><input type="number" id="aBrokerageReturn" min="0" max="12" step="0.1"></label>
-        <label>Cash real return <span class="u">%</span><input type="number" id="aCashReturn" min="-20" max="12" step="0.1"></label>
-        <label>Emergency cash reserve after FIRE <span class="u">€ in today's money</span><input type="number" id="aRetirementReserve" min="0" max="1000000000" step="1000"></label>
-        <label>Withdrawal rate <span class="u">%</span><input type="number" id="aSwr" min="2" max="6" step="0.05"></label>
-        <label>Inflation <span class="u">%/yr</span><input type="number" id="aInflation" min="0" max="15" step="0.1"></label>
+        <label>Investment-account / pension real return <span class="u">%, after fees, before withdrawal tax</span><input type="number" id="aReturn" step="0.1"></label>
+        <label>Brokerage / crypto real return <span class="u">%, after fees and expected tax drag</span><input type="number" id="aBrokerageReturn" step="0.1"></label>
+        <label>Cash real return <span class="u">%</span><input type="number" id="aCashReturn" step="0.1"></label>
+        <label>Emergency cash reserve after FIRE <span class="u">€ in today's money</span><input type="number" id="aRetirementReserve" step="1000"></label>
+        <label>Withdrawal rate <span class="u">%</span><input type="number" id="aSwr" step="0.05"></label>
+        <label>Inflation <span class="u">%/yr</span><input type="number" id="aInflation" step="0.1"></label>
       </div>
 
       <p class="sub">How long, and how much</p>
       <div class="grid">
-        <label>Plan until age <span class="u">the money must last this long</span><input type="number" id="aPlanToAge" min="75" max="110" step="1"></label>
-        <label>Spending growth <span class="u">%/yr above inflation</span><input type="number" id="aSpendGrowth" min="0" max="5" step="0.1"></label>
-        <label>Work on past the FI date <span class="u">years, for margin</span><input type="number" id="aBufferYears" min="0" max="10" step="0.5"></label>
-        <label>Purchase costs <span class="u">% of price; planning estimate</span><input type="number" id="aTransactionCosts" min="0" max="20" step="0.1"></label>
+        <label>Plan until age <span class="u">the money must last this long</span><input type="number" id="aPlanToAge" step="1"></label>
+        <label>Spending growth <span class="u">%/yr above inflation</span><input type="number" id="aSpendGrowth" step="0.1"></label>
+        <label>Work on past the FI date <span class="u">years, for margin</span><input type="number" id="aBufferYears" step="0.5"></label>
+        <label>Purchase costs <span class="u">% of price; planning estimate</span><input type="number" id="aTransactionCosts" step="0.1"></label>
         <label>Emergency reserve <span class="u">months after purchase</span>
           <button type="button" class="explain" data-info="emergency-reserve" aria-expanded="false" aria-label="What this means">i</button>
-          <input type="number" id="aEmergencyMonths" min="0" max="36" step="1"></label>
+          <input type="number" id="aEmergencyMonths" step="1"></label>
       </div>
       <p class="hint">The after-FIRE reserve stays in cash and is never spent on ordinary expenses.
         Cash above it is spent first, then investments. Investments replenish the reserve if its
@@ -240,18 +240,18 @@
             <option value="statePension">At state pension age, with the rest</option>
           </select></label>
         <label id="potsShareWrap">Believe Pillars II &amp; III at <span class="u">%</span>
-          <input type="number" id="aPotsShare" min="0" max="100" step="5"></label>
+          <input type="number" id="aPotsShare" step="5"></label>
         <label id="stateShareWrap">Believe the state pension at <span class="u">%</span>
-          <input type="number" id="aStateShare" min="0" max="100" step="5"></label>
+          <input type="number" id="aStateShare" step="5"></label>
         <label id="earlyWrap">Draw the state pension <span class="u">years early</span>
-          <input type="number" id="aStateEarly" min="0" max="5" step="1"></label>
+          <input type="number" id="aStateEarly" step="1"></label>
         <label id="payoutWrap">Pillar II &amp; III withdrawals
           <select id="aPillarPayout">
             <option value="fundPension">Fund withdrawals — over the entered duration</option>
             <option value="lumpSum">Lump sum — 10% withdrawal tax assumed</option>
           </select></label>
         <label id="lumpShareWrap">Invest the net lump sum <span class="u">%; remainder stays in cash</span>
-          <input type="number" id="aLumpInvestedShare" min="0" max="100" step="5"></label>
+          <input type="number" id="aLumpInvestedShare" step="5"></label>
       </div>
       <p class="alert alert-soft" id="pensionEffectHint"></p>
       <p class="hint">Insurer annuities are not modeled; old quotes are ignored. Fund withdrawals require an official duration.

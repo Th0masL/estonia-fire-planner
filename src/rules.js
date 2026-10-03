@@ -6,7 +6,8 @@
 //
 // Severity ordering: critical > important > opportunity > info.
 
-import { RATES, DEFAULTS } from './rates.js';
+import { RATES } from './rates.js';
+import { netFromGross } from './calc.js';
 import { eur, pct, pct1, escapeHtml } from './format.js';
 
 const SEVERITY_ORDER = { critical: 0, important: 1, opportunity: 2, info: 3 };
@@ -88,7 +89,7 @@ export function actionPlan(sim, input) {
           id: `crypto-tax-${p.name}`, severity: 'important', link: 'portfolio',
           title: `${p.name}: crypto tax treatment is not confirmed`,
           value: eur(p.cryptoTaxReserve) + ' gain-tax reserve',
-          detail: `The plan reserves 22% of gains using the entered cost basis. Loss offsets and ` +
+          detail: `The plan reserves ${pct1(RATES.crypto.taxRate)} of gains using the entered cost basis. Loss offsets and ` +
             `investment-account eligibility depend on acquisition through a MiCA-authorised ` +
             `provider; confirm the provider and transaction date before counting the balance.`,
         });
@@ -125,8 +126,11 @@ export function actionPlan(sim, input) {
     }
 
     if (sim.fi.pillarPayout === 'fundPension' && sim.fi.pillarIncomeEndsAge) {
-      const endAge = sim.fi.pillarIncomeEndsAge;
-      const alone = Math.max(0, sim.assumptions.planToAge - endAge);
+      // One person throughout: whoever's pots stop last, at their own age, and
+      // the years from then to the end of the plan (the youngest's planning age).
+      const last = people.reduce((x, y) => y.pillarIncomeEndYear > x.pillarIncomeEndYear ? y : x);
+      const endAge = last.pillarIncomeEndAge;
+      const alone = Math.max(0, sim.timeline.planEndYear - last.pillarIncomeEndYear);
       add({
         id: 'payout-runs-out', severity: 'important', link: 'pensions',
         title: `Pension pots run dry at ${endAge.toFixed(0)}`,
@@ -135,7 +139,7 @@ export function actionPlan(sim, input) {
           `A fund pension is paced over the recommended duration and then stops — it is not a ` +
           `lifetime income. From ${Math.round(sim.fi.pillarIncomeEndsYear)} the portfolio carries ` +
           `the household again${sim.fi.policy === 'all' ? ', with only the state pension alongside it' : ' alone'}, ` +
-          `for the last ${alone.toFixed(0)} years to ${sim.assumptions.planToAge}. That is priced ` +
+          `for the last ${alone.toFixed(0)} years of the plan${people.length > 1 ? '' : ` to ${sim.assumptions.planToAge}`}. That is priced ` +
           `into the target above. The advantage ` +
           `is that it depends on no insurer: you take it through your own pension fund.`,
       });
@@ -297,10 +301,10 @@ export function actionPlan(sim, input) {
         title: `${p.name || 'You'}: Pillar III allowance not fully used`,
         value: eur(p3.unclaimed) + '/year unclaimed',
         detail:
-          `Contributing ${eur(p3.cap)} a year — the lower of 15% of gross and ` +
+          `Contributing ${eur(p3.cap)} a year — the lower of ${pct(RATES.pillar3.maxShareOfGross)} of gross and ` +
           `${eur(RATES.pillar3.maxAnnual)} — returns ${eur(p3.maxRefund)} of income tax. ` +
           `The money goes in pre-tax, so it beats the same amount in an investment account ` +
-          `even if withdrawn early at the full 22%. Pay by personal transfer rather than ` +
+          `even if withdrawn early at the full ${pct1(RATES.incomeTax)}. Pay by personal transfer rather than ` +
           `payroll deduction if a mortgage application is pending.`,
       });
     }
@@ -428,15 +432,19 @@ export function actionPlan(sim, input) {
   const nonEarners = people.filter((p) => !p.employed);
   if (nonEarners.length && people.length > 1) {
     const gross = 12_000;
-    const gain = 10_871 + 12 * RATES.healthInsurance.voluntaryMonthly;
+    const gain = netFromGross(gross).net + 12 * RATES.healthInsurance.voluntaryMonthly;
+    // What the next euro keeps: a first euro inside the unused exemption, and a
+    // euro on top of a salary well above it (default Pillar II rate for both).
+    const firstEuro = netFromGross(1).net;
+    const highEarner = netFromGross(100_001).net - netFromGross(100_000).net;
     add({
       id: 'partner-could-work', severity: 'opportunity', link: 'household',
       title: 'A second income is worth more than its size suggests',
       value: '~' + eur(gain) + '/year',
       detail:
         `An unused basic exemption means the first ${eur(12 * RATES.basicExemptionMonthly)} of ` +
-        `a second salary is free of income tax, netting about 96% against a high earner's ~75% ` +
-        `marginal rate. A ${eur(gross)}/year job is worth roughly ${eur(gain)} once the avoided ` +
+        `a second salary is free of income tax, netting about ${pct(firstEuro)} against the ` +
+        `~${pct(highEarner)} a high earner keeps of a marginal euro. A ${eur(gross)}/year job is worth roughly ${eur(gain)} once the avoided ` +
         `health insurance premium is counted — and it removes the single-income fragility.`,
     });
   }
@@ -469,8 +477,11 @@ export function actionPlan(sim, input) {
               .map((x) => `${escapeHtml(x.name)} at ${x.unlockAge.toFixed(0)} in ${Math.round(x.unlockYear)}`)
               .join(', ') + `. The longer wait is the one that binds`
           : `, projected at about ${sim.timeline.pension.pillarUnlockAge.toFixed(0)} for this birth year`) +
-        `. Everything before then comes from the investment account — which is why the target ` +
-        `above excludes pension balances entirely.`,
+        (sim.fi.countsPots
+          ? `. Everything before then comes from the investment account; the pots count ` +
+            `towards the plan only from each person's own draw date.`
+          : `. Everything before then comes from the investment account — which is why the ` +
+            `target above excludes pension balances entirely.`),
     });
   }
 

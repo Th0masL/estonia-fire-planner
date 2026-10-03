@@ -18,7 +18,7 @@ export function ruleYearStatus(projectionYear) {
 
 export const RATES = {
   year: 2026,
-  lastVerified: '2026-08',
+  lastVerified: '2026-09',
 
   incomeTax: 0.22,                    // flat, from 2025-01-01
   vat: 0.24,                          // added to bank custody fees, see brokers
@@ -36,6 +36,10 @@ export const RATES = {
     stateRate: 0.04,                    // FIXED - does not scale with your choice
     rateChangeDeadline: '11-30',        // apply by 30 Nov, effective 1 Jan
     earlyExitTax: 0.22,                 // all-or-nothing, whole balance
+    // Ministry guidance still describes 10 years. Bill 935 SE has second-reading
+    // documents dated 17 Sep 2026; final enacted terms and commencement dates
+    // are not verified here. See pensions.md. The engine does not model early
+    // exit or rejoining and does not implement proposed changes.
     rejoinWaitYears: 10,
     payout: { annuity: 0, fundPensionRecommended: 0, lumpSum: 0.10 },
     // A pension contract pays a FIXED NOMINAL amount, set at signing from the
@@ -252,7 +256,10 @@ export const RATES = {
   // their own. Dated so a reader can see how stale they are, and kept here so
   // there is one place to refresh rather than several pages to hunt through.
   marketRates: {
-    asOf: 'August 2026',             // legacy scenario below, NOT all rates verified
+    // asOf dates the money-market scenario, which was NOT rechecked in
+    // September 2026 - rules.js prints it as "the unverified <asOf> ...
+    // illustration". Only the ECB rate was rechecked; it has its own dates.
+    asOf: 'August 2026',
     ecbDepositFacility: 0.025,
     ecbEffectiveDate: '2026-09-16',
     ecbCheckedDate: '2026-09-20',

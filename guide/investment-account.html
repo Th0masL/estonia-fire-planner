@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-g9QPaxkU8uol1H+7sWCUSdWdg4bWEytdIjRwCN9hRsk='; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The investment account — Estonian FIRE Simulator</title>
 <meta name="description" content="An investment account can help with FIRE planning, but tax deferral is not a promise of tax-free investing.">
@@ -26,10 +28,12 @@
 <button id="menu" class="menu" aria-label="Toggle navigation" aria-controls="sidebar" aria-expanded="false">
   <span></span><span></span><span></span>
 </button>
-<a class="mobile-brand" href="../index.html" aria-label="Estonian FIRE home">
-  <span class="brand-mark" aria-hidden="true">FI</span>
-  <span>Estonian FIRE</span>
-</a>
+<nav class="mobile-brand-nav" aria-label="Home">
+  <a class="mobile-brand" href="../index.html" aria-label="Estonian FIRE home">
+    <span class="brand-mark" aria-hidden="true">FI</span>
+    <span>Estonian FIRE</span>
+  </a>
+</nav>
 
 <nav id="sidebar" class="sidebar" aria-label="Contents">
   <a class="brand" href="../index.html" aria-label="Estonian FIRE home">
@@ -68,7 +72,7 @@
       <button type="button" data-theme-choice="system" aria-pressed="true">System</button>
       <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
     </div>
-    <p class="note">Not financial advice. Baseline review: August 2026.
+    <p class="note">Not financial advice. Baseline review: September 2026.
       <a href="../guide/sources.html">Per-rule checks and limitations</a>.</p>
   </div>
 </nav>

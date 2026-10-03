@@ -21,7 +21,8 @@ export default defineConfig({
       })))),
   ],
   webServer: {
-    command: 'node test/browser/server.mjs',
+    // Build, assemble the Pages artifact in _site/ and serve only that.
+    command: 'python3 build.py --site _site && node test/browser/server.mjs',
     url: 'http://127.0.0.1:8043/simulator.html',
     reuseExistingServer: false,
   },

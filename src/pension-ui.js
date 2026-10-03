@@ -241,7 +241,7 @@ function render() {
         <tr><th>${pct1(rate)}${rate === input.pillar2Rate ? ' <span class="muted">current</span>' : ''}</th>
         <td>${eur(alt.total)} · ${eur(alt.netCostAnnual / 12)}/mo</td></tr>`).join('')}
     </table>
-    <p class="hint">The state's 4% does <em>not</em> rise with your own rate — it is fixed. Raising
+    <p class="hint">The state's ${pct(RATES.pillar2.stateRate)} does <em>not</em> rise with your own rate — it is fixed. Raising
       your contribution buys more pension, but no extra match, and it locks the money until
       ${r.unlockAge.toFixed(0)}.</p>
 

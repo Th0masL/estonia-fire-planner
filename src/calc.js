@@ -15,7 +15,10 @@ import { RATES, DEFAULTS } from './rates.js';
 import { withdrawRealInvestmentAccount, investmentAccountPriceLevel } from './investment-account-tax.js';
 
 const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
-const annuityFactor = (r, n) => (r === 0 ? n : ((1 + r) ** n - 1) / r);
+// Savings are paid in at the end of each year. A part-year is paid in at the end
+// of that part, so it earns nothing yet and is worth exactly what went in; the
+// closed form would value it below principal. Continuous at n = 1.
+const annuityFactor = (r, n) => (r === 0 || n <= 1 ? n : ((1 + r) ** n - 1) / r);
 const overlapYears = (from, to, activeFrom = -Infinity, activeTo = Infinity) =>
   Math.max(0, Math.min(to, activeTo) - Math.max(from, activeFrom));
 
@@ -72,6 +75,11 @@ const withdrawInvestments = (balances, amount, toCash = false) => {
     // Within each owner, use the already-tax-reserved brokerage/crypto bucket
     // first, then the contribution-first investment account. No shared allowance.
     const ordinary = Math.min(requested, Math.max(0, b.invested - (b.ia || 0)));
+    if (!(requested - ordinary > 0)) { // nothing asked of the account: leave it untouched
+      b.invested -= ordinary;
+      if (toCash) b.cash += ordinary;
+      continue;
+    }
     const result = withdrawRealInvestmentAccount({ balanceReal: b.ia || 0,
       allowanceNominal: b.allowanceNominal || 0 }, Math.max(0, requested - ordinary),
       RATES.incomeTax, priceAt(b));
@@ -148,10 +156,8 @@ export function accumulationStep(opening, surplus, years, cashReturn, investment
     for (let elapsed = 0; elapsed < years; elapsed += 1) {
       const duration = Math.min(1, years - elapsed);
       growBalances(balances, duration, cashReturn, investmentReturn);
-      for (const [i, b] of balances.entries()) {
-        const rate = b.destination === 'brokerage' ? (b.brokerageReturn ?? investmentReturn) : investmentReturn;
-        depositInvestment(b, surplus * shares[i] * annuityFactor(rate, duration), surplus * shares[i] * duration);
-      }
+      // Paid in at the end of the step, so the deposit is its own principal.
+      for (const [i, b] of balances.entries()) depositInvestment(b, surplus * shares[i] * duration);
     }
   } else if (!shortfall) {
     for (let elapsed = 0; elapsed < years; elapsed += 1) {
@@ -217,6 +223,9 @@ export function pensionAges(birthYear) {
   const lastKnownYear = known[known.length - 1];
   let stateAge;
   let confirmed = false;
+  // Only a projection past the table has a range; an older cohort absent from
+  // it has an assumed age and no published bound to quote.
+  let range = null;
   if (knownByBirthYear?.[birthYear] != null) {
     stateAge = knownByBirthYear[birthYear];
     confirmed = true;
@@ -227,6 +236,11 @@ export function pensionAges(birthYear) {
     stateAge = knownByCalendarYear[lastKnownYear];
     confirmed = false;
     stateAge += ((yearTurning65 - lastKnownYear) * driftMonthsPerYearEstimate) / 12;
+    range = {
+      min: knownByCalendarYear[lastKnownYear],
+      max: knownByCalendarYear[lastKnownYear] +
+        ((yearTurning65 - lastKnownYear) * RATES.pensionAge.maxDriftMonthsPerYear) / 12,
+    };
   } else {
     // Only relevant to already-retired cohorts absent from the recent transition
     // table. Keep the date conservative and explicitly mark it unconfirmed.
@@ -236,13 +250,10 @@ export function pensionAges(birthYear) {
     statePensionAge: stateAge,
     pillarUnlockAge: stateAge + pillarUnlockOffsetYears,
     confirmed,
-    estimateRange: confirmed ? null : {
-      min: knownByCalendarYear[lastKnownYear],
-      max: knownByCalendarYear[lastKnownYear] +
-        ((yearTurning65 - lastKnownYear) * RATES.pensionAge.maxDriftMonthsPerYear) / 12,
-    },
-    note: confirmed ? null :
-      'Scenario midpoint only; the official age has not been published. Use the displayed range.',
+    estimateRange: range,
+    note: confirmed ? null : range
+      ? 'Scenario midpoint only; the official age has not been published. Use the displayed range.'
+      : 'Assumed 65 for a cohort outside the transition table; check the official record.',
   };
 }
 
@@ -355,7 +366,9 @@ export function pillarProjection({
     grow(p3.contribution);
 
   // A fund pension paced over the statistically recommended duration is taxed
-  // at 0%. Remaining life expectancy at that age is roughly 20 years.
+  // at 0%. Remaining life expectancy at that age is roughly 20 years. This is a
+  // scale illustration for the pension page only, labelled as such there; the
+  // simulator requires the official duration and never uses this figure.
   const payoutYears = 20;
   const monthlyPension = (pot2 + pot3) / payoutYears / 12;
 
@@ -424,7 +437,6 @@ export function simulate(input) {
       pillar2Rate: p.pillar2Rate ?? 0.02,
     });
     p.employed = gross > 0;
-    p.hasHealthInsurance = p.employed || !!p.healthInsurance;
   }
 
   // Non-salary income belongs to the person who owns the asset producing it,
@@ -459,6 +471,14 @@ export function simulate(input) {
   const lumpSum = a.pillarPayout === 'lumpSum';
   a.pillarPayout = lumpSum ? 'lumpSum' : 'fundPension';
   const lumpInvestedShare = clamp(a.pensionLumpSumInvestedShare ?? 0, 0, 1);
+  // Derived from the two draw dates, so it is redone whenever they move.
+  const setPillarEnd = (p) => {
+    // Compatibility headline: the date by which every countable pot has begun.
+    p.pillarDrawYear = Math.max(p.pillar2DrawYear, p.pillar3DrawYear ?? p.pillar2DrawYear);
+    p.pillarDrawAge = p.pillarDrawYear - p.birthYear;
+    p.pillarIncomeEndYear = p.pillarDrawYear + (p.payoutYears ?? 0);
+    p.pillarIncomeEndAge = p.pillarIncomeEndYear - p.birthYear;
+  };
   for (const p of people) {
     p.pension = pensionAges(p.birthYear);
     p.pensionUnlockYear = p.birthYear + p.pension.pillarUnlockAge;
@@ -484,20 +504,12 @@ export function simulate(input) {
     } else {
       p.pillar3DrawYear = null;
     }
-    // Compatibility headline: the date by which every countable pot has begun.
-    p.pillarDrawYear = Math.max(p.pillar2DrawYear, p.pillar3DrawYear ?? p.pillar2DrawYear);
-    p.pillarDrawAge = p.pillarDrawYear - p.birthYear;
     // Do not invent an insurer price or an official tax-free duration. Those
     // must come from a current quote / Pensionikeskus result supplied by the user.
     p.payoutYears = p.fundPensionYears != null
       ? Math.max(1, p.fundPensionYears) : null;
     p.pensionTermsKnown = lumpSum || p.payoutYears != null;
-    p.pillarIncomeEndYear = p.payoutYears != null
-      ? Math.max(p.pillar2DrawYear + p.payoutYears,
-          (p.pillar3DrawYear ?? p.pillar2DrawYear) + p.payoutYears)
-      : p.pillarDrawYear;
-    p.pillarIncomeEndAge = p.payoutYears != null
-      ? p.pillarDrawAge + p.payoutYears : p.pillarDrawAge;
+    setPillarEnd(p);
     p.ageNow = currentYear - p.birthYear;
     // Pillar I accrual comes from the accrued coefficient and nothing else. No
     // estimate from a career length: it could only ever be worse than the figure
@@ -521,6 +533,9 @@ export function simulate(input) {
 
   // ---- spending, now and at FI -------------------------------------------
   const s = hh.spending;
+  // With no supplied end date, dependent costs continue for the whole plan. It
+  // is safer to overfund an unknown liability than erase it on the FI date.
+  const childCostsEndYear = s.childCostsEndYear ?? Infinity;
   const spendNow =
     12 * ((s.housing || 0) + (s.childCosts || 0) + (s.other || 0) + (s.buffer || 0));
 
@@ -531,7 +546,9 @@ export function simulate(input) {
 
   // Pillar III contributions leave the counted portfolio - the balance is
   // excluded from the plan - so they reduce what can be invested. The refund
-  // comes back, so only the net cost bites.
+  // comes back, so only the net cost bites. Charged for every working year the
+  // user enters it, even past the pot's draw date: the money really leaves, and
+  // not crediting it to a pot already drawn errs on the safe side.
   const pillar3NetCost = people.reduce(
     (x, p) => x + Math.max(0, p.pillar3.contribution - p.pillar3.refund), 0);
 
@@ -561,6 +578,9 @@ export function simulate(input) {
   // Pension age is not proof of receipt or health entitlement. Coverage dates
   // are explicit, independent of pension benefit policy/trust. With no confirmed
   // route, retain premiums throughout retirement (including the capital floor).
+  // The voluntary premium is set by law and is the same for everyone, so the
+  // current rate is used rather than a person's entered contract price, which
+  // is only what they pay today and goes stale when the rate is re-indexed.
   const healthPerPerson = 12 * RATES.healthInsurance.voluntaryMonthly;
   const healthEndFor = (p) => p.healthCoveredAfterFi ? -Infinity
     : (Number.isFinite(p.healthCoverageFromYear) && p.healthCoverageFromYear >= 1900 &&
@@ -626,7 +646,8 @@ export function simulate(input) {
   // Existing investments can still fund FI without new savings, but every
   // working-year deficit must be funded; it must not be clamped away.
   const surplusAfterLoan = surplusAfterMove + (mort ? 12 * mort.monthly : 0);
-  const depleting = Math.max(surplusNow, surplusAfterMove, surplusAfterLoan) <= 0;
+  const childRelief = Number.isFinite(childCostsEndYear) ? 12 * (s.childCosts || 0) : 0;
+  const depleting = Math.max(surplusNow, surplusAfterMove, surplusAfterLoan) + childRelief <= 0;
   const annualSaving = Math.max(0, surplusAfterMove);
   const houseYears = purchase ? Math.max(0, purchase.monthsAway || 0) / 12 : Infinity;
   const inflation = a.inflation ?? DEFAULTS.inflation;
@@ -656,13 +677,48 @@ export function simulate(input) {
     brokerageReturn: a.brokerageRealReturn ?? a.realReturn }));
   const advance = (balances, surplus, years) => accumulationStep(balances, surplus,
     years, a.cashRealReturn ?? 0, a.realReturn, people.map((p) => p.share));
-  const beforeHouse = purchase ? advance(initialBalances, surplusNow, houseYears) : initialBalances;
+  // What the working years save is set by the date, exactly as the need is in
+  // retirement: rent until completion, then running costs and the (deflating)
+  // mortgage payment until the last one, and child costs until they end. The
+  // headline surplus figures above are only the rates at particular dates.
+  const surplusIn = (date) => householdNetIncome - discretionaryAnnual - fixedOutgoings -
+    (date < childCostsEndYear ? 12 * (s.childCosts || 0) : 0) -
+    (!purchase || date < purchaseYear ? 12 * (s.housing || 0)
+      : 12 * (purchase.runningCostsMonthly || 0) +
+        (date < mortgageEndYear ? mortgageAnnualIn(date) : 0));
+  // Advance between two points, in years from now, one flat stretch at a time.
+  // Inside a deflating mortgage every calendar year is its own stretch, so each
+  // payment is priced for its own year. `saved` turns the surplus into what is
+  // actually paid in (CoastFIRE keeps the deficits and drops the saving).
+  const accumulate = (balances, from, to, { yearly = false, saved = (x) => x } = {}) => {
+    if (!(from < to)) return advance(balances, 0, 0);
+    const events = [houseYears, mortgageEndYear - currentYear, childCostsEndYear - currentYear];
+    for (let t = from; t < to;) {
+      const date = currentYear + t;
+      let end = to;
+      for (const e of events) if (e > t && e < end) end = e;
+      if (yearly || (inflation !== 0 && date >= purchaseYear && date < mortgageEndYear)) {
+        end = Math.min(end, Math.floor(date) + 1 - currentYear);
+      }
+      balances = advance(balances, saved(surplusIn(date)), end - t);
+      t = end;
+    }
+    return balances;
+  };
+  const beforeHouse = purchase ? accumulate(initialBalances, 0, houseYears) : initialBalances;
   const projectedAtHouse = beforeHouse.shortfall > 1e-6 ? -Infinity :
     beforeHouse.reduce((s, b) => s + b.cash + netInvestments(b), 0);
   const houseFundingShortfall = purchase
     ? Math.max(0, cashForHouse + emergencyFund - projectedAtHouse) : 0;
+  // Memoised: the accumulation depends on nothing the solver changes, and the
+  // solver asks for the same date many times. Callers must not mutate the result.
+  const balancesCache = new Map();
   const balancesAt = (years) => {
-    const balances = advance(initialBalances, surplusNow, Math.min(years, houseYears));
+    if (!balancesCache.has(years)) balancesCache.set(years, accumulateTo(years));
+    return balancesCache.get(years);
+  };
+  const accumulateTo = (years) => {
+    const balances = accumulate(initialBalances, 0, Math.min(years, houseYears));
     if (!purchase || years < houseYears || houseFundingShortfall > 0) return balances;
     let remaining = cashForHouse;
     const payer = purchase.paidBy;
@@ -679,25 +735,13 @@ export function simulate(input) {
       for (const [i, b] of balances.entries()) spendPortfolio([b], cashForHouse * available[i] / sum);
     }
     reserveCash(balances, emergencyFund);
-    const elapsed = years - houseYears;
-    if (inflation !== 0) {
-      let projected = balances;
-      const end = Math.min(currentYear + years, mortgageEndYear);
-      for (let start = purchaseYear; start < end;) {
-        const next = Math.min(end, Math.floor(start) + 1);
-        projected = advance(projected, surplusAfterLoan - mortgageAnnualIn(start), next - start);
-        start = next;
-      }
-      return advance(projected, surplusAfterLoan, Math.max(0, elapsed - purchase.termYears));
-    }
-    const atPayoff = advance(balances, surplusAfterMove, Math.min(elapsed, purchase.termYears));
-    return advance(atPayoff, surplusAfterLoan, Math.max(0, elapsed - purchase.termYears));
+    return accumulate(balances, houseYears, years);
   };
-  const project = (_start, _save, years) => purchase && years >= houseYears && houseFundingShortfall > 0
-    ? -Infinity : (() => {
-      const balances = balancesAt(years);
-      return balances.shortfall > 1e-6 ? -Infinity : portfolioTotal(balances);
-    })();
+  const project = (years) => {
+    if (purchase && years >= houseYears && houseFundingShortfall > 0) return -Infinity;
+    const balances = balancesAt(years);
+    return balances.shortfall > 1e-6 ? -Infinity : portfolioTotal(balances);
+  };
   const ownershipAt = (years) => balancesAt(years).map((b) => b.cash + b.invested);
   const retirementReserve = Math.max(0, Math.min(1e9, a.retirementCashReserve || 0));
   const retirementBalances = (capital, years) => {
@@ -771,7 +815,8 @@ export function simulate(input) {
         unitsSoFar: p.pillar1UnitsSoFar,
         futureYears,
         serviceYears: estonianService,
-        inPillar2: (p.pillar2Rate ?? 0.02) > 0,
+        // Every rate on offer is a member's rate (leaving Pillar II is not modelled).
+        inPillar2: true,
       });
     }
     if (p.euEeaServiceYears > 0) return 0; // amount requires official pro-rata calculation
@@ -785,7 +830,7 @@ export function simulate(input) {
   // plan is willing to depend on.
   const potsShare = a.potsCountedShare ?? 1;
   const stateShare = a.stateCountedShare ?? 1;
-  const potIncomeIn = (p, year, yearsToFi, stress = null) => {
+  const potIncomeIn = (p, year, yearsToFi, stress = null, share = potsShare) => {
     if (lumpSum) return 0; // Capital transfers are not recurring income.
     if (!p.pensionTermsKnown) return 0;
     const from = Math.max(year, currentYear + yearsToFi);
@@ -797,21 +842,24 @@ export function simulate(input) {
       if (draw == null) continue;
       const active = overlapYears(from, to, draw, draw + p.payoutYears);
       if (!active) continue;
-      const base = potAtDraw(p, yearsToFi, kind) / p.payoutYears * potsShare;
+      const base = potAtDraw(p, yearsToFi, kind) / p.payoutYears * share;
       income += base * active * (1 + a.realReturn) ** Math.max(0, from - draw) *
         pensionStressFactor(currentYear + yearsToFi, Math.max(from, draw), a.realReturn, stress);
     }
     return income;
   };
 
-  const pensionBreakdownIn = (year, yearsToFi, stress = null) => {
+  // The one "pension income in year Y" function. The trust shares are
+  // parameters so the haircut replay can ask the same question at 100%.
+  const pensionBreakdownIn = (year, yearsToFi, stress = null,
+    shares = { pots: potsShare, state: stateShare }) => {
     let pots = 0, state = 0;
     for (const p of people) {
       // A fund pension stops. That is the whole point of offering the choice:
       // the portfolio has to be able to take over again afterwards.
       if (countPots && year + 1 > Math.min(p.pillar2DrawYear,
           p.pillar3DrawYear ?? Infinity) && year < p.pillarIncomeEndYear) {
-        pots += potIncomeIn(p, year, yearsToFi, stress);
+        pots += potIncomeIn(p, year, yearsToFi, stress, shares.pots);
       }
       if (countState && year + 1 > p.statePensionYear) {
         // Net, not gross: a qualifying fund pension is 0%-taxed but Pillar I is not,
@@ -822,7 +870,7 @@ export function simulate(input) {
           p.statePensionYear, Infinity);
         state += statePensionNet(gross, {
           pensionAge: year >= p.statePensionStandardYear,
-        }).net * stateShare * active;
+        }).net * shares.state * active;
       }
     }
     return { pots, state, total: pots + state };
@@ -891,9 +939,6 @@ export function simulate(input) {
 
   // What a year costs, in today's money: the base plus health cover, grown by
   // however many years have passed since work stopped.
-  // With no supplied end date, dependent costs continue for the whole plan. It
-  // is safer to overfund an unknown liability than erase it on the FI date.
-  const childCostsEndYear = s.childCostsEndYear ?? Infinity;
   const needIn = (year, fiYear) => {
     const from = Math.max(year, fiYear);
     const to = year + 1;
@@ -958,7 +1003,6 @@ export function simulate(input) {
     // clears the floor once it has grown was never perpetual-safe to begin with.
     if (spendableTotal(opening) - retirementReserve < floorIn(perpetualFloor, Math.floor(fiYear), fiYear, y) - 1e-6) return false;
     for (let year = Math.floor(fiYear); year < planEndYear; year++) {
-      const investedFor = year + 1 - Math.max(year, fiYear);
       const step = retirementYear(balances, Math.max(0, needIn(year, fiYear) - pensionIncomeIn(year, y)), year, y);
       if (step.shortfall > 1e-6) return false;
       balances = step.balances;
@@ -970,7 +1014,7 @@ export function simulate(input) {
   const solveFor = (perpetualFloor) => {
     const ok = (y) => (!purchase || y >= houseYears) &&
       houseFundingShortfall <= 0 &&
-      lastsFrom(project(totalStart, annualSaving, y), y, perpetualFloor);
+      lastsFrom(project(y), y, perpetualFloor);
     const horizon = Math.min(100, planEndYear - currentYear - 1e-6);
     if (horizon <= 0 || houseFundingShortfall > 0) return Infinity;
     const events = [houseYears, mortgageEndYear - currentYear];
@@ -985,7 +1029,7 @@ export function simulate(input) {
 
   const perpetualMode = (a.portfolioEnd || 'perpetual') === 'perpetual';
   const lastsIfStoppingAt = (y) =>
-    lastsFrom(project(totalStart, annualSaving, y), y, perpetualMode);
+    lastsFrom(project(y), y, perpetualMode);
 
   const setEarlyPension = (p, earlyYears) => {
       p.statePensionEarlyYears = earlyYears;
@@ -998,15 +1042,7 @@ export function simulate(input) {
         if (p.pillar3LegalYear != null) {
           p.pillar3DrawYear = Math.max(p.pillar3LegalYear, p.statePensionYear);
         }
-        p.pillarDrawYear = Math.max(
-          p.pillar2DrawYear, p.pillar3DrawYear ?? p.pillar2DrawYear);
-        p.pillarDrawAge = p.pillarDrawYear - p.birthYear;
-        p.pillarIncomeEndYear = p.payoutYears != null
-          ? Math.max(p.pillar2DrawYear + p.payoutYears,
-              (p.pillar3DrawYear ?? p.pillar2DrawYear) + p.payoutYears)
-          : p.pillarDrawYear;
-        p.pillarIncomeEndAge = Number.isFinite(p.pillarIncomeEndYear)
-          ? p.pillarIncomeEndYear - p.birthYear : Infinity;
+        setPillarEnd(p);
       }
   };
   const earlyAllowedAt = (p, yearsToStop) => {
@@ -1062,9 +1098,16 @@ export function simulate(input) {
   // - it was found by making that amount only barely enough. It differs when FI
   // is already reached, where projecting forward reports what you happen to hold
   // rather than what the plan needs, and those are not the same claim.
+  // The headline and perpetual numbers are often the same question; ask once.
+  const requiredCache = new Map();
   const requiredAt = (y, perpetualFloor) => {
+    const key = `${y}|${perpetualFloor}`;
+    if (!requiredCache.has(key)) requiredCache.set(key, solveRequired(y, perpetualFloor));
+    return requiredCache.get(key);
+  };
+  const solveRequired = (y, perpetualFloor) => {
     if (!Number.isFinite(y)) return Infinity;
-    const have = project(totalStart, annualSaving, y);
+    const have = project(y);
     if (!lastsFrom(have, y, perpetualFloor)) return Infinity;
     if (lastsFrom(0, y, perpetualFloor)) return 0;
     let lo = 0, hi = have;
@@ -1087,7 +1130,7 @@ export function simulate(input) {
   // Ownership and the schedule follow the money you will really have; the
   // headline follows the requirement.
   const fiTarget = Number.isFinite(yearsToFi)
-    ? project(totalStart, annualSaving, yearsToFi)
+    ? project(yearsToFi)
     : Infinity;
 
   const mortgageAtFi = mort && Number.isFinite(yearsToFi)
@@ -1095,32 +1138,27 @@ export function simulate(input) {
       (1 + inflation) ** Math.max(0, yearsToFi - houseYears) : 0;
 
   // CoastFIRE: stop adding to the portfolio, keep working, and let compounding
-  // finish the job by `targetAge`. Under bridging "finished" means the pot
-  // survives to the end of the plan rather than reaching a fixed number.
-  const coastAt = (targetAge) => {
-    const targetYear = currentYear + targetAge - ageNow;
+  // finish the job by `targetYear`. Under bridging "finished" means the pot
+  // survives to the end of the plan rather than reaching a fixed number. A date,
+  // not an age: in a couple the target belongs to one person and the headline
+  // age to another, and mixing them moves the answer by the age gap.
+  const coastAt = (targetYear) => {
     if (targetYear >= planEndYear || houseFundingShortfall > 0) return null;
+    const stopAt = targetYear - currentYear;
     for (let y = 0; y <= 60; y += 0.25) {
-      const age = ageNow + y;
-      if (age >= targetAge) return null;
+      if (y >= stopAt) return null;
       if (purchase && y < houseYears) continue; // house funding is not yet complete
-      let balances = balancesAt(y);
-      if (balances.shortfall > 1e-6) continue;
-      const pf = portfolioTotal(balances);
+      const opening = balancesAt(y);
+      if (opening.shortfall > 1e-6) continue;
       // Stop positive saving, not spending deficits. Keep the same cash-first
-      // withdrawals, calendar-year mortgage deflation and exact payoff boundary
+      // withdrawals, calendar-year mortgage deflation and dated cost changes
       // as accumulation. Configured earnings and pension contributions continue.
-      for (let start = currentYear + y; start < targetYear;) {
-        const end = Math.min(targetYear, Math.floor(start) + 1,
-          mortgageEndYear > start ? mortgageEndYear : Infinity);
-        const surplus = !purchase ? surplusNow : surplusAfterLoan -
-          (start < mortgageEndYear ? mortgageAnnualIn(start) : 0);
-        balances = advance(balances, Math.min(0, surplus), end - start);
-        start = end;
-      }
+      const balances = accumulate(opening, y, stopAt,
+        { yearly: true, saved: (surplus) => Math.min(0, surplus) });
       if (balances.shortfall > 1e-6) continue;
-      const enough = lastsFrom(portfolioTotal(balances), targetAge - ageNow, perpetualMode, balances);
-      if (enough) return { years: y, age, portfolio: pf };
+      if (lastsFrom(portfolioTotal(balances), stopAt, perpetualMode, balances)) {
+        return { years: y, age: ageNow + y, year: currentYear + y, portfolio: portfolioTotal(opening) };
+      }
     }
     return null;
   };
@@ -1135,13 +1173,9 @@ export function simulate(input) {
   // and lump sums are recalculated under the same shock as accessible investments.
   const resilience = () => {
     if (!Number.isFinite(yearsToFi)) return null;
-    const draws = [], durations = [];
-    for (let year = Math.floor(currentYear + yearsToFi); year < planEndYear; year++) {
-      draws.push(Math.max(0, needIn(year, currentYear + yearsToFi) -
-        pensionIncomeIn(year, yearsToFi)));
-      durations.push(year + 1 - Math.max(year, currentYear + yearsToFi));
-    }
-    if (!draws.length) return null;
+    // Every retirement year the plan has to pay for, the part-year at FI included.
+    const horizon = Math.max(0, Math.ceil(planEndYear - Math.floor(currentYear + yearsToFi)));
+    if (!horizon) return null;
     const survives = (badYears, badReturn, crash = 0) => {
       const stress = { badYears, badReturn, crash };
       let balances = retirementBalances(fiTarget, yearsToFi);
@@ -1150,7 +1184,7 @@ export function simulate(input) {
       if (spendableTotal(openingWithLumps(balances, yearsToFi, potsShare, stress)) - retirementReserve < floorIn(perpetualMode, Math.floor(fiYear), fiYear, yearsToFi) - 1e-6) {
         return false;
       }
-      for (let i = 0; i < draws.length; i++) {
+      for (let i = 0; i < horizon; i++) {
         const paymentYear = Math.floor(fiYear) + i;
         const withdrawal = Math.max(0, needIn(paymentYear, fiYear) - pensionIncomeIn(paymentYear, yearsToFi, stress));
         const step = retirementYear(balances, withdrawal, paymentYear, yearsToFi,
@@ -1168,9 +1202,9 @@ export function simulate(input) {
     // fewer years to count.
     const countBad = (rate) => {
       let n = 0;
-      while (n <= draws.length && survives(n, rate)) n++;
+      while (n <= horizon && survives(n, rate)) n++;
       const years = n - 1;
-      return { years: Math.min(years, draws.length), all: years >= draws.length };
+      return { years: Math.min(years, horizon), all: years >= horizon };
     };
     // Largest immediate fall it still recovers from.
     let lo = 0, hi = 0.95;
@@ -1184,7 +1218,7 @@ export function simulate(input) {
     return {
       flatYears: flat.years, flatAll: flat.all,
       bearYears: bear.years, bearAll: bear.all,
-      crash: lo, horizonYears: draws.length,
+      crash: lo, horizonYears: horizon,
     };
   };
 
@@ -1198,24 +1232,9 @@ export function simulate(input) {
       (potsShare < 1 || stateShare < 1)) {
     let balances = retirementBalances(fiTarget, yearsToFi);
     for (let year = Math.floor(currentYear + yearsToFi); year < planEndYear; year++) {
-      let income = 0;
-      for (const p of people) {
-        if (countPots && year < p.pillarIncomeEndYear) {
-          // The same income, un-haircut.
-          income += potIncomeIn(p, year, yearsToFi) / (potsShare || 1);
-        }
-        if (countState && year >= p.statePensionYear) {
-          // Computed here rather than read off the person: the per-person pass
-          // has not run yet, and depending on that ordering is how a silent NaN
-          // gets into a headline figure.
-          const gross = 12 * stateMonthlyFor(p, yearsToFi) *
-            (1 + p.statePensionAdjustment);
-          income += statePensionNet(gross, {
-            pensionAge: year >= p.statePensionStandardYear,
-          }).net;
-        }
-      }
-      const investedFor = year + 1 - Math.max(year, currentYear + yearsToFi);
+      // The same income as the schedule, un-haircut - including the part-years
+      // at FI and at the first state-pension payment.
+      const income = pensionBreakdownIn(year, yearsToFi, null, { pots: 1, state: 1 }).total;
       balances = retirementYear(balances, Math.max(0, needIn(year, currentYear + yearsToFi) - income),
         year, yearsToFi, a.realReturn, 1).balances;
     }
@@ -1470,10 +1489,14 @@ export function simulate(input) {
     timeline: {
       ageNow,
       yearsToFi, fiAge: ageNow + yearsToFi, fiYear: currentYear + yearsToFi,
+      // The youngest person's planning age; every horizon above ends here.
+      planEndYear,
       agesAtFi: people.map((p) => ({ name: p.name, age: p.ageNow + yearsToFi })),
       mortgageBalanceAtFi: mortgageAtFi,
-      coastToPensionUnlock: coastAt(ages.pillarUnlockAge),
-      coastTo60: coastAt(60),
+      // Pension unlock is the last person's date; 60 is the first person's, to
+      // match the headline ages, which are all theirs.
+      coastToPensionUnlock: coastAt(Math.max(...people.map((p) => p.pensionUnlockYear))),
+      coastTo60: coastAt(primary.birthYear + 60),
       depleting,
       pension: ages,
       accumulation,

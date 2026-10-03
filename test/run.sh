@@ -17,7 +17,7 @@ cd "$(dirname "$0")/.."
 node test/rule-year.mjs
 node test/cash-opportunity.mjs
 python3 build.py > /dev/null
-for suite in verify crosscheck audit-fixes pillar3 pension-service health-coverage cash-reserve mortgage-spending pension-lump-sum pension-stress funded-fi coast solver-window investment-account-tax tax-integration monotonic invariants roundtrip output; do
+for suite in verify crosscheck audit-fixes review-fixes pillar3 pension-service health-coverage cash-reserve mortgage-spending pension-lump-sum pension-stress funded-fi coast solver-window investment-account-tax tax-integration monotonic invariants roundtrip ui-state-fixes output; do
   node "test/$suite.mjs"
 done
 echo "all suites passed"

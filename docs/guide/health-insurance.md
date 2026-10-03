@@ -19,7 +19,7 @@ job immediately provides cover” is not a safe assumption.
 
 [Board remuneration and service contracts](https://tervisekassa.ee/en/employee-contract-under-law-obligations-member-management-or-controlling-body-legal-person)
 have a different declaration-based route: monthly social tax from one or more
-payers must meet the minimum (€292.38 in 2026). Cover starts after the TSD
+payers must meet the minimum ({{derived.socialTaxMinimumMonthly|money2}} in 2026). Cover starts after the TSD
 submission deadline, not simply on the day a fee is paid. Confirm payroll
 obligations and registration; the simulator's salary input does not verify them.
 

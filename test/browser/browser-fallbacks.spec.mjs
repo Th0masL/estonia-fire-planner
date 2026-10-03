@@ -60,6 +60,8 @@ for (const clipboard of ['missing', 'denied']) {
     }, clipboard);
     await page.goto('/simulator.html#d=' + encodeState(syntheticPlan()));
     await page.locator('.pname').first().fill('Person2');
+    // Saving waits for typing to settle.
+    await expect.poll(() => page.evaluate(key => JSON.parse(localStorage.getItem(key)).persons[0].name, STORAGE_KEY)).toBe('Person2');
     const saved = await page.evaluate(key => JSON.parse(localStorage.getItem(key)), STORAGE_KEY);
     await page.locator('#share').click();
     await expect(page.locator('#shareBox')).toBeVisible();

@@ -1,27 +1,35 @@
 #!/usr/bin/env python3
 """Build the Estonian FIRE Simulator site from markdown.
 
-    python3 build.py
+    python3 build.py               # rebuild the generated pages in place
+    python3 build.py --site _site  # ...then copy only the published files to _site/
 
-Produces a landing page plus one HTML page per guide topic, sharing a nav.
-The calculator (simulator.html) is hand-written and not generated.
+Generates index.html, one HTML page per guide topic, and the two calculator
+pages (simulator.html and pension.html) from src/*.template.html with the JS
+modules inlined. Never edit the generated HTML by hand.
 
-Markdown in docs/guide/ is the source of truth.
+Markdown in docs/guide/ is the source of truth for the guide pages.
 
-Requires: pip install markdown
+Requires: python3 -m pip install -r requirements.txt (pins Markdown), and Node.js
+to read src/rates.js.
 """
 
 from __future__ import annotations
 
+import argparse
+import base64
+import calendar
+import hashlib
 import json
 import re
+import shutil
 import subprocess
 import unicodedata
 from pathlib import Path
 
 import markdown
 
-ROOT = Path(__file__).parent
+ROOT = Path(__file__).resolve().parent
 DOCS = ROOT / "docs"
 OUT = ROOT / "guide"
 SRC = ROOT / "src"
@@ -58,15 +66,25 @@ PAGES = [
     ("guide/verification.md",          "sources",            "Sources & verification"),
 ]
 
-VERIFIED = "August 2026"
+# Everything a visitor needs, and nothing else. The deploy workflow and the
+# browser-test server both publish exactly this list (via --site), so the tests
+# check the same artifact that ships. Directories are copied whole.
+SITE_FILES = [
+    "index.html", "simulator.html", "pension.html",
+    "tokens.css", "styles.css",
+    "src/nav.js",
+    "guide/",
+]
 
 SIDEBAR = """<button id="menu" class="menu" aria-label="Toggle navigation" aria-controls="sidebar" aria-expanded="false">
   <span></span><span></span><span></span>
 </button>
-<a class="mobile-brand" href="{root}index.html" aria-label="Estonian FIRE home">
-  <span class="brand-mark" aria-hidden="true">FI</span>
-  <span>Estonian FIRE</span>
-</a>
+<nav class="mobile-brand-nav" aria-label="Home">
+  <a class="mobile-brand" href="{root}index.html" aria-label="Estonian FIRE home">
+    <span class="brand-mark" aria-hidden="true">FI</span>
+    <span>Estonian FIRE</span>
+  </a>
+</nav>
 
 <nav id="sidebar" class="sidebar" aria-label="Contents">
   <a class="brand" href="{root}index.html" aria-label="Estonian FIRE home">
@@ -120,7 +138,17 @@ def load_rates() -> dict:
                 flat[key] = v
 
     walk(json.loads(out.stdout))
+
+    # Derived figures the prose quotes. Computed here so they follow the inputs.
+    flat["derived.socialTaxMinimumMonthly"] = round(
+        flat["socialTax"] * flat["socialTaxMinimumBaseMonthly"], 2)
     return flat
+
+
+def month_label(year_month: str) -> str:
+    """'2026-09' -> 'September 2026' for the sidebar's review date."""
+    year, month = year_month.split("-")
+    return f"{calendar.month_name[int(month)]} {year}"
 
 
 def money(v) -> str:
@@ -207,10 +235,6 @@ def rewrite_links(html_text: str, here: str) -> str:
         slug = DOC_TO_SLUG.get(target)
         if slug is None:
             return m.group(0)
-        if slug == "@simulator":
-            return 'href="../simulator.html"'
-        if slug == "@index":
-            return 'href="../index.html"'
         if slug == here:
             return f'href="{anchor or "#"}"'
         return f'href="{slug}.html{anchor}"'
@@ -268,18 +292,70 @@ TEMPLATE = """<!DOCTYPE html>
 """
 
 
+# ------------------------------------------------------------ page hardening
+
+_INLINE_SCRIPT = re.compile(r"<script(?![^>]*\bsrc\s*=)[^>]*>(.*?)</script>", re.S | re.I)
+# A style attribute in markup, or one set from JS via markup or setAttribute.
+# CSSOM writes (el.style.x = ...) are not restricted by CSP and do not count.
+_INLINE_STYLE = re.compile(r"""[\s"'`]style\s*=|setAttribute\(\s*['"]style['"]""")
+
+
+def harden(html: str, page: str) -> str:
+    """Add a Content-Security-Policy and a no-referrer policy to a page.
+
+    Inline scripts are allowed by their SHA-256 hash, computed from the final
+    page, so editing a template's inline script needs no manual update here.
+    The referrer policy matters because a shared plan travels in the URL.
+    """
+    hashes = []
+    for m in _INLINE_SCRIPT.finditer(html):
+        digest = base64.b64encode(hashlib.sha256(m.group(1).encode("utf-8")).digest()).decode()
+        if f"'sha256-{digest}'" not in hashes:
+            hashes.append(f"'sha256-{digest}'")
+    style_src = "'self' 'unsafe-inline'" if _INLINE_STYLE.search(html) else "'self'"
+    policy = "; ".join([
+        "default-src 'self'",
+        "script-src " + " ".join(["'self'", *hashes]),
+        "style-src " + style_src,
+        "img-src 'self' data:",
+        "object-src 'none'",
+        "base-uri 'none'",
+        "form-action 'none'",
+    ])
+    anchor = '<meta charset="utf-8">\n'
+    if anchor not in html:
+        raise SystemExit(f"{page}: no '<meta charset=\"utf-8\">' line to anchor the CSP meta tag after")
+    # Must precede every script, or the policy does not apply to it.
+    return html.replace(anchor, anchor +
+                        f'<meta http-equiv="Content-Security-Policy" content="{policy}">\n'
+                        '<meta name="referrer" content="no-referrer">\n', 1)
+
+
+# Strips real ES import statements only, anchored at the start of a line:
+# `import {a, b} from './x.js';`, `import x from '...';`, `import * as x from
+# '...';` and `import '...';`, including braces that span several lines. The
+# surrounding \s* keeps the historical whitespace handling of the bundles.
+_IMPORT = re.compile(
+    r"""^\s*import\s+(?:"""
+    r"""(?:(?:[\w$]+\s*,\s*)?(?:\{[\w$\s,]*\}|\*\s+as\s+[\w$]+)|[\w$]+)\s+from\s+"""
+    r""")?(['"])[^'"\n]+\1\s*;\s*$""", re.M)
+
+
 def bundle_pages(sidebar_for) -> None:
     """Inline each page's JS modules and sidebar so they need no server."""
     for out_name, (template_name, modules) in BUNDLES.items():
         template = SRC / template_name
         if not template.exists():
-            print(f"  skipping {out_name} (no template)")
-            continue
+            raise SystemExit(f"{out_name}: template {template.relative_to(ROOT)} is missing")
 
         parts, declared = [], {}
         for name in modules:
             code = (SRC / name).read_text(encoding="utf-8")
-            code = re.sub(r"^\s*import\s+.*?;\s*$", "", code, flags=re.M | re.S)
+            code = _IMPORT.sub("", code)
+            if re.search(r"^\s*import[\s{*'\"]", code, flags=re.M):
+                raise SystemExit(
+                    f"{out_name}: {name} has an import statement the bundler does not "
+                    f"recognise. Use a plain `import {{ ... }} from './x.js';`.")
             code = re.sub(r"^export\s+", "", code, flags=re.M)
 
             # Concatenating modules collapses their separate scopes into one, so
@@ -302,16 +378,21 @@ def bundle_pages(sidebar_for) -> None:
         html = (template.read_text(encoding="utf-8")
                 .replace("<!--BUNDLE-->", script)
                 .replace("<!--SIDEBAR-->", sidebar_for(out_name)))
+        html = harden(html, out_name)
         (ROOT / out_name).write_text(html, encoding="utf-8")
         print(f"wrote {out_name} ({len(html):,} bytes, JS inlined)")
 
 
 def build() -> None:
     OUT.mkdir(exist_ok=True)
-    pages = [(DOCS / src, slug, label) for src, slug, label in PAGES if (DOCS / src).exists()]
-    for src, _, _ in PAGES:
-        if not (DOCS / src).exists():
-            print(f"  skipping {src} (not present)")
+    missing = [src for src, _, _ in PAGES if not (DOCS / src).exists()]
+    if missing:
+        raise SystemExit("missing guide source(s) listed in PAGES: " +
+                         ", ".join(f"docs/{src}" for src in missing))
+    pages = [(DOCS / src, slug, label) for src, slug, label in PAGES]
+
+    rates = load_rates()
+    verified = month_label(rates["lastVerified"])
 
     def nav_for(active: str, root: str) -> str:
         return "\n".join(
@@ -322,14 +403,12 @@ def build() -> None:
 
     def sidebar_for(page: str, root: str = "", active: str = "") -> str:
         return SIDEBAR.format(
-            root=root, verified=VERIFIED, nav=nav_for(active, root),
+            root=root, verified=verified, nav=nav_for(active, root),
             home_active=" active" if page == "index.html" else "",
             sim_active=" active" if page == "simulator.html" else "",
             pen_active=" active" if page == "pension.html" else "")
 
     bundle_pages(lambda page: sidebar_for(page))
-
-    rates = load_rates()
 
     for i, (path, slug, label) in enumerate(pages):
         text = substitute_rates(path.read_text(encoding="utf-8"), rates, str(path))
@@ -355,12 +434,20 @@ def build() -> None:
         first = re.search(r"<p>(.*?)</p>", body, re.S)
         desc = (re.sub(r"<[^>]+>", "", first.group(1))[:155] if first else label)
 
-        (OUT / f"{slug}.html").write_text(TEMPLATE.format(
+        (OUT / f"{slug}.html").write_text(harden(TEMPLATE.format(
             title=f"{h1} — Estonian FIRE Simulator", h1=h1,
             desc=desc.replace('"', "'").replace("\n", " "),
             root="../", sidebar=sidebar_for("", "../", slug),
-            content=body, pager=prev_l + next_l, verified=VERIFIED,
-        ), encoding="utf-8")
+            content=body, pager=prev_l + next_l,
+        ), f"guide/{slug}.html"), encoding="utf-8")
+
+    # A page whose source was removed or renamed would otherwise linger in
+    # guide/ and still be published.
+    produced = {f"{slug}.html" for _, slug, _ in pages}
+    for stale in sorted(OUT.glob("*.html")):
+        if stale.name not in produced:
+            stale.unlink()
+            print(f"removed orphaned guide/{stale.name}")
 
     cards = "\n".join(
         f'        <a class="card" href="guide/{slug}.html">{label}</a>'
@@ -391,16 +478,45 @@ def build() -> None:
 {cards}
       </div>
 """
-    (ROOT / "index.html").write_text(TEMPLATE.format(
+    (ROOT / "index.html").write_text(harden(TEMPLATE.format(
         title="Estonian FIRE Simulator", h1="Estonian FIRE Simulator",
         desc="Financial independence planning for Estonian tax residents: the investment "
              "account, the pension pillars, and the health insurance gap.",
         root="", sidebar=sidebar_for("index.html"),
-        content=landing_body, pager="", verified=VERIFIED,
-    ), encoding="utf-8")
+        content=landing_body, pager="",
+    ), "index.html"), encoding="utf-8")
 
     print(f"wrote index.html + {len(pages)} guide pages")
 
 
+def assemble_site(dest: Path) -> None:
+    """Copy exactly SITE_FILES into dest, replacing whatever was there."""
+    dest = dest.resolve()
+    if dest == ROOT or ROOT.is_relative_to(dest) or not dest.is_relative_to(ROOT):
+        raise SystemExit(f"--site must be a new directory inside the repository, not {dest}")
+    # The directory is deleted first, so refuse anything that could be source.
+    if not dest.name.startswith("_"):
+        raise SystemExit(f"--site directory name must start with '_' (e.g. _site), not {dest.name}")
+    if dest.exists():
+        shutil.rmtree(dest)
+    for entry in SITE_FILES:
+        src = ROOT / entry
+        if not src.exists():
+            raise SystemExit(f"site file {entry} is missing")
+        target = dest / entry
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if src.is_dir():
+            shutil.copytree(src, target)
+        else:
+            shutil.copy2(src, target)
+    print(f"assembled site in {dest.relative_to(ROOT)}/")
+
+
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    parser.add_argument("--site", metavar="DIR", type=Path,
+                        help="after building, copy the published files into DIR")
+    args = parser.parse_args()
     build()
+    if args.site:
+        assemble_site(ROOT / args.site if not args.site.is_absolute() else args.site)

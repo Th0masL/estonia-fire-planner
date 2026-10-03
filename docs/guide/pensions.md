@@ -30,8 +30,19 @@ as identical. Confirm individual entitlement with the provider.
 
 The calculator's future pension ages are estimates where not officially known.
 Do not confuse the Pillar II payout threshold with eligibility for a flexible
-state pension: these are separate decisions. Early-exit administration, rejoining
-rules and pending reforms are **not reverified in this guide update**.
+state pension: these are separate decisions.
+
+Leaving Pillar II early is all-or-nothing today, and you must wait
+{{pillar2.rejoinWaitYears}} years before you can rejoin, according to the
+[Ministry of Finance reform guidance](https://www.fin.ee/teise-samba-reform).
+Proposals would shorten the wait and permit partial withdrawals.
+[Riigikogu's 935 SE record](https://www.riigikogu.ee/tegevus/dokumendiregister/dokument/7ca318f2-39a1-4e86-a3d1-50529a265760/)
+contains second-reading documents dated 17 September 2026. That record alone
+does not establish the final enacted terms or commencement dates, which remain
+**unverified in this release review**. The planner does not model early exit or
+rejoining and does not implement the proposals. Check
+[Riigi Teataja](https://www.riigiteataja.ee/akt/KoPS) for the law in force
+before you decide to leave.
 
 ## 2%, 4% or 6% — should you raise your rate?
 
@@ -143,14 +154,14 @@ and losses while extending the portfolio-funded interval.
 
 The planner estimates future pension service and units from gross salary, not
 actual social-tax records. In 2026 the employer minimum social-tax base is
-{{socialTaxMinimumBaseMonthly|money}}/month (€292.38 tax); this is distinct from the current minimum wage.
+{{socialTaxMinimumBaseMonthly|money}}/month ({{derived.socialTaxMinimumMonthly|money2}} tax); this is distinct from the current minimum wage.
 Applicability depends on circumstances and exceptions. The calculator does not
 infer minimum top-ups, state-paid contributions or special qualifying periods.
 Low- and zero-salary state-pension projections therefore carry a warning.
 Check payroll and official records; net income alone does not establish accrual.
 Historical service and accrued units must be entered separately.
 
-Sources checked 19 September 2026:
+Sources checked 20 September 2026:
 [EMTA social tax](https://www.emta.ee/en/business-client/taxes-and-payment/income-and-social-taxes/social-tax)
 and [SKA pension qualifying period](https://www.sotsiaalkindlustusamet.ee/en/pension-and-benefits/applying-pension/pension-qualifying-period).
 The rates are verified; a particular person's entitlement is not.

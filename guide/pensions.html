@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-g9QPaxkU8uol1H+7sWCUSdWdg4bWEytdIjRwCN9hRsk='; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pension pillars II and III — Estonian FIRE Simulator</title>
 <meta name="description" content="Keep three questions separate: when money can be withdrawn, when favourable tax treatment applies, and when the plan actually starts using it. Neither pill">
@@ -26,10 +28,12 @@
 <button id="menu" class="menu" aria-label="Toggle navigation" aria-controls="sidebar" aria-expanded="false">
   <span></span><span></span><span></span>
 </button>
-<a class="mobile-brand" href="../index.html" aria-label="Estonian FIRE home">
-  <span class="brand-mark" aria-hidden="true">FI</span>
-  <span>Estonian FIRE</span>
-</a>
+<nav class="mobile-brand-nav" aria-label="Home">
+  <a class="mobile-brand" href="../index.html" aria-label="Estonian FIRE home">
+    <span class="brand-mark" aria-hidden="true">FI</span>
+    <span>Estonian FIRE</span>
+  </a>
+</nav>
 
 <nav id="sidebar" class="sidebar" aria-label="Contents">
   <a class="brand" href="../index.html" aria-label="Estonian FIRE home">
@@ -68,7 +72,7 @@
       <button type="button" data-theme-choice="system" aria-pressed="true">System</button>
       <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
     </div>
-    <p class="note">Not financial advice. Baseline review: August 2026.
+    <p class="note">Not financial advice. Baseline review: September 2026.
       <a href="../guide/sources.html">Per-rule checks and limitations</a>.</p>
   </div>
 </nav>
@@ -104,8 +108,18 @@ discrepancy is flagged here rather than silently treating the English summaries
 as identical. Confirm individual entitlement with the provider.</p>
 <p>The calculator's future pension ages are estimates where not officially known.
 Do not confuse the Pillar II payout threshold with eligibility for a flexible
-state pension: these are separate decisions. Early-exit administration, rejoining
-rules and pending reforms are <strong>not reverified in this guide update</strong>.</p>
+state pension: these are separate decisions.</p>
+<p>Leaving Pillar II early is all-or-nothing today, and you must wait
+10 years before you can rejoin, according to the
+<a href="https://www.fin.ee/teise-samba-reform">Ministry of Finance reform guidance</a>.
+Proposals would shorten the wait and permit partial withdrawals.
+<a href="https://www.riigikogu.ee/tegevus/dokumendiregister/dokument/7ca318f2-39a1-4e86-a3d1-50529a265760/">Riigikogu's 935 SE record</a>
+contains second-reading documents dated 17 September 2026. That record alone
+does not establish the final enacted terms or commencement dates, which remain
+<strong>unverified in this release review</strong>. The planner does not model early exit or
+rejoining and does not implement the proposals. Check
+<a href="https://www.riigiteataja.ee/akt/KoPS">Riigi Teataja</a> for the law in force
+before you decide to leave.</p>
 <h2 id="2-4-or-6--should-you-raise-your-rate">2%, 4% or 6% — should you raise your rate?</h2>
 <p>Pillar II's personal contribution can be 2%, 4% or 6%; the state contribution
 remains 4%. Increasing the personal rate does not increase that state amount.
@@ -199,7 +213,7 @@ infer minimum top-ups, state-paid contributions or special qualifying periods.
 Low- and zero-salary state-pension projections therefore carry a warning.
 Check payroll and official records; net income alone does not establish accrual.
 Historical service and accrued units must be entered separately.</p>
-<p>Sources checked 19 September 2026:
+<p>Sources checked 20 September 2026:
 <a href="https://www.emta.ee/en/business-client/taxes-and-payment/income-and-social-taxes/social-tax">EMTA social tax</a>
 and <a href="https://www.sotsiaalkindlustusamet.ee/en/pension-and-benefits/applying-pension/pension-qualifying-period">SKA pension qualifying period</a>.
 The rates are verified; a particular person's entitlement is not.</p>

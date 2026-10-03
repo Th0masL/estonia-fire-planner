@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "test": "bash test/run.sh",
-    "test:browser": "python3 build.py && playwright test"
+    "test:browser": "playwright test"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

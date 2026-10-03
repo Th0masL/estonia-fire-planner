@@ -6,8 +6,8 @@ import { simulate } from './calc.js';
 import { actionPlan } from './rules.js';
 import { RATES, DEFAULTS, ruleYearStatus } from './rates.js';
 import {
-  MAX_PERSONS, STORAGE_KEY, HASH_KEY, blankPerson, blankState, exampleState,
-  encodeState, decodeState, sanitise,
+  MAX_PERSONS, STORAGE_KEY, BACKUP_KEY, HASH_KEY, BOUNDS, MAX_NAME_LENGTH, MAX_IMPORT_BYTES,
+  blankPerson, blankState, exampleState, encodeState, decodeState, sanitise,
 } from './state.js';
 import { eur, pct, pct1, escapeHtml } from './format.js';
 import { infoBtn, infoRow, infoNote, bindExplain } from './explain.js';
@@ -62,7 +62,50 @@ function save() {
 
 let shared = null, sharedError = null;
 try { shared = fromHash(); } catch (e) { sharedError = e.message; }
-let state = shared || load() || blankState();
+let state = load() || blankState();
+
+// ------------------------------------------------------------ previous plan
+
+// Import, Example, Clear, Remove and a share link all replace what is here.
+// The plan they replace is kept - in storage when it can be, and in memory
+// always, since storage may be blocked - so the flash can offer Undo.
+let previousPlan = null;
+
+/** What the plan looks like once it has been through a reload. Comparing two
+ *  plans in this form ignores differences a reload would erase anyway. */
+const canonicalPlan = (s) => JSON.stringify(sanitise(JSON.parse(JSON.stringify(s))));
+const isEmptyPlan = (s) => canonicalPlan(s) === canonicalPlan(blankState());
+
+/** Keep the current plan before replacing it. Returns false when there was
+ *  nothing worth keeping - an empty form - so there is nothing to undo, and an
+ *  older backup is not overwritten with a blank one. */
+function keepPrevious() {
+  if (isEmptyPlan(state)) return false;
+  previousPlan = JSON.stringify(state);
+  try { localStorage.setItem(BACKUP_KEY, previousPlan); } catch {}
+  return true;
+}
+
+function undoReplace() {
+  let raw = previousPlan;
+  if (raw == null) try { raw = localStorage.getItem(BACKUP_KEY); } catch {}
+  let back = null;
+  try { back = raw ? sanitise(JSON.parse(raw)) : null; } catch {}
+  if (!back) { flash('There is no previous plan to go back to.', false); return; }
+  // Swap rather than discard, so the plan being undone is not lost either.
+  keepPrevious();
+  state = back;
+  save(); stateToForm(); render();
+  flash('Restored the previous plan.');
+}
+
+/** Replace the whole plan, keeping the old one for Undo. */
+function replacePlan(next, message) {
+  const kept = keepPrevious();
+  state = next;
+  save(); stateToForm(); render();
+  flash(message, true, kept ? undoReplace : null);
+}
 
 // ------------------------------------------------------------------ people UI
 
@@ -74,9 +117,9 @@ function renderPeople() {
     card.className = 'person';
     card.innerHTML = `
       <div class="person-head">
-        <label class="pname-field">Name<input class="pname" data-i="${i}" data-k="name"></label>
-        <label class="byear">Born<input type="number" min="1930" max="2015" step="1" data-i="${i}" data-k="birthYear" value="${p.birthYear}"></label>
-        ${state.persons.length > 1 ? `<button class="btn btn-quiet rm" data-i="${i}">Remove</button>` : ''}
+        <label class="pname-field">Name<input class="pname" maxlength="${MAX_NAME_LENGTH}" data-i="${i}" data-k="name"></label>
+        <label class="byear">Born<input type="number" ${fieldRange('birthYear')} step="1" data-i="${i}" data-k="birthYear" value="${p.birthYear}"></label>
+        ${state.persons.length > 1 ? `<button type="button" class="btn btn-quiet rm" data-i="${i}" aria-label="Remove ${escapeHtml(p.name)}">Remove</button>` : ''}
       </div>
 
       <p class="sub">Income</p>
@@ -143,12 +186,12 @@ function renderPeople() {
         from years worked or today's salary.` : ''}`)}
       <div class="grid">
         <label>Pillar III contributions <span class="u">€/yr</span><input type="number" min="0" step="500" data-i="${i}" data-k="pillar3Annual" value="${p.pillar3Annual}"></label>
-        <label>First Pillar III contribution <span class="u">year; access and tax rules depend on it</span><input type="number" min="1998" max="${RATES.year}" step="1" data-i="${i}" data-k="pillar3FirstContributionYear" value="${p.pillar3FirstContributionYear ?? ''}"></label>
-        <label ${state.assumptions.pensionPolicy === 'all' ? '' : 'hidden'}>Pension units earned ${infoBtn('pension-units')} <span class="u">from the state's own record</span><input type="number" min="0" max="60" step="0.1" data-i="${i}" data-k="pillar1Units" value="${p.pillar1Units ?? ''}"></label>
-        <label ${state.assumptions.pensionPolicy === 'all' ? '' : 'hidden'}>Estonian pension service <span class="u">qualifying years already accrued, not calendar years worked</span><input type="number" min="0" max="80" step="0.1" data-i="${i}" data-k="yearsWorkedEstonia" value="${p.yearsWorkedEstonia ?? ''}"></label>
-        <label ${state.assumptions.pensionPolicy === 'all' ? '' : 'hidden'}>Other EU/EEA service <span class="u">years; official pro-rata result still required</span><input type="number" min="0" max="80" step="0.1" data-i="${i}" data-k="yearsWorkedEuEea" value="${p.yearsWorkedEuEea ?? 0}"></label>
+        <label>First Pillar III contribution <span class="u">year; access and tax rules depend on it</span><input type="number" ${fieldRange('pillar3FirstContributionYear')} step="1" data-i="${i}" data-k="pillar3FirstContributionYear" value="${p.pillar3FirstContributionYear ?? ''}"></label>
+        <label ${state.assumptions.pensionPolicy === 'all' ? '' : 'hidden'}>Pension units earned ${infoBtn('pension-units')} <span class="u">from the state's own record</span><input type="number" ${fieldRange('pillar1Units')} step="0.1" data-i="${i}" data-k="pillar1Units" value="${p.pillar1Units ?? ''}"></label>
+        <label ${state.assumptions.pensionPolicy === 'all' ? '' : 'hidden'}>Estonian pension service <span class="u">qualifying years already accrued, not calendar years worked</span><input type="number" ${fieldRange('serviceYears')} step="0.1" data-i="${i}" data-k="yearsWorkedEstonia" value="${p.yearsWorkedEstonia ?? ''}"></label>
+        <label ${state.assumptions.pensionPolicy === 'all' ? '' : 'hidden'}>Other EU/EEA service <span class="u">years; official pro-rata result still required</span><input type="number" ${fieldRange('serviceYears')} step="0.1" data-i="${i}" data-k="yearsWorkedEuEea" value="${p.yearsWorkedEuEea ?? 0}"></label>
         <label ${state.assumptions.pensionPolicy === 'all' ? '' : 'hidden'}><input type="checkbox" data-i="${i}" data-k="nationalPensionEligible" ${p.nationalPensionEligible ? 'checked' : ''}> National-pension residence/foreign-pension conditions confirmed</label>
-        <label ${state.assumptions.pensionPolicy === 'ignore' || state.assumptions.pillarPayout === 'lumpSum' ? 'hidden' : ''}>Official fund-pension duration <span class="u">years, from Pensionikeskus</span><input type="number" min="1" max="60" step="1" data-i="${i}" data-k="fundPensionYears" value="${p.fundPensionYears ?? ''}"></label>
+        <label ${state.assumptions.pensionPolicy === 'ignore' || state.assumptions.pillarPayout === 'lumpSum' ? 'hidden' : ''}>Official fund-pension duration <span class="u">years, from Pensionikeskus</span><input type="number" ${fieldRange('fundPensionYears')} step="1" data-i="${i}" data-k="fundPensionYears" value="${p.fundPensionYears ?? ''}"></label>
       </div>
       ${infoNote('pension-units', `Your accrued Pillar I coefficient — what the state has actually
         recorded, rather than anything estimated from a career length.
@@ -191,7 +234,7 @@ function renderPeople() {
         <label><input type="checkbox" data-i="${i}" data-k="lifeInsurance" ${p.lifeInsurance ? 'checked' : ''}> Pays for term life cover</label>
         <label><input type="checkbox" data-i="${i}" data-k="healthInsurance" ${p.healthInsurance ? 'checked' : ''}> Pays for a voluntary health contract</label>
         <label><input type="checkbox" data-i="${i}" data-k="healthCoveredAfterFi" ${p.healthCoveredAfterFi ? 'checked' : ''}> Confirmed health cover throughout retirement, with no extra premium (for example S1)</label>
-        <label class="coverage-date" ${p.healthCoveredAfterFi ? 'hidden' : ''}>Confirmed health-cover start year <span class="u">optional; no extra premium from this date</span><input type="number" min="1900" max="2200" step="1" data-i="${i}" data-k="healthCoverageFromYear" value="${p.healthCoverageFromYear ?? ''}"></label>
+        <label class="coverage-date" ${p.healthCoveredAfterFi ? 'hidden' : ''}>Confirmed health-cover start year <span class="u">optional; no extra premium from this date</span><input type="number" ${fieldRange('healthCoverageFromYear')} step="1" data-i="${i}" data-k="healthCoverageFromYear" value="${p.healthCoverageFromYear ?? ''}"></label>
         <p class="hint">Leave the year blank unless an ongoing coverage route is confirmed.
           Pension age alone is not confirmation. Without a route, premiums continue through
           the planning horizon and remain in the perpetual-income target. Older plans now
@@ -212,6 +255,10 @@ function renderPeople() {
 }
 
 function updatePersonLabels() {
+  // Every Remove button says whom it removes, and follows the name as it is typed.
+  document.querySelectorAll('#people .rm').forEach((b) => {
+    b.setAttribute('aria-label', `Remove ${state.persons[+b.dataset.i]?.name ?? ''}`);
+  });
 
   // Who funds the house only needs asking when there is more than one person.
   const pb = $('paidByWrap'), sel = $('hPaidBy');
@@ -236,6 +283,103 @@ function setDeep(obj, path, value) {
   let o = obj;
   for (let i = 0; i < parts.length - 1; i++) o = o[parts[i]];
   o[parts[parts.length - 1]] = value;
+}
+
+// ------------------------------------------------------------------- bounds
+
+// Form fields whose range comes from BOUNDS, with the factor between the stored
+// value and the one shown (percentages are stored as fractions).
+const FIELD_BOUNDS = {
+  aReturn: ['realReturn', 100], aBrokerageReturn: ['brokerageRealReturn', 100],
+  aCashReturn: ['cashRealReturn', 100], aRetirementReserve: ['retirementCashReserve', 1],
+  aSwr: ['swr', 100], aInflation: ['inflation', 100], aPlanToAge: ['planToAge', 1],
+  aSpendGrowth: ['spendingGrowth', 100], aBufferYears: ['bufferYears', 1],
+  aTransactionCosts: ['transactionCostRate', 100], aEmergencyMonths: ['emergencyFundMonths', 1],
+  aPotsShare: ['potsCountedShare', 100], aStateShare: ['stateCountedShare', 100],
+  aStateEarly: ['statePensionEarlyYears', 1], aLumpInvestedShare: ['pensionLumpSumInvestedShare', 100],
+  sChildEnd: ['childCostsEndYear', 1], hTerm: ['termYears', 1], hRate: ['mortgageRate', 100],
+  hMonths: ['monthsAway', 1],
+};
+// toFixed trims float noise: 0.2 * 100 is 20.000000000000004.
+const boundShown = (key, scale, end) => +(BOUNDS[key][end] * scale).toFixed(6);
+/** min/max attributes for a person-card field, from the same table. */
+const fieldRange = (key, scale = 1) => `min="${boundShown(key, scale, 0)}" max="${boundShown(key, scale, 1)}"`;
+
+for (const [id, [key, scale]] of Object.entries(FIELD_BOUNDS)) {
+  $(id).min = boundShown(key, scale, 0);
+  $(id).max = boundShown(key, scale, 1);
+}
+
+/**
+ * Mark every visible number field the plan cannot use as typed, the way the
+ * pension calculator does. The engine runs on the sanitised plan, so an
+ * out-of-range value is clamped exactly as a reload would clamp it - this says
+ * so beside the field instead of leaving the result to change silently later.
+ * Returns how many fields are out of range.
+ */
+function markRanges() {
+  let bad = 0;
+  document.querySelectorAll('#inputs input[type="number"]').forEach((el, n) => {
+    const v = el.validity;
+    const out = !el.closest('[hidden]') && (v.rangeUnderflow || v.rangeOverflow || v.badInput);
+    let note = el.nextElementSibling?.classList.contains('field-error') ? el.nextElementSibling : null;
+    el.setAttribute('aria-invalid', String(!!out));
+    if (!out) {
+      if (note) { note.remove(); el.removeAttribute('aria-describedby'); }
+      return;
+    }
+    bad++;
+    if (!note) {
+      note = document.createElement('span');
+      note.className = 'field-error';
+      note.id = el.id ? `${el.id}-error` : `field-error-${n}`;
+      // Inside the label, so hidden from the field's name; it is announced
+      // once, as the description.
+      note.setAttribute('aria-hidden', 'true');
+      el.after(note);
+      el.setAttribute('aria-describedby', note.id);
+    }
+    const lo = el.min === '' ? null : +el.min, hi = el.max === '' ? null : +el.max;
+    const allowed = lo != null && hi != null ? `between ${lo} and ${hi}`
+      : lo != null ? `at least ${lo}` : `at most ${hi}`;
+    const used = v.badInput ? 'The plan ignores it'
+      : el.dataset.k === 'healthCoverageFromYear' ? 'The plan ignores this year'
+      : `The plan uses ${v.rangeUnderflow ? lo : hi}`;
+    note.textContent = `Must be ${allowed}. ${used} until it is changed.`;
+  });
+  return bad;
+}
+
+/** When no FI date exists, name the input responsible if one stands out. */
+function whyNoFi(sim, a, onTrack, badFields) {
+  const why = [];
+  if (!sim.fi.bridging && a.spendingGrowth >= a.swr) {
+    why.push(`<strong>Spending growth</strong> (${pct1(a.spendingGrowth)} a year) is at or above
+      the <strong>withdrawal rate</strong> (${pct1(a.swr)}), so no portfolio of any size can hold
+      the capital floor. Review the spending-growth assumption, or choose <em>Last until the planning age</em>.`);
+  } else if (!onTrack && sim.income.householdNetIncome <= 0) {
+    why.push(`No one has an income entered, and the assets alone do not cover spending to age
+      ${a.planToAge}. Enter a <strong>gross salary</strong>, or check the balances.`);
+  } else if (!onTrack) {
+    why.push(`<strong>Spending</strong> is higher than income, so nothing is saved, and the
+      assets alone do not cover the plan to age ${a.planToAge}.`);
+  } else {
+    why.push(`At this saving rate the portfolio does not reach the target within the planning
+      horizon. Spending, savings and the <strong>real return</strong>
+      (${pct1(a.realReturn)}) move the date the most.`);
+  }
+  if (badFields) {
+    why.push(`${badFields === 1 ? 'One field is' : `${badFields} fields are`} outside the allowed
+      range and marked in the form; the plan uses the nearest allowed value.`);
+  }
+  return why.join(' ');
+}
+
+/** Each person's official fund-pension duration, as entered. */
+function payoutYearsText(persons) {
+  const one = (p) => (p.payoutYears == null ? 'duration not supplied' : `${p.payoutYears.toFixed(0)} years`);
+  return persons.length === 1 ? one(persons[0])
+    : persons.map((p) => `${escapeHtml(p.name)} ${one(p)}`).join(', ');
 }
 
 // -------------------------------------------------------------- form binding
@@ -528,10 +672,16 @@ function render() {
   const ruleStatus = ruleYearStatus(new Date().getFullYear());
   $('ruleYearStatus').textContent = ruleStatus.message;
   $('ruleYearStatus').className = ruleStatus.mismatch ? 'alert' : 'hint';
-  let sim, noPensionSim, plan;
+  const badFields = markRanges();
+  let sim, noPensionSim, plan, clean;
   try {
     const currentYear = new Date().getFullYear();
-    sim = simulate({ ...state, currentYear });
+    // The engine sees exactly what a reload would give it: the saved JSON,
+    // sanitised. Otherwise a value the form lets through (a 50% return, a
+    // negative salary) moves the result now and a different one after reload.
+    clean = sanitise(JSON.parse(JSON.stringify(state)));
+    if (!clean) throw new Error('the plan could not be read');
+    sim = simulate({ ...clean, currentYear });
     // When pensions are active, keep a zero-benefit stress case beside the
     // selected result. Contributions and their effect on take-home stay exactly
     // as entered: only the benefits are switched off. That makes this a clean
@@ -539,13 +689,16 @@ function render() {
     // history in which the pension system never existed.
     if (sim.fi.policy !== 'ignore') {
       noPensionSim = simulate({
-        ...state,
-        assumptions: { ...state.assumptions, pensionPolicy: 'ignore' },
+        ...clean,
+        assumptions: { ...clean.assumptions, pensionPolicy: 'ignore' },
         currentYear,
       });
     }
-    plan = actionPlan(sim, state);
+    plan = actionPlan(sim, clean);
   } catch (e) {
+    // Still shown as an empty plan, but never silently: a thrown error here is
+    // a bug, and the console is where anyone investigating it will look.
+    console.error(e);
     $('headline').innerHTML = `<p class="empty">Add your income and spending to see a plan.</p>`;
     $('chart').innerHTML = ''; $('plan').innerHTML = '';
     $('pensionEffectHint').textContent = '';
@@ -708,6 +861,8 @@ function render() {
       <div class="stat ${onTrack || marginal ? '' : 'stat-warn'}"><b>${eur(sim.savings.surplusAfterMove)}</b><span>${onTrack ? 'saved per year' : 'short each year'}</span></div>
     </div>
 
+    ${reachable ? '' : `<p class="alert alert-soft" id="fiBlocker">${whyNoFi(sim, clean.assumptions, onTrack, badFields)}</p>`}
+
     <p class="hint" id="fiEstimateHint">FI timing is an estimate under your assumptions, not a
       market forecast. Displayed years and ages are rounded summaries, not instructions to retire
       at the start of that year. The search checks quarterly dates and major events; narrow
@@ -780,7 +935,7 @@ function render() {
         growing in the same euros, which is exactly what the real return already accounts for.`)}` : ''}
       <tr class="thead"><th>What you hold now</th><td></td></tr>
       <tr><th>Portfolio counted today ${infoBtn('counted')}</th><td>${eur(sim.portfolio.start)}</td></tr>
-      ${infoRow('counted', `Cash, declared investment accounts and ordinary brokerage accounts${state.excludeCrypto ? '' : ' plus crypto'} —
+      ${infoRow('counted', `Cash, declared investment accounts and ordinary brokerage accounts${clean.excludeCrypto ? '' : ' plus crypto'} —
         investment accounts are shown before future withdrawal tax; brokerage/crypto are net of their
         approximate opening tax reserves. The FI target preserves the projected asset mix and recorded
         contribution allowance when testing a smaller portfolio.${sim.house ? ` House cash is not removed today; it leaves on the entered completion date.` : ''} Pension balances are
@@ -810,7 +965,7 @@ function render() {
       ${sim.savings.lifeInsuranceCost ? `<tr><th>Life cover <span class="muted">protection, not savings</span></th><td>−${eur(sim.savings.lifeInsuranceCost)}/yr</td></tr>` : ''}
       ${sim.savings.healthInsuranceCost ? `<tr><th>Health contracts <span class="muted">only until FI; the ${eur(sim.spending.healthAtFi)}/yr above covers everyone after that</span></th><td>−${eur(sim.savings.healthInsuranceCost)}/yr</td></tr>` : ''}` : ''}
       ${sim.house ? `
-      <tr class="thead"><th>Buying the home <span class="muted">${eur(state.household.property.purchase.price)}, in ${state.household.property.purchase.monthsAway} months</span></th><td></td></tr>
+      <tr class="thead"><th>Buying the home <span class="muted">${eur(clean.household.property.purchase.price)}, in ${clean.household.property.purchase.monthsAway} months</span></th><td></td></tr>
       <tr><th>Mortgage ${infoBtn('ltv')}</th><td>${eur(sim.house.loan)} · ${eur(sim.house.monthly)}/mo · LTV ${pct(sim.house.ltv)}</td></tr>
       ${infoRow('ltv', `LTV is loan-to-value: what you borrow as a share of the price. The Bank of
         Estonia caps it at ${pct(RATES.mortgage.maxLtv)} — ${pct(RATES.mortgage.maxLtvWithKredEx)}
@@ -830,9 +985,9 @@ function render() {
       <tr class="breakdown"><th>Notary, state fee, valuation, bank <span class="muted">${pct(sim.house.transactionCostRate)} of the price</span></th><td>${eur(sim.house.transactionCosts)}</td></tr>
       ${sim.house.movingCosts ? `<tr class="breakdown"><th>Moving &amp; furnishing</th><td>${eur(sim.house.movingCosts)}</td></tr>` : ''}
       <tr class="breakdown"><th>Emergency fund <span class="muted">${sim.house.emergencyFundMonths} months of spending after the move</span></th><td>${eur(sim.house.emergencyFund)}</td></tr>
-      ${infoRow('complete', `Deposit, plus ${pct(DEFAULTS.transactionCostRate)} of the price in
+      ${infoRow('complete', `Deposit, plus ${pct(sim.house.transactionCostRate)} of the price in
         notary, state fee, valuation and bank charges, plus moving and furnishing — and on top of
-        all that an emergency fund of ${DEFAULTS.emergencyFundMonths} months' spending, because
+        all that an emergency fund of ${sim.house.emergencyFundMonths} months' spending, because
         completing with nothing left is how a good purchase becomes a bad one.`)}` : ''}
 </table>
 
@@ -952,7 +1107,7 @@ function render() {
         <td><strong>${eur(p.pensionIncomeFinal / 12)}</strong>/mo <span class="muted">vs ${eur(p.pensionIncome / 12)} at the start</span></td></tr>`).join('') : ''}
       ${sim.fi.countsPots && sim.fi.pillarPayout === 'lumpSum' ? sim.fi.lumpSums.map((e) => `<tr><th>${escapeHtml(sim.persons[e.owner].name)}: ${e.kind === 'pillar2' ? 'Pillar II' : 'Pillar III'} lump sum <span class="muted">${e.date.toFixed(1)}</span></th><td>${eur(e.gross)} gross − ${eur(e.tax)} tax = ${eur(e.net)} net; <strong>${eur(e.credited)} counted</strong></td></tr>`).join('') : ''}
       ${sim.fi.countsPots && sim.fi.pillarPayout === 'fundPension' ? `
-      <tr><th>Taken as ${infoBtn('payout')}</th><td><strong>a fund pension</strong> · 0% tax · ${sim.persons[0].payoutYears ?? 'official duration not supplied'} years</td></tr>
+      <tr><th>Taken as ${infoBtn('payout')}</th><td><strong>a fund pension</strong> · 0% tax · ${payoutYearsText(sim.persons)}</td></tr>
       ${sim.persons.some((p) => !p.pensionTermsKnown) ? `<tr class="bad"><th>Pension income excluded</th><td>Enter the Pensionikeskus duration for each person</td></tr>` : ''}
       ${sim.fi.pillarPayout === 'fundPension' && sim.fi.countsPots && sim.persons.every((p) => p.payoutYears != null) ? (() => {
         const last = sim.persons.reduce((a, b) => (b.pillarIncomeEndYear > a.pillarIncomeEndYear ? b : a));
@@ -963,8 +1118,8 @@ function render() {
       ${infoNote('erosion', `Fund payments follow the market value of the units redeemed. Returns can increase or decrease payments; there is no guaranteed income floor.`)}
       ${infoRow('payout', `A <em>fondipension</em> is paid out of your own pension fund with no insurer involved,
            and is taxed at <strong>0%</strong> so long as it is paced over the statutory recommended
-           duration — remaining life expectancy at the age you start. The entered official result is
-           ${sim.persons[0].payoutYears?.toFixed(0) ?? 'not supplied'} years. Paced faster it is taxed at
+           duration — remaining life expectancy at the age you start. The entered official
+           ${sim.persons.length > 1 ? 'results are' : 'result is'} ${payoutYearsText(sim.persons)}. Paced faster it is taxed at
            ${pct(RATES.pillar2.payout.lumpSum)}. Statistics Estonia publishes that figure by age
            <em>and sex</em>, and the gap is wide: at ${RATES.pillar2.payoutYearsAtAge} it is about
            16 years for men and 21 for women. Pensionikeskus's calculator gives the figure that
@@ -990,7 +1145,7 @@ function render() {
          is set under Assumptions and explained above.`
       : `Individual by law and locked until each person's own unlock date, so none of
          it counts toward the target above. Projected at the same real return, including Pillar II
-         contributions (yours plus the state's 4%) until FI.`}</p>` : ''}
+         contributions (yours plus the state's ${pct(RATES.pillar2.stateRate)}) until FI.`}</p>` : ''}
 
     ${sim.fi.ownershipAtFi.length > 1 && reachable ? `
     <h3>Who owns what at FI ${infoBtn('ownership')}</h3>
@@ -1010,7 +1165,7 @@ function render() {
   // a bank quote without scrolling to the results.
   const echo = $('mortgageEcho');
   if (sim.house) {
-    const p = state.household.property.purchase;
+    const p = clean.household.property.purchase;
     echo.hidden = false;
     echo.innerHTML =
       `Repayment works out at <strong>${eur(sim.house.monthly)}/month</strong> ` +
@@ -1038,7 +1193,27 @@ function render() {
 
 // -------------------------------------------------------------------- events
 
-function onChange() { formToState(); save(); render(); }
+// Typing moves the plan into `state` at once, but saving and re-running the
+// engine wait until the keys stop for a moment: two full simulations per
+// keystroke make a long number laggy to type. A `change` event, a button or
+// leaving the page flushes whatever is waiting.
+const SETTLE_MS = 150;
+let settling = 0;
+function commit() {
+  clearTimeout(settling);
+  settling = 0;
+  save(); render();
+}
+function commitSoon() {
+  clearTimeout(settling);
+  settling = setTimeout(commit, SETTLE_MS);
+}
+addEventListener('pagehide', () => { if (settling) commit(); });
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden' && settling) commit();
+});
+
+function onChange() { formToState(); commitSoon(); }
 
 document.addEventListener('input', (e) => {
   const el = e.target;
@@ -1050,7 +1225,7 @@ document.addEventListener('input', (e) => {
     setDeep(p, el.dataset.k, raw);
     if (el.dataset.k === 'name') updatePersonLabels();
     if (['lifeInsurance', 'healthInsurance', 'healthCoveredAfterFi'].includes(el.dataset.k)) renderPeople();
-    save(); render();
+    commitSoon();
     return;
   }
   if (el.id === 'alloc') {
@@ -1059,24 +1234,30 @@ document.addEventListener('input', (e) => {
     state.persons[1].allocationShare = 1 - s;
     $('allocOut').textContent =
       `${el.value}% ${state.persons[0].name} / ${100 - +el.value}% ${state.persons[1].name}`;
-    save(); render();
+    commitSoon();
     return;
   }
   onChange();
 });
 
 document.addEventListener('change', async (e) => {
-  if (e.target.id === 'buying') { $('houseFields').hidden = !e.target.checked; onChange(); }
+  // A committed value is shown straight away.
+  if (e.target.id === 'buying') { $('houseFields').hidden = !e.target.checked; formToState(); commit(); }
+  else if (settling) commit();
   if (e.target.id === 'importFile') {
     const file = e.target.files[0];
     if (!file) return;
     try {
+      // Checked before reading: a saved plan is a few kilobytes, and parsing
+      // a huge file would freeze the page before sanitise could refuse it.
+      if (file.size > MAX_IMPORT_BYTES) {
+        throw new Error(`the file is ${(file.size / 1e6).toFixed(1)} MB, and a saved plan ` +
+          `is never more than ${MAX_IMPORT_BYTES / 1e6} MB. Nothing was changed.`);
+      }
       const parsed = sanitise(JSON.parse(await file.text()));
       if (!parsed) throw new Error('not a simulator file');
-      state = parsed;
-      save(); stateToForm(); render();
-      flash(`Loaded ${file.name} — ${parsed.persons.length} ` +
-            `${parsed.persons.length === 1 ? 'person' : 'people'}.`);
+      replacePlan(parsed, `Loaded ${file.name} — ${parsed.persons.length} ` +
+        `${parsed.persons.length === 1 ? 'person' : 'people'}.`);
     } catch (err) {
       flash(`Could not read ${file.name}: ${err.message}`, false);
     } finally {
@@ -1086,18 +1267,34 @@ document.addEventListener('change', async (e) => {
   }
 });
 
-function flash(msg, ok = true) {
+/** A short status message. With `action`, it carries an Undo button and stays
+ *  longer, and never disappears while the button has focus. */
+function flash(msg, ok = true, action = null) {
   const el = $('status');
   el.textContent = msg;
+  if (action) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'btn btn-quiet status-action';
+    btn.textContent = 'Undo';
+    btn.addEventListener('click', () => action());
+    el.append(' ', btn);
+  }
   el.className = 'status ' + (ok ? 'ok' : 'bad');
   el.hidden = false;
   clearTimeout(flash._t);
-  flash._t = setTimeout(() => { el.hidden = true; }, 4000);
+  const hide = () => {
+    if (el.contains(document.activeElement)) flash._t = setTimeout(hide, 2000);
+    else el.hidden = true;
+  };
+  flash._t = setTimeout(hide, action ? 15000 : 4000);
 }
 
 bindExplain(() => render());
 
 document.addEventListener('click', (e) => {
+  // Any button works on the plan as typed, so nothing is left waiting.
+  if (settling && e.target.closest('button')) commit();
   if (e.target.id === 'import') $('importFile').click();
   if (e.target.id === 'addPerson') {
     // The model, the allocation slider and the ownership table are all built
@@ -1109,20 +1306,23 @@ document.addEventListener('click', (e) => {
     save(); renderPeople(); render();
   }
   if (e.target.classList.contains('rm')) {
-    state.persons.splice(+e.target.dataset.i, 1);
+    const i = +e.target.dataset.i;
+    const name = state.persons[i]?.name;
+    if (name == null || !confirm(`Remove ${name} and every figure entered for them?`)) return;
+    const kept = keepPrevious();
+    state.persons.splice(i, 1);
     state.persons[0].allocationShare = 1;
     save(); renderPeople(); render();
+    flash(`Removed ${name}.`, true, kept ? undoReplace : null);
   }
   if (e.target.id === 'reset') {
     if (confirm('Clear every field and start from an empty form?')) {
-      state = blankState(); save(); stateToForm(); render();
-      flash('Cleared. Every field is now empty.');
+      replacePlan(blankState(), 'Cleared. Every field is now empty.');
     }
   }
   if (e.target.id === 'example') {
     if (!confirm('Replace what is here with an example household?')) return;
-    state = exampleState(); save(); stateToForm(); render();
-    flash('Loaded an example household — edit any field to make it yours.');
+    replacePlan(exampleState(), 'Loaded an example household — edit any field to make it yours.');
   }
   if (e.target.id === 'shareClose') $('shareBox').hidden = true;
   if (e.target.id === 'share') {
@@ -1139,27 +1339,39 @@ document.addEventListener('click', (e) => {
   if (e.target.id === 'export') {
     const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
+    const href = URL.createObjectURL(blob);
+    a.href = href;
     a.download = 'estonian-fire-plan.json';
     a.click();
-    URL.revokeObjectURL(a.href);
+    // Revoking straight after click() can cancel the download in Safari, which
+    // starts reading the blob only after the event has returned.
+    setTimeout(() => URL.revokeObjectURL(href), 30000);
     flash('Exported estonian-fire-plan.json');
   }
 });
 
-/** Adopt a plan that arrived in the URL, then clear it from the address bar. */
-function adoptShared(next, announce) {
-  state = next;
-  save();                                    // persist before dropping the hash
+/**
+ * Adopt a plan that arrived in the URL, then clear it from the address bar.
+ * Opening a link must not quietly wipe a different plan saved here: ask first,
+ * and keep the old one for Undo either way.
+ */
+function adoptShared(next) {
+  const differs = canonicalPlan(next) !== canonicalPlan(state);
+  const agreed = !differs || isEmptyPlan(state) || confirm(
+    'This link carries a different plan from the one saved in this browser.\n\n' +
+    'Replace your saved plan with it? You can undo this straight afterwards.');
+  if (agreed) {
+    if (differs) replacePlan(next, 'Loaded a shared plan from the link.');
+    else flash('Loaded a shared plan from the link.');
+  }
+  // Dropped after saving, so a failure in between cannot lose the plan.
   history.replaceState(null, '', location.pathname + location.search);
-  stateToForm();
-  render();
-  if (announce) flash('Loaded a shared plan from the link.');
+  if (!agreed) flash('Kept your saved plan. The shared plan was not loaded.');
 }
 
 stateToForm();
 render();
-if (shared) adoptShared(shared, true);
+if (shared) adoptShared(shared);
 else if (sharedError) flash(sharedError, false);
 
 // A link pasted into an already-open tab changes only the fragment, which does
@@ -1167,6 +1379,9 @@ else if (sharedError) flash(sharedError, false);
 addEventListener('hashchange', () => {
   try {
     const next = fromHash();
-    if (next) adoptShared(next, true);
+    if (next) {
+      if (settling) commit();
+      adoptShared(next);
+    }
   } catch (e) { flash(e.message, false); }
 });

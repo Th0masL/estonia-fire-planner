@@ -3,7 +3,9 @@ import { readFile } from 'node:fs/promises';
 import { blankState, exampleState, encodeState, decodeState, STORAGE_KEY } from '../../src/state.js';
 
 // Synthetic names; handlers only set a local marker and never read/send data.
-const hostileName = `Person1 "><img data-injected src=x onerror="window.__injected=true"><svg data-injected onload="window.__injected=true"></svg>`;
+// Kept within the 60-character name cap, which a longer payload would hit
+// before any escaping is tested.
+const hostileName = `P1"><img data-injected src=x onerror=__injected=true>`;
 const plainName = `Person2 Õ 中文 O'Name & "quoted" <text>`;
 function makePlan(name = hostileName) {
   const plan = exampleState();
@@ -213,8 +215,12 @@ test('imports, exports, reloads and generated share links preserve names and dat
 
 test('fragment changes safely adopt a new plan in an existing tab', async ({ page }) => {
   await page.goto('/simulator.html' + fragment(makePlan('Person1')));
+  // A different plan is already saved, so the page asks before replacing it.
+  let asked = '';
+  page.once('dialog', async (dialog) => { asked = dialog.type(); await dialog.accept(); });
   await page.evaluate((hash) => { location.hash = hash; }, fragment(makePlan()));
   await assertSafeNames(page);
+  expect(asked).toBe('confirm');
   expect(JSON.parse(await saved(page)).persons[0].name).toBe(hostileName);
 });
 
@@ -228,7 +234,8 @@ test('typing a name preserves focus, punctuation, and non-ASCII characters', asy
   await name.fill(plainName);
   await expect(name).toBeFocused();
   await assertSafeNames(page, plainName);
-  expect(JSON.parse(await saved(page)).persons[0].name).toBe(plainName);
+  // Saving waits for typing to settle, so poll rather than read once.
+  await expect.poll(async () => JSON.parse(await saved(page)).persons[0].name).toBe(plainName);
 });
 
 test('invalid imports and changed fragments report errors without replacing the plan', async ({ page }) => {

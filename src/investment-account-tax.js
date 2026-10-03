@@ -40,13 +40,17 @@ export function withdrawInvestmentAccount(account, requestedNet, taxRate) {
 
 // Adapters for the simulator's real-euro asset/spending basis. Allowance is
 // deliberately nominal across dates; never multiply it by the price level.
+// The simulator asks for the same date many times in a row; remember the last.
+let lastPrice = { inflation: NaN, years: NaN, factor: NaN };
 export function investmentAccountPriceLevel(inflation, years) {
+  if (inflation === lastPrice.inflation && years === lastPrice.years) return lastPrice.factor;
   if (!Number.isFinite(inflation) || inflation <= -1) {
     throw new RangeError('inflation must be finite and greater than -1');
   }
   nonnegative(years, 'years');
   const factor = (1 + inflation) ** years;
   if (!Number.isFinite(factor) || factor <= 0) throw new RangeError('invalid price level');
+  lastPrice = { inflation, years, factor };
   return factor;
 }
 
