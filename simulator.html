@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-g9QPaxkU8uol1H+7sWCUSdWdg4bWEytdIjRwCN9hRsk=' 'sha256-DOZbO00FuETFOyw8FdUS9lNaeZqoI/5CNYjG1gr+4kk='; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-g9QPaxkU8uol1H+7sWCUSdWdg4bWEytdIjRwCN9hRsk=' 'sha256-T8aLUvATv6x5ib/3Lpj9MWHhKvpSOfe8XkdiNjMLXuQ='; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Estonian FIRE Simulator</title>
@@ -3004,10 +3004,16 @@ const exampleState = () => baseState({
   persons: [{
     ...blankPerson('You'),
     income: { grossMonthly: 3000, netMonthly: null, otherNetMonthly: 0 },
+    // Illustrative records only, not official entitlements or a recommended
+    // withdrawal duration. Real plans must use the person's own records.
+    pillar1Units: 15,
+    yearsWorkedEstonia: 12,
+    pillar3FirstContributionYear: 2022,
+    fundPensionYears: 25,
     assets: {
       cash: 10000, investmentAccount: 6000, investmentAccountContributions: 6000,
       brokerage: 0, brokerageCostBasis: 0,
-      pillar2: 12000, pillar3: 0, crypto: 0, cryptoCostBasis: 0,
+      pillar2: 12000, pillar3: 3000, crypto: 0, cryptoCostBasis: 0,
     },
   }],
 });
@@ -4545,7 +4551,7 @@ document.addEventListener('click', (e) => {
     }
   }
   if (e.target.id === 'example') {
-    if (!confirm('Replace what is here with an example household?')) return;
+    if (!confirm('Replace what is here with a fictional example household? Pension balances, service, units and withdrawal duration are illustrative, not official records. Replace them with your own figures before using the plan.')) return;
     replacePlan(exampleState(), 'Loaded an example household — edit any field to make it yours.');
   }
   if (e.target.id === 'shareClose') $('shareBox').hidden = true;

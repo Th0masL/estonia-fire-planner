@@ -12,6 +12,25 @@ const fragment = (p) => '#d=' + encodeState(p);
 const stored = (page, key = STORAGE_KEY) => page.evaluate((k) => localStorage.getItem(k), key);
 const firstName = (page) => page.locator('.pname').first();
 
+test('loading the example supplies pension inputs when pension counting is enabled', async ({ page }) => {
+  await page.goto('/simulator.html');
+  page.once('dialog', async (dialog) => {
+    expect(dialog.message()).toContain('illustrative, not official records');
+    await dialog.accept();
+  });
+  await page.locator('#example').click();
+  await page.locator('#aPensionPolicy').selectOption('ownPots');
+  await expect(page.locator('[data-k="fundPensionYears"]')).toHaveValue('25');
+  await expect(page.locator('body')).not.toContainText('Pension income excluded');
+  await expect(page.locator('body')).not.toContainText('first-contribution year missing');
+  await page.locator('#aPensionPolicy').selectOption('all');
+  await expect(page.locator('[data-k="pillar1Units"]')).toHaveValue('15');
+  await expect(page.locator('[data-k="yearsWorkedEstonia"]')).toHaveValue('12');
+  await page.reload();
+  await expect(page.locator('#aPensionPolicy')).toHaveValue('all');
+  await expect(page.locator('[data-k="fundPensionYears"]')).toHaveValue('25');
+});
+
 test('a share link asks before replacing a different saved plan, and declining keeps it', async ({ page }) => {
   await page.goto('/simulator.html' + fragment(plan('Person1')));
   const before = await stored(page);

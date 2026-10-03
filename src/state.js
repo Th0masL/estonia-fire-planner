@@ -123,10 +123,16 @@ export const exampleState = () => baseState({
   persons: [{
     ...blankPerson('You'),
     income: { grossMonthly: 3000, netMonthly: null, otherNetMonthly: 0 },
+    // Illustrative records only, not official entitlements or a recommended
+    // withdrawal duration. Real plans must use the person's own records.
+    pillar1Units: 15,
+    yearsWorkedEstonia: 12,
+    pillar3FirstContributionYear: 2022,
+    fundPensionYears: 25,
     assets: {
       cash: 10000, investmentAccount: 6000, investmentAccountContributions: 6000,
       brokerage: 0, brokerageCostBasis: 0,
-      pillar2: 12000, pillar3: 0, crypto: 0, cryptoCostBasis: 0,
+      pillar2: 12000, pillar3: 3000, crypto: 0, cryptoCostBasis: 0,
     },
   }],
 });

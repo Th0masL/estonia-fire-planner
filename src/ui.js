@@ -1321,7 +1321,7 @@ document.addEventListener('click', (e) => {
     }
   }
   if (e.target.id === 'example') {
-    if (!confirm('Replace what is here with an example household?')) return;
+    if (!confirm('Replace what is here with a fictional example household? Pension balances, service, units and withdrawal duration are illustrative, not official records. Replace them with your own figures before using the plan.')) return;
     replacePlan(exampleState(), 'Loaded an example household — edit any field to make it yours.');
   }
   if (e.target.id === 'shareClose') $('shareBox').hidden = true;

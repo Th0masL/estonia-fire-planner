@@ -15,6 +15,26 @@ const ok = (condition, label) => {
 };
 const near = (a, b, tol = 0.01) => Math.abs(a - b) <= tol;
 
+// Example records must demonstrate pensions without weakening blank-plan
+// safeguards or presenting synthetic inputs as real entitlements.
+{
+  for (const policy of ['ownPots', 'all']) {
+    const plan = exampleState();
+    plan.assumptions.pensionPolicy = policy;
+    const result = simulate(plan);
+    const person = result.persons[0];
+    ok(person.pensionTermsKnown, `${policy}: example fund duration is supplied`);
+    ok(person.pillar3EligibilityKnown, `${policy}: example Pillar III history is supplied`);
+    ok(person.pensionIncome > 0, `${policy}: example fund payments are positive`);
+    if (policy === 'all') ok(person.statePensionIncome > 0, 'example state pension is positive');
+    ok(Number.isFinite(result.timeline.yearsToFi), `${policy}: example has a FIRE result`);
+  }
+  const blank = blankState().persons[0];
+  ok(blank.fundPensionYears === null && blank.pillar1Units === null &&
+    blank.yearsWorkedEstonia === null && blank.pillar3FirstContributionYear === null,
+  'blank plans still require the user’s own pension records');
+}
+
 // ---- child costs stop on their end date during the working years ----------
 {
   const plan = blankState();
