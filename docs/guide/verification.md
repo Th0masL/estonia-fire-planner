@@ -356,6 +356,16 @@ remain open.
 
 ### Cash-market snapshot
 
+**Clarification added 4 October 2026:** the brokers guide now separates the ECB
+policy rate, €STR, bank savings rates and XEON. Official LHV, SEB, Coop Pank and
+Luminor product pages support the dated retail snapshot, with Luminor's campaign
+conditions separately linked. Swedbank's rate was absent from the retrieved
+page and is explicitly unverified. Matched fixed-term quotes, complete net
+costs and individual customer eligibility are not verified. Tagatisfond's
+member list supports the named Estonian legal banks; this does not certify
+every account or broker cash-sweep arrangement. Product sources and limitations
+are linked beside the [comparison](brokers.md#compare-bank-savings-products-in-estonia).
+
 **Status:** dated benchmark, not a retail quote. **Checked:** 20 September 2026.
 **Effective:** 16 September 2026. The
 [ECB rate table](https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html)

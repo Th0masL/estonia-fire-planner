@@ -29,6 +29,36 @@ when their tax treatment is neutral.
 
 ## 2. Deposit guarantees and investor compensation
 
+### Is my parked cash covered?
+
+**Clarified 4 October 2026:** it depends on what you actually hold, not whether
+the app calls it “savings”, “cash” or an “investment account”. The EU harmonizes
+the ordinary {{protection.depositGuarantee|money}} limit through **national deposit-guarantee schemes**; it
+is not blanket ECB insurance for financial products.
+Sources: [European Commission, deposit guarantees](https://finance.ec.europa.eu/banking/banking-regulation/deposit-guarantee-schemes_en)
+and [European deposit insurance proposal](https://finance.ec.europa.eu/banking/banking-union/european-deposit-insurance-scheme_en).
+
+- **Eligible bank current account, savings deposit or term deposit:** normally
+  within the deposit scheme, subject to the depositor's eligibility and the
+  combined limit at that legal bank.
+- **XEON or another ETF / money-market fund:** fund units are investments, not
+  your bank deposit. **No {{protection.depositGuarantee|money}} deposit guarantee for those units.** Buying
+  them through your bank or an investment account does not change that.
+- **Uninvested money at a broker or a cash-sweep service:** do not assume either
+  coverage or no coverage. Identify where the money is actually held, whether
+  you are an eligible underlying depositor, and how the scheme aggregates it
+  with your other deposits. A balance invested into a fund is not a deposit.
+
+**Example:** €70,000 in savings plus €25,000 in a term deposit plus €8,000 in a
+current account at the same bank totals €103,000. Ignoring interest and special
+temporary-balance rules, €100,000 is covered and €3,000 is above the ordinary
+limit. Separate account numbers do not multiply the protection. Allow headroom
+for interest too. See [Tagatisfond's aggregation and interest rules](https://www.tf.ee/en/protection-depositors/faq).
+
+This protection addresses bank failure, not inflation, every fraud loss, or
+uninterrupted access. Investor compensation is a different protection; it does
+not reimburse normal ETF losses. The distinctions below explain why.
+
 | Protection | What it addresses | What it does not promise |
 |---|---|---|
 | Deposit guarantee | Eligible bank deposits within the applicable limit | Unlimited cover or uninterrupted access |

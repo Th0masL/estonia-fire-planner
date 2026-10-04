@@ -265,8 +265,10 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
 // the same round number.
 {
   const ALLOWED = {
-    // Cyprus 2013: the EU limit at the time. History, not current law.
-    'docs/guide/account-protection.md': 3,
+    // Fixed worked example, with its own explicit amounts and uncovered sum.
+    'docs/guide/account-protection.md': 1,
+    // Luminor's dated promotional rate cap, NOT the deposit-guarantee limit.
+    'docs/guide/brokers.md': 2,
     // A FatFIRE spending tier, nothing to do with deposit protection.
     'docs/guide/fatfire.md': 5,
     // Synthetic company comparison amounts, not protection thresholds.

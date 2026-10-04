@@ -5,6 +5,12 @@ snapshot and limited deposit/fund distinctions were checked on 20 September 2026
 Foreign-account, product-specific protection and availability claims remain open.
 This is not a complete provider comparison.
 
+**Cash-parking clarification, 4 October 2026:** start with
+[how ECB rates and XEON relate](#ecb-rates-str-and-xeon-in-plain-language),
+then [compare bank savings products](#compare-bank-savings-products-in-estonia)
+and [check the deposit guarantee](account-protection.md#is-my-parked-cash-covered).
+The dated bank offers below are a limited snapshot, not a live ranking.
+
 ## Choosing a broker
 
 Compare the account you would actually open, the securities you would buy and
@@ -88,10 +94,43 @@ them. Fund comparisons elsewhere in the guide also need their own dated review.
 
 ---
 
-## Parking cash: a money market fund inside the investment account
+<span id="parking-cash-a-money-market-fund-inside-the-investment-account"></span>
+
+## Parking cash: bank deposits and investment funds
 
 **Review scope, 20 September 2026:** compare product risk, access and tax treatment
 before yield. A fund is not automatically better than a deposit.
+
+“Parking cash” means holding money temporarily while trying to earn something on
+it. It is a purpose, not a legal product category. You can park money in a bank
+deposit or buy a low-volatility investment, but those have different protections.
+
+### ECB rates, €STR and XEON in plain language
+
+These are related, but they are not the same rate or product:
+
+| Name | What it means for your money |
+|---|---|
+| ECB deposit facility rate | The rate eligible banks receive on overnight deposits with the Eurosystem. It is not an account you can open as a retail saver. |
+| €STR (euro short-term rate) | An overnight wholesale borrowing-rate benchmark calculated from market transactions. ECB policy influences it, but it is not identical to the policy rate. |
+| Your bank's savings rate | The bank's own offer, with its own access rules. It need not equal €STR or move immediately when the ECB changes rates. |
+| XEON | A tradable ETF designed to track an overnight-rate index. You buy fund units, not an ECB deposit. |
+
+Sources: [ECB interest-rate explainer](https://data.ecb.europa.eu/methodology/what-are-interest-rates)
+and [ECB explanation of €STR](https://www.ecb.europa.eu/stats/financial_markets_and_interest_rates/euro_short-term_rate/html/eurostr_overview.en.html).
+
+XEON's benchmark compounds **€STR + 0.085 percentage points**; its stated annual
+fund fee is **0.10%**. As a rough illustration, if €STR stayed at a hypothetical
+2%, subtracting that fee gives about **1.985%** before trading costs, tax and
+tracking differences. This is an approximation, not a current yield or promise.
+The [DWS factsheet](https://etf.dws.com/download/asset/42e11275-ddf0-45d2-8319-ad55635c3a08)
+also identifies swap replication and accumulating shares: returns stay in the
+fund rather than arriving as monthly interest in your bank account.
+
+If overnight rates fall, the future return can fall too; negative returns are
+possible. To spend the money, sell units and wait for settlement and withdrawal.
+**XEON is not covered by the {{protection.depositGuarantee|money}} bank-deposit guarantee.** Buying it through
+a bank does not change that. See the [protection explanation](account-protection.md#is-my-parked-cash-covered).
 
 ### Deposits and funds do different jobs
 
@@ -138,6 +177,59 @@ the bank transfer to the recipient. **Settlement is not the same as spendable
 cash.** Do not promise a fixed two-day route to a notary payment. Keep immediately
 needed emergency money accessible without requiring a market sale.
 
+### Compare bank savings products in Estonia
+
+**Sources checked 4 October 2026.** These are EUR retail savings products, not
+fixed-term offers. Rates below are advertised annual nominal rates before tax,
+not inflation-adjusted returns. Variable rates can change. Each bank name links
+to its own product information; reconfirm the offer before depositing.
+
+| Bank / product | Advertised annual rate | Getting money back / important condition |
+|---|---|---|
+| [LHV Savings Account](https://www.lhv.ee/en/faq/savings-account) | 1.65% | Withdraw to your own LHV account without advance notice or withdrawal fee. Interest credited monthly. |
+| [SEB Savings deposit](https://www.seb.ee/en/private/savings-and-investments/savings/savings-deposit-privates) | 1.65% | Free withdrawal from the third day; same-day transfer costs 0.5%, minimum €1.60. |
+| [Coop Pank Cash Drawer](https://www.cooppank.ee/en/info/faq/cash-drawer) | 2.00% | Free next-day withdrawal; immediate access has a fee. Closing before month-end forfeits that month's interest. |
+| [Luminor Bloom savings](https://bloom.luminor.ee/en) | 1.50% standard; 3.00% eligible promotional money | Advertises instant access. The 3% campaign ends 31 December 2026; conditions below. |
+| [Swedbank Easy Saver](https://www.swedbank.ee/private/investor/deposits/easySaver?language=ENG) | **Not verified** | Free immediate withdrawals advertised. The rate field was empty in the retrieved page; check the bank's current quote. |
+
+**Luminor campaign:** the [published rules](https://luminor.ee/s3fs-public/documents/luminor_savings_account_terms_and_conditions_ee_eng.pdf)
+limit 3% to at most €100,000 of qualifying new money. Qualification is recalculated
+daily against total Luminor balances on 15 September 2026; simply moving existing
+money between your Luminor accounts does not qualify. After the campaign, the
+then-current standard rate applies. The 3% is annualized, not a 3% payout for
+the remaining campaign months. Bloom also has onboarding restrictions: the
+product page describes adult Estonian-resident EU citizens and lists exclusions.
+Confirm eligibility rather than assuming the offer is available to everyone.
+
+**Deposit protection:** eligible deposits at the Estonian entities AS LHV Pank,
+AS SEB Pank, Coop Pank AS, Luminor Bank AS and Swedbank AS fall under Estonia's
+Tagatisfond scheme; these entities appear on its
+[deposit-scheme member list](https://www.tf.ee/et/hoiustajate-kaitse/liikmete-nimekiri).
+The ordinary limit is {{protection.depositGuarantee|money}} per person **across all eligible deposits at that
+same bank**, including interest—not {{protection.depositGuarantee|money}} for each product in this table.
+Check the deposit information sheet for your actual contract. The Luminor
+campaign's €100,000 rate cap does not create an extra guarantee allowance.
+
+### How to compare offers fairly
+
+- Start with the date you need the money. Separate immediate-access savings
+  from fixed-term deposits; compare term quotes for the **same amount and term**.
+  For example, [SEB's rate page](https://www.seb.ee/en/private/deposit-rates)
+  advertises term rates “up to 2.5%”; that is not a verified 3-, 6- or 12-month
+  quote. A matched term-deposit comparison remains **unverified here**.
+- Ask for the euro amount after account fees, withdrawal fees and applicable
+  taxes. Check promotional caps, expiry, minimum balances and day-count basis.
+  The figures above do not establish every provider's all-in net return.
+- For scale, €10,000 at 1.65% earns roughly €165 over a full year; at 2%, roughly
+  €200. That €35 difference assumes unchanged rates and ignores compounding,
+  fees and taxes. A €3 monthly account fee would already cost €36 a year.
+- For an ETF, include purchase/sale commissions and the bid–ask spread (the gap
+  between buying and selling prices). Do not compare a past fund return with a
+  guaranteed future deposit payout as if they were the same thing.
+- Leave room below the guarantee limit for accrued interest and other balances
+  at the same institution. The [protection guide](account-protection.md#is-my-parked-cash-covered)
+  gives a worked example.
+
 ### Cash-rate snapshot and quote checklist
 
 **Checked {{marketRates.ecbCheckedDate}}:** the ECB deposit facility rate is **{{marketRates.ecbDepositFacility|pct}}**,
@@ -146,9 +238,9 @@ not a retail savings offer or a guaranteed money-market-fund return.
 Source: [ECB key interest rates](https://www.ecb.europa.eu/stats/policy_and_exchange_rates/key_ecb_interest_rates/html/index.en.html),
 effective-date table.
 
-The former August provider estimates are not verified current quotes. They
-have been removed from this comparison rather than automatically increased with
-the ECB rate. This page is static, including when used offline.
+The ECB table was rechecked on 4 October 2026 with the same result. Do not
+automatically increase retail offers when the ECB rate changes. The bank
+snapshot above has its own check date; this page is static, including offline.
 
 | Route | Evidence needed before comparing |
 |---|---|
@@ -164,7 +256,7 @@ is expressed in **USD equivalent**, not a universal EUR threshold. Use the
 for the actual account. Methodology checked 20 September 2026; an individual
 account's current yield is **not verified here**.
 
-No ranking of the named banks or products has been established in this review.
+No universal best bank or product has been established in this review.
 Compare like-for-like annual returns after costs, taxes and access restrictions.
 Do not assume a savings product pays nothing, that every money-market fund
 tracks the ECB rate exactly, or that every provider settles withdrawals on the
@@ -212,13 +304,10 @@ class, costs, risks and redemption route with an eligible deposit.
 One example is **XEON**, Xtrackers II EUR Overnight Rate Swap UCITS ETF 1C,
 ISIN **LU0290358497**. The
 [DWS factsheet dated 31 August 2026](https://etf.dws.com/download/asset/42e11275-ddf0-45d2-8319-ad55635c3a08)
-describes accumulating EUR shares, indirect swap replication, a 0.10% annual
-fund fee and a benchmark based on €STR plus 8.5 basis points. Checked
-20 September 2026; not a live yield quote or broker-availability confirmation.
-The fund fee is not the investor's all-in cost.
+supports the mechanics explained above; rechecked 4 October 2026. It is not
+a live yield quote or confirmation that your broker offers the fund.
 
-DWS warns about counterparty failure and investment losses. The benchmark is not
-a guaranteed payout and is not the ECB deposit facility rate. This review does
+DWS warns about counterparty failure and investment losses. This review does
 not establish authorization of XEON as an MMF under the MMF Regulation; it is
 described here as an overnight-rate swap ETF. CSH2 and other alternatives have
 not been reverified, so no interchangeable-product shortlist is offered.

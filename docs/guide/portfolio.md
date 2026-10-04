@@ -187,6 +187,10 @@ custody risk. Assess the allocation separately from the provider choice.
 
 ### Where short-term cash might sit
 
+For a plain-language starting point, read [ECB rates, €STR and XEON](brokers.md#ecb-rates-str-and-xeon-in-plain-language),
+the [Estonian bank savings comparison](brokers.md#compare-bank-savings-products-in-estonia),
+and [whether parked money has {{protection.depositGuarantee|money}} protection](account-protection.md#is-my-parked-cash-covered).
+
 Keep emergency access and dated purchase needs separate from long-term investment
 decisions. Compare eligible deposits, maturity dates and fund redemption risks
 using the [cash-product checklist](brokers.md#deposits-and-funds-do-different-jobs).
