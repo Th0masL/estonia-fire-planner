@@ -24,8 +24,8 @@ submission deadline, not simply on the day a fee is paid. Confirm payroll
 obligations and registration; the simulator's salary input does not verify them.
 
 An OÜ's total payroll outlay is not the same as an insurance premium: some is
-remuneration received personally. The former comparison of the whole company
-outlay with a voluntary premium did not establish which route costs less overall.
+pay received personally. Compare the full company and personal cash flows before
+deciding which route costs less overall.
 FIE and other work arrangements require their own eligibility and cost review.
 
 ## Family routes: distinguish the different bases
@@ -63,7 +63,6 @@ No individual S1 entitlement is established here.
 
 ## Unemployment registration can provide coverage
 
-The earlier statement that registration provides no insurance was wrong.
 The [Ministry's 2026 guidance](https://www.mkm.ee/too-ja-vordsed-voimalused/toohoive/huvitised-ja-toetused)
 explicitly includes registered unemployed people who do not qualify for
 unemployment insurance benefit. Benefit entitlement and health coverage are
@@ -100,8 +99,8 @@ does not establish an unrestricted right to cancel or certify all standard terms
 have a coverage route registered using SKA data. Accessing Pillar II/III funds,
 or reaching an estimated pension age, is not the same as receiving a state pension.
 Early state-pension entitlement and the permanent pension adjustment need a
-personal SKA assessment. The former fixed multiplier table and claims that low
-spending makes early claiming worthwhile were not a verified optimisation.
+personal SKA assessment. Low spending alone does not establish that claiming
+early is the better choice.
 
 The planner budgets the configured premium per uncovered person until a
 **user-confirmed ongoing coverage start**. Without that date, premiums continue

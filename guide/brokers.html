@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-g9QPaxkU8uol1H+7sWCUSdWdg4bWEytdIjRwCN9hRsk='; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-g9QPaxkU8uol1H+7sWCUSdWdg4bWEytdIjRwCN9hRsk='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Where to hold it — brokers, and parking cash — Estonian FIRE Simulator</title>
@@ -92,6 +92,11 @@ This is not a complete provider comparison.</p>
 then <a href="#compare-bank-savings-products-in-estonia">compare bank savings products</a>
 and <a href="protection.html#is-my-parked-cash-covered">check the deposit guarantee</a>.
 The dated bank offers below are a limited snapshot, not a live ranking.</p>
+<p><strong>Looking for a market product rather than a bank offer?</strong> Read
+<a href="#market-products-for-temporary-cash">market products for temporary cash</a>,
+then the <a href="#does-a-short-holding-period-cover-the-costs">worked short-term cost example</a>.
+Product mechanics and selected tariffs were checked on 4 October 2026;
+broker availability and personal tax eligibility are not certified.</p>
 <h2 id="choosing-a-broker">Choosing a broker</h2>
 <p>Compare the account you would actually open, the securities you would buy and
 your expected order sizes. Execution fees are only one cost: check custody,
@@ -132,8 +137,7 @@ Securities section (marked valid from 9 June 2025);
 <a href="https://www.swedbank.ee/private/home/more/pricesrates?language=ENG">Swedbank price list</a>,
 Securities account and transactions. The check date is not a promise that prices
 will remain unchanged.</p>
-<p>Lightyear also lists Baltic-share trading; the previous claim that it cannot
-offer Baltic shares was incorrect. Check the exact security's availability.</p>
+<p>Lightyear also lists Baltic-share trading. Check the exact security's availability.</p>
 <h3 id="custody-fees-are-not-the-total-cost">Custody fees are not the total cost</h3>
 <p>LHV's standard account lists 0.01% monthly
 on the part above €100,000, plus VAT, for securities
@@ -227,6 +231,83 @@ fund rather than arriving as monthly interest in your bank account.</p>
 possible. To spend the money, sell units and wait for settlement and withdrawal.
 <strong>XEON is not covered by the €100,000 bank-deposit guarantee.</strong> Buying it through
 a bank does not change that. See the <a href="protection.html#is-my-parked-cash-covered">protection explanation</a>.</p>
+<h3 id="market-products-for-temporary-cash">Market products for temporary cash</h3>
+<p><strong>Yes: euro overnight-rate ETFs and euro money-market funds are market-based
+ways to park money.</strong> A bank or broker is the route to buying them, not the
+source of a promotional interest promise. Their returns vary with market rates.
+They are candidates for money whose access date is flexible, not substitutes
+for immediately accessible emergency cash or a capital guarantee.</p>
+<p>“ETF” describes an exchange-traded fund structure; “money-market fund” is a
+regulated investment category. These overlap: an MMF can be an ETF, but an
+overnight-rate ETF is not automatically an authorized MMF.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
+<thead>
+<tr>
+<th>Example</th>
+<th>How it earns a return</th>
+<th>Main distinction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>XEON — overnight-rate swap ETF</td>
+<td>A swap delivers an overnight-index return</td>
+<td>Counterparty risk; not a bank deposit</td>
+</tr>
+<tr>
+<td>Vanguard EUR Cash UCITS ETF — physical MMF</td>
+<td>A portfolio of short-term instruments</td>
+<td>Credit and liquidity risks remain without an index swap</td>
+</tr>
+<tr>
+<td>BlackRock MMF through a platform</td>
+<td>Short-term instruments, with subscriptions/redemptions through the provider</td>
+<td>Access, fees and share class depend on the platform</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>XEON:</strong> see the <a href="#ecb-rates-str-and-xeon-in-plain-language">benchmark explanation above</a>
+and <a href="#which-fund-to-buy">exact share-class identifier</a>. In an accumulating fund,
+income stays invested. Normally, positive net overnight returns increase its
+value gradually; that is not a promise that its exchange price always rises.
+You realize the sale proceeds when you sell, rather than receiving monthly bank
+interest. Trading prices and execution costs also affect your outcome.</p>
+<p><strong>Physical MMF example:</strong> Vanguard EUR Cash UCITS ETF (EUR) Accumulating,
+ISIN <strong>IE000SOORXS0</strong>, lists a <strong>0.07% annual ongoing charge</strong>. It is a regulated
+short-term variable-NAV MMF holding instruments such as Treasury bills, deposits
+and reverse repos (short-term lending against securities). It aims to preserve
+capital and provide euro money-market returns, but explicitly does not guarantee
+the money invested. Its benchmark is compounded €STR, not a promised tracking
+return. The same share class has different exchange tickers: <strong>VCAA</strong> on Deutsche
+Boerse and <strong>VCSHA</strong> in Amsterdam. Match the ISIN, not just the ticker.
+<a href="https://www.vanguard.co.uk/professional/product/etf/money-market/E060/vanguard-eur-cash-ucits-etf-eur-acc">Vanguard product information</a>,
+checked 4 October 2026. Availability through any particular Estonian broker is
+<strong>unverified</strong>. Physical holdings remove reliance on XEON's index-swap structure,
+not all investment risk.</p>
+<p>Its <a href="https://fund-docs.vanguard.com/ie000soorxs0-en.pdf">UK investor-information document, dated 17 February 2026</a>
+describes a short-term horizon of less than one year and warns about credit,
+counterparty and negative-yield risks. The 0.07% ongoing charge excludes portfolio
+transaction costs. This document helps explain the product; obtain the applicable
+current retail KID from your broker rather than treating a UK document as proof
+of Estonian distribution eligibility.</p>
+<p><strong>Non-exchange access example:</strong> Lightyear's Estonia help page confirms access
+to BlackRock MMFs. Its Savings feature buys and sells fund units; it is not a
+bank savings deposit. The provider says most orders process within minutes,
+occasionally until the next business day; withdrawal to a bank is a further
+step. Check the exact fund/share class, current net yield and total fees in the
+app. Do not subtract fees twice from a yield already stated after fees, or
+treat a recent annualized yield as a fixed future rate.
+<a href="https://lightyear.com/en-ee/help/trading-and-investments/vaults-money-market-fund-mmf">Lightyear MMF information</a>,
+checked 4 October 2026. This confirms a route available in Estonia, not a
+guaranteed personal onboarding decision or bank-arrival deadline.</p>
+<p><strong>None of these fund units has the bank-deposit guarantee.</strong> Liquidity can
+deteriorate during market stress; normal access estimates are not guarantees.
+See also the provider's <a href="https://lightyear.com/en-eu/risk-disclosures">investment-risk disclosures</a>.
+For money you will spend in euros, compare EUR exposure: a higher USD yield
+introduces exchange-rate risk. A EUR trading price alone does not establish
+that the underlying investment has EUR-only exposure. Ordinary short-duration
+bond funds are also not interchangeable with overnight products: their prices
+can respond differently to interest-rate and credit changes.</p>
 <h3 id="deposits-and-funds-do-different-jobs">Deposits and funds do different jobs</h3>
 <div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
 <thead>
@@ -269,6 +350,20 @@ Articles 6 and 36, MMF is an authorized designation and funds must disclose that
 capital is not guaranteed. An overnight-rate ETF or bond fund should not be
 labelled an authorized MMF merely because it is used to park cash.</p>
 <h3 id="tax-deferral-is-not-a-tax-exemption">Tax deferral is not a tax exemption</h3>
+<p>For an Estonian tax resident, separate two arrangements:</p>
+<ul>
+<li><strong>Ordinary securities taxation:</strong> realized sale gains are declared, with
+  qualifying documented purchase/sale costs taken into account. Reinvesting the
+  proceeds does not itself defer that tax. Distributions need their own treatment.</li>
+<li><strong>Investment-account system:</strong> qualifying financial assets bought and sold
+  under the account rules can defer tax while proceeds remain within the system.
+  Taxable withdrawals depend on contributions and payments in date order across
+  the person's investment accounts, not the profit on one particular ETF sale.</li>
+</ul>
+<p>The <a href="https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account">EMTA guidance</a>
+was rechecked on 4 October 2026. This is not a ruling that every fund, broker or
+cash movement qualifies. Confirm the account, asset eligibility and reporting
+route before using the system; see <a href="investment-account.html">investment-account rules</a>.</p>
 <p><a href="https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account">EMTA's investment-account guidance</a>,
 “How are taxable gains calculated”, uses dated payments and contributions across
 the taxpayer's investment accounts. A house payment can consume the remaining
@@ -281,10 +376,65 @@ gain from a later taxable withdrawal. This example ignores fees and other relief
 section also covers qualifying deposits and the notification/receipt conditions
 for deferring interest. Compare products using the same tax assumptions.</p>
 <h3 id="plan-the-payment-not-just-the-sale">Plan the payment, not just the sale</h3>
+<p>EU exchange-traded securities normally use <strong>T+2 settlement</strong> at this review
+date: two business days after the trade, not two calendar days. The planned
+EU transition to T+1 is 11 October 2027. Neither timetable promises when your
+bank account will be credited; non-exchange fund redemptions can have different
+terms. <a href="https://www.esma.europa.eu/sites/default/files/2025-06/High-level_Roadmap_to_T_1_Securities_Settlement_in_the_EU.pdf">ESMA settlement roadmap</a>.</p>
 <p>Confirm trade or redemption cut-offs, settlement, holidays, withdrawal limits and
 the bank transfer to the recipient. <strong>Settlement is not the same as spendable
 cash.</strong> Do not promise a fixed two-day route to a notary payment. Keep immediately
 needed emergency money accessible without requiring a market sale.</p>
+<h3 id="does-a-short-holding-period-cover-the-costs">Does a short holding period cover the costs?</h3>
+<p>Use a fictional <strong>€20,000 held for three months</strong>, with a hypothetical <strong>2% annual
+return after fund charges</strong>. Neither figure is a current product quote.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable data table"><table>
+<thead>
+<tr>
+<th>Calculation</th>
+<th style="text-align: right;">Approximate amount</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Return before broker costs and personal tax: €20,000 × 2% × 3/12</td>
+<td style="text-align: right;">€100</td>
+</tr>
+<tr>
+<td>Purchase commission at 0.14%</td>
+<td style="text-align: right;">€28</td>
+</tr>
+<tr>
+<td>Sale commission at 0.14%, using an unchanged sale value for simplicity</td>
+<td style="text-align: right;">€28</td>
+</tr>
+<tr>
+<td>Remaining after those commissions alone</td>
+<td style="text-align: right;">€44</td>
+</tr>
+</tbody>
+</table></div>
+<p>The commission rate is the selected listed foreign-market tariff in the
+<a href="https://www.lhv.ee/en/price-list">LHV</a> and
+<a href="https://www.swedbank.ee/private/home/more/pricesrates?language=ENG">Swedbank</a>
+online securities schedules, rechecked 4 October 2026. Confirm the exact ETF,
+venue and account tariff; this is not an executable quote. The real sale fee
+depends on sale value. Spread, any custody charges and tax reduce the result
+further. The fund charge is already in the assumed return, so do not deduct it
+again. Existing holdings can affect custody fees.</p>
+<p>By comparison, a hypothetical fee-free deposit at <strong>1.5%</strong> would earn about
+<strong>€75</strong> over the same period before tax. A higher fund yield can therefore lose
+to a lower deposit rate after costs. At the assumed 0.5-percentage-point yield
+advantage, €56 of commissions alone takes about <strong>6.7 months</strong> to recover:
+€56 ÷ (€20,000 × 0.005) × 12. Rates, fees and risks need not stay constant.</p>
+<p><a href="https://lightyear.com/en-ee/pricing">Lightyear's own tariff</a> lists no ETF
+execution or custody fee, but fund costs and bid–ask spreads still apply.
+That does not establish that it offers either named ETF. Compare your actual
+all-in order preview, not another broker's marketing comparison.</p>
+<p><strong>Practical sequence:</strong> identify the ISIN and EUR exposure; read the current
+KID and redemption terms; check purchase, sale and holding costs; confirm tax
+handling; and leave time to sell and transfer out before the payment date.
+A limit order can constrain an ETF's execution price but may not fill.</p>
 <h3 id="compare-bank-savings-products-in-estonia">Compare bank savings products in Estonia</h3>
 <p><strong>Sources checked 4 October 2026.</strong> These are EUR retail savings products, not
 fixed-term offers. Rates below are advertised annual nominal rates before tax,
@@ -410,7 +560,7 @@ tracks the ECB rate exactly, or that every provider settles withdrawals on the
 same timetable.</p>
 <p>Tax treatment also depends on the account arrangement, not just the product
 name. Check the <a href="investment-account.html">investment-account rules</a>; a qualifying
-wrapper can defer tax, but money withdrawn for a house can consume contribution
+investment account can defer tax, but money withdrawn for a house can consume contribution
 allowance and generate taxable withdrawals.</p>
 <p><strong>Simulator limit:</strong> the cash-return input is a real-return assumption, not a
 live nominal bank quote. This documentation refresh does not change that input,
@@ -435,7 +585,8 @@ broker cash and fund holdings. Do not infer another guarantee allowance simply
 because an account is offered in another country.</p>
 <p><strong>Still unverified:</strong> individual foreign-product exemptions, treaty outcomes,
 cash-sweep arrangements and account-specific guarantee coverage.</p>
-<h3 id="which-fund-to-buy">Which fund to buy</h3>
+<p><span id="which-fund-to-buy"></span></p>
+<h3 id="cash-fund-examples">Cash-fund examples</h3>
 <p>There is no universal cash-fund recommendation here. Compare the exact share
 class, costs, risks and redemption route with an eligible deposit.</p>
 <p>One example is <strong>XEON</strong>, Xtrackers II EUR Overnight Rate Swap UCITS ETF 1C,
@@ -445,8 +596,12 @@ supports the mechanics explained above; rechecked 4 October 2026. It is not
 a live yield quote or confirmation that your broker offers the fund.</p>
 <p>DWS warns about counterparty failure and investment losses. This review does
 not establish authorization of XEON as an MMF under the MMF Regulation; it is
-described here as an overnight-rate swap ETF. CSH2 and other alternatives have
-not been reverified, so no interchangeable-product shortlist is offered.</p>
+described here as an overnight-rate swap ETF. The
+<a href="#market-products-for-temporary-cash">market-product examples</a> contrast it with
+a physical MMF and a non-exchange access route, not equivalent guarantees.
+CSH2 and other alternatives have not been reverified. Live yields, order-book
+spreads, broker-specific availability, actual transfer times and individual
+investment-account eligibility remain <strong>unverified</strong>.</p>
 <h3 id="when-a-savings-account-is-still-the-better-choice">When a savings account is still the better choice</h3>
 <p>When immediate access and capital certainty matter more than a possible yield
 difference, compare eligible deposits first. Confirm notice periods and transfer

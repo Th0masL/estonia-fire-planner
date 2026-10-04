@@ -128,9 +128,10 @@ function render() {
     ${infoNote('diverted', `The state's ${pct1(RATES.pillar2.stateRate)} is not additional money. RPKS §13¹(1)
       sends ${pct(0.16)} of your gross into the state pension instead of ${pct(0.20)} once you are a
       Pillar II member — the missing four points are what lands in your own fund. Both halves of the
-      Pillar I accrual formula fall by that same 16/20, so being a member earns you exactly
-      <strong>${pct(1 - RATES.pillar1.pillar2MemberFactor)} less</strong> state pension for identical
-      earnings.<br><br>On this salary that is ${eur(pillar1Cost / 12)} a month of state pension given
+      modeled annual Pillar I accrual formula fall by that same 16/20. This means
+      <strong>${pct(1 - RATES.pillar1.pillar2MemberFactor)} less new pension accrual</strong> for identical
+      earnings during membership, not 20% less total state pension. The separate base amount
+      is not reduced by this factor, and previously earned rights are separate.<br><br>On this salary that is ${eur(pillar1Cost / 12)} a month of state pension given
       up, against ${eur(c.stateMonthly)} a month going into your own fund — plus your own
       contribution, plus decades of compounding, which is what it has to beat. Note the cost comes
       from <em>membership</em>, not from your rate: moving from

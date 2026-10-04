@@ -30,7 +30,7 @@ and [standard VAT](https://www.emta.ee/en/admin/content/handbook_article/39).
 ## Filing year is not the income year
 
 For **2025 income declared in 2026**, the filing deadline was **30 April 2026**.
-The additional-payment and final refund deadline is **1 October 2026**.
+The additional-payment and final refund deadline was **1 October 2026**.
 Electronic refunds started **5 March 2026** where no further verification was
 needed. Foreign income or capital gains do not by themselves establish a separate
 October-only refund schedule. Check your own decision and outstanding requests.

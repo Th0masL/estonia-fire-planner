@@ -106,9 +106,7 @@ sets the standard distribution tax at 22/78 of the net dividend from 2025, with
 transitional exceptions. A comparison must include extraction, business costs,
 appropriate remuneration and the same starting budget.
 
-The old 15-year comparison of company assets with personal assets omitted that
-reconciliation and confused a single starting sum with repeated annual saving.
-It did not demonstrate a net advantage. Use the
+Use the
 [reconciled company examples](company.md), not an assumed 22% saving from
 “restructuring” salary. The simulator has no corporate-account mode.
 

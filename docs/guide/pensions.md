@@ -1,5 +1,20 @@
 # Pension pillars II and III
 
+## Start with the three pillars
+
+| Pillar | What it is | What matters for FIRE |
+|---|---|---|
+| I: state pension | A state-paid pension based on entitlement and pension records, not your own investment pot | Stopping work can reduce future pension accrual; check your records and eligibility |
+| II: funded pension | Your pension investments, funded through contributions | The pot can grow or fall; access and withdrawal tax have rules |
+| III: voluntary pension | Voluntary pension saving with a possible income-tax deduction | The deduction depends on your income; access and tax depend on your history and payout choice |
+
+“Accrual” means building up future pension entitlement. The state pension includes
+a base amount and components based on pension records; it is not simply a fixed
+percentage of your final salary. Review your records in SKA's pension calculator.
+[SKA's pension explanation](https://sotsiaalkindlustusamet.ee/en/pension-and-benefits/pension-amount/pension-calculation),
+checked 4 October 2026. This page focuses on Pillars II and III; it does not
+reconstruct an individual's state-pension entitlement.
+
 Keep three questions separate: when money can be withdrawn, when favourable
 tax treatment applies, and when the plan actually starts using it. Neither
 pillar should be represented by a universal age 60 or 65.
@@ -32,17 +47,25 @@ The calculator's future pension ages are estimates where not officially known.
 Do not confuse the Pillar II payout threshold with eligibility for a flexible
 state pension: these are separate decisions.
 
-Leaving Pillar II early is all-or-nothing today, and you must wait
-{{pillar2.rejoinWaitYears}} years before you can rejoin, according to the
-[Ministry of Finance reform guidance](https://www.fin.ee/teise-samba-reform).
-Proposals would shorten the wait and permit partial withdrawals.
-[Riigikogu's 935 SE record](https://www.riigikogu.ee/tegevus/dokumendiregister/dokument/7ca318f2-39a1-4e86-a3d1-50529a265760/)
-contains second-reading documents dated 17 September 2026. That record alone
-does not establish the final enacted terms or commencement dates, which remain
-**unverified in this release review**. The planner does not model early exit or
-rejoining and does not implement the proposals. Check
-[Riigi Teataja](https://www.riigiteataja.ee/akt/KoPS) for the law in force
-before you decide to leave.
+### Early exit: distinguish current rules from upcoming changes
+
+**Status checked 4 October 2026.** The existing guidance describes an all-or-nothing
+early withdrawal and a {{pillar2.rejoinWaitYears}}-year wait before rejoining.
+[Ministry guidance](https://www.fin.ee/teise-samba-reform).
+
+Parliament reports that it passed **935 SE on 30 September 2026**. Its announcement
+describes a five-year rejoining wait, with changes starting on **1 November 2026**,
+and partial early withdrawals starting on **1 January 2028**. It also describes
+restrictions on another early withdrawal after leaving and rejoining.
+[Parliament's announcement](https://www.riigikogu.ee/pressiteated/riigikogu-vottis-vastu-kolm-seadust-kolm-otsust-ja-kaks-avaldust/).
+
+**Verification limit:** parliamentary passage is not the same as a rule already
+being in force. Promulgation, the final published law and individual transition
+conditions were not independently verified here; the consolidated-law page was
+not readable through the research tool. Confirm the applicable version in
+[Riigi Teataja](https://www.riigiteataja.ee/akt/KoPS) before acting.
+The planner does not model early exit or rejoining; no calculation rule has been
+changed based on this announcement.
 
 ## 2%, 4% or 6% — should you raise your rate?
 
@@ -78,18 +101,25 @@ refund in the tax return.
 ### The spousal transfer caveat for single-earner households
 
 The simulator calculates deductions separately for each person and does not
-transfer unused allowance between partners. Do not interpret one person's
-unused limit as an automatic refund for the other. Spousal-transfer legal
-details were not reverified in this update; consult EMTA before relying on a
-household-level deduction strategy.
+transfer unused allowance between partners. Do not combine two people's Pillar III
+limits into one person's deduction.
 
-### Comparing wrappers
+[EMTA's sharing guidance](https://www.emta.ee/en/private-client/taxes-and-payment/tax-incentives/sharing-tax-incentives),
+checked 4 October 2026, says that only unused education expenses can be transferred
+between spouses or registered partners for the **2024 and 2025 income years**.
+It does not provide a transferable Pillar III allowance. For a 2026-income return,
+confirm that year's guidance; this review does not certify the later filing rules
+or special arrangements for payments made by someone else.
+
+<span id="comparing-wrappers"></span>
+
+### Comparing pension saving with an investment account
 
 Compare the same net cash outlay, actual usable deduction, refund timing,
 fees, investment exposure and eventual withdrawal tax. A fully available refund
 can favour pension saving, but that assumption does not hold for every person.
-The earlier unconditional “beats the investment account” examples and provider
-fee claims have been removed rather than presented as universal conclusions.
+Compare the cash you give up now with the after-tax money available when you
+need it, including the years before pension access.
 
 ## Should the pension count toward your FI number?
 
@@ -98,8 +128,9 @@ The simulator supports a zero-benefit comparison and a pension-inclusive plan.
 contributions already deducted from salary become available savings.
 
 Pension policy selects whether to count own pots or also eligible state pension;
-the trust percentage reduces the benefits the plan relies on. It is a scenario
-haircut, not a probability estimate, market guarantee or legal change to ownership.
+the trust percentage reduces the benefits the plan relies on. For example,
+counting 80% means planning with only 80% of the modeled benefits. It does not mean
+there is an 80% chance of receiving your pension or change what you legally own.
 Funded pots are assets, but future value, access rules and tax treatment can
 change. State pension depends on entitlement and future rules rather than a
 personal investment balance.

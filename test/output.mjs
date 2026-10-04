@@ -24,6 +24,25 @@ const ok = (cond, label, detail = '') => {
 
 const read = (rel) => readFileSync(join(ROOT, rel), 'utf8');
 
+// Reader-facing explanations must not overstate pension policy or model results.
+{
+  const pensions = read('guide/pensions.html');
+  for (const phrase of ['Start with the three pillars', '30 September 2026',
+    '1 November 2026', '1 January 2028', 'Promulgation',
+    '2024 and 2025 income years', 'does not model early exit or rejoining']) {
+    ok(pensions.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').includes(phrase), `pension explanation retains ${phrase}`);
+  }
+  ok(pensions.includes('id="comparing-wrappers"'), 'renamed pension heading preserves existing links');
+  ok(read('guide/brokers.html').includes('id="which-fund-to-buy"'), 'renamed cash heading preserves existing links');
+  const pensionUi = read('pension.html');
+  ok(pensionUi.includes('less new pension accrual'), 'membership comparison identifies the affected accrual');
+  ok(pensionUi.includes('not 20% less total state pension'), 'membership comparison does not cut the base pension');
+  ok(pensionUi.includes('previously earned rights are separate'), 'membership comparison preserves historical rights');
+  for (const file of readdirSync(join(ROOT, 'docs/guide')).filter(x => x.endsWith('.md') && x !== 'verification.md')) {
+    ok(!/The previous guide|The former comparison|The earlier statement|The old 15-year|The previous rental table/.test(read(`docs/guide/${file}`)), `${file} teaches the rule instead of correction history`);
+  }
+}
+
 // Repayment compensation needs contract-specific verification; do not ship the
 // former unused universal cap as if it were a supported calculation parameter.
 ok(!Object.hasOwn(RATES.mortgage, 'earlyRepaymentCapMonthsInterest'), 'rates expose no universal early-repayment cap');
@@ -487,6 +506,25 @@ for (const tpl of ['src/simulator.template.html', 'src/pension.template.html']) 
   }
   ok(property.includes('Tax deferral is not tax-free interest'), 'purchase guide does not promise tax-free fund earnings');
   ok(!read('guide/protection.html').includes('A few weeks is fine'), 'protection guide does not endorse short uninsured exposure as safe');
+}
+
+{
+  const brokers = read('guide/brokers.html');
+  for (const phrase of ['market-products-for-temporary-cash', 'IE000SOORXS0',
+    'None of these fund units has the bank-deposit guarantee.',
+    'Ordinary securities taxation', 'two business days after the trade',
+    'not an executable quote', 'individual', 'unverified']) {
+    ok(brokers.includes(phrase), `market cash guide retains ${phrase}`);
+  }
+  const principal = 20000, annualReturn = 0.02, months = 3;
+  const gross = principal * annualReturn * months / 12;
+  const commission = principal * RATES.brokers.commissionRate;
+  const remaining = gross - 2 * commission;
+  for (const amount of [gross, commission, remaining, principal * 0.015 * months / 12]) {
+    ok(brokers.includes(`€${amount}`), `fictional cash cost illustration includes €${amount}`);
+  }
+  const breakEven = (2 * commission / (principal * (annualReturn - 0.015)) * 12).toFixed(1);
+  ok(brokers.includes(`${breakEven} months`), 'cash comparison break-even arithmetic matches stated assumptions');
 }
 
 {

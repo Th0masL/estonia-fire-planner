@@ -21,8 +21,7 @@ and [the investment-account rules](investment-account.md).
 ## VWCE vs WEBN
 
 **Both target large and mid-cap companies in developed and emerging markets.**
-Neither is an all-cap fund or a dedicated small-cap allocation. The old
-“small-cap tail” distinction was misleading.
+Neither includes a dedicated allocation to small companies.
 
 | Characteristic | VWCE | WEBN |
 |---|---|---|
@@ -41,6 +40,10 @@ pages 1–3, objectives, income policy and costs. These are identified share cla
 not a guarantee of availability through any particular broker.
 
 ### Fee evidence and its limits
+
+OCF means ongoing charges figure: the fund's recurring operating charge.
+A KID is a key information document explaining a product's risks and costs.
+Neither the quoted OCF nor one cost line in a KID is necessarily your total cost.
 
 Vanguard's current page lists 0.14%. Its
 [fee announcement dated 2 August 2026](https://www.ch.vanguard/en/private-investor/insights/lowering-fees-on-another-six-etfs)
@@ -62,8 +65,7 @@ components are not an all-in cost comparison.
 The evidence above does not establish a universal winner. Compare current
 tracking results, total costs, trading spreads at your order size, fund documents
 and availability. Holdings counts and asset sizes change, and fund-wide assets
-are not the same as share-class assets; the previous undated size ratios and
-issuer-quality rankings have been removed.
+are not the same as share-class assets. Compare figures with the same scope and date.
 
 Their stated mandates suggest substantial exposure overlap; that is an inference,
 not a measured current holdings-overlap percentage. Two tickers do not necessarily
@@ -155,8 +157,7 @@ eligibility. It also makes customers in other supported markets responsible
 for their tax obligations rather than promising local withholding.
 
 Those facts do not establish which arrangement qualifies for Estonian tax
-deferral. The previous categorical rejection, launch-date comparison and
-provider ranking have been removed. Check current country/account terms,
+deferral. Check current country/account terms,
 charges, documents and reporting; no claim is made that EMTA has never addressed
 this structure.
 
@@ -188,20 +189,21 @@ custody risk. Assess the allocation separately from the provider choice.
 ### Where short-term cash might sit
 
 For a plain-language starting point, read [ECB rates, €STR and XEON](brokers.md#ecb-rates-str-and-xeon-in-plain-language),
+the [market-product examples and short-term costs](brokers.md#market-products-for-temporary-cash),
 the [Estonian bank savings comparison](brokers.md#compare-bank-savings-products-in-estonia),
 and [whether parked money has {{protection.depositGuarantee|money}} protection](account-protection.md#is-my-parked-cash-covered).
 
 Keep emergency access and dated purchase needs separate from long-term investment
 decisions. Compare eligible deposits, maturity dates and fund redemption risks
 using the [cash-product checklist](brokers.md#deposits-and-funds-do-different-jobs).
-A tax wrapper does not turn an investment into guaranteed or instantly available cash.
+An account's tax treatment does not turn an investment into guaranteed or instantly available cash.
 
 ---
 
 ## LHV or IBKR for the ETF itself?
 
-The former “switch at €200,000” rule was not a verified break-even calculation.
-Use a current, account-specific quote instead. The checked
+An arbitrary balance threshold is not a verified break-even calculation.
+Use a current quote for your account and expected trades. The checked
 [broker fees](brokers.md#broker-fee-snapshot) are a starting point;
 IBKR's current tariff and account-specific reporting remain an open review here.
 

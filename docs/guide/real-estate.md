@@ -3,6 +3,9 @@
 Property can provide rental cash flow, but the tax calculation and the cash
 available for FIRE spending are different quantities.
 
+Start with the rent received, subtract tax and actual costs, then work out what
+is left to spend. A tax deduction and a cash expense are not the same thing.
+
 > **Limited review, 20 September 2026:** the cited general tax rules were checked. Examples are conditional, not a completed tax return or a property recommendation.
 
 ## Residential rent: when the 20% deduction applies

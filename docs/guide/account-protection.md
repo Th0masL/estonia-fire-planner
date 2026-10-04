@@ -145,8 +145,8 @@ currency changes do not eliminate equity losses.
 
 **Still unverified:** provider-specific custody and protection, foreign compensation
 percentages/limits, future capital controls, actual recovery timelines and the
-precise resolution loss hierarchy. Historical Greece/Cyprus figures and macro-risk
-rankings have been removed rather than used as predictions for Estonia.
+order in which losses would be allocated if an institution failed. Historical
+crises elsewhere do not establish what would happen in Estonia.
 There is no universal account count or portfolio threshold that solves these risks.
 
 ## Sources and scope

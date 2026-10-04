@@ -19,6 +19,31 @@ neither the website nor an offline copy automatically updates legislation.
 
 ## Checked rules
 
+### Plain-English review and pension update — 4 October 2026
+
+Reader-facing guides now explain terminology before using it and state the
+current guidance directly. Correction history remains in this register rather
+than interrupting the explanations. This editorial pass does not refresh every
+source date or certify every rule, offer or individual's eligibility.
+
+- [Parliament's 30 September announcement](https://www.riigikogu.ee/pressiteated/riigikogu-vottis-vastu-kolm-seadust-kolm-otsust-ja-kaks-avaldust/)
+  reports passage of 935 SE and separate future start dates. The pension guide
+  no longer describes the measure only as a second-reading proposal. Promulgation,
+  final published legislation and individual transition cases remain unverified;
+  the consolidated-law page was not readable through the research tool.
+- [EMTA's sharing guidance](https://www.emta.ee/en/private-client/taxes-and-payment/tax-incentives/sharing-tax-incentives)
+  identifies only unused education expenses as transferable for 2024 and 2025
+  income. The pension and household guides distinguish that evidence from
+  later filing-year guidance and do not suggest a transferable Pillar III limit.
+- [SKA's pension calculation](https://sotsiaalkindlustusamet.ee/en/pension-and-benefits/pension-amount/pension-calculation)
+  distinguishes the base amount from pension-record components. The pension
+  calculator explanation now applies its 20% comparison to new modeled accrual,
+  not the entire state pension. The calculation itself is unchanged.
+
+All three sources were checked on 4 October 2026. Existing section links are
+retained where headings changed. Returns, personal tax outcomes, provider
+availability and future rules remain subject to the limits recorded below.
+
 ### Closing consistency review
 
 **Reviewed:** 21 September 2026. This pass reconciled cross-guide status wording,
@@ -417,6 +442,19 @@ separate [cash-product](#cash-products-and-purchase-reserve-withdrawals),
 
 ### Cash products and purchase-reserve withdrawals
 
+**Market-product follow-up, 4 October 2026:** the
+[cash guide](brokers.md#market-products-for-temporary-cash) now distinguishes
+XEON's overnight swap from Vanguard's physical EUR Cash UCITS ETF
+(IE000SOORXS0), and Lightyear's BlackRock MMF access for Estonia. Issuer and
+platform sources are linked beside each example. The Vanguard page establishes
+MMF classification and its 0.07% ongoing charge, not availability at a particular
+broker. ESMA's settlement roadmap supports the dated T+2 explanation and planned
+11 October 2027 transition, not an end-to-end withdrawal promise. LHV, Swedbank
+and Lightyear's own tariffs and EMTA's securities/investment-account guidance
+were rechecked for the fictional cost example and tax distinction. No live
+yield, personalized tax ruling, exact ETF availability, realized spread or
+crisis-access guarantee is certified. No simulator assumptions changed.
+
 **Status:** limited risk/tax clarification. **Checked:** 20 September 2026.
 [MMF Regulation, consolidated 24 December 2024](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02017R1131-20241224),
 Articles 6 and 36, distinguishes authorized MMFs from guaranteed investments.
@@ -481,6 +519,10 @@ transfers, treaty outcomes and historic corrections remain open. No engine chang
 - Pension service is a salary-based estimate, not a reconstruction of minimum top-ups, state-paid contributions or special qualifying periods.
 - Healthcare dates are user confirmations; waiting periods, annual contract commitments and every temporary coverage interval are not simulated.
 - The separate pension calculator's monthly figure is a simple 20-year division of its projected pot, not the FIRE simulator's supplied-duration fund-withdrawal schedule or a provider quote.
+
+In these notes, an investment “wrapper” means the account or legal arrangement
+used to hold investments. “Annualized cash flows” means amounts expressed on a
+yearly basis; it does not mean the model predicts the exact payment day.
 
 For implementation details, contributors should read `src/DATA-MODEL.md` and
 `src/INVESTMENT-ACCOUNT-TAX.md`. Tests check the implemented conventions; they

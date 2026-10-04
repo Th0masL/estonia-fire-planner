@@ -4,6 +4,10 @@ Tax treatment depends on acquisition history and the account arrangement, not
 just the coin or where it is held today. Do not use a blanket no-loss-offset rule
 for every holding.
 
+MiCA is the EU's Markets in Crypto-Assets regulation. In this guide, a gain is
+the taxable profit on a disposal; a disposal can include a sale, swap or spending
+crypto. “Loss offset” means using an eligible loss to reduce taxable gains.
+
 ## Acquisition and reporting
 
 From **1 January 2025**, qualifying crypto acquired through a MiCA-authorised
@@ -37,8 +41,8 @@ Source: [EMTA — Securities and investment account](https://www.emta.ee/en/priv
 Do not assume moving existing coins to a new wallet or platform establishes
 eligibility. The treatment of a particular migration, self-custody arrangement
 or historic lot remains **unverified here**. Obtain transaction-specific advice
-before selling solely to restructure ownership. The previous categorical claim
-that all hardware-wallet holdings must first be sold was not sufficiently scoped.
+before selling solely to restructure ownership. Keeping coins in a hardware
+wallet does not, by itself, answer the tax-eligibility question.
 
 ## What the simulator does—and does not do
 

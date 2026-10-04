@@ -1,5 +1,25 @@
 import { test, expect } from '@playwright/test';
 
+test('market cash guide is navigable and keeps risks beside product examples', async ({ page }, testInfo) => {
+  await page.goto('/guide/brokers.html#market-products-for-temporary-cash');
+  await expect(page.getByRole('heading', { name: 'Market products for temporary cash' })).toBeVisible();
+  const comparison = page.locator('table').filter({ hasText: 'Vanguard EUR Cash UCITS ETF' });
+  await expect(comparison).toContainText('Counterparty risk');
+  await expect(comparison).toContainText('Credit and liquidity risks');
+  await expect(page.locator('main')).toContainText('IE000SOORXS0');
+  await expect(page.locator('main')).toContainText('None of these fund units has the bank-deposit guarantee.');
+  await comparison.scrollIntoViewIfNeeded();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+  await page.screenshot({ path: testInfo.outputPath('market-cash-products.png') });
+  await page.goto('/guide/brokers.html#does-a-short-holding-period-cover-the-costs');
+  await expect(page.getByRole('heading', { name: 'Does a short holding period cover the costs?' })).toBeVisible();
+  const costs = page.locator('table').filter({ hasText: 'Remaining after those commissions alone' });
+  await expect(costs).toContainText('€44');
+  await costs.scrollIntoViewIfNeeded();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+  await page.screenshot({ path: testInfo.outputPath('market-cash-costs.png') });
+});
+
 test('cash guidance separates investment risks and tax deferral', async ({ page }, testInfo) => {
   await page.goto('/guide/brokers.html#deposits-and-funds-do-different-jobs');
   await expect(page.getByRole('heading', { name: 'Deposits and funds do different jobs' })).toBeVisible();

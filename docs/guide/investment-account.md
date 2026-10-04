@@ -9,7 +9,9 @@ promise of tax-free investing.
 
 For Estonian residents, qualifying investment accounts defer personal income tax
 on reinvested financial-asset income. Taxable payments arise when withdrawals
-exceed the remaining contribution allowance. Calculate in date order across
+exceed the remaining contribution allowance: the recorded amount you can still
+withdraw before income tax becomes due under this system. It is not your current
+portfolio value. Calculate in date order across
 one taxpayer's investment accounts, not by annual netting or combining spouses.
 Eligible purchases and sales within the system are not themselves declared as
 contributions or withdrawals. This does not eliminate foreign withholding.
@@ -37,7 +39,7 @@ both a home and retirement spending.
 ## Constraints (read carefully)
 
 - Check both the account and asset: a platform licence alone is insufficient.
-- Qualifying crowdfunding holdings can be eligible from 2024; the old blanket exclusion of private-company equity was too broad. Qualifying crypto applies from **1 January 2025**; see [Crypto](crypto.md).
+- Qualifying crowdfunding holdings can be eligible from 2024; check the instrument and provider rather than excluding all private-company holdings. Qualifying crypto applies from **1 January 2025**; see [Crypto](crypto.md).
 - Funding and receipt conditions apply, with specific exceptions; an outside purchase is not automatically eligible.
 - Declare the account and contributions/payments annually in **table 6.5**. Review imported reports, including taxed interest/dividends.
 - Losing Estonian tax residence ends this deferral and requires closure reporting; obtain advice before moving.
@@ -66,8 +68,7 @@ Vanguard's UK tax instructions are not Estonian filing instructions.
 
 **Still unverified:** this guide has not established fund-specific treaty
 entitlement, actual withholding or recoverable tax for an Ireland/Luxembourg
-comparison. The former blanket 15% versus 30% comparison and promised annual
-return advantage have been removed. Request the exact fund's prospectus, tax
+comparison. Request the exact fund's prospectus, tax
 disclosures and annual report before making such a comparison. An ISIN prefix
 alone is not that evidence.
 

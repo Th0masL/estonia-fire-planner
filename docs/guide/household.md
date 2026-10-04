@@ -30,7 +30,8 @@ or transfer questions. See the [investment-account guide](investment-account.md)
 
 Pillar III capacity depends on each taxpayer, including eligible non-salary
 income. The simulator does not transfer unused allowances between partners;
-[spousal-transfer details remain open](pensions.md#the-spousal-transfer-caveat-for-single-earner-households).
+[the spouse/partner explanation](pensions.md#the-spousal-transfer-caveat-for-single-earner-households)
+separates the published filing-year guidance from questions still requiring confirmation.
 
 [SKA's supplementary Pillar II contributions](https://www.sotsiaalkindlustusamet.ee/perehuvitised-ja-muud-toetused/ravi-ja-pensionikindlustus/kogumispensioni-taiendavad-sissemaksed)
 provide a child-related route for an eligible parent of an under-three. Therefore

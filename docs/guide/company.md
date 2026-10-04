@@ -1,5 +1,9 @@
 # Using an OÜ as an investment wrapper
 
+An OÜ is an Estonian private limited company. Using it as an investment
+“wrapper” means the company owns the investments, rather than you owning them
+personally. “Extraction” below means paying money from the company to its owner.
+
 An OÜ can retain business profits for investment before distribution tax. That
 does not make company money tax-free personal spending money. Compare what the
 owner can actually receive after costs and extraction taxes.
@@ -83,8 +87,7 @@ Compare the same property, purchase funding, debt service, actual costs, annual
 taxes, reinvestment assumptions, eventual sale and extraction. Track contributed
 purchase capital separately from rental profits.
 
-The previous rental table and categorical leverage recommendation have been
-removed: they did not reconcile these flows sufficiently. Residential deduction
+Residential deduction
 eligibility, interest treatment, transfer/sale taxes, VAT and company financing
 terms remain **open review** here. This page does not establish a tax-free way to
 transfer an existing property or determine the best ownership structure.

@@ -72,8 +72,8 @@ outside the deposit budget.
 **Still unverified:** current EIS/KredEx guarantee categories, individual eligibility,
 guarantee charges and restrictions, lender age limits, insurance requirements,
 local land tax and any relationship discount. Confirm these with the relevant
-provider before relying on them. The previous categorical eligibility claims
-and estimated margin range are not retained as verified guidance.
+provider before relying on them. Obtain an actual interest-rate offer rather
+than budgeting with an assumed market-wide margin.
 
 The personal housing-loan interest deduction ended from 2024, according to
 [EMTA](https://www.emta.ee/en/private-client/housing-loan-interest).
@@ -162,8 +162,8 @@ the cash and the return you might earn elsewhere **after costs and taxes**.
 
 For floating-rate debt, future interest savings change with the rate. An expected
 equity return is uncertain and is not directly equivalent to avoided borrowing
-costs. The previous fixed rate thresholds and “invest everything” recommendations
-were not established as suitable for every household.
+costs. There is no single interest-rate threshold that decides the right choice
+for every household.
 
 Investment-account contributions are not a permanent exemption for investment
 profits. Withdrawals use the remaining allowance; see
@@ -205,9 +205,8 @@ Before paying extra, request a written calculation and revised schedule:
 - How much accessible emergency cash remains?
 
 **Still unverified:** the applicable statutory compensation provisions, fixed-rate
-break costs, notice waivers and schedule choices for your agreement. The former
-universal three-month cap, fixed-rate percentage caps and “every bank” assertions
-have been removed rather than presented as legal advice.
+break costs, notice waivers and schedule choices for your agreement. Do not
+assume the same repayment fee or notice period applies at every bank.
 
 Keeping a higher payment can repay principal faster; lowering the required
 payment improves monthly flexibility. Compare written schedules on the same

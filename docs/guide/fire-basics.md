@@ -2,6 +2,13 @@
 
 > **Limited review, 20 September 2026:** the arithmetic below is conditional and the cited rule/research explanations have limited scope. Historical results and constant-return examples are not forecasts; no withdrawal rate or FIRE label establishes personal readiness.
 
+FIRE means **financial independence, retire early**. The practical question is
+whether your assets and other income can pay your costs without employment.
+Start with spending, then check taxes, pension timing, healthcare and uncertainty.
+
+“Real” amounts mean today's purchasing power, after allowing for inflation.
+“Nominal” amounts mean the euros paid at the time, without that adjustment.
+
 ## The one equation
 
 A simple starting-point target, before dated cash flows and other model adjustments, is:
@@ -17,6 +24,9 @@ FI_number = annual_spending / SWR
 ```
 
 At a 4% SWR that's **25× annual spending**. At 3.5% it's **28.6×**. At 3.25% it's **30.8×**.
+
+SWR is short for “safe withdrawal rate”, the conventional research term. Here
+it is a planning assumption, not a promise that withdrawals will be safe.
 
 ## How spending and income affect the target
 
@@ -112,8 +122,8 @@ is a different rule, with variable spending.
 ### Historical survival is not a personal success probability
 
 Bengen's retrospective describes historical returns and inflation, not a
-probabilistic forecast for an Estonian household. The previous guide incorrectly
-combined Bengen and Trinity under one dataset and assumption list.
+forecast of an Estonian household's chance of success. Different studies use
+different data and assumptions; their results cannot simply be combined.
 
 [Karsten Jeske's research overview](https://earlyretirementnow.com/safe-withdrawal-rate-series/)
 discusses longer horizons, valuations, fees, additional cash flows and bequests.
@@ -123,8 +133,7 @@ historical cohort success rates directly to a particular household.
 
 **Still unverified:** this review has not reproduced the original Trinity tables,
 Pfau's international results or an Estonia-specific withdrawal backtest.
-The former claims about the best-performing market, exact failure rates and a
-universally suitable 3.25–3.5% range are not retained as established facts.
+No universally suitable 3.25–3.5% range is established here.
 
 For any study, check the return series, currency, inflation measure, asset mix,
 rebalancing, fees, taxes, withdrawal timing, horizon and definition of success.
@@ -163,6 +172,8 @@ rules, not universally ranked improvements. This page does not establish their
 relative effectiveness or say the simulator implements them.
 
 ## Accumulation vs decumulation are different problems
+
+Accumulation means building your savings; decumulation means spending them down.
 
 | Planning question | Accumulation | Decumulation |
 |---|---|---|

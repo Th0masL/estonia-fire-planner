@@ -4,8 +4,7 @@ There is no verified universal ranking of these choices. Their effect depends on
 income, spending, existing assets, access dates and personal constraints. The
 numbers below identify topics, not priority or expected return.
 
-> **Limited review — 20 September 2026:** unsupported rankings and blanket
-> recommendations have been removed. Sources support the limited account and
+> **Limited review — 20 September 2026:** sources support the account and
 > allocation distinctions below, not an optimal strategy for a particular person.
 > Personal tax, healthcare and pension eligibility still require confirmation.
 
@@ -33,7 +32,9 @@ For genuinely independent business income, an OÜ can retain profit before distr
 
 Whether this helps depends on the actual cash flows and costs. See the reconciled examples in [Using an OÜ](company.md).
 
-Requires: real business substance, a defensible salary, an accountant. Not a DIY area.
+Separate genuine business activity from employment income. Pay appropriate
+remuneration for work and keep company records. An accountant can help assess
+the arrangement; hiring one is a recommendation here, not a universal legal requirement.
 
 ### 3. Check investment-account suitability
 
@@ -47,7 +48,7 @@ Losing Estonian tax residence ends this deferral and requires the relevant
 closure declaration. Moving existing holdings into the system is not automatically
 permitted or tax-neutral. See [EMTA's rules](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account)
 and the [investment-account guide](investment-account.md). Compare actual fees,
-administration and access needs; do not move emergency cash solely to obtain a wrapper.
+administration and access needs; do not move emergency cash solely for tax deferral.
 
 ### 4. Check usable Pillar III deduction capacity
 
@@ -69,8 +70,7 @@ Choose a suitable allocation before selecting a fund. The
 [dated VWCE/WEBN comparison](portfolio.md#vwce-vs-webn) identifies both as
 large/mid-cap global equity funds, not small-cap allocations. It distinguishes
 published ongoing charges from total costs and does not name a universal winner.
-Other funds and combinations need a separate issuer-document review; the former
-undated comparison table is not retained as a verified shortlist.
+For other funds and combinations, read the issuer's current documents before comparing them.
 
 A simple portfolio can reduce administration, but still needs periodic review of
 its suitability, costs and fund changes. Automation is not a reason to ignore it.
@@ -91,7 +91,7 @@ risks but does not guarantee against losses.
 Confirm each person's actual coverage route, start and end dates, and any gap
 before stopping work. Do not assume a spouse, part-time job or pension access
 automatically supplies coverage. Use the actual premium and uncovered period in
-the plan, rather than capitalising a temporary premium as a permanent expense.
+the plan, rather than treating a temporary premium as a lifelong expense.
 
 The [health-insurance guide](health-insurance.md) and [household guide](household.md)
 distinguish reviewed general rules from personal eligibility still
@@ -147,7 +147,7 @@ and rerun the plan when income, spending or assumptions change.
 
 ## Extra complexity needs a reason
 
-These are due-diligence questions, not a verified ranking of returns:
+Before adding complexity, ask:
 
 - **Stock selection and market timing:** what evidence supports the strategy after costs, tax and concentration risk? No expected outperformance is established here.
 - **Crypto:** check the asset, licensed provider, acquisition date and reporting route. A blanket “no loss offset” rule is incorrect; see the [crypto guide](crypto.md) and [EMTA's distinctions](https://www.emta.ee/en/private-client/taxes-and-payment/taxable-income/securities-and-investment-account). Historic holdings and self-custody transfers need transaction-specific review.

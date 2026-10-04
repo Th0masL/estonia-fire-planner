@@ -3,6 +3,9 @@
 A planning checklist, not a ranking of failure probabilities. Revisit it when
 household circumstances, investments or rules change.
 
+Start with three questions: could spending rise, income or investments fall,
+or money become unavailable when needed? Test these separately as well as together.
+
 > **Limited review, 20 September 2026:** the cited policy and residency statements were checked. Future returns, inflation, crisis access and personal risk probabilities remain unknown.
 
 ## Sequence-of-returns risk
